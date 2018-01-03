@@ -1,0 +1,38 @@
+﻿  stdafx.cpp
+  Vector2D.cpp
+  Transform.cpp
+  Trace.cpp
+  Teleporter.cpp
+  System.cpp
+  SpriteSource.cpp
+  Sprite.cpp
+  Random.cpp
+  Physics.cpp
+  Mesh.cpp
+  Matrix2D.cpp
+  Main.cpp
+  GameStateTable.cpp
+  GameStateStub.cpp
+  GameStateManager.cpp
+  GameStateLevel2.cpp
+  GameStateLevel1.cpp
+  GameStateAsteroids.cpp
+  GameObjectManager.cpp
+  GameObject.cpp
+  Generating Code...
+  Compiling...
+  Engine.cpp
+  Collider.cpp
+  BehaviorSpaceship.cpp
+  BehaviorBullet.cpp
+  BehaviorAsteroid.cpp
+  Behavior.cpp
+  AnimationSequence.cpp
+  Animation.cpp
+  Generating Code...
+  Project6.vcxproj -> C:\Users\mark.culp\Documents\Week 16 or whatever\CS230 Project 6 Student\Debug\Project6.exe
+  Project6.vcxproj -> C:\Users\mark.culp\Documents\Week 16 or whatever\CS230 Project 6 Student\Debug\Project6.pdb (Partial PDB)
+  .\AE\lib\Alpha_Engine_D.dll
+  1 File(s) copied
+  .\AE\lib\glew32.dll
+  1 File(s) copied

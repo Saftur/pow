@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{029e481d-a349-414d-8ab4-5d625aee7140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{441702e7-464c-4436-8b65-1eeccb71892b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\GameStates">
+      <UniqueIdentifier>{0fc2ef2e-d98c-4889-a1c2-72ec1c09f16d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameObjects">
+      <UniqueIdentifier>{ec1c66bc-f13f-4730-a58d-cb7a14e7d50a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameObjects\Graphics">
+      <UniqueIdentifier>{b4f05833-7b58-4457-94c2-d951b07921d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameObjects\Transform">
+      <UniqueIdentifier>{70eb5340-1c69-4ecf-b6a3-6936afb378dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Math">
+      <UniqueIdentifier>{4e2cdf13-9f49-4fc7-9f0a-01967aa7d8aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameObjects\Physics">
+      <UniqueIdentifier>{fecc5ced-8810-4412-a37a-66a054c49f76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameObjects\Behaviors">
+      <UniqueIdentifier>{04f49eed-8fa7-41f3-b103-744758c284b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Behaviors">
+      <UniqueIdentifier>{18810654-6ad0-4f0d-9591-534f656a6f77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameObjects\Colliders">
+      <UniqueIdentifier>{26995432-f90b-46b7-a4e1-4b709cb42c5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fmod">
+      <UniqueIdentifier>{63bcaa8a-6cbb-4d94-b80d-bb7f693e59ff}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\stdafx.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Behavior.cpp">
+      <Filter>Engine\GameObjects\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Animation.cpp">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\AnimationSequence.cpp">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Mesh.cpp">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sprite.cpp">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SpriteSource.cpp">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics.cpp">
+      <Filter>Engine\GameObjects\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Transform.cpp">
+      <Filter>Engine\GameObjects\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObject.cpp">
+      <Filter>Engine\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjectManager.cpp">
+      <Filter>Engine\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Matrix2D.cpp">
+      <Filter>Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Vector2D.cpp">
+      <Filter>Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateManager.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Trace.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorBullet.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorSpaceship.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateAsteroids.cpp">
+      <Filter>Game\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateLevel1.cpp">
+      <Filter>Game\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateLevel2.cpp">
+      <Filter>Game\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateStub.cpp">
+      <Filter>Game\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateTable.cpp">
+      <Filter>Game\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorAsteroid.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collider.cpp">
+      <Filter>Engine\GameObjects\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Teleporter.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Random.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\GameStateStub.h">
+      <Filter>Game\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateManager.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stdafx.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\targetver.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Stub.h" />
+    <ClInclude Include="Source\Engine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateTable.h">
+      <Filter>Game\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateLevel1.h">
+      <Filter>Game\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateLevel2.h">
+      <Filter>Game\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Trace.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AnimationFrame.h">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AnimationSequence.h">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Animation.h">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sprite.h">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SpriteSource.h">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mesh.h">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Transform.h">
+      <Filter>Engine\GameObjects\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObject.h">
+      <Filter>Engine\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Matrix2D.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vector2D.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Physics.h">
+      <Filter>Engine\GameObjects\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateAsteroids.h">
+      <Filter>Game\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjectManager.h">
+      <Filter>Engine\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorSpaceship.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Behavior.h">
+      <Filter>Engine\GameObjects\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorBullet.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorAsteroid.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collider.h">
+      <Filter>Engine\GameObjects\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Teleporter.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Random.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
