@@ -217,5 +217,29 @@
     <ClInclude Include="Source\Random.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="fmodAPI\inc\fmod.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="fmodAPI\inc\fmod.hpp">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="fmodAPI\inc\fmod_codec.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="fmodAPI\inc\fmod_common.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="fmodAPI\inc\fmod_dsp.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="fmodAPI\inc\fmod_dsp_effects.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="fmodAPI\inc\fmod_errors.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="fmodAPI\inc\fmod_output.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

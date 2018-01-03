@@ -11,6 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="fmodAPI\inc\fmod.h" />
+    <ClInclude Include="fmodAPI\inc\fmod.hpp" />
+    <ClInclude Include="fmodAPI\inc\fmod_codec.h" />
+    <ClInclude Include="fmodAPI\inc\fmod_common.h" />
+    <ClInclude Include="fmodAPI\inc\fmod_dsp.h" />
+    <ClInclude Include="fmodAPI\inc\fmod_dsp_effects.h" />
+    <ClInclude Include="fmodAPI\inc\fmod_errors.h" />
+    <ClInclude Include="fmodAPI\inc\fmod_output.h" />
     <ClInclude Include="Source\Animation.h" />
     <ClInclude Include="Source\AnimationFrame.h" />
     <ClInclude Include="Source\AnimationSequence.h" />
