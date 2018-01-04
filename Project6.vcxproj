@@ -25,6 +25,7 @@
     <ClInclude Include="Source\Behavior.h" />
     <ClInclude Include="Source\BehaviorAsteroid.h" />
     <ClInclude Include="Source\BehaviorBullet.h" />
+    <ClInclude Include="Source\BehaviorButton.h" />
     <ClInclude Include="Source\BehaviorSpaceship.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\Engine.h" />
@@ -34,6 +35,7 @@
     <ClInclude Include="Source\GameStateLevel1.h" />
     <ClInclude Include="Source\GameStateLevel2.h" />
     <ClInclude Include="Source\GameStateManager.h" />
+    <ClInclude Include="Source\GameStateMenu.h" />
     <ClInclude Include="Source\GameStateStub.h" />
     <ClInclude Include="Source\GameStateTable.h" />
     <ClInclude Include="Source\Matrix2D.h" />
@@ -57,6 +59,7 @@
     <ClCompile Include="Source\Behavior.cpp" />
     <ClCompile Include="Source\BehaviorAsteroid.cpp" />
     <ClCompile Include="Source\BehaviorBullet.cpp" />
+    <ClCompile Include="Source\BehaviorButton.cpp" />
     <ClCompile Include="Source\BehaviorSpaceship.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
@@ -66,6 +69,7 @@
     <ClCompile Include="Source\GameStateLevel1.cpp" />
     <ClCompile Include="Source\GameStateLevel2.cpp" />
     <ClCompile Include="Source\GameStateManager.cpp" />
+    <ClCompile Include="Source\GameStateMenu.cpp" />
     <ClCompile Include="Source\GameStateStub.cpp" />
     <ClCompile Include="Source\GameStateTable.cpp" />
     <ClCompile Include="Source\Main.cpp" />

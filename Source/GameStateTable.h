@@ -32,6 +32,7 @@ public:
 	{
 		/* Normal Game States: */
 		// Add new game states here.
+		GsMenu,
 		GsLevel1,
 		GsLevel2,
 		GsAsteroids,
@@ -41,7 +42,7 @@ public:
 		GsLast = GsNum - 1,
 
 		/* Specify the initial game state */
-		GsInitial = GsAsteroids,
+		GsInitial = GsMenu,
 	} GameStates;
 
 	//------------------------------------------------------------------------------

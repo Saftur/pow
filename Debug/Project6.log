@@ -1,38 +1,54 @@
-﻿  stdafx.cpp
-  Vector2D.cpp
-  Transform.cpp
-  Trace.cpp
-  Teleporter.cpp
-  System.cpp
-  SpriteSource.cpp
-  Sprite.cpp
-  Random.cpp
-  Physics.cpp
-  Mesh.cpp
-  Matrix2D.cpp
-  Main.cpp
-  GameStateTable.cpp
-  GameStateStub.cpp
-  GameStateManager.cpp
-  GameStateLevel2.cpp
-  GameStateLevel1.cpp
-  GameStateAsteroids.cpp
-  GameObjectManager.cpp
-  GameObject.cpp
-  Generating Code...
-  Compiling...
-  Engine.cpp
-  Collider.cpp
-  BehaviorSpaceship.cpp
-  BehaviorBullet.cpp
-  BehaviorAsteroid.cpp
-  Behavior.cpp
-  AnimationSequence.cpp
-  Animation.cpp
-  Generating Code...
-  Project6.vcxproj -> C:\Users\mark.culp\Documents\Week 16 or whatever\CS230 Project 6 Student\Debug\Project6.exe
-  Project6.vcxproj -> C:\Users\mark.culp\Documents\Week 16 or whatever\CS230 Project 6 Student\Debug\Project6.pdb (Partial PDB)
-  .\AE\lib\Alpha_Engine_D.dll
-  1 File(s) copied
-  .\AE\lib\glew32.dll
-  1 File(s) copied
+﻿  BehaviorButton.cpp
+c:\users\bknutson\documents\repo\source\behaviorbutton.h(99): error C2220: warning treated as error - no 'object' file generated
+c:\users\bknutson\documents\repo\source\behaviorbutton.h(99): warning C4624: 'BehaviorButton': destructor was implicitly defined as deleted
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(40): error C2248: 'Behavior::~Behavior': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(98): note: see declaration of 'Behavior::~Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(41): error C2248: 'Behavior::stateCurr': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(108): note: see declaration of 'Behavior::stateCurr'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(42): error C2248: 'Behavior::stateNext': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(109): note: see declaration of 'Behavior::stateNext'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(43): error C2248: 'Behavior::onInit': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(112): note: see declaration of 'Behavior::onInit'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(44): error C2248: 'Behavior::onUpdate': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(113): note: see declaration of 'Behavior::onUpdate'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(45): error C2248: 'Behavior::onExit': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(114): note: see declaration of 'Behavior::onExit'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(46): error C2248: 'Behavior::clone': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(117): note: see declaration of 'Behavior::clone'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(47): error C2248: 'Behavior::destroy': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(118): note: see declaration of 'Behavior::destroy'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(60): error C2248: 'Behavior::~Behavior': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(98): note: see declaration of 'Behavior::~Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(61): error C2248: 'Behavior::stateCurr': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(108): note: see declaration of 'Behavior::stateCurr'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(62): error C2248: 'Behavior::stateNext': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(109): note: see declaration of 'Behavior::stateNext'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(63): error C2248: 'Behavior::onInit': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(112): note: see declaration of 'Behavior::onInit'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(64): error C2248: 'Behavior::onUpdate': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(113): note: see declaration of 'Behavior::onUpdate'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(65): error C2248: 'Behavior::onExit': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(114): note: see declaration of 'Behavior::onExit'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(66): error C2248: 'Behavior::clone': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(117): note: see declaration of 'Behavior::clone'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(67): error C2248: 'Behavior::destroy': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(118): note: see declaration of 'Behavior::destroy'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'
+c:\users\bknutson\documents\repo\source\behaviorbutton.cpp(107): error C2248: 'Behavior::stateCurr': cannot access private member declared in class 'Behavior'
+  c:\users\bknutson\documents\repo\source\behavior.h(108): note: see declaration of 'Behavior::stateCurr'
+  c:\users\bknutson\documents\repo\source\behavior.h(43): note: see declaration of 'Behavior'

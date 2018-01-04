@@ -37,14 +37,14 @@
     <Filter Include="fmod">
       <UniqueIdentifier>{63bcaa8a-6cbb-4d94-b80d-bb7f693e59ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Buttons">
+      <UniqueIdentifier>{cacedcf3-a0e9-4c9c-9add-cd13f6e74dd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Behavior.cpp">
-      <Filter>Engine\GameObjects\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Animation.cpp">
       <Filter>Engine\GameObjects\Graphics</Filter>
@@ -112,9 +112,6 @@
     <ClCompile Include="Source\GameStateTable.cpp">
       <Filter>Game\GameStates</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BehaviorAsteroid.cpp">
-      <Filter>Game\Behaviors</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Collider.cpp">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClCompile>
@@ -123,6 +120,18 @@
     </ClCompile>
     <ClCompile Include="Source\Random.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateMenu.cpp">
+      <Filter>Game\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorAsteroid.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorButton.cpp">
+      <Filter>Engine\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Behavior.cpp">
+      <Filter>Engine\GameObjects\Behaviors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -199,13 +208,7 @@
     <ClInclude Include="Source\BehaviorSpaceship.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Behavior.h">
-      <Filter>Engine\GameObjects\Behaviors</Filter>
-    </ClInclude>
     <ClInclude Include="Source\BehaviorBullet.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BehaviorAsteroid.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
     <ClInclude Include="Source\Collider.h">
@@ -240,6 +243,18 @@
     </ClInclude>
     <ClInclude Include="fmodAPI\inc\fmod_output.h">
       <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateMenu.h">
+      <Filter>Game\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorAsteroid.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorButton.h">
+      <Filter>Engine\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Behavior.h">
+      <Filter>Engine\GameObjects\Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

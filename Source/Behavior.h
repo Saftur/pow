@@ -49,6 +49,7 @@ public:
 	friend class BehaviorAsteroid;
 	friend class BehaviorBullet;
 	friend class BehaviorSpaceship;
+	friend class BehaviorButton;
 
 	//------------------------------------------------------------------------------
 	// Public Functions:
