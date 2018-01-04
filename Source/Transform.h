@@ -75,6 +75,11 @@ public:
 	// Params:
 	//	 translation = Reference to a scale vector.
 	void SetScale(const Vector2D& scale);
+	
+
+	static void SetCamTranslation(const Vector2D& translation);
+
+	static Vector2D GetCamTranslation();
 
 private:
 	//------------------------------------------------------------------------------
@@ -98,5 +103,8 @@ private:
 	// True if the transformation matrix needs to be recalculated.
 	// (Hint: this should be initialized to true.)
 	bool	isDirty;
+
+
+	static Vector2D camTranslation;
 };
 //------------------------------------------------------------------------------
