@@ -100,6 +100,8 @@ private:
 	// Archetypes
 	static void CreateBulletArchetype(void);
 	static void CreateAsteroidArchetype(void);
+	
+	static void UpdateCamera(float dt);
 };
 
 /*----------------------------------------------------------------------------*/

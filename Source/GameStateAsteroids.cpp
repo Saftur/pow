@@ -86,6 +86,8 @@ void GameStateAsteroids::Init()
 void GameStateAsteroids::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
+	
+	UpdateCamera(dt);
 
 	if (AEInputCheckCurr('1'))
 		GameStateManager::GetInstance().SetNextState(GameStateTable::GsLevel1);
@@ -260,6 +262,20 @@ void GameStateAsteroids::CreateAsteroidArchetype(void)
 	go->SetSprite(*s);
 
 	GameObjectManager::GetInstance().AddArchetype(*go);
+}
+
+void GameStateAsteroids::UpdateCamera(float dt)
+{
+	Vector2D camTranslation = Transform::GetCamTranslation();
+	if (AEInputCheckCurr('W'))
+		camTranslation.Y(camTranslation.Y() + 100 * dt);
+	if (AEInputCheckCurr('A'))
+		camTranslation.X(camTranslation.X() - 100 * dt);
+	if (AEInputCheckCurr('S'))
+		camTranslation.Y(camTranslation.Y() - 100 * dt);
+	if (AEInputCheckCurr('D'))
+		camTranslation.X(camTranslation.X() + 100 * dt);
+	Transform::SetCamTranslation(camTranslation);
 }
 
 /*----------------------------------------------------------------------------*/
