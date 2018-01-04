@@ -40,6 +40,8 @@
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\Random.h" />
+    <ClInclude Include="source\Sound.h" />
+    <ClInclude Include="source\SoundManager.h" />
     <ClInclude Include="Source\Sprite.h" />
     <ClInclude Include="Source\SpriteSource.h" />
     <ClInclude Include="Source\stdafx.h" />
@@ -73,6 +75,8 @@
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\Random.cpp" />
+    <ClCompile Include="source\Sound.cpp" />
+    <ClCompile Include="source\SoundManager.cpp" />
     <ClCompile Include="Source\Sprite.cpp" />
     <ClCompile Include="Source\SpriteSource.cpp" />
     <ClCompile Include="Source\stdafx.cpp">
@@ -125,8 +129,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>.\AE\include;$(IncludePath)</IncludePath>
-    <LibraryPath>.\AE\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\AE\include;.\fmodAPI\inc;$(IncludePath)</IncludePath>
+    <LibraryPath>.\AE\lib;.\fmodAPI\lib;$(LibraryPath)</LibraryPath>
     <CustomBuildAfterTargets />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -152,7 +156,8 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy .\AE\lib\Alpha_Engine_D.dll "$(OutDir)" /Y
-xcopy .\AE\lib\glew32.dll "$(OutDir)" /Y</Command>
+xcopy .\AE\lib\glew32.dll "$(OutDir)" /Y
+xcopy .\fmodAPI\lib\fmod.dll "$(OutDir)" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

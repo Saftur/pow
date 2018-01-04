@@ -37,6 +37,9 @@
     <Filter Include="fmod">
       <UniqueIdentifier>{63bcaa8a-6cbb-4d94-b80d-bb7f693e59ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Sound">
+      <UniqueIdentifier>{b6342329-9d4c-47a5-824b-0c5c75c294cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -123,6 +126,12 @@
     </ClCompile>
     <ClCompile Include="Source\Random.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SoundManager.cpp">
+      <Filter>Engine\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Sound.cpp">
+      <Filter>Engine\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -240,6 +249,12 @@
     </ClInclude>
     <ClInclude Include="fmodAPI\inc\fmod_output.h">
       <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Sound.h">
+      <Filter>Engine\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SoundManager.h">
+      <Filter>Engine\Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -31,6 +31,8 @@ Matrix2D& Transform::GetMatrix()
 		Matrix2D newRotation = Matrix2D().RotationMatrixRadians(rotation);
 
 		matrix = newTranslation * newRotation * newScale;
+
+		isDirty = false;
 	}
 
 	return  matrix;
