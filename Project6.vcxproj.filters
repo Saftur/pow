@@ -242,4 +242,20 @@
       <Filter>fmod</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="fmodAPI\lib\fmod.dll">
+      <Filter>fmod</Filter>
+    </None>
+    <None Include="fmodAPI\lib\fmodL.dll">
+      <Filter>fmod</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="fmodAPI\lib\fmod_vc.lib">
+      <Filter>fmod</Filter>
+    </Library>
+    <Library Include="fmodAPI\lib\fmodL_vc.lib">
+      <Filter>fmod</Filter>
+    </Library>
+  </ItemGroup>
 </Project>

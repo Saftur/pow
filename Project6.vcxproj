@@ -85,6 +85,14 @@
     <ClCompile Include="Source\Transform.cpp" />
     <ClCompile Include="Source\Vector2D.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="fmodAPI\lib\fmod.dll" />
+    <None Include="fmodAPI\lib\fmodL.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="fmodAPI\lib\fmodL_vc.lib" />
+    <Library Include="fmodAPI\lib\fmod_vc.lib" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{71A03382-4E92-4D93-A8D2-58B289C3D484}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
