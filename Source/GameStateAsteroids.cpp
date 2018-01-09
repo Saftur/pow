@@ -278,4 +278,8 @@ void GameStateAsteroids::UpdateCamera(float dt)
 	Transform::SetCamTranslation(camTranslation);
 }
 
+void GameStateAsteroids::UpdateUIScore(void *data[]) {
+	UNREFERENCED_PARAMETER(data);
+}
+
 /*----------------------------------------------------------------------------*/

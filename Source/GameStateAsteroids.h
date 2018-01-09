@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include "GUIManager.h"
+
 //------------------------------------------------------------------------------
 // Include Files:
 //------------------------------------------------------------------------------
@@ -102,6 +104,7 @@ private:
 	static void CreateAsteroidArchetype(void);
 	
 	static void UpdateCamera(float dt);
+	static UIUpdateFunc UpdateUIScore;
 };
 
 /*----------------------------------------------------------------------------*/
