@@ -36,11 +36,7 @@
 
 // Create a new physics component.
 Physics::Physics()
-<<<<<<< HEAD
-	: oldTranslation(Vector2D()), acceleration(Vector2D()), velocity(Vector2D()), inverseMass(0.0f), rotationalVelocity(0.0f) {}
-=======
 	: oldTranslation(Vector2D()), acceleration(Vector2D()), velocity(Vector2D()), rotationalVelocity(0), inverseMass(0.0f) {}
->>>>>>> 25e1d20cd01c247a189917a75e9edded5e2ddd91
 
 // Get the acceleration of a physics component.
 // Returns:
