@@ -11,13 +11,16 @@ Description: Implementation of Transform.h functions and stuff.
 #include "stdafx.h"
 #include "Transform.h"
 
+
+Vector2D Transform::camTranslation = { 0, 0 };
+
 // Create a new transform object.
 // (Hint: Failing to initialize the scale values to non-zero values will result in invisible sprites.)
 // Params:
 //	 x = Initial world position on the x-axis.
 //	 y = Initial world position on the y-axis.
 Transform::Transform(float x, float y)
-	: translation(Vector2D(x, y)), rotation(0.0f), scale(Vector2D(1, 1)), matrix(Matrix2D()), isDirty(true) {}
+	: translation(Vector2D(x, y)), rotation(0.0f), scale(Vector2D(1, 1)), matrix(Matrix2D()), isDirty(true), followCamera(true) {}
 
 // Get the transform matrix, based upon translation, rotation and scale settings.
 // Returns:
@@ -34,6 +37,9 @@ Matrix2D& Transform::GetMatrix()
 
 		isDirty = false;
 	}
+
+	if (followCamera)
+		matrix = Matrix2D().TranslationMatrix(camTranslation.X(), camTranslation.Y()) * matrix;
 
 	return  matrix;
 }
@@ -87,4 +93,19 @@ void Transform::SetScale(const Vector2D& scale6)
 {
 	scale = scale6;
 	isDirty = true;
+}
+
+void Transform::SetFollowCamera(bool fc)
+{
+	followCamera = fc;
+}
+
+void Transform::SetCamTranslation(const Vector2D & translation)
+{
+	camTranslation = translation;
+}
+
+Vector2D Transform::GetCamTranslation()
+{
+	return camTranslation;
 }
