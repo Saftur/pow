@@ -10,8 +10,10 @@ Implementation file for sound controller
 
 #include "stdafx.h"
 #include "SoundManager.h"
+#include <string>
 #include "Trace.h"
 
+// Initialize the SoundManager.
 void SoundManager::Init()
 {
 	FMOD_RESULT result;
@@ -30,95 +32,120 @@ void SoundManager::Init()
 		Trace::GetInstance().GetStream() << "FMOD initialization error! (" << result << ") " << std::endl;
 	}
 
-	soundArchetypeList = SoundList();
-	soundActiveList = SoundList();
+	soundRegistry = SoundList();
 
-	soundArchetypeList.maxSounds = soundListSize;
-	soundActiveList.maxSounds = soundListSize;
+	soundRegistry.maxSounds = SoundListSize;
 }
 
+// Update the SoundManager.
 void SoundManager::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
+
+	system->update();
 }
 
+// Shut down the SoundManager.
 void SoundManager::Shutdown()
 {
-	for (unsigned i = 0; i < soundActiveList.maxSounds; i++)
+	for (unsigned i = 0; i < soundRegistry.maxSounds; i++)
 	{
-		if (&soundActiveList.soundList[i])
+		if (&soundRegistry.soundList[i])
 		{
-			delete(&soundActiveList.soundList[i]);
+			delete(&soundRegistry.soundList[i]);
 
-			soundActiveList.soundList[i] = NULL;
-			soundActiveList.soundCount--;
-		}
-	}
-
-	for (unsigned i = 0; i < soundArchetypeList.maxSounds; i++)
-	{
-		if (&soundArchetypeList.soundList[i])
-		{
-			delete(&soundArchetypeList.soundList[i]);
-
-			soundArchetypeList.soundList[i] = NULL;
-			soundArchetypeList.soundCount--;
+			soundRegistry.soundList[i] = NULL;
+			soundRegistry.soundCount--;
 		}
 	}
 }
 
+// Returns the SoundManager's system (the FMOD object which is responsible for all of the sound handling).
 FMOD::System* SoundManager::GetSystem()
 {
 	return system;
 }
 
-void SoundManager::AddArchetype(Sound& sound)
+// Adds a sound to the sound registry.
+// Parameters:
+//		name: the name of the sound file to add.
+//		path: the folder to look in. Defaults to globabl sound path.
+void SoundManager::Add(Sound sound, const char* path)
 {
-	if (soundArchetypeList.soundCount == soundArchetypeList.maxSounds)
+	if (soundRegistry.soundCount == soundRegistry.maxSounds)
 		return;
 
-	soundArchetypeList.soundList[soundArchetypeList.soundCount++] = &sound;
+ 	std::string tmp(path);
+
+	tmp += sound;
+
+	system->createSound(tmp.c_str(), FMOD_DEFAULT, NULL, (&soundRegistry.soundList[soundRegistry.soundCount++]));
 }
 
-void SoundManager::Add(Sound& sound)
+// Plays a sound.
+// Parameters:
+//		name: the name of the sound file to play.
+//		loopCount: how many times to loop the sound. Default is 0, meaning no looping.
+//		volume: a sound-specific volume modifier. Default is 1.0.
+void SoundManager::PlaySFX(Sound name, int loopCount, float volume)
 {
-	if (soundActiveList.soundCount == soundActiveList.maxSounds)
-		return;
+	FMOD::Channel* channel;
 
-	soundActiveList.soundList[soundActiveList.soundCount++] = new Sound(sound);
+	system->playSound(getSound(name), NULL, false, &channel);
+	channel->setVolume(volume);
+	channel->setLoopCount(loopCount);
 }
 
-Sound* SoundManager::GetSoundByName(const char* name)
+// Sets the music.
+// Parameters:
+//		name: the name of the sound file to play.
+//		volume: a sound-specific volume modifier. Default is 1.0.
+//		doTransition: whether to apply a fadeout and fadein effect to allow for a
+//			smooth transition. Default is false.
+void SoundManager::SetMusic(Sound name, float volume, bool doTransition)
 {
-	for (unsigned i = 0; i < soundArchetypeList.maxSounds; i++)
+	UNREFERENCED_PARAMETER(doTransition);
+	system->playSound(getSound(name), NULL, false, &musicChannel);
+	musicChannel->setVolume(volume);
+	musicChannel->setLoopCount(-1);
+}
+
+// Stops the currently playing music.
+// Parameters:
+//		doFadeout: whether to apply a fadeout effect before stopping (music will play until end of file). Defaults to false.
+void SoundManager::StopMusic(bool doFadeout)
+{
+	if (doFadeout)
 	{
-		if (soundActiveList.soundList[i])
+		// TODO: Add some code here.
+	}
+	else
+	{
+		musicChannel->stop();
+	}
+}
+
+// Retrieves a sound from the sound registry.
+// Parameters:
+//		name: the name of the sound to find.
+FMOD::Sound* SoundManager::getSound(Sound name)
+{
+	char tmp[MaxSoundNameLength] = "";
+
+	for (int i = 0; i < SoundListSize; i++)
+	{
+		if (soundRegistry.soundList[i])
 		{
-			if (soundActiveList.soundList[i])
-			{
-				if (soundActiveList.soundList[i]->IsNamed(name))
-					return soundActiveList.soundList[i];
-			}
+			soundRegistry.soundList[i]->getName(tmp, MaxSoundNameLength);
+			if (std::strcmp(name, tmp) == 0)
+				return soundRegistry.soundList[i];
 		}
 	}
 
 	return NULL;
 }
 
-Sound* SoundManager::GetArchetype(const char* name)
-{
-	for (int i = 0; i < soundListSize; i++)
-	{
-		if (soundArchetypeList.soundList[i])
-		{
-			if (soundArchetypeList.soundList[i]->IsNamed(name))
-				return soundArchetypeList.soundList[i];
-		}
-	}
-
-	return NULL;
-}
-
+// Returns the current instance of the SoundManager.
 SoundManager& SoundManager::GetInstance()
 {
 	static SoundManager obj;

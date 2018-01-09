@@ -130,9 +130,6 @@
     <ClCompile Include="source\SoundManager.cpp">
       <Filter>Engine\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="source\Sound.cpp">
-      <Filter>Engine\Sound</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GameStateStub.h">
@@ -249,9 +246,6 @@
     </ClInclude>
     <ClInclude Include="fmodAPI\inc\fmod_output.h">
       <Filter>fmod</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Sound.h">
-      <Filter>Engine\Sound</Filter>
     </ClInclude>
     <ClInclude Include="source\SoundManager.h">
       <Filter>Engine\Sound</Filter>

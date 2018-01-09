@@ -1,9 +1,9 @@
-﻿  Sound.cpp
+﻿  SoundManager.cpp
   Project6.vcxproj -> C:\Users\mark.culp\Documents\repo\Debug\Project6.exe
   Project6.vcxproj -> C:\Users\mark.culp\Documents\repo\Debug\Project6.pdb (Partial PDB)
   .\AE\lib\Alpha_Engine_D.dll
   1 File(s) copied
   .\AE\lib\glew32.dll
   1 File(s) copied
-  .\fmodAPI\lib\fmod.dll
+  .\fmodAPI\lib\fmodL.dll
   1 File(s) copied

@@ -22,6 +22,7 @@
 #include "BehaviorSpaceship.h"
 #include "BehaviorAsteroid.h"
 #include "Random.h"
+#include "SoundManager.h"
 #include <string>
 
 //------------------------------------------------------------------------------
@@ -41,6 +42,9 @@ int GameStateAsteroids::asteroidScore = 0;
 int GameStateAsteroids::asteroidHighScore = 0;
 int GameStateAsteroids::asteroidSpawnCount;
 int GameStateAsteroids::asteroidWaveCount;
+
+Sound testSound = "jazz.wav";
+Sound testMusic = "music.mp3";
 
 //------------------------------------------------------------------------------
 // Public Structures:
@@ -78,6 +82,10 @@ void GameStateAsteroids::Init()
 
 	AEGfxSetBackgroundColor(0, 0, 0);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+
+	SoundManager::GetInstance().Add(testSound);
+	SoundManager::GetInstance().Add(testMusic);
+	SoundManager::GetInstance().SetMusic(testMusic);
 }
 
 // Update the Asteroids game state.
@@ -93,6 +101,9 @@ void GameStateAsteroids::Update(float dt)
 		GameStateManager::GetInstance().SetNextState(GameStateTable::GsLevel2);
 	if (AEInputCheckCurr('3'))
 		GameStateManager::GetInstance().SetNextState(GameStateTable::GsRestart);
+
+	if (AEInputCheckCurr('J'))
+		SoundManager::GetInstance().PlaySFX(testSound);
 
 	if (!GameObjectManager::GetInstance().GetObjectByName("Asteroid"))
 		SpawnAsteroidWave();

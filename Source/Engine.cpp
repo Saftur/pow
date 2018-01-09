@@ -16,6 +16,7 @@
 #include "Trace.h"
 #include "GameObjectManager.h"
 #include "Random.h"
+#include "SoundManager.h"
 
 //------------------------------------------------------------------------------
 // Private Structures:
@@ -53,6 +54,8 @@ void Engine::Init()
 
 	GameObjectManager::GetInstance().Init();
 
+	SoundManager::GetInstance().Init();
+
 	RandomInit();
 }
 
@@ -74,6 +77,9 @@ void Engine::Update(float dt)
 	GameObjectManager::GetInstance().CheckCollisions();
 	GameObjectManager::GetInstance().Draw();
 
+	// Update the sound manager.
+	SoundManager::GetInstance().Update(dt);
+
 	// Complete the draw process for the current game loop.
 	System::GetInstance().Draw();
 }
@@ -90,6 +96,7 @@ void Engine::Shutdown()
 	// Shutdown the game state manager.
 	GameStateManager::GetInstance().Shutdown();
 	GameObjectManager::GetInstance().Shutdown();
+	SoundManager::GetInstance().Shutdown();
 
 	//--------------------------------------------------------------------------
 	// NOTE: Certain modules need to be shutdown last and in reverse order.
