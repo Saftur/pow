@@ -48,16 +48,20 @@ void SoundManager::Update(float dt)
 // Shut down the SoundManager.
 void SoundManager::Shutdown()
 {
-	for (unsigned i = 0; i < soundRegistry.maxSounds; i++)
+	for (unsigned i = 0; i < soundRegistry.soundCount; i++)
 	{
-		if (&soundRegistry.soundList[i])
+		if (soundRegistry.soundList[i])
 		{
-			delete(&soundRegistry.soundList[i]);
+			//delete(soundRegistry.soundList[i]);
+			soundRegistry.soundList[i]->release();
 
-			soundRegistry.soundList[i] = NULL;
-			soundRegistry.soundCount--;
+			//soundRegistry.soundList[i] = NULL;
+			//soundRegistry.soundCount--;
 		}
 	}
+	soundRegistry.soundCount = 0;
+	system->close();
+	system->release();
 }
 
 // Returns the SoundManager's system (the FMOD object which is responsible for all of the sound handling).
