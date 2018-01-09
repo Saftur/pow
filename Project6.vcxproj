@@ -25,7 +25,8 @@
     <ClInclude Include="Source\Behavior.h" />
     <ClInclude Include="Source\BehaviorAsteroid.h" />
     <ClInclude Include="Source\BehaviorBullet.h" />
-    <ClInclude Include="Source\BehaviorButton.h" />
+    <ClInclude Include="Source\BehaviorButtonStub.h" />
+    <ClInclude Include="Source\BehaviorLevelButton.h" />
     <ClInclude Include="Source\BehaviorSpaceship.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\Engine.h" />
@@ -59,7 +60,8 @@
     <ClCompile Include="Source\Behavior.cpp" />
     <ClCompile Include="Source\BehaviorAsteroid.cpp" />
     <ClCompile Include="Source\BehaviorBullet.cpp" />
-    <ClCompile Include="Source\BehaviorButton.cpp" />
+    <ClCompile Include="Source\BehaviorButtonStub.cpp" />
+    <ClCompile Include="Source\BehaviorLevelButton.cpp" />
     <ClCompile Include="Source\BehaviorSpaceship.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
