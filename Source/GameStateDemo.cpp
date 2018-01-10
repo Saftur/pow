@@ -34,11 +34,13 @@
 //------------------------------------------------------------------------------
 
 Tilemap *GameStateDemo::tilemap;
+// TODO Remove test vars
 AEGfxTexture *GameStateDemo::textureHex;
 AEGfxVertexList *GameStateDemo::meshQuad;
 Sprite *GameStateDemo::spriteHex;
 SpriteSource *GameStateDemo::spriteSourceHex;
 Transform *GameStateDemo::transformHex;
+// End test vars
 
 //------------------------------------------------------------------------------
 // Private Function Declarations:
@@ -53,6 +55,7 @@ void GameStateDemo::Load()
 {
 	Trace::GetInstance().GetStream() << "Demo: Load" << std::endl;
 	tilemap = new Tilemap("Assets\\Hexidecimal.png", "Data\\Tilemap1.txt", "data\\Tilemap1.collision.txt", 0, 0, 512, 512);
+	// TODO Remove testing
 	textureHex = AEGfxTextureLoad("Assets\\Hexidecimal.png");
 	meshQuad = MeshCreateQuad(32.0f, 32.0f, 0.25f, 0.25f, "Test Mesh");
 	spriteSourceHex = new SpriteSource(4, 4, textureHex);
@@ -60,6 +63,7 @@ void GameStateDemo::Load()
 	spriteHex->SetMesh(meshQuad);
 	spriteHex->SetSpriteSource(spriteSourceHex);
 	transformHex = new Transform(0, 0);
+	// End testing
 }
 
 // Initialize the memory associated with the Demo game state.
@@ -78,20 +82,24 @@ void GameStateDemo::Update(float dt)
 
 	Trace::GetInstance().GetStream() << "Demo: Update" << std::endl;
 	
+	// TODO Remove testing
 	s32 scrMouseX, scrMouseY;
 	float mouseX, mouseY;
 	AEInputGetCursorPosition(&scrMouseX, &scrMouseY);
 	AEGfxConvertScreenCoordinatesToWorld((float)scrMouseX, (float)scrMouseY, &mouseX, &mouseY);
 	Vector2D pos = tilemap->getPosOnMap({ mouseX, mouseY });
+	// End testing
 
 	tilemap->Draw();
 
+	// TODO Remove testing
 	spriteHex->SetFrame((int)pos.X());
 	transformHex->SetTranslation({ mouseX - 32, mouseY - 32 });
 	spriteHex->Draw(*transformHex);
 	spriteHex->SetFrame((int)pos.Y());
 	transformHex->SetTranslation({ mouseX + 32, mouseY - 32 });
 	spriteHex->Draw(*transformHex);
+	// End testing
 
 	//GameStateManager::GetInstance().SetNextState(GameStateTable::GsQuit);
 }
@@ -107,11 +115,13 @@ void GameStateDemo::Unload()
 {
 	Trace::GetInstance().GetStream() << "Demo: Unload" << std::endl;
 	delete tilemap;
+	// TODO Remove test vars
 	delete textureHex;
 	delete meshQuad;
 	delete spriteSourceHex;
 	delete spriteHex;
 	delete transformHex;
+	// End test vars
 }
 
 //------------------------------------------------------------------------------

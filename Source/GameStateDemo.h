@@ -62,10 +62,12 @@ public:
 
 private:
 	static Tilemap *tilemap;
+	// TODO Remove test vars
 	static AEGfxTexture *textureHex;
 	static AEGfxVertexList *meshQuad;
 	static Sprite *spriteHex;
 	static SpriteSource *spriteSourceHex;
 	static Transform *transformHex;
+	// End test vars
 };
 /*----------------------------------------------------------------------------*/
