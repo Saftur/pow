@@ -83,16 +83,20 @@ void GameStateDemo::Update(float dt)
 	Trace::GetInstance().GetStream() << "Demo: Update" << std::endl;
 	
 	// TODO Remove testing
+	// Get mouse pos in world
 	s32 scrMouseX, scrMouseY;
 	float mouseX, mouseY;
 	AEInputGetCursorPosition(&scrMouseX, &scrMouseY);
 	AEGfxConvertScreenCoordinatesToWorld((float)scrMouseX, (float)scrMouseY, &mouseX, &mouseY);
+
+	// Get mouse pos on tilemap
 	Vector2D pos = tilemap->getPosOnMap({ mouseX, mouseY });
 	// End testing
 
 	tilemap->Draw();
 
 	// TODO Remove testing
+	// Draw x, y coordinates under mouse cursor
 	spriteHex->SetFrame((int)pos.X());
 	transformHex->SetTranslation({ mouseX - 32, mouseY - 32 });
 	spriteHex->Draw(*transformHex);
