@@ -38,7 +38,7 @@ Matrix2D& Transform::GetMatrix()
 		isDirty = false;
 	}
 
-	if (followCamera)
+	if (followCamera && camIsDirty)
 		matrix = Matrix2D().TranslationMatrix(camTranslation.X(), camTranslation.Y()) * matrix;
 
 	return  matrix;
@@ -103,9 +103,15 @@ void Transform::SetFollowCamera(bool fc)
 void Transform::SetCamTranslation(const Vector2D & translation)
 {
 	camTranslation = translation;
+	camIsDirty = true;
 }
 
 Vector2D Transform::GetCamTranslation()
 {
 	return camTranslation;
+}
+
+void Transform::SetCamIsDirty(bool isDirty)
+{
+	camIsDirty = isDirty;
 }

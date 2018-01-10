@@ -14,7 +14,8 @@
 Tilemap::Tilemap(const char* spritesheetFilename, const char* tilemapFilename, const char* collisionMapFilename, 
 	int onScreenOffsetX, int onScreenOffsetY, int onScreenWidth, int onScreenHeight) :
 		offsetX(onScreenOffsetX), offsetY(onScreenOffsetY), width(onScreenWidth), height(onScreenHeight), 
-		sprite(new Sprite("TilemapSprite")), texture(AEGfxTextureLoad(spritesheetFilename))
+		sprite(new Sprite("TilemapSprite")), texture(AEGfxTextureLoad(spritesheetFilename)), 
+		transform(new Transform(0.0f, 0.0f))
 {
 	readFiles(tilemapFilename, collisionMapFilename); // Initializes: tilemap, collisionMap, tilemapWidth, tilemapHeight
 	Trace::GetInstance().GetStream() << tilemapWidth << ", " << tilemapHeight << std::endl;
@@ -40,6 +41,7 @@ Tilemap::~Tilemap()
 	delete[] collisionMap;
 	delete sprite;
 	delete spriteSource;
+	delete transform;
 	AEGfxTextureUnload(texture);
 	AEGfxMeshFree(meshQuad);
 }

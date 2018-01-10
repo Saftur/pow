@@ -83,6 +83,8 @@ public:
 
 	static Vector2D GetCamTranslation();
 
+	static void SetCamIsDirty(bool isDirty);
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Variables:
@@ -110,5 +112,6 @@ private:
 
 
 	static Vector2D camTranslation;
+	static bool camIsDirty;
 };
 //------------------------------------------------------------------------------

@@ -11,6 +11,7 @@
 #include "Sprite.h"
 #include "SpriteSource.h"
 #include "Mesh.h"
+#include "Transform.h"
 
 class Tilemap {
 public:
@@ -38,4 +39,5 @@ private:
 	SpriteSource* spriteSource;
 	AEGfxTexture* texture;
 	AEGfxVertexList* meshQuad;
+	Transform* transform;
 };
