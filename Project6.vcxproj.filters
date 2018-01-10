@@ -142,6 +142,9 @@
     <ClCompile Include="source\SoundManager.cpp">
       <Filter>Engine\Sound</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameStateDemo.cpp">
+      <Filter>Game\GameStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GameStateStub.h">
@@ -270,6 +273,9 @@
     </ClInclude>
     <ClInclude Include="Source\BehaviorButtonStub.h">
       <Filter>Engine\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateDemo.h">
+      <Filter>Game\GameStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

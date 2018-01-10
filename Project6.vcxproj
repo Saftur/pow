@@ -33,6 +33,7 @@
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\GameObjectManager.h" />
     <ClInclude Include="Source\GameStateAsteroids.h" />
+    <ClInclude Include="Source\GameStateDemo.h" />
     <ClInclude Include="Source\GameStateLevel1.h" />
     <ClInclude Include="Source\GameStateLevel2.h" />
     <ClInclude Include="Source\GameStateManager.h" />
@@ -69,6 +70,7 @@
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\GameObjectManager.cpp" />
     <ClCompile Include="Source\GameStateAsteroids.cpp" />
+    <ClCompile Include="Source\GameStateDemo.cpp" />
     <ClCompile Include="Source\GameStateLevel1.cpp" />
     <ClCompile Include="Source\GameStateLevel2.cpp" />
     <ClCompile Include="Source\GameStateManager.cpp" />
