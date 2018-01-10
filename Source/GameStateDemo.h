@@ -21,6 +21,10 @@
 // Forward References:
 //------------------------------------------------------------------------------
 
+class Tilemap;
+typedef struct AEGfxTexture AEGfxTexture;
+typedef struct AEGfxVertexList AEGfxVertexList;
+
 //------------------------------------------------------------------------------
 // Public Structures:
 //------------------------------------------------------------------------------
@@ -55,5 +59,13 @@ public:
 
 	// Unload the resources associated with the Demo game state.
 	static void Unload();
+
+private:
+	static Tilemap *tilemap;
+	static AEGfxTexture *textureHex;
+	static AEGfxVertexList *meshQuad;
+	static Sprite *spriteHex;
+	static SpriteSource *spriteSourceHex;
+	static Transform *transformHex;
 };
 /*----------------------------------------------------------------------------*/

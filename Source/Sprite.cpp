@@ -113,7 +113,7 @@ void Sprite::AdjustAlpha(float alphaAdjust)
 void Sprite::SetFrame(unsigned int frameIndexPain)
 {
 	// Validate frameIndex against sprite source's frame count
-	if (frameIndex > spriteSource->GetFrameCount())
+	if (frameIndexPain < 0 || frameIndexPain >= spriteSource->GetFrameCount())
 		return;
 
 	// Set the frame index

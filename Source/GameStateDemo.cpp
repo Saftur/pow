@@ -10,8 +10,11 @@
 //------------------------------------------------------------------------------
 
 #include "stdafx.h"
+#include <AEEngine.h>
 #include "GameStateManager.h"
 #include "GameStateDemo.h"
+#include "Tilemap.h"
+#include "Mesh.h"
 #include "Trace.h"
 
 //------------------------------------------------------------------------------
@@ -30,6 +33,13 @@
 // Private Variables:
 //------------------------------------------------------------------------------
 
+Tilemap *GameStateDemo::tilemap;
+AEGfxTexture *GameStateDemo::textureHex;
+AEGfxVertexList *GameStateDemo::meshQuad;
+Sprite *GameStateDemo::spriteHex;
+SpriteSource *GameStateDemo::spriteSourceHex;
+Transform *GameStateDemo::transformHex;
+
 //------------------------------------------------------------------------------
 // Private Function Declarations:
 //------------------------------------------------------------------------------
@@ -42,6 +52,14 @@
 void GameStateDemo::Load()
 {
 	Trace::GetInstance().GetStream() << "Demo: Load" << std::endl;
+	tilemap = new Tilemap("Assets\\Hexidecimal.png", "Data\\Tilemap1.txt", "data\\Tilemap1.collision.txt", 0, 0, 512, 512);
+	textureHex = AEGfxTextureLoad("Assets\\Hexidecimal.png");
+	meshQuad = MeshCreateQuad(32.0f, 32.0f, 0.25f, 0.25f, "Test Mesh");
+	spriteSourceHex = new SpriteSource(4, 4, textureHex);
+	spriteHex = new Sprite("Test Sprite");
+	spriteHex->SetMesh(meshQuad);
+	spriteHex->SetSpriteSource(spriteSourceHex);
+	transformHex = new Transform(0, 0);
 }
 
 // Initialize the memory associated with the Demo game state.
@@ -59,6 +77,21 @@ void GameStateDemo::Update(float dt)
 	UNREFERENCED_PARAMETER(dt);
 
 	Trace::GetInstance().GetStream() << "Demo: Update" << std::endl;
+	
+	s32 scrMouseX, scrMouseY;
+	float mouseX, mouseY;
+	AEInputGetCursorPosition(&scrMouseX, &scrMouseY);
+	AEGfxConvertScreenCoordinatesToWorld((float)scrMouseX, (float)scrMouseY, &mouseX, &mouseY);
+	Vector2D pos = tilemap->getPosOnMap({ mouseX, mouseY });
+
+	tilemap->Draw();
+
+	spriteHex->SetFrame((int)pos.X());
+	transformHex->SetTranslation({ mouseX - 32, mouseY - 32 });
+	spriteHex->Draw(*transformHex);
+	spriteHex->SetFrame((int)pos.Y());
+	transformHex->SetTranslation({ mouseX + 32, mouseY - 32 });
+	spriteHex->Draw(*transformHex);
 
 	//GameStateManager::GetInstance().SetNextState(GameStateTable::GsQuit);
 }
@@ -73,6 +106,12 @@ void GameStateDemo::Shutdown()
 void GameStateDemo::Unload()
 {
 	Trace::GetInstance().GetStream() << "Demo: Unload" << std::endl;
+	delete tilemap;
+	delete textureHex;
+	delete meshQuad;
+	delete spriteSourceHex;
+	delete spriteHex;
+	delete transformHex;
 }
 
 //------------------------------------------------------------------------------
