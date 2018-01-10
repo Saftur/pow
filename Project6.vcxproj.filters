@@ -43,6 +43,9 @@
     <Filter Include="Engine\Sound">
       <UniqueIdentifier>{b6342329-9d4c-47a5-824b-0c5c75c294cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Tilemap">
+      <UniqueIdentifier>{26f6a7a3-cd51-4873-a8dc-d6d4ac3d337b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -144,6 +147,9 @@
     </ClCompile>
     <ClCompile Include="Source\GameStateDemo.cpp">
       <Filter>Game\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tilemap.cpp">
+      <Filter>Engine\Tilemap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -276,6 +282,9 @@
     </ClInclude>
     <ClInclude Include="Source\GameStateDemo.h">
       <Filter>Game\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Tilemap.h">
+      <Filter>Engine\Tilemap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

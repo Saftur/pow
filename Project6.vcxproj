@@ -52,6 +52,7 @@
     <ClInclude Include="Source\System.h" />
     <ClInclude Include="Source\targetver.h" />
     <ClInclude Include="Source\Teleporter.h" />
+    <ClInclude Include="Source\Tilemap.h" />
     <ClInclude Include="Source\Trace.h" />
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\Vector2D.h" />
@@ -91,6 +92,7 @@
     </ClCompile>
     <ClCompile Include="Source\System.cpp" />
     <ClCompile Include="Source\Teleporter.cpp" />
+    <ClCompile Include="Source\Tilemap.cpp" />
     <ClCompile Include="Source\Trace.cpp" />
     <ClCompile Include="Source\Transform.cpp" />
     <ClCompile Include="Source\Vector2D.cpp" />
@@ -135,14 +137,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>.\AE\include;.\fmodAPI\inc;$(IncludePath)</IncludePath>
-    <LibraryPath>.\AE\lib;.\fmodAPI\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\AE\include;.\Visual Leak Detector\include;.\fmodAPI\inc;$(IncludePath)</IncludePath>
+    <LibraryPath>.\AE\lib;.\Visual Leak Detector\lib;.\fmodAPI\lib;$(LibraryPath)</LibraryPath>
     <CustomBuildAfterTargets />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>.\AE\include;$(IncludePath)</IncludePath>
-    <LibraryPath>.\AE\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\AE\include;.\Visual Leak Detector\include;$(IncludePath)</IncludePath>
+    <LibraryPath>.\AE\lib;.\Visual Leak Detector\lib;$(LibraryPath)</LibraryPath>
     <CustomBuildAfterTargets />
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
