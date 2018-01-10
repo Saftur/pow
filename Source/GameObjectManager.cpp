@@ -80,7 +80,6 @@ void GameObjectManager::Update(float dt)
 			}
 		}
 	}
-	Transform::SetCamIsDirty(false);
 }
 
 // Check collisions between pairs of objects.
@@ -110,6 +109,7 @@ void GameObjectManager::Draw(void)
 				gameObjectActiveList.objectList[i]->Draw();
 		}
 	}
+	Transform::SetCamIsDirty(false);
 }
 
 // Shutdown the game object manager.

@@ -45,7 +45,7 @@ public:
 		GsLast = GsNum - 1,
 
 		/* Specify the initial game state */
-		GsInitial = GsDemo,
+		GsInitial = GsAsteroids,
 	} GameStates;
 
 	//------------------------------------------------------------------------------

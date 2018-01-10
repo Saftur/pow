@@ -13,6 +13,7 @@ Description: Implementation of Transform.h functions and stuff.
 
 
 Vector2D Transform::camTranslation = { 0, 0 };
+bool Transform::camIsDirty = false;
 
 // Create a new transform object.
 // (Hint: Failing to initialize the scale values to non-zero values will result in invisible sprites.)
