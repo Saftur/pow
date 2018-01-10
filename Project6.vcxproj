@@ -137,14 +137,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>.\AE\include;.\Visual Leak Detector\include;.\fmodAPI\inc;$(IncludePath)</IncludePath>
-    <LibraryPath>.\AE\lib;.\Visual Leak Detector\lib;.\fmodAPI\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\AE\include;.\fmodAPI\inc;$(IncludePath)</IncludePath>
+    <LibraryPath>.\AE\lib;.\fmodAPI\lib;$(LibraryPath)</LibraryPath>
     <CustomBuildAfterTargets />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>.\AE\include;.\Visual Leak Detector\include;$(IncludePath)</IncludePath>
-    <LibraryPath>.\AE\lib;.\Visual Leak Detector\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\AE\include;$(IncludePath)</IncludePath>
+    <LibraryPath>.\AE\lib;$(LibraryPath)</LibraryPath>
     <CustomBuildAfterTargets />
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
