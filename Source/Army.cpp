@@ -25,10 +25,10 @@ const char *Army::GetName() const {
 	return name;
 }
 
-Army::Unit * Army::GetUnit(const char * name)
+Army::Unit * Army::GetUnit(const char * unitName)
 {
 	for (Unit *unit : units) {
-		if (strcmp(name, unit->name) == 0)
+		if (strcmp(unitName, unit->name) == 0)
 			return unit;
 	}
 	return nullptr;
