@@ -40,6 +40,7 @@
     <ClInclude Include="Source\GameStateMenu.h" />
     <ClInclude Include="Source\GameStateStub.h" />
     <ClInclude Include="Source\GameStateTable.h" />
+    <ClInclude Include="source\IOController.h" />
     <ClInclude Include="Source\Matrix2D.h" />
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\Physics.h" />
@@ -78,6 +79,7 @@
     <ClCompile Include="Source\GameStateMenu.cpp" />
     <ClCompile Include="Source\GameStateStub.cpp" />
     <ClCompile Include="Source\GameStateTable.cpp" />
+    <ClCompile Include="source\IOController.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Matrix2D.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
@@ -137,8 +139,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>.\AE\include;.\Visual Leak Detector\include;.\fmodAPI\inc;$(IncludePath)</IncludePath>
-    <LibraryPath>.\AE\lib;.\Visual Leak Detector\lib;.\fmodAPI\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\AE\include;.\fmodAPI\inc;$(IncludePath)</IncludePath>
+    <LibraryPath>.\AE\lib;.\fmodAPI\lib;$(LibraryPath)</LibraryPath>
     <CustomBuildAfterTargets />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

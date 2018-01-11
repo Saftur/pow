@@ -15,7 +15,6 @@
 #include "AEEngine.h"
 #include "GameStateManager.h"
 #include "System.h"
-#include <vld.h>
 
 //------------------------------------------------------------------------------
 // Main Function:
