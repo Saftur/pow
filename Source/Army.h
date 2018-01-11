@@ -10,19 +10,22 @@ public:
 	struct Unit {
 		enum Ability { NONE, ARMOR, BOW, BUILDER };
 
-		char name[100];
 		int hp;
 		int damage;
 		int speed;
 		Ability ability;
+		char name[100];
 	};
 
 	Army(const char *name);
 	~Army();
 
 	void AddUnit(Unit *unit);
+	void RemoveUnit(const char *unitName);
 	const char *GetName() const;
-	Unit *GetUnit(const char *name);
+	//const char **GetUnitNames() const;
+	//void CloneUnit(const char *unitName, Vector2D pos) const;
+	Unit *GetUnit(const char *unitName) const;
 
 private:
 	const char *name;

@@ -193,6 +193,25 @@ GameObject* GameObjectManager::GetObjectByName(const char* name)
 	return NULL;
 }
 
+vector<GameObject*> GameObjectManager::GetObjectsByName(const char * name)
+{
+	vector<GameObject*> objects;
+
+	for (int i = 0; i < objectListSize; i++)
+	{
+		if (gameObjectActiveList.objectList[i])
+		{
+			if (gameObjectActiveList.objectList[i])
+			{
+				if (gameObjectActiveList.objectList[i]->IsNamed(name))
+					objects.push_back(gameObjectActiveList.objectList[i]);
+			}
+		}
+	}
+
+	return objects;
+}
+
 // Returns a pointer to the first game object archetype matching the specified name.
 // (Hint: This function and the GameObjectManagerGetObjectByName functions require
 //    the same code.  Consider creating a single, private function that searches

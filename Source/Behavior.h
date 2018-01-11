@@ -51,6 +51,7 @@ public:
 	friend class BehaviorSpaceship;
 	friend class BehaviorLevelButton;
 	friend class BehaviorButtonStub;
+	friend class BehaviorUnit;
 
 	//------------------------------------------------------------------------------
 	// Public Functions:
