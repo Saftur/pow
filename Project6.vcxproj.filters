@@ -151,6 +151,9 @@
     <ClCompile Include="Source\Tilemap.cpp">
       <Filter>Engine\Tilemap</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Army.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GameStateStub.h">
@@ -285,6 +288,9 @@
     </ClInclude>
     <ClInclude Include="Source\Tilemap.h">
       <Filter>Engine\Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Army.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
