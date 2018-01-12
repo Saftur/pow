@@ -42,6 +42,17 @@ public:
 	//  parent = The object that owns this behavior.
 	BehaviorUnit(GameObject& parent, Army::Unit unit, vector<Vector2D> path);
 
+	Vector2D GetScrPos();
+	Vector2D GetMapPos();
+	Vector2D GetNextDir();
+	Vector2D GetNextScrPos();
+	Vector2D GetNextPos();
+
+	bool IsMoving();
+
+	bool IsAdjacent(BehaviorUnit *other);
+	bool WillBeAdjacent(BehaviorUnit *other);
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Functions:
@@ -85,15 +96,6 @@ private:
 	//	 behavior = Pointer to the behavior component.
 	//	 dt = Change in time (in seconds) since the last game loop.
 	static void Exit(Behavior& behavior);
-
-	Vector2D GetScrPos();
-	Vector2D GetMapPos();
-	Vector2D GetNextDir();
-	Vector2D GetNextScrPos();
-	Vector2D GetNextPos();
-
-	bool IsAdjacent(BehaviorUnit *other);
-	bool WillBeAdjacent(BehaviorUnit *other);
 
 	//------------------------------------------------------------------------------
 	// Private Variables:

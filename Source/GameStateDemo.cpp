@@ -48,6 +48,9 @@ Army *GameStateDemo::army2;
 vector<Vector2D> GameStateDemo::path1;
 vector<Vector2D> GameStateDemo::path2;
 
+int GameStateDemo::frontLine1;
+int GameStateDemo::frontLine2;
+
 //------------------------------------------------------------------------------
 // Private Function Declarations:
 //------------------------------------------------------------------------------
@@ -103,6 +106,9 @@ void GameStateDemo::Init()
 	//CreateUnit(*army2, "Unit1", { 3, 2 }, path2);
 	//CreateUnit(*army2, "Unit1", { 3, 3 }, path2);
 	//CreateUnit(*army1, "Unit1", { 0, 3 }, path);
+
+	frontLine1 = 0;
+	frontLine2 = 5;
 }
 
 // Update the Demo game state.
@@ -142,7 +148,8 @@ void GameStateDemo::Update(float dt)
 
 	tilemap->Draw();
 
-	//GameStateManager::GetInstance().SetNextState(GameStateTable::GsQuit);
+	if (AEInputCheckTriggered(' '))
+		GameStateManager::GetInstance().SetNextState(GameStateTable::GsRestart);
 }
 
 // Shutdown any memory associated with the Demo game state.
@@ -175,8 +182,9 @@ void GameStateDemo::Unload()
 
 void GameStateDemo::CreateUnit(Army &army, const char * name, Vector2D pos, vector<Vector2D> path)
 {
+	if (!LegalSpawn(army, pos)) return;
 	Army::Unit *unit = army.GetUnit(name);
-	if (!name) return;
+	if (!unit) return;
 
 	GameObject* go = new GameObject("Unit");
 
@@ -201,4 +209,22 @@ void GameStateDemo::CreateUnit(Army &army, const char * name, Vector2D pos, vect
 	//go->SetCollider(*c);
 
 	GameObjectManager::GetInstance().Add(*go);
+}
+
+bool GameStateDemo::LegalSpawn(Army & army, Vector2D pos)
+{
+	vector<GameObject*> units = GameObjectManager::GetInstance().GetObjectsByName("Unit");
+	for (GameObject *unit : units) {
+		BehaviorUnit *bu = (BehaviorUnit*)(unit->GetBehavior());
+		Transform *t = unit->GetTransform();
+		if (t) {
+			if (pos == tilemap->getPosOnMap(t->GetTranslation()))
+				return false;
+		}
+		if (bu) {
+			if (pos == bu->GetNextPos() && bu->IsMoving())
+				return false;
+		}
+	}
+	return (&army == army1 && pos.X() <= frontLine1) || (&army == army2 && pos.X() >= frontLine2);
 }

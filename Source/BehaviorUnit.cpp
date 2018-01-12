@@ -131,19 +131,13 @@ void BehaviorUnit::Init(Behavior& behavior)
 			Transform *t = obj->GetTransform();
 			if (!bu || !t) continue; // If missing behavior or transform, skip
 			if (bu->base.stateCurr == cUnitMoving || bu->base.stateCurr == cUnitWaiting/*cUnitDoneMove*/) { // If other already moving
-				Vector2D sp = self.GetMapPos();
-				Vector2D snd = self.GetNextDir();
-				Vector2D snp = self.GetNextPos();
-				Vector2D op = bu->GetMapPos();
-				Vector2D ond = bu->GetNextDir();
-				Vector2D onp = bu->GetNextPos();
 				if (self.unitData.army != bu->unitData.army && (self.IsAdjacent(bu) || (bu->base.stateCurr == cUnitMoving && self.WillBeAdjacent(bu)))) {
 					self.target = bu;
 					behavior.stateCurr = cUnitWaiting;
 					behavior.stateNext = cUnitWaiting;
 					break;
 				}
-				if ((self.GetNextPos() == bu->GetMapPos()/* && self.GetNextDir() != bu->GetNextDir()*/) || self.GetNextPos() == bu->GetNextPos()) {
+				if ((self.GetNextPos() == bu->GetMapPos()/* && self.GetNextDir() != bu->GetNextDir()*/) || (self.GetNextPos() == bu->GetNextPos() && bu->base.stateCurr == cUnitMoving)) {
 					behavior.stateCurr = cUnitWaiting; // Skip init
 					behavior.stateNext = cUnitWaiting;
 					break;
@@ -261,6 +255,11 @@ Vector2D BehaviorUnit::GetNextScrPos()
 Vector2D BehaviorUnit::GetNextPos()
 {
 	return startPos+GetNextDir();
+}
+
+bool BehaviorUnit::IsMoving()
+{
+	return base.stateCurr == cUnitMoving;
 }
 
 bool BehaviorUnit::IsAdjacent(BehaviorUnit * other)

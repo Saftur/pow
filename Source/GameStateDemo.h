@@ -77,6 +77,10 @@ private:
 	static vector<Vector2D> path1;
 	static vector<Vector2D> path2;
 
+	static int frontLine1;
+	static int frontLine2;
+
 	static void CreateUnit(Army &army, const char *name, Vector2D pos, vector<Vector2D> path = {});
+	static bool LegalSpawn(Army &army, Vector2D pos);
 };
 /*----------------------------------------------------------------------------*/
