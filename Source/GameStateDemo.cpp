@@ -38,18 +38,15 @@
 //------------------------------------------------------------------------------
 
 Tilemap *GameStateDemo::tilemap;
-// TODO Remove test vars
-AEGfxTexture *GameStateDemo::textureHex;
-AEGfxVertexList *GameStateDemo::meshQuad;
-Sprite *GameStateDemo::spriteHex;
-SpriteSource *GameStateDemo::spriteSourceHex;
-Transform *GameStateDemo::transformHex;
-// End test vars
 AEGfxTexture *GameStateDemo::textureUnit;
 AEGfxVertexList *GameStateDemo::meshUnit;
 SpriteSource *GameStateDemo::spriteSourceUnit;
 
 Army *GameStateDemo::army1;
+Army *GameStateDemo::army2;
+
+vector<Vector2D> GameStateDemo::path1;
+vector<Vector2D> GameStateDemo::path2;
 
 //------------------------------------------------------------------------------
 // Private Function Declarations:
@@ -63,16 +60,7 @@ Army *GameStateDemo::army1;
 void GameStateDemo::Load()
 {
 	Trace::GetInstance().GetStream() << "Demo: Load" << std::endl;
-	tilemap = new Tilemap("Assets\\Hexidecimal.png", "Data\\Tilemap1.txt", "data\\Tilemap1.collision.txt", 0, 0, 512, 512);
-	// TODO Remove testing
-	textureHex = AEGfxTextureLoad("Assets\\Hexidecimal.png");
-	meshQuad = MeshCreateQuad(32.0f, 32.0f, 0.25f, 0.25f, "Test Mesh");
-	spriteSourceHex = new SpriteSource(4, 4, textureHex);
-	spriteHex = new Sprite("Test Sprite");
-	spriteHex->SetMesh(meshQuad);
-	spriteHex->SetSpriteSource(spriteSourceHex);
-	transformHex = new Transform(0, 0);
-	// End testing
+	tilemap = new Tilemap("Assets\\Hexidecimal.png", "Data\\Tilemap1.txt", "data\\Tilemap1.collision.txt", 0, 0, 768, 512, 4, 4);
 	textureUnit = AEGfxTextureLoad("Assets\\MonkeyStand.png");
 	meshUnit = MeshCreateQuad(32.0f, 32.0f, 1.0f, 1.0f, "Unit Mesh");
 	spriteSourceUnit = new SpriteSource(1, 1, textureUnit);
@@ -86,11 +74,35 @@ void GameStateDemo::Init()
 	//									  hp, atk, spd
 	Army::Unit *unit1 = new Army::Unit({ 100, 100, 100, Army::Unit::NONE });
 	strcpy(unit1->name, "Unit1");
+	Army::Unit *unit2 = new Army::Unit({ 100, 100, 100, Army::Unit::NONE });
+	strcpy(unit2->name, "Unit1");
 	army1 = new Army("Army1");
 	army1->AddUnit(unit1);
-	vector<Vector2D> path;
-	path.push_back({ 1, 0 });
-	CreateUnit(*army1, "Unit1", { 0, 0 }, path);
+	army2 = new Army("Army2");
+	army2->AddUnit(unit2);
+	//vector<Vector2D> path;
+	path1.push_back({ 1, 0 });
+	path1.push_back({ 1, 0 });
+	path1.push_back({ 1, 0 });
+	path1.push_back({ 1, 0 });
+	path1.push_back({ 1, 0 });
+	//vector<Vector2D> path2;
+	path2.push_back({ -1, 0 });
+	path2.push_back({ -1, 0 });
+	path2.push_back({ -1, 0 });
+	path2.push_back({ -1, 0 });
+	path2.push_back({ -1, 0 });
+	//CreateUnit(*army1, "Unit1", { 3, 0 }, path1);
+	//CreateUnit(*army1, "Unit1", { 2, 0 }, path1);
+	//CreateUnit(*army1, "Unit1", { 0, 0 }, path1);
+	//CreateUnit(*army1, "Unit1", { 0, 0 }, path);
+	//CreateUnit(*army2, "Unit1", { 3, 0 }, path2);
+	//CreateUnit(*army2, "Unit1", { 3, 1 }, path2);
+	//CreateUnit(*army1, "Unit1", { 0, 1 }, path);
+	//CreateUnit(*army1, "Unit1", { 0, 2 }, path);
+	//CreateUnit(*army2, "Unit1", { 3, 2 }, path2);
+	//CreateUnit(*army2, "Unit1", { 3, 3 }, path2);
+	//CreateUnit(*army1, "Unit1", { 0, 3 }, path);
 }
 
 // Update the Demo game state.
@@ -103,28 +115,32 @@ void GameStateDemo::Update(float dt)
 
 	Trace::GetInstance().GetStream() << "Demo: Update" << std::endl;
 	
-	// TODO Remove testing
-	// Get mouse pos in world
-	s32 scrMouseX, scrMouseY;
-	float mouseX, mouseY;
-	AEInputGetCursorPosition(&scrMouseX, &scrMouseY);
-	AEGfxConvertScreenCoordinatesToWorld((float)scrMouseX, (float)scrMouseY, &mouseX, &mouseY);
-
-	// Get mouse pos on tilemap
-	Vector2D pos = tilemap->getPosOnMap({ mouseX, mouseY });
-	// End testing
+	if (AEInputCheckTriggered('1')) {
+		CreateUnit(*army1, "Unit1", { 0, 0 }, path1);
+	}
+	if (AEInputCheckTriggered('Q')) {
+		CreateUnit(*army1, "Unit1", { 0, 1 }, path1);
+	}
+	if (AEInputCheckTriggered('A')) {
+		CreateUnit(*army1, "Unit1", { 0, 2 }, path1);
+	}
+	if (AEInputCheckTriggered('Z')) {
+		CreateUnit(*army1, "Unit1", { 0, 3 }, path1);
+	}
+	if (AEInputCheckTriggered('7')) {
+		CreateUnit(*army2, "Unit1", { 5, 0 }, path2);
+	}
+	if (AEInputCheckTriggered('U')) {
+		CreateUnit(*army2, "Unit1", { 5, 1 }, path2);
+	}
+	if (AEInputCheckTriggered('J')) {
+		CreateUnit(*army2, "Unit1", { 5, 2 }, path2);
+	}
+	if (AEInputCheckTriggered('M')) {
+		CreateUnit(*army2, "Unit1", { 5, 3 }, path2);
+	}
 
 	tilemap->Draw();
-
-	// TODO Remove testing
-	// Draw x, y coordinates under mouse cursor
-	spriteHex->SetFrame((int)pos.X());
-	transformHex->SetTranslation({ mouseX - 32, mouseY - 32 });
-	spriteHex->Draw(*transformHex);
-	spriteHex->SetFrame((int)pos.Y());
-	transformHex->SetTranslation({ mouseX + 32, mouseY - 32 });
-	spriteHex->Draw(*transformHex);
-	// End testing
 
 	//GameStateManager::GetInstance().SetNextState(GameStateTable::GsQuit);
 }
@@ -136,7 +152,11 @@ void GameStateDemo::Shutdown()
 
 	GameObjectManager::GetInstance().Shutdown();
 
+	path1.clear();
+	path2.clear();
+
 	delete army1;
+	delete army2;
 }
 
 // Unload the resources associated with the Demo game state.
@@ -144,14 +164,7 @@ void GameStateDemo::Unload()
 {
 	Trace::GetInstance().GetStream() << "Demo: Unload" << std::endl;
 	delete tilemap;
-	// TODO Remove test vars
-	delete textureHex;
-	AEGfxMeshFree(meshQuad);
-	delete spriteSourceHex;
-	delete spriteHex;
-	delete transformHex;
-	// End test vars
-	delete textureUnit;
+	AEGfxTextureUnload(textureUnit);
 	AEGfxMeshFree(meshUnit);
 	delete spriteSourceUnit;
 }
@@ -170,6 +183,7 @@ void GameStateDemo::CreateUnit(Army &army, const char * name, Vector2D pos, vect
 	Vector2D screenPos = tilemap->getPosOnScreen(pos);
 	Transform* t = new Transform(screenPos.X(), screenPos.Y());
 	//t->SetScale({});
+	go->SetTransform(*t);
 
 	Sprite* sprite = new Sprite("Unit Sprite");
 	sprite->SetMesh(meshUnit);
@@ -181,7 +195,6 @@ void GameStateDemo::CreateUnit(Army &army, const char * name, Vector2D pos, vect
 
 	Behavior* b = (Behavior*)new BehaviorUnit(*go, *unit, path);
 
-	go->SetTransform(*t);
 	go->SetSprite(*sprite);
 	go->SetPhysics(*p);
 	go->SetBehavior(*b);

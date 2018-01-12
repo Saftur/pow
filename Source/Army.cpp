@@ -19,6 +19,7 @@ Army::~Army() {
 void Army::AddUnit(Unit * unit)
 {
 	units.push_back(unit);
+	unit->army = this;
 }
 
 void Army::RemoveUnit(const char * unitName)

@@ -17,7 +17,8 @@
 class Tilemap {
 public:
 	Tilemap(const char* spritesheetFilename, const char* tilemapFilename, const char* collisionMapFilename, 
-		int onScreenOffsetX, int onScreenOffsetY, int onScreenWidth, int onScreenHeight);
+		int onScreenOffsetX, int onScreenOffsetY, int onScreenWidth, int onScreenHeight, 
+		int spritesheetWidth, int spritesheetHeight);
 	~Tilemap();
 	void Draw();
 	Vector2D getPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile = nullptr);
@@ -27,6 +28,8 @@ public:
 
 	int getTileWidth();
 	int getTileHeight();
+	int getTilemapWidth();
+	int getTilemapHeight();
 
 private:
 	void readFiles(const char* tilemapFilename, const char* collisionMapFilename);

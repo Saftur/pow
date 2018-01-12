@@ -149,7 +149,7 @@ void GameObjectManager::Add(GameObject& gameObject)
 	if (gameObjectActiveList.objectCount == gameObjectActiveList.objectMax)
 		return;
 
-	gameObjectActiveList.objectList[gameObjectActiveList.objectCount++] = new GameObject(gameObject);
+	gameObjectActiveList.objectList[gameObjectActiveList.objectCount++] = &gameObject;
 }
 
 // Add a game object to the game object archetype list.
@@ -182,11 +182,8 @@ GameObject* GameObjectManager::GetObjectByName(const char* name)
 	{
 		if (gameObjectActiveList.objectList[i])
 		{
-			if (gameObjectActiveList.objectList[i])
-			{
-				if (gameObjectActiveList.objectList[i]->IsNamed(name))
-					return gameObjectActiveList.objectList[i];
-			}
+			if (gameObjectActiveList.objectList[i]->IsNamed(name))
+				return gameObjectActiveList.objectList[i];
 		}
 	}
 
@@ -199,13 +196,10 @@ vector<GameObject*> GameObjectManager::GetObjectsByName(const char * name)
 
 	for (int i = 0; i < objectListSize; i++)
 	{
-		if (gameObjectActiveList.objectList[i])
+		if (gameObjectActiveList.objectList[i] && !(gameObjectActiveList.objectList[i]->IsDestroyed()))
 		{
-			if (gameObjectActiveList.objectList[i])
-			{
-				if (gameObjectActiveList.objectList[i]->IsNamed(name))
-					objects.push_back(gameObjectActiveList.objectList[i]);
-			}
+			if (gameObjectActiveList.objectList[i]->IsNamed(name))
+				objects.push_back(gameObjectActiveList.objectList[i]);
 		}
 	}
 

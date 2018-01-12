@@ -11,8 +11,11 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include "System.h"
+
 Tilemap::Tilemap(const char* spritesheetFilename, const char* tilemapFilename, const char* collisionMapFilename, 
-	int onScreenOffsetX, int onScreenOffsetY, int onScreenWidth, int onScreenHeight) :
+	int onScreenOffsetX, int onScreenOffsetY, int onScreenWidth, int onScreenHeight, 
+		int spritesheetWidth, int spritesheetHeight) :
 		offsetX(onScreenOffsetX), offsetY(onScreenOffsetY), width(onScreenWidth), height(onScreenHeight), 
 		sprite(new Sprite("TilemapSprite")), texture(AEGfxTextureLoad(spritesheetFilename)), 
 		transform(new Transform(0.0f, 0.0f))
@@ -29,8 +32,8 @@ Tilemap::Tilemap(const char* spritesheetFilename, const char* tilemapFilename, c
 	tileWidth = onScreenWidth / tilemapWidth;
 	tileHeight = onScreenHeight / tilemapHeight;
 	Trace::GetInstance().GetStream() << tileWidth << ", " << tileHeight << std::endl;
-	meshQuad = MeshCreateQuad((float)tileWidth / 2.0f, (float)tileHeight / 2.0f, 1.0f / tilemapWidth, 1.0f / tilemapHeight, "TilemapMesh");
-	spriteSource = new SpriteSource(tilemapWidth, tilemapHeight, texture);
+	meshQuad = MeshCreateQuad((float)tileWidth / 2.0f, (float)tileHeight / 2.0f, 1.0f / spritesheetWidth, 1.0f / spritesheetHeight, "TilemapMesh");
+	spriteSource = new SpriteSource(spritesheetWidth, spritesheetHeight, texture);
 	sprite->SetMesh(meshQuad);
 	sprite->SetSpriteSource(spriteSource);
 }
@@ -70,7 +73,7 @@ Vector2D Tilemap::getPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile)
 	pos.Y((float)(int)((-screenPos.Y() - offsetY + (height / 2)) / tileHeight));
 	if (offsetFromTile) {
 		offsetFromTile->X(screenPos.X() - (offsetX - (width / 2) + (tileWidth / 2) + (tileWidth * pos.X())));
-		offsetFromTile->Y(screenPos.Y() - (offsetY - (height / 2) + (tileHeight / 2) + (tileHeight * pos.Y())));
+		offsetFromTile->Y(-screenPos.Y() - -(offsetY - (height / 2) + (tileHeight / 2) + (tileHeight * pos.Y())));
 	}
 	return pos;
 }
@@ -79,7 +82,7 @@ Vector2D Tilemap::getPosOnScreen(Vector2D tilePos)
 {
 	Vector2D pos;
 	pos.X(tileWidth * tilePos.X() + offsetX - width / 2 + tileWidth / 2);
-	pos.Y(tileHeight * tilePos.Y() + offsetY - height / 2 + tileHeight / 2);
+	pos.Y(-(tileHeight * tilePos.Y() + offsetY - height / 2 + tileHeight / 2));
 	return pos;
 }
 
@@ -159,6 +162,16 @@ int Tilemap::getTileWidth()
 int Tilemap::getTileHeight()
 {
 	return tileHeight;
+}
+
+int Tilemap::getTilemapWidth()
+{
+	return tilemapWidth;
+}
+
+int Tilemap::getTilemapHeight()
+{
+	return tilemapHeight;
 }
 
 void Tilemap::readFiles(const char* tilemapFilename, const char* collisionMapFilename)

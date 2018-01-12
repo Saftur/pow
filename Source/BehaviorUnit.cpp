@@ -23,7 +23,7 @@
 #include "Trace.h"
 
 //------------------------------------------------------------------------------
-enum UnitState { cUnitInvalid, cUnitWaiting, cUnitMoving, cUnitCheckMove, };
+enum UnitState { cUnitInvalid, cUnitWaiting, cUnitMoving, cUnitCheckMove, cUnitAttacking };
 //------------------------------------------------------------------------------
 // Public Consts:
 //------------------------------------------------------------------------------
@@ -50,8 +50,11 @@ BehaviorUnit::BehaviorUnit(GameObject& parent, Army::Unit unit, vector<Vector2D>
 	base.clone = BehaviorUnit::Clone;
 	base.destroy = BehaviorUnit::Destroy;
 	unitData = unit;
-	hp = unitData.hp;
+	hp = (float)(unitData.hp);
+	startPos = GetMapPos();
 	this->path = path;
+	target = nullptr;
+	attackTimer = 0;
 }
 
 //------------------------------------------------------------------------------
@@ -73,8 +76,11 @@ BehaviorUnit::BehaviorUnit(const Behavior& other, GameObject& parent)
 	base.clone = other.clone;
 	base.destroy = other.destroy;
 	unitData = ((const BehaviorUnit&)other).unitData;
-	hp = unitData.hp;
+	hp = (float)(unitData.hp);
+	startPos = GetMapPos();
 	path = ((const BehaviorUnit&)other).path;
+	target = ((const BehaviorUnit&)other).target;
+	attackTimer = 0;
 }
 
 // Clone an advanced behavior and return a pointer to the cloned object.
@@ -106,14 +112,38 @@ void BehaviorUnit::Init(Behavior& behavior)
 	switch (behavior.stateCurr)
 	{
 	case cUnitMoving:
+		Vector2D nextPos = self.GetNextPos();
+		while (nextPos.X() < 0 || nextPos.Y() < 0 ||
+			nextPos.X() >= GameStateDemo::tilemap->getTilemapWidth() ||
+			nextPos.Y() >= GameStateDemo::tilemap->getTilemapHeight()) {
+			self.path.erase(self.path.begin());
+			nextPos = self.GetNextPos();
+		}
+		if (self.path.empty()) {
+			behavior.stateCurr = cUnitWaiting;
+			behavior.stateNext = cUnitWaiting;
+			break;
+		}
 		behavior.stateCurr = cUnitCheckMove; // Prevent self-detection
 		vector<GameObject*> units = GameObjectManager::GetInstance().GetObjectsByName("Unit");
 		for (GameObject* obj : units) {
 			BehaviorUnit *bu = (BehaviorUnit*)(obj->GetBehavior());
 			Transform *t = obj->GetTransform();
 			if (!bu || !t) continue; // If missing behavior or transform, skip
-			if (bu->base.stateCurr == cUnitMoving) { // If other already moving
-				if (bu->GetNextPos() == self.GetNextPos()) {
+			if (bu->base.stateCurr == cUnitMoving || bu->base.stateCurr == cUnitWaiting/*cUnitDoneMove*/) { // If other already moving
+				Vector2D sp = self.GetMapPos();
+				Vector2D snd = self.GetNextDir();
+				Vector2D snp = self.GetNextPos();
+				Vector2D op = bu->GetMapPos();
+				Vector2D ond = bu->GetNextDir();
+				Vector2D onp = bu->GetNextPos();
+				if (self.unitData.army != bu->unitData.army && (self.IsAdjacent(bu) || (bu->base.stateCurr == cUnitMoving && self.WillBeAdjacent(bu)))) {
+					self.target = bu;
+					behavior.stateCurr = cUnitWaiting;
+					behavior.stateNext = cUnitWaiting;
+					break;
+				}
+				if ((self.GetNextPos() == bu->GetMapPos()/* && self.GetNextDir() != bu->GetNextDir()*/) || self.GetNextPos() == bu->GetNextPos()) {
 					behavior.stateCurr = cUnitWaiting; // Skip init
 					behavior.stateNext = cUnitWaiting;
 					break;
@@ -127,6 +157,7 @@ void BehaviorUnit::Init(Behavior& behavior)
 			direction.Y(direction.Y() * GameStateDemo::tilemap->getTileHeight());
 			direction *= (float)(self.unitData.speed);
 			direction /= 100;
+			direction.Y(-direction.Y());
 			behavior.parent.GetPhysics()->SetVelocity(direction);
 		}
 		break;
@@ -142,11 +173,51 @@ void BehaviorUnit::Update(Behavior& behavior, float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
 
-	//BehaviorUnit &self = *((BehaviorUnit*)(&behavior));
+	BehaviorUnit &self = *((BehaviorUnit*)(&behavior));
+	if (self.hp <= 0) {
+		self.base.parent.Destroy();
+		return;
+	}
+
 	switch (behavior.stateCurr)
 	{
-	case cUnitMoving:
-		//if (self.GetScrPos())
+	case cUnitMoving: {
+		Vector2D dir = self.GetNextDir();
+		Vector2D scrPos = self.GetScrPos();
+		Vector2D nextScrPos = self.GetNextScrPos();
+		Vector2D diff = scrPos - nextScrPos;
+		if (diff.X() * dir.X() >= 0 && diff.Y() * -dir.Y() >= 0) {
+			behavior.parent.GetPhysics()->SetVelocity({ 0, 0 });
+			self.path.erase(self.path.begin());
+			behavior.stateCurr = cUnitWaiting;//cUnitDoneMove;
+			self.startPos = self.GetMapPos();
+			//Init(behavior);
+		}
+		/*if (dir.X() != 0) {
+			if (scrPos.X()*dir.X() >= nextScrPos.X()*dir.X()) {
+				scrPos.X(nextScrPos.X());
+			}
+		}
+		if (dir.Y() != 0) {
+			if (scrPos.Y()*dir.Y() >= nextScrPos.Y()*dir.Y()) {
+				scrPos.Y(nextScrPos.Y());
+			}
+		}*/
+	}
+		break;
+	case cUnitWaiting:
+		if (self.target) {
+			if (self.IsAdjacent(self.target) && !(self.target->base.parent.IsDestroyed())) {
+				if (self.attackTimer <= 0) {
+					//Trace::GetInstance().GetStream() << "Attack!" << std::endl;
+					self.target->hp -= (float)(self.unitData.damage) / 4;
+					if (self.target->hp <= 0) self.target = nullptr;
+					self.attackTimer = self.attackCooldown;
+				} else self.attackTimer -= dt;
+				break;
+			} else self.target = nullptr;
+		}
+		behavior.stateNext = cUnitMoving;
 		break;
 	}
 }
@@ -163,22 +234,45 @@ void BehaviorUnit::Exit(Behavior& behavior)
 
 Vector2D BehaviorUnit::GetScrPos()
 {
+	if (!(base.parent.GetTransform()))
+		return { 0, 0 };
 	return base.parent.GetTransform()->GetTranslation();
 }
 
 Vector2D BehaviorUnit::GetMapPos()
 {
+	if (!(base.parent.GetTransform()))
+		return { 0, 0 };
 	return GameStateDemo::tilemap->getPosOnMap(GetScrPos());
 }
 
 Vector2D BehaviorUnit::GetNextDir()
 {
+	if (path.empty())
+		return { 0, 0 };
 	return path[0];
+}
+
+Vector2D BehaviorUnit::GetNextScrPos()
+{
+	return GameStateDemo::tilemap->getPosOnScreen(GetNextPos());
 }
 
 Vector2D BehaviorUnit::GetNextPos()
 {
-	return GetMapPos()+GetNextDir();
+	return startPos+GetNextDir();
+}
+
+bool BehaviorUnit::IsAdjacent(BehaviorUnit * other)
+{
+	Vector2D diff = GetMapPos() - other->GetMapPos();
+	return diff.Magnitude() <= 1;
+}
+
+bool BehaviorUnit::WillBeAdjacent(BehaviorUnit * other)
+{
+	Vector2D diff = GetMapPos() - other->GetNextPos();
+	return diff.Magnitude() <= 1;
 }
 
 //------------------------------------------------------------------------------

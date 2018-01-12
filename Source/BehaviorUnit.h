@@ -89,7 +89,11 @@ private:
 	Vector2D GetScrPos();
 	Vector2D GetMapPos();
 	Vector2D GetNextDir();
+	Vector2D GetNextScrPos();
 	Vector2D GetNextPos();
+
+	bool IsAdjacent(BehaviorUnit *other);
+	bool WillBeAdjacent(BehaviorUnit *other);
 
 	//------------------------------------------------------------------------------
 	// Private Variables:
@@ -100,8 +104,14 @@ private:
 
 	// Add unit-specific behavior variables.
 	Army::Unit unitData;
-	int hp;
+	float hp;
+	Vector2D startPos;
 	vector<Vector2D> path;
+	BehaviorUnit *target;
+	//bool follow;
+	float attackTimer;
+
+	const float attackCooldown = 0.5;
 
 	//------------------------------------------------------------------------------
 	// Private Consts:

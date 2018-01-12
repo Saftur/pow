@@ -14,6 +14,7 @@ public:
 		int damage;
 		int speed;
 		Ability ability;
+		Army *army;
 		char name[100];
 	};
 

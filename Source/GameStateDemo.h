@@ -67,20 +67,16 @@ public:
 	static Tilemap *tilemap;
 
 private:
-	// TODO Remove test vars
-	static AEGfxTexture *textureHex;
-	static AEGfxVertexList *meshQuad;
-	static Sprite *spriteHex;
-	static SpriteSource *spriteSourceHex;
-	static Transform *transformHex;
-	// End test vars
-
 	static AEGfxTexture *textureUnit;
 	static AEGfxVertexList *meshUnit;
 	static SpriteSource *spriteSourceUnit;
 
 	static Army *army1;
+	static Army *army2;
 
-	static void CreateUnit(Army &army, const char *name, Vector2D pos, vector<Vector2D> path);
+	static vector<Vector2D> path1;
+	static vector<Vector2D> path2;
+
+	static void CreateUnit(Army &army, const char *name, Vector2D pos, vector<Vector2D> path = {});
 };
 /*----------------------------------------------------------------------------*/
