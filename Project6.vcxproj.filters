@@ -127,9 +127,6 @@
     <ClCompile Include="Source\Random.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameStateMenu.cpp">
-      <Filter>Game\GameStates</Filter>
-    </ClCompile>
     <ClCompile Include="Source\BehaviorAsteroid.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
@@ -150,6 +147,9 @@
     </ClCompile>
     <ClCompile Include="Source\Tilemap.cpp">
       <Filter>Engine\Tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendertext.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -262,9 +262,6 @@
     <ClInclude Include="fmodAPI\inc\fmod_output.h">
       <Filter>fmod</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameStateMenu.h">
-      <Filter>Game\GameStates</Filter>
-    </ClInclude>
     <ClInclude Include="source\SoundManager.h">
       <Filter>Engine\Sound</Filter>
     </ClInclude>
@@ -285,6 +282,9 @@
     </ClInclude>
     <ClInclude Include="Source\Tilemap.h">
       <Filter>Engine\Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendertext.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
