@@ -17,6 +17,7 @@
 #include "GameObjectManager.h"
 #include "Random.h"
 #include "SoundManager.h"
+#include "IOController.h"
 
 //------------------------------------------------------------------------------
 // Private Structures:

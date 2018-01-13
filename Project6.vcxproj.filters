@@ -46,6 +46,9 @@
     <Filter Include="Engine\Tilemap">
       <UniqueIdentifier>{26f6a7a3-cd51-4873-a8dc-d6d4ac3d337b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\I/O">
+      <UniqueIdentifier>{2e9b1b5b-ed9b-4200-a64c-607a3e0d94dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -150,6 +153,9 @@
     </ClCompile>
     <ClCompile Include="Source\Tilemap.cpp">
       <Filter>Engine\Tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="source\IOController.cpp">
+      <Filter>Engine\I/O</Filter>
     </ClCompile>
     <ClCompile Include="Source\Army.cpp">
       <Filter>Game</Filter>
@@ -291,6 +297,9 @@
     </ClInclude>
     <ClInclude Include="Source\Tilemap.h">
       <Filter>Engine\Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="source\IOController.h">
+      <Filter>Engine\I/O</Filter>
     </ClInclude>
     <ClInclude Include="Source\Army.h">
       <Filter>Game</Filter>

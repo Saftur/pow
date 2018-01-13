@@ -2,12 +2,13 @@
 #include "stdafx.h"
 #include "Army.h"
 #include "GameObjectManager.h"
+#include "IOController.h"
 
 
 Army::Army(const char *name) :
 	name(name)
 {
-
+	IOController::GetInstance().LoadArmy(this);
 }
 
 Army::~Army() {

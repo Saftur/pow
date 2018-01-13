@@ -39,7 +39,7 @@ enum UnitState { cUnitInvalid, cUnitWaiting, cUnitMoving, cUnitCheckMove, cUnitA
 // Allocate a new (Unit) behavior component.
 // Params:
 //  parent = The object that owns this behavior.
-BehaviorUnit::BehaviorUnit(GameObject& parent, Army::Unit unit, vector<Vector2D> path)
+BehaviorUnit::BehaviorUnit(GameObject& parent, Army::Unit unit, vector<Vector2D> path, GameObject* ability)
 	: base(parent)
 {
 	base.stateCurr = cUnitInvalid;
@@ -55,6 +55,8 @@ BehaviorUnit::BehaviorUnit(GameObject& parent, Army::Unit unit, vector<Vector2D>
 	this->path = path;
 	target = nullptr;
 	attackTimer = 0;
+
+	abilityOverlay = ability;
 }
 
 //------------------------------------------------------------------------------
@@ -153,6 +155,7 @@ void BehaviorUnit::Init(Behavior& behavior)
 			direction /= 100;
 			direction.Y(-direction.Y());
 			behavior.parent.GetPhysics()->SetVelocity(direction);
+			self.abilityOverlay->GetPhysics()->SetVelocity(direction);
 		}
 		break;
 	}
@@ -170,6 +173,7 @@ void BehaviorUnit::Update(Behavior& behavior, float dt)
 	BehaviorUnit &self = *((BehaviorUnit*)(&behavior));
 	if (self.hp <= 0) {
 		self.base.parent.Destroy();
+		self.abilityOverlay->Destroy();
 		return;
 	}
 
@@ -182,6 +186,7 @@ void BehaviorUnit::Update(Behavior& behavior, float dt)
 		Vector2D diff = scrPos - nextScrPos;
 		if (diff.X() * dir.X() >= 0 && diff.Y() * -dir.Y() >= 0) {
 			behavior.parent.GetPhysics()->SetVelocity({ 0, 0 });
+			self.abilityOverlay->GetPhysics()->SetVelocity({ 0, 0 });
 			self.path.erase(self.path.begin());
 			behavior.stateCurr = cUnitWaiting;//cUnitDoneMove;
 			self.startPos = self.GetMapPos();

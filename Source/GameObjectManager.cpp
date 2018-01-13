@@ -15,6 +15,7 @@
 
 #include "stdafx.h"
 #include "GameObjectManager.h"
+#include "AEEngine.h"
 
 //------------------------------------------------------------------------------
 
@@ -101,6 +102,8 @@ void GameObjectManager::CheckCollisions()
 // Draw all game objects in the active game object list.
 void GameObjectManager::Draw(void)
 {
+	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+
 	for (int i = 0; i < objectListSize; i++)
 	{
 		if (gameObjectActiveList.objectList[i])

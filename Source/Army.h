@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include "Sprite.h"
 using std::vector;
 
 class GameObject;
@@ -16,11 +17,12 @@ public:
 		Ability ability;
 		Army *army;
 		char name[100];
+		Sprite* abilitySprite;
 	};
 
 	Army(const char *name);
 	~Army();
-
+	
 	void AddUnit(Unit *unit);
 	void RemoveUnit(const char *unitName);
 	const char *GetName() const;

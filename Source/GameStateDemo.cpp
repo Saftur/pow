@@ -39,8 +39,11 @@
 
 Tilemap *GameStateDemo::tilemap;
 AEGfxTexture *GameStateDemo::textureUnit;
+AEGfxTexture *GameStateDemo::textureAbility;
 AEGfxVertexList *GameStateDemo::meshUnit;
+AEGfxVertexList *GameStateDemo::meshAbility;
 SpriteSource *GameStateDemo::spriteSourceUnit;
+SpriteSource* GameStateDemo::spriteSourceAbility;
 
 Army *GameStateDemo::army1;
 Army *GameStateDemo::army2;
@@ -64,9 +67,12 @@ void GameStateDemo::Load()
 {
 	Trace::GetInstance().GetStream() << "Demo: Load" << std::endl;
 	tilemap = new Tilemap("Assets\\Hexidecimal.png", "Data\\Tilemap1.txt", "data\\Tilemap1.collision.txt", 0, 0, 768, 512, 4, 4);
-	textureUnit = AEGfxTextureLoad("Assets\\MonkeyStand.png");
+	textureUnit = AEGfxTextureLoad("Assets\\baseunit.png");
+	textureAbility = AEGfxTextureLoad("Assets\\abilities.png");
 	meshUnit = MeshCreateQuad(32.0f, 32.0f, 1.0f, 1.0f, "Unit Mesh");
+	meshAbility = MeshCreateQuad(32.0f, 32.0f, 0.25f, 1.0f, "Ability Mesh");
 	spriteSourceUnit = new SpriteSource(1, 1, textureUnit);
+	spriteSourceAbility = new SpriteSource(4, 1, textureAbility);
 }
 
 // Initialize the memory associated with the Demo game state.
@@ -75,14 +81,14 @@ void GameStateDemo::Init()
 	Trace::GetInstance().GetStream() << "Demo: Init" << std::endl;
 
 	//									  hp, atk, spd
-	Army::Unit *unit1 = new Army::Unit({ 100, 100, 100, Army::Unit::NONE });
-	strcpy(unit1->name, "Unit1");
-	Army::Unit *unit2 = new Army::Unit({ 100, 100, 100, Army::Unit::NONE });
-	strcpy(unit2->name, "Unit1");
+	//Army::Unit *unit1 = new Army::Unit({ 100, 100, 100, Army::Unit::NONE });
+	//strcpy(unit1->name, "Unit1");
+	//Army::Unit *unit2 = new Army::Unit({ 100, 100, 100, Army::Unit::NONE });
+	//strcpy(unit2->name, "Unit1");
 	army1 = new Army("Army1");
-	army1->AddUnit(unit1);
+	//army1->AddUnit(unit1);
 	army2 = new Army("Army2");
-	army2->AddUnit(unit2);
+	//army2->AddUnit(unit2);
 	//vector<Vector2D> path;
 	path1.push_back({ 1, 0 });
 	path1.push_back({ 1, 0 });
@@ -187,9 +193,11 @@ void GameStateDemo::CreateUnit(Army &army, const char * name, Vector2D pos, vect
 	if (!unit) return;
 
 	GameObject* go = new GameObject("Unit");
+	GameObject* overlay = new GameObject("Ability");
 
 	Vector2D screenPos = tilemap->getPosOnScreen(pos);
 	Transform* t = new Transform(screenPos.X(), screenPos.Y());
+	Transform* abilityT = new Transform(screenPos.X(), screenPos.Y());
 	//t->SetScale({});
 	go->SetTransform(*t);
 
@@ -197,18 +205,26 @@ void GameStateDemo::CreateUnit(Army &army, const char * name, Vector2D pos, vect
 	sprite->SetMesh(meshUnit);
 	sprite->SetSpriteSource(spriteSourceUnit);
 
-	//Collider* c = new Collider(*go);
+	Sprite* abilitySprite = new Sprite("Ability Sprite");
+	abilitySprite->SetMesh(meshAbility);
+	abilitySprite->SetSpriteSource(spriteSourceAbility);
+	abilitySprite->SetFrame(unit->ability);
 
 	Physics* p = new Physics();
+	Physics* abilityP = new Physics();
 
-	Behavior* b = (Behavior*)new BehaviorUnit(*go, *unit, path);
+	Behavior* b = (Behavior*)new BehaviorUnit(*go, *unit, path, overlay);
+
+	overlay->SetTransform(*abilityT);
+	overlay->SetSprite(*abilitySprite);
+	overlay->SetPhysics(*abilityP);
 
 	go->SetSprite(*sprite);
 	go->SetPhysics(*p);
 	go->SetBehavior(*b);
-	//go->SetCollider(*c);
 
 	GameObjectManager::GetInstance().Add(*go);
+	GameObjectManager::GetInstance().Add(*overlay);
 }
 
 bool GameStateDemo::LegalSpawn(Army & army, Vector2D pos)

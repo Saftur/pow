@@ -68,8 +68,11 @@ public:
 
 private:
 	static AEGfxTexture *textureUnit;
+	static AEGfxTexture *textureAbility;
 	static AEGfxVertexList *meshUnit;
 	static SpriteSource *spriteSourceUnit;
+	static SpriteSource* spriteSourceAbility;
+	static AEGfxVertexList *meshAbility;
 
 	static Army *army1;
 	static Army *army2;

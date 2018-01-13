@@ -40,7 +40,7 @@ public:
 	// Allocate a new (Unit) behavior component.
 	// Params:
 	//  parent = The object that owns this behavior.
-	BehaviorUnit(GameObject& parent, Army::Unit unit, vector<Vector2D> path);
+	BehaviorUnit(GameObject& parent, Army::Unit unit, vector<Vector2D> path, GameObject* ability);
 
 	Vector2D GetScrPos();
 	Vector2D GetMapPos();
@@ -112,6 +112,7 @@ private:
 	BehaviorUnit *target;
 	//bool follow;
 	float attackTimer;
+	GameObject* abilityOverlay;
 
 	const float attackCooldown = 0.5;
 
