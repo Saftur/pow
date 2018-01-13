@@ -16,6 +16,8 @@
 //------------------------------------------------------------------------------
 
 #include "GameObject.h"
+#include <vector>
+using std::vector;
 
 //------------------------------------------------------------------------------
 
@@ -94,6 +96,8 @@ public:
 	//	   then return the pointer to the named game object,
 	//	   else return nullptr.
 	GameObject* GetObjectByName(const char* name);
+
+	vector<GameObject*> GetObjectsByName(const char* name);
 
 	// Returns a pointer to the first game object archetype matching the specified name.
 	// (Hint: This function and the GameObjectManagerGetObjectByName functions require

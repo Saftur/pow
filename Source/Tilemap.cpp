@@ -63,11 +63,23 @@ void Tilemap::Draw()
 	}
 }
 
-Vector2D Tilemap::getPosOnMap(Vector2D screenPos)
+Vector2D Tilemap::getPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile)
 {
 	Vector2D pos;
 	pos.X((float)(int)((screenPos.X() - offsetX + (width / 2)) / tileWidth));
 	pos.Y((float)(int)((-screenPos.Y() - offsetY + (height / 2)) / tileHeight));
+	if (offsetFromTile) {
+		offsetFromTile->X(screenPos.X() - (offsetX - (width / 2) + (tileWidth / 2) + (tileWidth * pos.X())));
+		offsetFromTile->Y(screenPos.Y() - (offsetY - (height / 2) + (tileHeight / 2) + (tileHeight * pos.Y())));
+	}
+	return pos;
+}
+
+Vector2D Tilemap::getPosOnScreen(Vector2D tilePos)
+{
+	Vector2D pos;
+	pos.X(tileWidth * tilePos.X() + offsetX - width / 2 + tileWidth / 2);
+	pos.Y(tileHeight * tilePos.Y() + offsetY - height / 2 + tileHeight / 2);
 	return pos;
 }
 
@@ -137,6 +149,16 @@ void Tilemap::setOffset(int onScreenOffsetX, int onScreenOffsetY)
 {
 	offsetX = onScreenOffsetX;
 	offsetY = onScreenOffsetY;
+}
+
+int Tilemap::getTileWidth()
+{
+	return tileWidth;
+}
+
+int Tilemap::getTileHeight()
+{
+	return tileHeight;
 }
 
 void Tilemap::readFiles(const char* tilemapFilename, const char* collisionMapFilename)

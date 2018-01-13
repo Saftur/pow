@@ -20,9 +20,13 @@ public:
 		int onScreenOffsetX, int onScreenOffsetY, int onScreenWidth, int onScreenHeight);
 	~Tilemap();
 	void Draw();
-	Vector2D getPosOnMap(Vector2D screenPos);
+	Vector2D getPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile = nullptr);
+	Vector2D getPosOnScreen(Vector2D tilePos);
 	bool isObjectCollidingWithMap(Vector2D objectPosition, Vector2D objectScale);
 	void setOffset(int onScreenOffsetX, int onScreenOffsetY);
+
+	int getTileWidth();
+	int getTileHeight();
 
 private:
 	void readFiles(const char* tilemapFilename, const char* collisionMapFilename);

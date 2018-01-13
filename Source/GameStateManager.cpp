@@ -36,6 +36,9 @@ void GameStateManager::Update(float dt)
 {
 	Trace::GetInstance().GetStream() << "GSM: Update" << std::endl;
 
+	// Update the current game state.
+	GameStateTable::GetInstance().ExecuteUpdate(gameState.current, dt);
+
 	// Check for a game state change.
 	if (StateIsChanging())
 	{
@@ -66,9 +69,6 @@ void GameStateManager::Update(float dt)
 		// Initialize the new game state.
 		GameStateTable::GetInstance().ExecuteInit(gameState.current);
 	}
-
-	// Update the current game state.
-	GameStateTable::GetInstance().ExecuteUpdate(gameState.current, dt);
 }
 
 // Shutdown the game state manager.

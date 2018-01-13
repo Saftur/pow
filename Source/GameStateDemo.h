@@ -11,6 +11,9 @@
 
 #pragma once
 
+#include <vector>
+using std::vector;
+
 //------------------------------------------------------------------------------
 // Include Files:
 //------------------------------------------------------------------------------
@@ -22,6 +25,7 @@
 //------------------------------------------------------------------------------
 
 class Tilemap;
+class Army;
 typedef struct AEGfxTexture AEGfxTexture;
 typedef struct AEGfxVertexList AEGfxVertexList;
 
@@ -60,14 +64,26 @@ public:
 	// Unload the resources associated with the Demo game state.
 	static void Unload();
 
-private:
 	static Tilemap *tilemap;
+
+private:
 	// TODO Remove test vars
 	static AEGfxTexture *textureHex;
+	static AEGfxTexture *textureAbility;
 	static AEGfxVertexList *meshQuad;
 	static Sprite *spriteHex;
 	static SpriteSource *spriteSourceHex;
 	static Transform *transformHex;
 	// End test vars
+
+	static AEGfxTexture *textureUnit;
+	static AEGfxVertexList *meshUnit;
+	static SpriteSource *spriteSourceUnit;
+	static SpriteSource* spriteSourceAbility;
+	static AEGfxVertexList *meshAbility;
+
+	static Army *army1;
+
+	static void CreateUnit(Army &army, const char *name, Vector2D pos, vector<Vector2D> path);
 };
 /*----------------------------------------------------------------------------*/

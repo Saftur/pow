@@ -241,6 +241,16 @@ Vector2D& Vector2D::operator/= (float floaty)
 	return *this;
 }
 
+bool Vector2D::operator==(const Vector2D & other) const
+{
+	return x == other.x && y == other.y;
+}
+
+bool Vector2D::operator!=(const Vector2D & other) const
+{
+	return x != other.x || y != other.y;
+}
+
 // Negates the given vector
 // Params:
 //  <none>

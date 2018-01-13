@@ -7,6 +7,7 @@ void IOController::LoadArmy(Army* army)
 {
 	string path = DATAPATH;
 	path += army->GetName();
+	path += ".ini";
 
 	ifstream workingFile(path);
 
@@ -16,27 +17,24 @@ void IOController::LoadArmy(Army* army)
 
 	while (getline(workingFile, line))
 	{
-		switch (index)
-		{
-		case 0:
-			unit = army->Unit1;
-			break;
-		}
+		unit = new Army::Unit();
 
 		stringstream reader (line);
 
-		reader >> army->Unit1->hp;
-		reader >> army->Unit1->damage;
-		reader >> army->Unit1->speed;
-		reader >> army->Unit1->ability;
+		reader >> unit->name;
+		reader >> unit->hp;
+		reader >> unit->damage;
+		reader >> unit->speed;
+		reader >> *((int*)&(unit->ability));
 
+		army->AddUnit(unit);
 		++index;
 	}
 }
 
 void IOController::SaveArmy(Army& army)
 {
-
+	UNREFERENCED_PARAMETER(army);
 }
 
 IOController& IOController::GetInstance()
@@ -45,3 +43,5 @@ IOController& IOController::GetInstance()
 
 	return cont;
 }
+
+IOController::IOController() {}

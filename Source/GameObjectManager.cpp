@@ -15,6 +15,7 @@
 
 #include "stdafx.h"
 #include "GameObjectManager.h"
+#include "AEEngine.h"
 
 //------------------------------------------------------------------------------
 
@@ -101,6 +102,8 @@ void GameObjectManager::CheckCollisions()
 // Draw all game objects in the active game object list.
 void GameObjectManager::Draw(void)
 {
+	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+
 	for (int i = 0; i < objectListSize; i++)
 	{
 		if (gameObjectActiveList.objectList[i])
@@ -149,7 +152,7 @@ void GameObjectManager::Add(GameObject& gameObject)
 	if (gameObjectActiveList.objectCount == gameObjectActiveList.objectMax)
 		return;
 
-	gameObjectActiveList.objectList[gameObjectActiveList.objectCount++] = new GameObject(gameObject);
+	gameObjectActiveList.objectList[gameObjectActiveList.objectCount++] = &gameObject;
 }
 
 // Add a game object to the game object archetype list.
@@ -182,15 +185,28 @@ GameObject* GameObjectManager::GetObjectByName(const char* name)
 	{
 		if (gameObjectActiveList.objectList[i])
 		{
-			if (gameObjectActiveList.objectList[i])
-			{
-				if (gameObjectActiveList.objectList[i]->IsNamed(name))
-					return gameObjectActiveList.objectList[i];
-			}
+			if (gameObjectActiveList.objectList[i]->IsNamed(name))
+				return gameObjectActiveList.objectList[i];
 		}
 	}
 
 	return NULL;
+}
+
+vector<GameObject*> GameObjectManager::GetObjectsByName(const char * name)
+{
+	vector<GameObject*> objects;
+
+	for (int i = 0; i < objectListSize; i++)
+	{
+		if (gameObjectActiveList.objectList[i])
+		{
+			if (gameObjectActiveList.objectList[i]->IsNamed(name))
+				objects.push_back(gameObjectActiveList.objectList[i]);
+		}
+	}
+
+	return objects;
 }
 
 // Returns a pointer to the first game object archetype matching the specified name.

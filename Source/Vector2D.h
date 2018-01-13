@@ -73,6 +73,9 @@ public:
 	Vector2D& operator*=(float scalar);
 	Vector2D& operator/=(float scalar);
 
+	bool operator==(const Vector2D& other) const;
+	bool operator!=(const Vector2D& other) const;
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Data
