@@ -1,3 +1,12 @@
+//------------------------------------------------------------------------------
+// File Name:	Rendertext.h
+// Author(s):	Brand Knutson
+// Project:		Push of War
+// Course:		Gam150
+//
+// Copyright © 2017 DigiPen (USA) Corporation.
+//------------------------------------------------------------------------------
+
 #pragma once
 
 #include "Vector2D.h"

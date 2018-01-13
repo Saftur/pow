@@ -1,3 +1,12 @@
+//------------------------------------------------------------------------------
+// File Name:	Rendertext.cpp
+// Author(s):	Brand Knutson
+// Project:		Push of War
+// Course:		Gam150
+//
+// Copyright © 2017 DigiPen (USA) Corporation.
+//------------------------------------------------------------------------------
+
 #include "stdafx.h"
 #include "AEEngine.h"
 
