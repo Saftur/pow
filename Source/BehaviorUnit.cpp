@@ -171,11 +171,13 @@ void BehaviorUnit::Update(Behavior& behavior, float dt)
 	UNREFERENCED_PARAMETER(dt);
 
 	BehaviorUnit &self = *((BehaviorUnit*)(&behavior));
-	if (self.hp <= 0) {
+	if (self.base.parent.IsDestroyed())
+		return;
+	/*if (self.hp <= 0) {
 		self.base.parent.Destroy();
 		self.abilityOverlay->Destroy();
 		return;
-	}
+	}*/
 
 	switch (behavior.stateCurr)
 	{
@@ -206,11 +208,15 @@ void BehaviorUnit::Update(Behavior& behavior, float dt)
 		break;
 	case cUnitWaiting:
 		if (self.target) {
-			if (self.IsAdjacent(self.target) && !(self.target->base.parent.IsDestroyed())) {
+			if (!(self.target->base.parent.IsDestroyed()) && self.IsAdjacent(self.target)) {
 				if (self.attackTimer <= 0) {
 					//Trace::GetInstance().GetStream() << "Attack!" << std::endl;
 					self.target->hp -= (float)(self.unitData.damage) / 4;
-					if (self.target->hp <= 0) self.target = nullptr;
+					if (self.target->hp <= 0) {
+						self.target->base.parent.Destroy();
+						self.target->abilityOverlay->Destroy();
+						self.target = nullptr;
+					}
 					self.attackTimer = self.attackCooldown;
 				} else self.attackTimer -= dt;
 				break;

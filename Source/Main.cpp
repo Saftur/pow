@@ -39,7 +39,6 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 	{
 		// Update the game engine.
 		Engine::GetInstance().Update(dt);
-		//if (AEInputCheckCurr('0')) GameStateManager::GetInstance().SetNextState(GameStateTable::GsMenu);
 	}
 
 	// Shutdown the game engine.

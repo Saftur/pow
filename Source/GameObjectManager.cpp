@@ -66,19 +66,20 @@ void GameObjectManager::Update(float dt)
 		{
 			if (!gameObjectActiveList.objectList[i]->IsDestroyed())
 				gameObjectActiveList.objectList[i]->Update(dt);
-			else
+		}
+	}
+	for (int i = 0; i < objectListSize; i++) {
+		if (gameObjectActiveList.objectList[i] && gameObjectActiveList.objectList[i]->IsDestroyed()) {
+			delete(gameObjectActiveList.objectList[i]);
+
+			for (int j = i; j < objectListSize - 1; j++)
 			{
-				delete(gameObjectActiveList.objectList[i]);
-
-				for (int j = i; j < objectListSize - 1; j++)
-				{
-					gameObjectActiveList.objectList[j] = gameObjectActiveList.objectList[j + 1];
-				}
-				
-				gameObjectActiveList.objectList[objectListSize - 1] = NULL;
-
-				gameObjectActiveList.objectCount--;
+				gameObjectActiveList.objectList[j] = gameObjectActiveList.objectList[j + 1];
 			}
+			
+			gameObjectActiveList.objectList[objectListSize - 1] = NULL;
+
+			gameObjectActiveList.objectCount--;
 		}
 	}
 }

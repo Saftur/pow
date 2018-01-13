@@ -19,7 +19,6 @@
 #include "GameStateLevel1.h"
 #include "GameStateLevel2.h"
 #include "GameStateAsteroids.h"
-#include "GameStateMenu.h"
 #include "GameStateDemo.h"
 
 //------------------------------------------------------------------------------
@@ -34,7 +33,6 @@ public:
 	{
 		/* Normal Game States: */
 		// Add new game states here.
-		GsMenu,
 		GsLevel1,
 		GsLevel2,
 		GsAsteroids,
@@ -121,7 +119,6 @@ private:
 	//------------------------------------------------------------------------------
 	const TableEntry GameStateTab[GsNum] =
 	{
-		{ GameStateMenu::Load, GameStateMenu::Init, GameStateMenu::Update, GameStateMenu::Shutdown, GameStateMenu::Unload },
 		{ GameStateLevel1::Load, GameStateLevel1::Init, GameStateLevel1::Update, GameStateLevel1::Shutdown, GameStateLevel1::Unload },
 		{ GameStateLevel2::Load, GameStateLevel2::Init, GameStateLevel2::Update, GameStateLevel2::Shutdown, GameStateLevel2::Unload },
 		{ GameStateAsteroids::Load, GameStateAsteroids::Init, GameStateAsteroids::Update, GameStateAsteroids::Shutdown, GameStateAsteroids::Unload },

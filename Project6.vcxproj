@@ -39,7 +39,6 @@
     <ClInclude Include="Source\GameStateLevel1.h" />
     <ClInclude Include="Source\GameStateLevel2.h" />
     <ClInclude Include="Source\GameStateManager.h" />
-    <ClInclude Include="Source\GameStateMenu.h" />
     <ClInclude Include="Source\GameStateStub.h" />
     <ClInclude Include="Source\GameStateTable.h" />
     <ClInclude Include="source\IOController.h" />
@@ -47,6 +46,7 @@
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\Random.h" />
+    <ClInclude Include="Source\Rendertext.h" />
     <ClInclude Include="source\SoundManager.h" />
     <ClInclude Include="Source\Sprite.h" />
     <ClInclude Include="Source\SpriteSource.h" />
@@ -80,7 +80,6 @@
     <ClCompile Include="Source\GameStateLevel1.cpp" />
     <ClCompile Include="Source\GameStateLevel2.cpp" />
     <ClCompile Include="Source\GameStateManager.cpp" />
-    <ClCompile Include="Source\GameStateMenu.cpp" />
     <ClCompile Include="Source\GameStateStub.cpp" />
     <ClCompile Include="Source\GameStateTable.cpp" />
     <ClCompile Include="source\IOController.cpp" />
@@ -89,6 +88,7 @@
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\Random.cpp" />
+    <ClCompile Include="Source\Rendertext.cpp" />
     <ClCompile Include="source\SoundManager.cpp" />
     <ClCompile Include="Source\Sprite.cpp" />
     <ClCompile Include="Source\SpriteSource.cpp" />
