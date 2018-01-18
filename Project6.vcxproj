@@ -28,6 +28,7 @@
     <ClInclude Include="Source\BehaviorBullet.h" />
     <ClInclude Include="Source\BehaviorButtonStub.h" />
     <ClInclude Include="Source\BehaviorLevelButton.h" />
+    <ClInclude Include="Source\BehaviorPlayer.h" />
     <ClInclude Include="Source\BehaviorSpaceship.h" />
     <ClInclude Include="Source\BehaviorUnit.h" />
     <ClInclude Include="Source\Collider.h" />
@@ -69,6 +70,7 @@
     <ClCompile Include="Source\BehaviorBullet.cpp" />
     <ClCompile Include="Source\BehaviorButtonStub.cpp" />
     <ClCompile Include="Source\BehaviorLevelButton.cpp" />
+    <ClCompile Include="Source\BehaviorPlayer.cpp" />
     <ClCompile Include="Source\BehaviorSpaceship.cpp" />
     <ClCompile Include="Source\BehaviorUnit.cpp" />
     <ClCompile Include="Source\Collider.cpp" />

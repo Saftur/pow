@@ -52,6 +52,7 @@ public:
 	friend class BehaviorLevelButton;
 	friend class BehaviorButtonStub;
 	friend class BehaviorUnit;
+	friend class BehaviorPlayer;
 
 	//------------------------------------------------------------------------------
 	// Public Functions:
