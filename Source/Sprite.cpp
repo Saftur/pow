@@ -58,7 +58,7 @@ typedef struct AEVec2 AEVec2;
 //	   then return a pointer to the allocated memory,
 //	   else return NULL.
 Sprite::Sprite(const char * name)
-	: name(name), alpha(1.0f){}
+	: name(name), alpha(1.0f), spriteSource(nullptr) {}
 
 // Draw a sprite (Sprite can be textured or untextured).
 // Params:
