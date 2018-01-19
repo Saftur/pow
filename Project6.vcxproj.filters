@@ -163,6 +163,9 @@
     <ClCompile Include="Source\BehaviorUnit.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
+    <ClCompile Include="Source\BehaviorPlayer.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
     <ClCompile Include="Source\PlatformManager.cpp">
       <Filter>Game</Filter>
     </ClCompile>
@@ -308,6 +311,9 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\BehaviorUnit.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorPlayer.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
     <ClInclude Include="Source\PlatformManager.h">

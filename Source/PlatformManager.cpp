@@ -76,9 +76,9 @@ bool PlatformManager::IsOnPlatform(GameObject * object, Vector2D * groundPositio
 		pt = &p.transform;
 		ptrs = pt->GetTranslation();
 		pscl = pt->GetScale();
-		if ((otrs.X() - pscl.X() / 4 > ptrs.X() - pscl.X() / 2 && otrs.X() - pscl.X() / 4 < ptrs.X() + pscl.X() / 2 ||
-			otrs.X() + pscl.X() / 4 > ptrs.X() - pscl.X() / 2 && otrs.X() + pscl.X() / 4 < ptrs.X() + pscl.X() / 2) &&
-			otrs.Y() - oscl.Y() / 2 > ptrs.Y() - pscl.Y() / 2 && otrs.Y() + oscl.Y() / 2 < ptrs.Y() + pscl.Y() / 2) {
+		if ((otrs.X() - oscl.X() / 4 > ptrs.X() - pscl.X() / 2 && otrs.X() - oscl.X() / 4 < ptrs.X() + pscl.X() / 2 ||
+			otrs.X() + oscl.X() / 4 > ptrs.X() - pscl.X() / 2 && otrs.X() + oscl.X() / 4 < ptrs.X() + pscl.X() / 2) &&
+			otrs.Y() - oscl.Y() / 2 > ptrs.Y() - pscl.Y() / 2 && otrs.Y() - oscl.Y() / 2 < ptrs.Y() + pscl.Y() / 2 + 1) {
 			if (groundPosition) {
 				groundPosition->X(otrs.X());
 				groundPosition->Y(ptrs.Y() + pscl.Y() / 2 + oscl.Y() / 2);
