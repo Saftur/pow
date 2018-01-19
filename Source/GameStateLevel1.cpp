@@ -21,13 +21,15 @@
 #include "BehaviorCheckpoint.h"
 #include "Collider.h"
 #include "GameObjectManager.h"
+#include "PlatformManager.h"
+#include "BehaviorPlayer.h"
 
 //------------------------------------------------------------------------------
 // Private Consts:
 //------------------------------------------------------------------------------
 const float GameStateLevel1::monkeyWalkSpeed = 500.0f;
 const float GameStateLevel1::monkeyJumpSpeed = 1000.0f;
-const float GameStateLevel1::groundHeight = -150.0f;
+const float GameStateLevel1::groundHeight = 150.0f;
 const Vector2D GameStateLevel1::gravityNormal(0.0f, -1500.0f);
 const Vector2D GameStateLevel1::gravityNone(0.0f, 0.0f);
 //------------------------------------------------------------------------------
@@ -78,7 +80,7 @@ GameObject* GameStateLevel1::CreateMonkey()
 	gameObjectMonkey = new GameObject("Player");
 
 	Transform* transform = new Transform(0, groundHeight);
-	transform->SetScale(Vector2D(300, 300));
+	transform->SetScale(Vector2D(100, 100));
 
 	Sprite* sprite2 = new Sprite("Monkey Sprite");
 	sprite2->SetMesh(meshQuad);
@@ -97,6 +99,9 @@ GameObject* GameStateLevel1::CreateMonkey()
 	Collider* col = new Collider(*gameObjectMonkey);
 	gameObjectMonkey->SetCollider(*col);
 
+	Behavior* behavior = (Behavior*)new BehaviorPlayer(*gameObjectMonkey);
+	gameObjectMonkey->SetBehavior(*behavior);
+
 	return gameObjectMonkey;
 }
 
@@ -104,8 +109,8 @@ GameObject* GameStateLevel1::CreateCheckpoint()
 {
 	gameObjectCheckpoint = new GameObject("Checkpoint");
 
-	Transform* transform = new Transform(300, groundHeight);
-	transform->SetScale(Vector2D(300, 300));
+	Transform* transform = new Transform(0, groundHeight);
+	transform->SetScale(Vector2D(100, 100));
 
 	Sprite* sprite2 = new Sprite("Checkpoint Sprite");
 	sprite2->SetMesh(meshQuad);
@@ -143,6 +148,15 @@ void GameStateLevel1::Init()
 
 	AEGfxSetBackgroundColor(1, 1, 1);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+
+	PlatformManager::Init();
+
+	Transform transform = Transform(0, 0);
+	transform.SetScale({ 100, 20 });
+
+	PlatformManager::AddPlatform(transform, 100);
+	transform.SetTranslation({ -100, -40 });
+	PlatformManager::AddPlatform(transform);
 }
 
 void GameStateLevel1::MoveMonkey()
@@ -193,7 +207,8 @@ void GameStateLevel1::Update(float dt)
 
 	Trace::GetInstance().GetStream() << "Stub: Update" << std::endl;
 
-	MoveMonkey();
+	//MoveMonkey();
+	PlatformManager::Update(dt);
 
 	if (AEInputCheckCurr('1'))
 	{
@@ -219,6 +234,8 @@ void GameStateLevel1::Shutdown()
 	Trace::GetInstance().GetStream() << "Stub: Shutdown" << std::endl;
 
 	GameObjectManager::GetInstance().Shutdown();
+
+	PlatformManager::Shutdown();
 }
 
 // Unload the resources associated with the Stub game state.

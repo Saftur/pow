@@ -58,21 +58,21 @@ void PlatformManager::Shutdown()
 	delete platformSprite;
 }
 
-void PlatformManager::AddPlatform(Transform transform)
+void PlatformManager::AddPlatform(Transform transform, float jump, float moveSpeed, vector<Transform> path)
 {
-	platforms.push_back({ transform });
+	platforms.push_back({ transform, jump, moveSpeed, path });
 }
 
-bool PlatformManager::IsOnPlatform(GameObject * object, Vector2D * groundPosition)
+PlatformManager::Platform* PlatformManager::IsOnPlatform(GameObject * object, Vector2D * groundPosition)
 {
 	Transform *ot = object->GetTransform();
-	if (!ot) return false;
+	if (!ot) return nullptr;
 	Vector2D otrs = ot->GetTranslation();
 	Vector2D oscl = ot->GetScale();
 	Transform *pt;
 	Vector2D ptrs;
 	Vector2D pscl;
-	for (Platform p : platforms) {
+	for (Platform &p : platforms) {
 		pt = &p.transform;
 		ptrs = pt->GetTranslation();
 		pscl = pt->GetScale();
@@ -83,8 +83,8 @@ bool PlatformManager::IsOnPlatform(GameObject * object, Vector2D * groundPositio
 				groundPosition->X(otrs.X());
 				groundPosition->Y(ptrs.Y() + pscl.Y() / 2 + oscl.Y() / 2);
 			}
-			return true;
+			return &p;
 		}
 	}
-	return false;
+	return nullptr;
 }

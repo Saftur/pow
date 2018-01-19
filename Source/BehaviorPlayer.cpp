@@ -71,11 +71,11 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 	else vel.X(0);
 
 	Vector2D newPos = Vector2D();
-	bool grounded = PlatformManager::IsOnPlatform(&behavior.parent, &newPos);
+	PlatformManager::Platform *platform = PlatformManager::IsOnPlatform(&behavior.parent, &newPos);
 	//If a jump button is pressed state that we are jumping and no longer grounded.
 	if (AEInputCheckTriggered('W') || AEInputCheckTriggered(VK_SPACE) || AEInputCheckTriggered(VK_UP)) {
-		if (grounded) {
-			vel.Y(playerJumpSpeedMax);
+		if (platform) {
+			vel.Y(playerJumpSpeedMax+platform->jump);
 			playerSpeedModifier += 15.0f;
 		}
 	}
@@ -86,20 +86,20 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 	}
 
 	//If we just landed on a platform.
-	if (grounded && inAir) {
+	if (platform && inAir) {
 		inAir = false;
 		vel.Y(0);
 		behavior.parent.GetTransform()->SetTranslation(newPos);
 	}
 
-	if(!grounded) inAir = true;
+	if(!platform) inAir = true;
 
 	if (vel.X() > playerSpeedMax) vel.X(playerSpeedMax);
 
 	p->SetVelocity(vel);
 
 	// If we are touching a platform and were last frame, incrment a counter.
-	if (wasGrounded && grounded)
+	if (wasGrounded && platform)
 	{
 		touchTime += dt;
 
@@ -113,7 +113,7 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 		touchTime = 0;
 	}
 
-	wasGrounded = grounded;
+	wasGrounded = platform;
 }
 
 // Dynamically allocate a new (Spaceship) behavior component.
