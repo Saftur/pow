@@ -20,6 +20,7 @@
 #include "Vector2D.h"
 #include "GameStateManager.h"
 #include "PlatformManager.h"
+#include "BehaviorCheckpoint.h"
 
 //------------------------------------------------------------------------------
 
@@ -39,6 +40,9 @@ const float BehaviorPlayer::playerJumpSpeedMax = 450.0f;
 float BehaviorPlayer::playerGravity = 800.0f;
 bool BehaviorPlayer::jumping = false;
 bool BehaviorPlayer::inAir = false;
+bool BehaviorPlayer::wasGrounded = false;
+const float BehaviorPlayer::maxPlayerTime = 1.0f;
+float BehaviorPlayer::touchTime = 0.0f;
 
 //------------------------------------------------------------------------------
 // Public Structures:
@@ -93,6 +97,23 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 	if (vel.X() > playerSpeedMax) vel.X(playerSpeedMax);
 
 	p->SetVelocity(vel);
+
+	// If we are touching a platform and were last frame, incrment a counter.
+	if (wasGrounded && grounded)
+	{
+		touchTime += dt;
+
+		if (touchTime > maxPlayerTime)
+		{
+			BehaviorCheckpoint::ResetUnconditional();
+		}
+	}
+	else
+	{
+		touchTime = 0;
+	}
+
+	wasGrounded = grounded;
 }
 
 // Dynamically allocate a new (Spaceship) behavior component.
