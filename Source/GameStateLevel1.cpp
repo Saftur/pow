@@ -155,8 +155,15 @@ void GameStateLevel1::Init()
 	transform.SetScale({ 100, 20 });
 
 	PlatformManager::AddPlatform(transform, 100);
+
 	transform.SetTranslation({ -100, -40 });
 	PlatformManager::AddPlatform(transform);
+
+	transform.SetTranslation({ 100, -40 });
+	vector<Vector2D> path;
+	path.push_back({ -100, -40 });
+	path.push_back({ 0, -80 });
+	PlatformManager::AddPlatform(transform, 0, 100, path);
 }
 
 void GameStateLevel1::MoveMonkey()

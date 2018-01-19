@@ -89,6 +89,13 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 	if (platform && inAir) {
 		inAir = false;
 		vel.Y(0);
+	}
+
+	if (platform) {
+		if (platform->dir != Vector2D(0, 0)) {
+			//newPos += platform->dir * platform->moveSpeed * dt;
+			newPos.X(newPos.X() + platform->dir.X() * platform->moveSpeed * dt);
+		}
 		behavior.parent.GetTransform()->SetTranslation(newPos);
 	}
 

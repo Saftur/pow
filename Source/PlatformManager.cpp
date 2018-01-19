@@ -40,10 +40,24 @@ void PlatformManager::Update(float dt)
 	Transform *pt;
 	Vector2D ptrs;
 	Vector2D pscl;
-	for (Platform p : platforms) {
+	for (Platform &p : platforms) {
 		pt = &p.transform;
 		ptrs = pt->GetTranslation();
 		pscl = pt->GetScale();
+		if (p.dir != Vector2D(0,0)) {
+			ptrs += p.dir * p.moveSpeed * dt;
+			Vector2D diff = p.path[p.pn] - ptrs;
+			if (diff.X() * -p.dir.X() >= 0 && diff.Y() * -p.dir.Y() >= 0) {
+				ptrs = p.path[p.pn];
+				if (++p.pn >= p.path.size())
+					p.pn = 0;
+				p.dir = { 0,0 };
+			}
+			pt->SetTranslation(ptrs);
+		}
+		if (p.dir == Vector2D(0,0) && p.moveSpeed > 0) {
+			p.dir = (p.path[p.pn] - ptrs).Normalized();
+		}
 		if (ptrs.X() + pscl.X() / 2 > scrMin.X() && ptrs.X() - pscl.X() / 2 < scrMax.X() &&
 			ptrs.Y() + pscl.Y() / 2 > scrMin.Y() && ptrs.Y() - pscl.Y() / 2 < scrMax.Y()) {
 			platformSprite->Draw(*pt);
@@ -58,9 +72,10 @@ void PlatformManager::Shutdown()
 	delete platformSprite;
 }
 
-void PlatformManager::AddPlatform(Transform transform, float jump, float moveSpeed, vector<Transform> path)
+void PlatformManager::AddPlatform(Transform transform, float jump, float moveSpeed, vector<Vector2D> path)
 {
-	platforms.push_back({ transform, jump, moveSpeed, path });
+	path.push_back(transform.GetTranslation());
+	platforms.push_back({ transform, jump, moveSpeed, path, 0, {0, 0} });
 }
 
 PlatformManager::Platform* PlatformManager::IsOnPlatform(GameObject * object, Vector2D * groundPosition)

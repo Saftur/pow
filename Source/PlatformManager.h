@@ -11,14 +11,16 @@ public:
 		Transform transform;
 		float jump;
 		float moveSpeed;
-		vector<Transform> path;
+		vector<Vector2D> path;
+		unsigned int pn;
+		Vector2D dir;
 	};
 
 	static void Init();
 	static void Update(float dt);
 	static void Shutdown();
 
-	static void AddPlatform(Transform transform, float jump = 0.0f, float moveSpeed = 0.0f, vector<Transform> path = {});
+	static void AddPlatform(Transform transform, float jump = 0.0f, float moveSpeed = 0.0f, vector<Vector2D> path = {});
 	static Platform* IsOnPlatform(GameObject *object, Vector2D *groundPosition = nullptr);;
 
 private:
