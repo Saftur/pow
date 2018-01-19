@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 //
 // File Name:	Behavior.h
-// Author(s):	Doug Schilling (dschilling)
+// Author(s):	Mark Culp
 // Project:		MyGame
 // Course:		CS230S17
 //
@@ -52,6 +52,8 @@ public:
 	friend class BehaviorLevelButton;
 	friend class BehaviorButtonStub;
 	friend class BehaviorUnit;
+	friend class BehaviorCheckpoint;
+	friend class BehaviorStub;
 	friend class BehaviorPlayer;
 
 	//------------------------------------------------------------------------------
