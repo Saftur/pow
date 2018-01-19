@@ -18,6 +18,9 @@
 #include "Mesh.h"
 #include "Transform.h"
 #include "SpriteSource.h"
+#include "BehaviorCheckpoint.h"
+#include "Collider.h"
+#include "GameObjectManager.h"
 
 //------------------------------------------------------------------------------
 // Private Consts:
@@ -42,6 +45,12 @@ AEGfxTexture* GameStateLevel1::textureMonkey;
 AEGfxVertexList* GameStateLevel1::meshQuad;
 GameObject* GameStateLevel1::gameObjectMonkey;
 SpriteSource* GameStateLevel1::spriteSourceMonkey;
+
+AEGfxTexture* GameStateLevel1::textureCheckpoint;
+AEGfxVertexList* GameStateLevel1::meshCheckpoint;
+GameObject* GameStateLevel1::gameObjectCheckpoint;
+SpriteSource* GameStateLevel1::spriteSourceCheckpoint;
+
 //------------------------------------------------------------------------------
 // Private Function Declarations:
 //------------------------------------------------------------------------------
@@ -58,12 +67,16 @@ void GameStateLevel1::Load()
 	meshQuad = MeshCreateQuad(0.5f, 0.5f, 1.0f / 3, 1.0f / 3, "Mesh3x3");
 	textureMonkey = AEGfxTextureLoad("Assets\\MonkeyWalk.png");
 	spriteSourceMonkey = new SpriteSource(3, 3, textureMonkey);
+
+	meshCheckpoint = MeshCreateQuad(0.5f, 0.5f, 1.0f / 3, 1.0f / 3, "Mesh3x3");
+	textureCheckpoint = AEGfxTextureLoad("Assets\\player.png");
+	spriteSourceCheckpoint = new SpriteSource(3, 3, textureCheckpoint);
 }
 
 GameObject* GameStateLevel1::CreateMonkey()
 {
-	gameObjectMonkey = new GameObject("Monkey");
-	
+	gameObjectMonkey = new GameObject("Player");
+
 	Transform* transform = new Transform(0, groundHeight);
 	transform->SetScale(Vector2D(300, 300));
 
@@ -81,7 +94,40 @@ GameObject* GameStateLevel1::CreateMonkey()
 	gameObjectMonkey->SetSprite(*sprite2);
 	gameObjectMonkey->SetTransform(*transform);
 
+	Collider* col = new Collider(*gameObjectMonkey);
+	gameObjectMonkey->SetCollider(*col);
+
 	return gameObjectMonkey;
+}
+
+GameObject* GameStateLevel1::CreateCheckpoint()
+{
+	gameObjectCheckpoint = new GameObject("Checkpoint");
+
+	Transform* transform = new Transform(300, groundHeight);
+	transform->SetScale(Vector2D(300, 300));
+
+	Sprite* sprite2 = new Sprite("Checkpoint Sprite");
+	sprite2->SetMesh(meshQuad);
+	sprite2->SetSpriteSource(spriteSourceCheckpoint);
+
+	Animation* animation2 = new Animation(sprite2);
+	animation2->Play(8, 0.25f, true);
+
+	Behavior* bCh = (Behavior*)new BehaviorCheckpoint(*gameObjectCheckpoint);
+
+	Physics* physics = new Physics();
+
+	gameObjectCheckpoint->SetAnimation(*animation2);
+	gameObjectCheckpoint->SetPhysics(*physics);
+	gameObjectCheckpoint->SetSprite(*sprite2);
+	gameObjectCheckpoint->SetTransform(*transform);
+	gameObjectCheckpoint->SetBehavior(*bCh);
+
+	Collider* col = new Collider(*gameObjectCheckpoint);
+	gameObjectCheckpoint->SetCollider(*col);
+
+	return gameObjectCheckpoint;
 }
 
 // Initialize the memory associated with the Stub game state.
@@ -90,6 +136,10 @@ void GameStateLevel1::Init()
 	Trace::GetInstance().GetStream() << "Stub: Init" << std::endl;
 
 	CreateMonkey();
+	CreateCheckpoint();
+
+	GameObjectManager::GetInstance().Add(*gameObjectMonkey);
+	GameObjectManager::GetInstance().Add(*gameObjectCheckpoint);
 
 	AEGfxSetBackgroundColor(1, 1, 1);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
@@ -145,9 +195,6 @@ void GameStateLevel1::Update(float dt)
 
 	MoveMonkey();
 
-	gameObjectMonkey->Update(dt);
-	gameObjectMonkey->Draw();
-
 	if (AEInputCheckCurr('1'))
 	{
 		GameStateManager::GetInstance().SetNextState(GameStateTable::GsRestart);
@@ -160,6 +207,10 @@ void GameStateLevel1::Update(float dt)
 	{
 		GameStateManager::GetInstance().SetNextState(GameStateTable::GsAsteroids);
 	}
+	else if (AEInputCheckCurr('R'))
+	{
+		BehaviorCheckpoint::ResetUnconditional();
+	}
 }
 
 // Shutdown any memory associated with the Stub game state.
@@ -167,7 +218,7 @@ void GameStateLevel1::Shutdown()
 {
 	Trace::GetInstance().GetStream() << "Stub: Shutdown" << std::endl;
 
-	delete(gameObjectMonkey);
+	GameObjectManager::GetInstance().Shutdown();
 }
 
 // Unload the resources associated with the Stub game state.
@@ -176,8 +227,9 @@ void GameStateLevel1::Unload()
 	Trace::GetInstance().GetStream() << "Stub: Unload" << std::endl;
 
 	AEGfxMeshFree(meshQuad);
+	AEGfxMeshFree(meshCheckpoint);
 	AEGfxTextureUnload(textureMonkey);
-
+	AEGfxTextureUnload(textureCheckpoint);
 }
 
 //------------------------------------------------------------------------------

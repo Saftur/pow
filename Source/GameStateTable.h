@@ -43,7 +43,7 @@ public:
 		GsLast = GsNum - 1,
 
 		/* Specify the initial game state */
-		GsInitial = GsDemo,
+		GsInitial = GsLevel1,
 	} GameStates;
 
 	//------------------------------------------------------------------------------

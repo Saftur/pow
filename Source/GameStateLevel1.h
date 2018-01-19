@@ -74,6 +74,8 @@ private:
 	//	 A pointer to the newly constructed game object
 	static GameObject* CreateMonkey(void);
 
+	static GameObject* CreateCheckpoint();
+
 	// Handle movement logic for the monkey game object
 	static void MoveMonkey(void);
 
@@ -84,6 +86,11 @@ private:
 	static AEGfxVertexList* meshQuad;
 	static SpriteSource* spriteSourceMonkey;
 	static GameObject* gameObjectMonkey;
+
+	static AEGfxTexture* textureCheckpoint;
+	static AEGfxVertexList* meshCheckpoint;
+	static GameObject* gameObjectCheckpoint;
+	static SpriteSource* spriteSourceCheckpoint;
 
 	static const float monkeyWalkSpeed;
 	static const float monkeyJumpSpeed;
