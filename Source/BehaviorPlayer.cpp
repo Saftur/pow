@@ -35,9 +35,8 @@ enum PlayerBehaviors {cPlayerInvalid, cPlayerIdle};
 
 float BehaviorPlayer::playerSpeedModifier = 0.0f;
 const float BehaviorPlayer::playerSpeedMax = 500.0f;
-const float BehaviorPlayer::playerJumpAcceleration = 150.0f;
-const float BehaviorPlayer::playerJumpSpeedMax = 250.0f;
-float BehaviorPlayer::playerGravity = 200.0f;
+const float BehaviorPlayer::playerJumpSpeedMax = 450.0f;
+float BehaviorPlayer::playerGravity = 800.0f;
 bool BehaviorPlayer::jumping = false;
 bool BehaviorPlayer::inAir = false;
 
@@ -67,32 +66,23 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 	else if (AEInputCheckCurr('D') || AEInputCheckCurr(VK_RIGHT)) vel.X(playerSpeedMax + playerSpeedModifier);
 	else vel.X(0);
 
-	///TODO: Replace 'grounded' with a function call to determine if the object is on a platform.
 	Vector2D newPos = Vector2D();
 	bool grounded = PlatformManager::IsOnPlatform(&behavior.parent, &newPos);
 	//If a jump button is pressed state that we are jumping and no longer grounded.
 	if (AEInputCheckTriggered('W') || AEInputCheckTriggered(VK_SPACE) || AEInputCheckTriggered(VK_UP)) {
 		if (grounded) {
-			jumping = true;
-			inAir = true;
+			vel.Y(playerJumpSpeedMax);
 			playerSpeedModifier += 15.0f;
 		}
 	}
 
-	//If we are jumping increase upward velocity until we release jump button or hit max jump speed.
-	if (jumping) {
-		vel.Y(vel.Y() + (playerJumpAcceleration + playerSpeedModifier) * dt);
-		if (AEInputCheckReleased('W') || AEInputCheckReleased(VK_SPACE) || AEInputCheckReleased(VK_UP)) jumping = false;
-		if (vel.Y() >= playerJumpSpeedMax + playerSpeedModifier) jumping = false;
-	}
-
-	//If we are in the air but not jumping, apply gravity.
-	if(inAir && !jumping) {
+	//If we are in the air, apply gravity.
+	if(inAir) {
 		vel.Y(vel.Y() - playerGravity * dt);
 	}
 
 	//If we just landed on a platform.
-	if (grounded && inAir && !jumping) {
+	if (grounded && inAir) {
 		inAir = false;
 		vel.Y(0);
 		behavior.parent.GetTransform()->SetTranslation(newPos);

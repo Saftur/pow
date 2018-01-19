@@ -109,7 +109,6 @@ private:
 	static float playerSpeedModifier;
 	static const float playerSpeedMax;
 
-	static const float playerJumpAcceleration;
 	static const float playerJumpSpeedMax;
 	static float playerGravity;
 	static bool jumping;
