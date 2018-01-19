@@ -16,6 +16,7 @@
 //------------------------------------------------------------------------------
 
 #include "Behavior.h"
+#include "PlatformManager.h"
 
 //------------------------------------------------------------------------------
 
@@ -109,11 +110,14 @@ private:
 	static float playerSpeedModifier;
 	static const float playerSpeedMax;
 
+	static const float maxPlayerTime;
 	static const float playerJumpAcceleration;
 	static const float playerJumpSpeedMax;
 	static float playerGravity;
 	static bool jumping;
 	static bool inAir;
+	static bool wasGrounded;
+	static float touchTime;
 };
 
 //------------------------------------------------------------------------------
