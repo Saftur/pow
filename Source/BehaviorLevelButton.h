@@ -80,18 +80,17 @@ private:
 	//	 dt = Change in time (in seconds) since the last game loop.
 	static void Update(Behavior& behavior, float dt);
 
+	//What happens when this button is pressed.
+	//Params:
+	//  behavior = reference to the behavior component.
+	static void ClickEffect(Behavior& behavior);
+
 	// Exit the current state of the behavior component.
 	// (Hint: Refer to the lecture notes on finite state machines (FSM).)
 	// Params:
 	//	 behavior = Pointer to the behavior component.
 	//	 dt = Change in time (in seconds) since the last game loop.
 	static void Exit(Behavior& behavior);
-
-	// The collision handling function for Asteroids.
-	// Params:
-	//	 asteroid = The asteroid object.
-	//	 other = The object the asteroid is colliding with.
-	static void CollisionHandler(GameObject& asteroid, GameObject& other);
 
 	//------------------------------------------------------------------------------
 	// Private Variables:

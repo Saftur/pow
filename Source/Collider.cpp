@@ -59,29 +59,6 @@ Collider::Collider(const Collider& other, GameObject& parent)
 //	 other = Reference to the second collider component.
 void Collider::CheckCollision(const Collider& other)
 {
-	if (AEInputCheckCurr(VK_LBUTTON)) {
-		//Get the mouse position on screen.
-		s32 mouseX;
-		s32 mouseY;
-		AEInputGetCursorPosition(&mouseX, &mouseY);
-
-		//Convert mouse screen position to world position.
-		float worldX;
-		float worldY;
-		AEGfxConvertScreenCoordinatesToWorld((float)mouseX, (float)mouseY, &worldX, &worldY);
-		Vector2D mousePos = Vector2D(worldX, worldY);
-
-		//Check if the mouse is within the bounds of this button.
-		Vector2D buttonScale = parent.GetTransform()->GetScale();
-		Vector2D buttonPos = parent.GetTransform()->GetTranslation();
-
-		if (mousePos.X() > buttonPos.X() - (buttonScale.X()) && mousePos.X() < buttonPos.X() + (buttonScale.X())
-			&& mousePos.Y() > buttonPos.Y() - (buttonScale.Y()) && mousePos.Y() < buttonPos.Y() + (buttonScale.Y())) {
-			GameObject fakeObject = GameObject("ThisIsAFakeObjectSoThisNameShouldntExistElsewhere");
-			handler(parent, fakeObject);
-		}
-	}
-	
 	if (parent.GetTransform()->GetTranslation().Distance(other.parent.GetTransform()->GetTranslation()) < radius + other.radius)
 	{
 		if (handler)

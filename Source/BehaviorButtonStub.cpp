@@ -76,9 +76,6 @@ void BehaviorButtonStub::Destroy(Behavior& behavior) {
 // Params:
 //	 behavior = Pointer to the behavior component.
 void BehaviorButtonStub::Init(Behavior& behavior) {
-	if (behavior.stateCurr == cButtonIdle) {
-		behavior.parent.GetCollider()->SetCollisionHandler(CollisionHandler);
-	}
 }
 
 // Update the current state of the behavior component.
@@ -87,8 +84,28 @@ void BehaviorButtonStub::Init(Behavior& behavior) {
 //	 behavior = Pointer to the behavior component.
 //	 dt = Change in time (in seconds) since the last game loop.
 void BehaviorButtonStub::Update(Behavior& behavior, float dt) {
-	UNREFERENCED_PARAMETER(behavior);
 	UNREFERENCED_PARAMETER(dt);
+	if (AEInputCheckCurr(VK_LBUTTON)) {
+		//Get the mouse position on screen.
+		s32 mouseX;
+		s32 mouseY;
+		AEInputGetCursorPosition(&mouseX, &mouseY);
+
+		//Convert mouse screen position to world position.
+		float worldX;
+		float worldY;
+		AEGfxConvertScreenCoordinatesToWorld((float)mouseX, (float)mouseY, &worldX, &worldY);
+		Vector2D mousePos = Vector2D(worldX, worldY);
+
+		//Check if the mouse is within the bounds of this button.
+		Vector2D buttonScale = behavior.parent.GetTransform()->GetScale();
+		Vector2D buttonPos = behavior.parent.GetTransform()->GetTranslation();
+
+		if (mousePos.X() > buttonPos.X() - (buttonScale.X()) && mousePos.X() < buttonPos.X() + (buttonScale.X())
+			&& mousePos.Y() > buttonPos.Y() - (buttonScale.Y()) && mousePos.Y() < buttonPos.Y() + (buttonScale.Y())) {
+			ClickEffect(behavior);
+		}
+	}
 }
 
 // Exit the current state of the behavior component.
@@ -100,13 +117,7 @@ void BehaviorButtonStub::Exit(Behavior& behavior) {
 	UNREFERENCED_PARAMETER(behavior);
 }
 
-// The collision handling function for Asteroids.
-// Params:
-//	 asteroid = The asteroid object.
-//	 other = The object the asteroid is colliding with.
-void BehaviorButtonStub::CollisionHandler(GameObject& button, GameObject& other) {
-	UNREFERENCED_PARAMETER(button);
-	if (other.IsNamed("ThisIsAFakeObjectSoThisNameShouldntExistElsewhere")) {
-		//Place all code here that you want triggered when someone presses this button type.
-	}
+void BehaviorButtonStub::ClickEffect(Behavior& behavior) {
+	UNREFERENCED_PARAMETER(behavior);
+	//Enter what happens when this button is clicked here.
 }
