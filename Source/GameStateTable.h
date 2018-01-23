@@ -78,6 +78,8 @@ public:
 	// Execute the Update function for the current game state.
 	void ExecuteUpdate(GameStates gameState, float dt) const;
 
+	void ExecuteUpdateAO(GameStates gameState, float dt) const;
+
 	// Execute the Shutdown function for the current game state.
 	void ExecuteShutdown(GameStates gameState) const;
 
@@ -112,6 +114,7 @@ private:
 		GameStateDtFunctionPtr		gameStateUpdate;	/* Pointer to a game state update function. */
 		GameStateVoidFunctionPtr	gameStateShutdown;	/* Pointer to a game state shutdown function. */
 		GameStateVoidFunctionPtr	gameStateUnload;	/* Pointer to a game state unload function. */
+		GameStateDtFunctionPtr		gameStateUpdateAO;	/* update after objects */
 	};
 
 	//------------------------------------------------------------------------------
@@ -119,7 +122,7 @@ private:
 	//------------------------------------------------------------------------------
 	const TableEntry GameStateTab[GsNum] =
 	{
-		{ GameStateLevel1::Load, GameStateLevel1::Init, GameStateLevel1::Update, GameStateLevel1::Shutdown, GameStateLevel1::Unload },
+		{ GameStateLevel1::Load, GameStateLevel1::Init, GameStateLevel1::Update, GameStateLevel1::Shutdown, GameStateLevel1::Unload, GameStateLevel1::UpdateAO },
 		{ GameStateLevel2::Load, GameStateLevel2::Init, GameStateLevel2::Update, GameStateLevel2::Shutdown, GameStateLevel2::Unload },
 		{ GameStateAsteroids::Load, GameStateAsteroids::Init, GameStateAsteroids::Update, GameStateAsteroids::Shutdown, GameStateAsteroids::Unload },
 		{ GameStateDemo::Load, GameStateDemo::Init, GameStateDemo::Update, GameStateDemo::Shutdown, GameStateDemo::Unload },

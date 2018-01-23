@@ -71,6 +71,11 @@ void GameStateManager::Update(float dt)
 	}
 }
 
+void GameStateManager::UpdateAO(float dt)
+{
+	GameStateTable::GetInstance().ExecuteUpdateAO(gameState.current, dt);
+}
+
 // Shutdown the game state manager.
 void GameStateManager::Shutdown()
 {

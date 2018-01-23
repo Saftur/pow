@@ -59,6 +59,8 @@ public:
 	//	 dt = Change in time (in seconds) since the last game loop.
 	static void Update(float dt);
 
+	static void UpdateAO(float dt);
+
 	// Shutdown any memory associated with the Level1 game state.
 	static void Shutdown();
 

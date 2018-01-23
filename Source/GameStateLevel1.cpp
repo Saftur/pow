@@ -102,6 +102,8 @@ GameObject* GameStateLevel1::CreateMonkey()
 	Behavior* behavior = (Behavior*)new BehaviorPlayer(*gameObjectMonkey);
 	gameObjectMonkey->SetBehavior(*behavior);
 
+	BehaviorCheckpoint::SetPlayer(*gameObjectMonkey);
+
 	return gameObjectMonkey;
 }
 
@@ -156,14 +158,23 @@ void GameStateLevel1::Init()
 
 	PlatformManager::AddPlatform(transform, 100);
 
-	transform.SetTranslation({ -100, -40 });
-	PlatformManager::AddPlatform(transform);
-
-	transform.SetTranslation({ 100, -40 });
+	transform.SetTranslation({ 100, 0 });
 	vector<Vector2D> path;
-	path.push_back({ -100, -40 });
-	path.push_back({ 0, -80 });
-	PlatformManager::AddPlatform(transform, 0, 100, path);
+	path.push_back({ 100, 50 });
+	//path.push_back({ -100, -40 });
+	//path.push_back({ 0, -80 });
+	PlatformManager::AddPlatform(transform, 0, 50, path);
+
+	/*transform.SetTranslation({ 0, 500 });
+	path.clear();
+	for (int i = 0; i < 360; i++) {
+		path.push_back(Vector2D((float)cos(i) * 500, (float)sin(i)) * 500);
+	}
+	PlatformManager::AddPlatform(transform, 0, 200, path);*/
+
+	transform.SetTranslation({ 0, -130 });
+	transform.SetScale({ 400, 20 });
+	PlatformManager::AddPlatform(transform);
 }
 
 void GameStateLevel1::MoveMonkey()
@@ -217,6 +228,8 @@ void GameStateLevel1::Update(float dt)
 	//MoveMonkey();
 	PlatformManager::Update(dt);
 
+	BehaviorCheckpoint::CheckPos();
+
 	if (AEInputCheckCurr('1'))
 	{
 		GameStateManager::GetInstance().SetNextState(GameStateTable::GsRestart);
@@ -233,6 +246,12 @@ void GameStateLevel1::Update(float dt)
 	{
 		BehaviorCheckpoint::ResetUnconditional();
 	}
+}
+
+void GameStateLevel1::UpdateAO(float dt)
+{
+	UNREFERENCED_PARAMETER(dt);
+	Transform::SetCamTranslation(-gameObjectMonkey->GetTransform()->GetTranslation());
 }
 
 // Shutdown any memory associated with the Stub game state.

@@ -32,6 +32,8 @@ public:
 	// Update the game state manager.
 	void Update(float dt);
 
+	void UpdateAO(float dt);
+
 	// Shutdown the game state manager.
 	void Shutdown();
 

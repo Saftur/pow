@@ -40,6 +40,7 @@ void PlatformManager::Update(float dt)
 	Transform *pt;
 	Vector2D ptrs;
 	Vector2D pscl;
+	Transform::SetCamIsDirty(true);
 	for (Platform &p : platforms) {
 		pt = &p.transform;
 		ptrs = pt->GetTranslation();
@@ -63,6 +64,7 @@ void PlatformManager::Update(float dt)
 			platformSprite->Draw(*pt);
 		}
 	}
+	Transform::SetCamIsDirty(false);
 }
 
 void PlatformManager::Shutdown()
@@ -91,8 +93,8 @@ PlatformManager::Platform* PlatformManager::IsOnPlatform(GameObject * object, Ve
 		pt = &p.transform;
 		ptrs = pt->GetTranslation();
 		pscl = pt->GetScale();
-		if ((otrs.X() - oscl.X() / 4 > ptrs.X() - pscl.X() / 2 && otrs.X() - oscl.X() / 4 < ptrs.X() + pscl.X() / 2 ||
-			otrs.X() + oscl.X() / 4 > ptrs.X() - pscl.X() / 2 && otrs.X() + oscl.X() / 4 < ptrs.X() + pscl.X() / 2) &&
+		if ((otrs.X() - oscl.X() / 4 > ptrs.X() - pscl.X() / 2 + 1 && otrs.X() - oscl.X() / 4 < ptrs.X() + pscl.X() / 2 - 1 ||
+			otrs.X() + oscl.X() / 4 > ptrs.X() - pscl.X() / 2 + 1 && otrs.X() + oscl.X() / 4 < ptrs.X() + pscl.X() / 2 - 1) &&
 			otrs.Y() - oscl.Y() / 2 > ptrs.Y() - pscl.Y() / 2 && otrs.Y() - oscl.Y() / 2 < ptrs.Y() + pscl.Y() / 2 + 1) {
 			if (groundPosition) {
 				groundPosition->X(otrs.X());
@@ -102,4 +104,55 @@ PlatformManager::Platform* PlatformManager::IsOnPlatform(GameObject * object, Ve
 		}
 	}
 	return nullptr;
+}
+
+int PlatformManager::HittingSide(GameObject * object, Vector2D * newPosition, Vector2D * newVelocity)
+{
+	Transform *ot = object->GetTransform();
+	if (!ot) return 0;
+	Vector2D otrs = ot->GetTranslation();
+	Vector2D oscl = ot->GetScale();
+	Transform *pt;
+	Vector2D ptrs;
+	Vector2D pscl;
+	for (Platform &p : platforms) {
+		pt = &p.transform;
+		ptrs = pt->GetTranslation();
+		pscl = pt->GetScale();
+		if ((otrs.X() - oscl.X() / 4 > ptrs.X() - pscl.X() / 2 + 1 && otrs.X() - oscl.X() / 4 < ptrs.X() + pscl.X() / 2 - 1 ||
+			otrs.X() + oscl.X() / 4 > ptrs.X() - pscl.X() / 2 + 1 && otrs.X() + oscl.X() / 4 < ptrs.X() + pscl.X() / 2 - 1 ||
+			otrs.X() > ptrs.X() - pscl.X() / 2 + 1 && otrs.X() < ptrs.X() + pscl.X() / 2 - 1) &&
+			otrs.Y() + oscl.Y() / 2 > ptrs.Y() - pscl.Y() / 2 - 1 && otrs.Y() + oscl.Y() / 2 < ptrs.Y() + pscl.Y() / 2) {
+			if (newPosition) {
+				newPosition->X(otrs.X());
+				newPosition->Y(ptrs.Y() - pscl.Y() / 2 - oscl.Y() / 2 - 1);
+			}
+			if (newVelocity) {
+				newVelocity->X(object->GetPhysics()->GetVelocity().X());
+				newVelocity->Y(0);
+			}
+			return 2;
+		}
+		if ((otrs.Y() - oscl.Y() / 4 > ptrs.Y() - pscl.Y() / 2 + 1 && otrs.Y() - oscl.Y() / 4 < ptrs.Y() + pscl.Y() / 2 - 1 ||
+			otrs.Y() + oscl.Y() / 4 > ptrs.Y() - pscl.Y() / 2 + 1 && otrs.Y() + oscl.Y() / 4 < ptrs.Y() + pscl.Y() / 2 - 1 ||
+			otrs.Y() > ptrs.Y() - pscl.Y() / 2 + 1 && otrs.Y() < ptrs.Y() + pscl.Y() / 2 - 1) &&
+			(otrs.X() - oscl.X() / 2 > ptrs.X() - pscl.X() / 2 && otrs.X() - oscl.X() / 2 < ptrs.X() + pscl.X() / 2 + 1 ||
+			otrs.X() + oscl.X() / 2 > ptrs.X() - pscl.X() / 2 - 1 && otrs.X() + oscl.X() / 2 < ptrs.X() + pscl.X() / 2)) {
+			if (newPosition) {
+				if (otrs.X() < ptrs.X())
+					newPosition->X(ptrs.X() - pscl.X() / 2 - oscl.X() / 2);
+				else
+					newPosition->X(ptrs.X() + pscl.X() / 2 + oscl.X() / 2);
+				newPosition->Y(otrs.Y());
+			}
+			if (newVelocity) {
+				newVelocity->X(0);
+				newVelocity->Y(object->GetPhysics()->GetVelocity().Y());
+			}
+			if (otrs.X() < ptrs.X())
+				return 3;
+			else return 1;
+		}
+	}
+	return 0;
 }

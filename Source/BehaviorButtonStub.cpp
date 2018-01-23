@@ -76,6 +76,7 @@ void BehaviorButtonStub::Destroy(Behavior& behavior) {
 // Params:
 //	 behavior = Pointer to the behavior component.
 void BehaviorButtonStub::Init(Behavior& behavior) {
+	UNREFERENCED_PARAMETER(behavior);
 }
 
 // Update the current state of the behavior component.

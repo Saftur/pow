@@ -28,7 +28,7 @@ Transform::Transform(float x, float y)
 //	 A reference to the component's matrix structure
 Matrix2D& Transform::GetMatrix()
 {
-	if (isDirty)
+	if (isDirty || (followCamera && camIsDirty))
 	{
 		Matrix2D newTranslation = Matrix2D().TranslationMatrix(translation.X(), translation.Y());
 		Matrix2D newScale = Matrix2D().ScalingMatrix(scale.X(), scale.Y());

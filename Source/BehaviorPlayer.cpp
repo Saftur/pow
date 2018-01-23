@@ -66,11 +66,18 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 
 	Vector2D vel = p->GetVelocity();
 
-	if(AEInputCheckCurr('A') || AEInputCheckCurr(VK_LEFT)) vel.X(-(playerSpeedMax + playerSpeedModifier));
-	else if (AEInputCheckCurr('D') || AEInputCheckCurr(VK_RIGHT)) vel.X(playerSpeedMax + playerSpeedModifier);
+	Vector2D newPos = Vector2D();
+	int hitSide = PlatformManager::HittingSide(&behavior.parent, &newPos);
+	if (hitSide != 0) {
+		t->SetTranslation(newPos);
+		if (hitSide == 2 && vel.Y() > 0)
+			vel.Y(0);
+	}
+
+	if(AEInputCheckCurr('A') || AEInputCheckCurr(VK_LEFT) && hitSide != 1) vel.X(-(playerSpeedMax + playerSpeedModifier));
+	else if (AEInputCheckCurr('D') || AEInputCheckCurr(VK_RIGHT) && hitSide != 3) vel.X(playerSpeedMax + playerSpeedModifier);
 	else vel.X(0);
 
-	Vector2D newPos = Vector2D();
 	PlatformManager::Platform *platform = PlatformManager::IsOnPlatform(&behavior.parent, &newPos);
 	//If a jump button is pressed state that we are jumping and no longer grounded.
 	if (AEInputCheckTriggered('W') || AEInputCheckTriggered(VK_SPACE) || AEInputCheckTriggered(VK_UP)) {
@@ -102,8 +109,17 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 	if(!platform) inAir = true;
 
 	if (vel.X() > playerSpeedMax) vel.X(playerSpeedMax);
+	if (vel.X() < -playerSpeedMax) vel.X(-playerSpeedMax);
 
 	p->SetVelocity(vel);
+
+	/*Vector2D newVel = Vector2D();
+	if (PlatformManager::HittingSide(&behavior.parent, &newPos, &newVel)) {
+		behavior.parent.GetTransform()->SetTranslation(newPos);
+		p->SetVelocity(newVel);
+	} else {
+		p->SetVelocity(vel);
+	}*/
 
 	// If we are touching a platform and were last frame, incrment a counter.
 	if (wasGrounded && platform)
@@ -112,7 +128,7 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 
 		if (touchTime > maxPlayerTime)
 		{
-			BehaviorCheckpoint::ResetUnconditional();
+			//BehaviorCheckpoint::ResetUnconditional();
 		}
 	}
 	else

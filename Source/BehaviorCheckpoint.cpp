@@ -20,6 +20,8 @@
 #include "GameStateLevel1.h"
 #include "BehaviorCheckpoint.h"
 #include "GameObjectManager.h"
+#include "GameStateManager.h"
+#include "GameStateTable.h"
 
 //------------------------------------------------------------------------------
 // Enums:
@@ -125,7 +127,7 @@ void BehaviorCheckpoint::Update(Behavior& behavior, float dt)
 	case cCheckpointIdle:
 		break;
 	case cCheckpointReset:
-		GameObjectManager::GetInstance().GetObjectByName("Player")->GetTransform()->SetTranslation(activeCheckpoint->GetTransform()->GetTranslation());
+		player->GetTransform()->SetTranslation(activeCheckpoint->GetTransform()->GetTranslation());
 		behavior.stateNext = cCheckpointIdle;
 		break;
 	}
@@ -153,17 +155,23 @@ void BehaviorCheckpoint::CollisionHandler(GameObject& checkpoint, GameObject& ot
 	}
 }
 
-void BehaviorCheckpoint::CheckPos(GameObject& player)
+void BehaviorCheckpoint::SetPlayer(GameObject& player_) {
+	player = &player_;
+}
+
+void BehaviorCheckpoint::CheckPos()
 {
-	if (player.GetTransform()->GetTranslation().Y() < AEGfxGetWinMaxY())
+	if (player->GetTransform()->GetTranslation().Y() < AEGfxGetWinMinY())
 	{
-		activeCheckpoint->GetBehavior()->stateNext = cCheckpointReset;
+		ResetUnconditional();
 	}
 }
 
 void BehaviorCheckpoint::ResetUnconditional()
 {
-	activeCheckpoint->GetBehavior()->stateNext = cCheckpointReset;
+	if (activeCheckpoint)
+		activeCheckpoint->GetBehavior()->stateNext = cCheckpointReset;
+	else GameStateManager::GetInstance().SetNextState(GameStateTable::GsRestart);
 }
 
 GameObject& BehaviorCheckpoint::GetActiveCheckpoint()
@@ -176,6 +184,7 @@ GameObject& BehaviorCheckpoint::GetActiveCheckpoint()
 //------------------------------------------------------------------------------
 
 GameObject* BehaviorCheckpoint::activeCheckpoint = nullptr;
+GameObject* BehaviorCheckpoint::player = nullptr;
 
 //------------------------------------------------------------------------------
 // Private Consts:

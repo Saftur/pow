@@ -75,6 +75,7 @@ void Engine::Update(float dt)
 
 	// Update the game object manager.
 	GameObjectManager::GetInstance().Update(dt);
+	GameStateManager::GetInstance().UpdateAO(dt);
 	GameObjectManager::GetInstance().CheckCollisions();
 	GameObjectManager::GetInstance().Draw();
 

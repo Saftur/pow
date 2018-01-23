@@ -74,6 +74,10 @@ public:
 
 	static GameObject& GetActiveCheckpoint();
 
+	static void SetPlayer(GameObject& player);
+
+	static void CheckPos();
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Functions:
@@ -124,8 +128,6 @@ private:
 	//	 other = The object the asteroid is colliding with.
 	static void CollisionHandler(GameObject& checkpoint, GameObject& other);
 
-	static void CheckPos(GameObject& player);
-
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
@@ -133,7 +135,8 @@ private:
 	// Inherit the base behavior structure.
 	Behavior	base;
 
-	static GameObject* BehaviorCheckpoint::activeCheckpoint;
+	static GameObject* activeCheckpoint;
+	static GameObject* player;
 
 
 	//------------------------------------------------------------------------------

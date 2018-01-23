@@ -70,6 +70,17 @@ void GameStateTable::ExecuteUpdate(GameStates gameState, float dt) const
 	}
 }
 
+void GameStateTable::ExecuteUpdateAO(GameStates gameState, float dt) const
+{
+	// First validate the game state and the function pointer.
+	if (StateIsValid(gameState) &&
+		((*GameStateTab[gameState].gameStateUpdateAO) != NULL))
+	{
+		// Execute the Update function.
+		(*GameStateTab[gameState].gameStateUpdateAO)(dt);
+	}
+}
+
 // Execute the Shutdown function for the current game state.
 void GameStateTable::ExecuteShutdown(GameStates gameState) const
 {
