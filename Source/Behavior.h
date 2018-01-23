@@ -55,6 +55,7 @@ public:
 	friend class BehaviorCheckpoint;
 	friend class BehaviorStub;
 	friend class BehaviorPlayer;
+	friend class BehaviorGoal;
 
 	//------------------------------------------------------------------------------
 	// Public Functions:

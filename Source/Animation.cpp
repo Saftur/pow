@@ -182,6 +182,11 @@ void Animation::Update(float dt)
 	}
 }
 
+void Animation::TogglePause()
+{
+	isRunning = !isRunning;
+}
+
 // Determine if the animation has reached the end of its sequence.
 // Params:
 //	 sequence = Pointer to the animation sequence object.

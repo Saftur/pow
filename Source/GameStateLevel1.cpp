@@ -23,6 +23,7 @@
 #include "GameObjectManager.h"
 #include "PlatformManager.h"
 #include "BehaviorPlayer.h"
+#include "BehaviorGoal.h"
 
 //------------------------------------------------------------------------------
 // Private Consts:
@@ -47,6 +48,11 @@ AEGfxTexture* GameStateLevel1::textureMonkey;
 AEGfxVertexList* GameStateLevel1::meshQuad;
 GameObject* GameStateLevel1::gameObjectMonkey;
 SpriteSource* GameStateLevel1::spriteSourceMonkey;
+
+AEGfxTexture* GameStateLevel1::textureGoal;
+AEGfxVertexList* GameStateLevel1::meshGoal;
+SpriteSource* GameStateLevel1::spriteSourceGoal;
+GameObject* GameStateLevel1::gameObjectGoal;
 
 AEGfxTexture* GameStateLevel1::textureCheckpoint;
 AEGfxVertexList* GameStateLevel1::meshCheckpoint;
@@ -73,6 +79,10 @@ void GameStateLevel1::Load()
 	meshCheckpoint = MeshCreateQuad(0.5f, 0.5f, 1.0f / 3, 1.0f / 3, "Mesh3x3");
 	textureCheckpoint = AEGfxTextureLoad("Assets\\player.png");
 	spriteSourceCheckpoint = new SpriteSource(3, 3, textureCheckpoint);
+
+	meshGoal = MeshCreateQuad(0.5f, 0.5f, 1.0f / 3, 1.0f / 3, "Mesh3x3");
+	textureGoal = AEGfxTextureLoad("Assets\\goal.png");
+	spriteSourceGoal = new SpriteSource(4, 1, textureGoal);
 }
 
 GameObject* GameStateLevel1::CreateMonkey()
@@ -107,6 +117,35 @@ GameObject* GameStateLevel1::CreateMonkey()
 	return gameObjectMonkey;
 }
 
+GameObject* GameStateLevel1::CreateGoal()
+{
+	gameObjectGoal = new GameObject("Goal");
+
+	Transform* transform = new Transform(0, groundHeight);
+
+	Sprite* sprite2 = new Sprite("Goal Sprite");
+	sprite2->SetMesh(meshGoal);
+	sprite2->SetSpriteSource(spriteSourceGoal);
+
+	Animation* animation2 = new Animation(sprite2);
+	animation2->Play(4, 0.25f, true);
+
+	Physics* physics = new Physics();
+
+	gameObjectGoal->SetAnimation(*animation2);
+	gameObjectGoal->SetPhysics(*physics);
+	gameObjectGoal->SetSprite(*sprite2);
+	gameObjectGoal->SetTransform(*transform);
+
+	Collider* col = new Collider(*gameObjectGoal);
+	gameObjectGoal->SetCollider(*col);
+
+	Behavior* behavior = (Behavior*)new BehaviorGoal(*gameObjectGoal, GameStateTable::GsLevel2);
+	gameObjectGoal->SetBehavior(*behavior);
+
+	return gameObjectGoal;
+}
+
 GameObject* GameStateLevel1::CreateCheckpoint()
 {
 	gameObjectCheckpoint = new GameObject("Checkpoint");
@@ -116,12 +155,12 @@ GameObject* GameStateLevel1::CreateCheckpoint()
 
 	Sprite* sprite2 = new Sprite("Checkpoint Sprite");
 	sprite2->SetMesh(meshQuad);
-	sprite2->SetSpriteSource(spriteSourceCheckpoint);
+	sprite2->SetSpriteSource(spriteSourceGoal);
 
 	Animation* animation2 = new Animation(sprite2);
 	animation2->Play(8, 0.25f, true);
 
-	Behavior* bCh = (Behavior*)new BehaviorCheckpoint(*gameObjectCheckpoint);
+	Behavior* bCh = (Behavior*)new BehaviorGoal(*gameObjectCheckpoint, GameStateTable::GsLevel2);
 
 	Physics* physics = new Physics();
 
@@ -144,9 +183,11 @@ void GameStateLevel1::Init()
 
 	CreateMonkey();
 	CreateCheckpoint();
+	//CreateGoal();
 
 	GameObjectManager::GetInstance().Add(*gameObjectMonkey);
 	GameObjectManager::GetInstance().Add(*gameObjectCheckpoint);
+	//GameObjectManager::GetInstance().Add(*gameObjectGoal);
 
 	AEGfxSetBackgroundColor(1, 1, 1);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
@@ -271,8 +312,10 @@ void GameStateLevel1::Unload()
 
 	AEGfxMeshFree(meshQuad);
 	AEGfxMeshFree(meshCheckpoint);
+	AEGfxMeshFree(meshGoal);
 	AEGfxTextureUnload(textureMonkey);
 	AEGfxTextureUnload(textureCheckpoint);
+	AEGfxTextureUnload(textureGoal);
 }
 
 //------------------------------------------------------------------------------

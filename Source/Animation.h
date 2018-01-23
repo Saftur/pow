@@ -72,6 +72,9 @@ public:
 	//	 The value in isDone.
 	bool IsDone() const;
 
+	// Pauses/unpauses the current animation.
+	void TogglePause();
+
 private:
 	// Pointer to the sprite associated with the animation.
 	Sprite* sprite;

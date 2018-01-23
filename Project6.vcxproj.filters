@@ -175,6 +175,9 @@
     <ClCompile Include="Source\PlatformManager.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Source\BehaviorGoal.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GameStateStub.h">
@@ -330,6 +333,9 @@
     </ClInclude>
     <ClInclude Include="Source\PlatformManager.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorGoal.h">
+      <Filter>Game\Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

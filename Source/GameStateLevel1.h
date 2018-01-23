@@ -78,6 +78,8 @@ private:
 
 	static GameObject* CreateCheckpoint();
 
+	static GameObject* CreateGoal();
+
 	// Handle movement logic for the monkey game object
 	static void MoveMonkey(void);
 
@@ -88,6 +90,11 @@ private:
 	static AEGfxVertexList* meshQuad;
 	static SpriteSource* spriteSourceMonkey;
 	static GameObject* gameObjectMonkey;
+
+	static AEGfxTexture* textureGoal;
+	static AEGfxVertexList* meshGoal;
+	static SpriteSource* spriteSourceGoal;
+	static GameObject* gameObjectGoal;
 
 	static AEGfxTexture* textureCheckpoint;
 	static AEGfxVertexList* meshCheckpoint;
