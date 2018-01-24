@@ -22,6 +22,7 @@
 #include "GameObjectManager.h"
 #include "GameStateManager.h"
 #include "GameStateTable.h"
+#include "BehaviorPlayer.h"
 
 //------------------------------------------------------------------------------
 // Enums:
@@ -128,6 +129,7 @@ void BehaviorCheckpoint::Update(Behavior& behavior, float dt)
 		break;
 	case cCheckpointReset:
 		player->GetTransform()->SetTranslation(activeCheckpoint->GetTransform()->GetTranslation());
+		((BehaviorPlayer*)(player->GetBehavior()))->ResetSpeedModifier();
 		behavior.stateNext = cCheckpointIdle;
 		break;
 	}

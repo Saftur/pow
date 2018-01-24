@@ -74,16 +74,22 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 			vel.Y(0);
 	}
 
-	if(AEInputCheckCurr('A') || AEInputCheckCurr(VK_LEFT) && hitSide != 1) vel.X(-(playerSpeedMax + playerSpeedModifier));
-	else if (AEInputCheckCurr('D') || AEInputCheckCurr(VK_RIGHT) && hitSide != 3) vel.X(playerSpeedMax + playerSpeedModifier);
-	else vel.X(0);
+	vel.X(0);
+	if(AEInputCheckCurr('A') || AEInputCheckCurr(VK_LEFT) && hitSide != 1) vel.X(vel.X() - (playerSpeedMax + playerSpeedModifier));
+	if (AEInputCheckCurr('D') || AEInputCheckCurr(VK_RIGHT) && hitSide != 3) vel.X(vel.X() + (playerSpeedMax + playerSpeedModifier));
+	if (vel.X() == 0)
+		playerSpeedModifier = 0;
 
 	PlatformManager::Platform *platform = PlatformManager::IsOnPlatform(&behavior.parent, &newPos);
 	//If a jump button is pressed state that we are jumping and no longer grounded.
-	if (AEInputCheckTriggered('W') || AEInputCheckTriggered(VK_SPACE) || AEInputCheckTriggered(VK_UP)) {
-		if (platform) {
+	if (platform) {
+		if (!wasGrounded && platform->trampoline && vel.Y() < 0) {
+			vel.Y(-vel.Y());
+		} else if (AEInputCheckCurr('W') || AEInputCheckCurr(VK_SPACE) || AEInputCheckCurr(VK_UP)) {
 			vel.Y(playerJumpSpeedMax+platform->jump);
 			playerSpeedModifier += 15.0f;
+		} else {
+			vel.Y(0);
 		}
 	}
 
@@ -95,7 +101,8 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 	//If we just landed on a platform.
 	if (platform && inAir) {
 		inAir = false;
-		vel.Y(0);
+		if (!platform->trampoline)
+			vel.Y(0);
 	}
 
 	if (platform) {
@@ -108,8 +115,8 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 
 	if(!platform) inAir = true;
 
-	if (vel.X() > playerSpeedMax) vel.X(playerSpeedMax);
-	if (vel.X() < -playerSpeedMax) vel.X(-playerSpeedMax);
+	//if (vel.X() > playerSpeedMax) vel.X(playerSpeedMax);
+	//if (vel.X() < -playerSpeedMax) vel.X(-playerSpeedMax);
 
 	p->SetVelocity(vel);
 
@@ -150,6 +157,11 @@ BehaviorPlayer::BehaviorPlayer(GameObject& parent)
 	base.onExit = BehaviorPlayer::Exit;
 	base.clone = BehaviorPlayer::Clone;
 	base.destroy = BehaviorPlayer::Destroy;
+}
+
+void BehaviorPlayer::ResetSpeedModifier()
+{
+	playerSpeedModifier = 0;
 }
 
 BehaviorPlayer::BehaviorPlayer(const Behavior& other, GameObject& parent)

@@ -10,6 +10,7 @@ public:
 	struct Platform {
 		Transform transform;
 		float jump;
+		bool trampoline;
 		float moveSpeed;
 		vector<Vector2D> path;
 		unsigned int pn;
@@ -20,7 +21,7 @@ public:
 	static void Update(float dt);
 	static void Shutdown();
 
-	static void AddPlatform(Transform transform, float jump = 0.0f, float moveSpeed = 0.0f, vector<Vector2D> path = {});
+	static void AddPlatform(Transform transform, float jump = 0.0f, bool trampoline = false, float moveSpeed = 0.0f, vector<Vector2D> path = {});
 	static Platform* IsOnPlatform(GameObject *object, Vector2D *groundPosition = nullptr);
 	// 0 = none, 1 = right, 2 = bottom, 3 = left, 4 = top
 	static int HittingSide(GameObject *object, Vector2D *newPosition = nullptr, Vector2D *newVelocity = nullptr);

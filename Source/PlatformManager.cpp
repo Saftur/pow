@@ -74,10 +74,10 @@ void PlatformManager::Shutdown()
 	delete platformSprite;
 }
 
-void PlatformManager::AddPlatform(Transform transform, float jump, float moveSpeed, vector<Vector2D> path)
+void PlatformManager::AddPlatform(Transform transform, float jump, bool trampoline, float moveSpeed, vector<Vector2D> path)
 {
 	path.push_back(transform.GetTranslation());
-	platforms.push_back({ transform, jump, moveSpeed, path, 0, {0, 0} });
+	platforms.push_back({ transform, jump, trampoline, moveSpeed, path, 0, {0, 0} });
 }
 
 PlatformManager::Platform* PlatformManager::IsOnPlatform(GameObject * object, Vector2D * groundPosition)

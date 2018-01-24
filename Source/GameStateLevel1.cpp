@@ -155,12 +155,12 @@ GameObject* GameStateLevel1::CreateCheckpoint()
 
 	Sprite* sprite2 = new Sprite("Checkpoint Sprite");
 	sprite2->SetMesh(meshQuad);
-	sprite2->SetSpriteSource(spriteSourceGoal);
+	sprite2->SetSpriteSource(spriteSourceCheckpoint);
 
 	Animation* animation2 = new Animation(sprite2);
 	animation2->Play(8, 0.25f, true);
 
-	Behavior* bCh = (Behavior*)new BehaviorGoal(*gameObjectCheckpoint, GameStateTable::GsLevel2);
+	Behavior* bCh = (Behavior*)new BehaviorCheckpoint(*gameObjectCheckpoint);
 
 	Physics* physics = new Physics();
 
@@ -204,7 +204,7 @@ void GameStateLevel1::Init()
 	path.push_back({ 100, 50 });
 	//path.push_back({ -100, -40 });
 	//path.push_back({ 0, -80 });
-	PlatformManager::AddPlatform(transform, 0, 50, path);
+	PlatformManager::AddPlatform(transform, 0, false, 50, path);
 
 	/*transform.SetTranslation({ 0, 500 });
 	path.clear();
@@ -212,6 +212,9 @@ void GameStateLevel1::Init()
 		path.push_back(Vector2D((float)cos(i) * 500, (float)sin(i)) * 500);
 	}
 	PlatformManager::AddPlatform(transform, 0, 200, path);*/
+
+	transform.SetTranslation({ -100, -10 });
+	PlatformManager::AddPlatform(transform, 0, true);
 
 	transform.SetTranslation({ 0, -130 });
 	transform.SetScale({ 400, 20 });

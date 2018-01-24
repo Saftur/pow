@@ -40,6 +40,8 @@ public:
 	//  parent = The object that owns this behavior.
 	BehaviorPlayer(GameObject& parent);
 
+	void ResetSpeedModifier();
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Functions:
