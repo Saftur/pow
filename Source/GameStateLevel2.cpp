@@ -15,6 +15,7 @@
 #include "GameStateLevel2.h"
 #include "Trace.h"
 #include "GameObject.h"
+#include "LevelTimer.h"
 
 //------------------------------------------------------------------------------
 // Private Consts:
@@ -34,6 +35,8 @@ const float GameStateLevel2::spaceshipSpeed = 500.0f;
 int GameStateLevel2::numLives;
 AEGfxVertexList* GameStateLevel2::meshTriangle;
 GameObject* GameStateLevel2::gameObjectShip;
+
+LevelTimer* GameStateLevel2::timer;
 //------------------------------------------------------------------------------
 // Private Function Declarations:
 //------------------------------------------------------------------------------
@@ -93,6 +96,7 @@ void GameStateLevel2::Init()
 	Trace::GetInstance().GetStream() << "Stub: Init" << std::endl;
 
 	CreateSpaceship();
+	timer = new LevelTimer({ -300, 100 }, { 10, 10 });
 
 	AEGfxSetBackgroundColor(1, 1, 1);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
@@ -133,6 +137,7 @@ void GameStateLevel2::Update(float dt)
 	MoveSpaceship();
 	gameObjectShip->Update(dt);
 	gameObjectShip->Draw();
+	timer->Update(dt);
 
 	if (AEInputCheckCurr('1'))
 	{

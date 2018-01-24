@@ -29,6 +29,7 @@ typedef class Animation Animation;
 typedef class AnimationSequence AnimationSequence;
 typedef class GameObject GameObject;
 typedef struct AnimationFrame AnimationFrame;
+typedef class LevelTimer LevelTimer;
 
 //------------------------------------------------------------------------------
 // Public Structures:
@@ -82,5 +83,7 @@ private:
 	static AEGfxVertexList* meshTriangle;
 	static GameObject* gameObjectShip;
 	static const float spaceshipSpeed;
+
+	static LevelTimer* timer;
 };
 /*----------------------------------------------------------------------------*/
