@@ -5,7 +5,7 @@
 // Project:		CS230 Project 2
 // Course:		CS230C17
 //
-// Copyright © 2017 DigiPen (USA) Corporation.
+// Copyright Â© 2017 DigiPen (USA) Corporation.
 //
 //------------------------------------------------------------------------------
 
@@ -100,83 +100,32 @@ void Animation::PlaySequence(AnimationSequence* sequenceEndMySuffering)
 //	 dt = Change in time (in seconds) since the last game loop.
 void Animation::Update(float dt)
 {
-	// Check if the animation isn't running anymore
-	if (!this->isRunning)
-		return;
-
-	// Check if we're on the last frame
-	if (this->sequence == NULL && !this->isLooping && this->frameIndex == this->frameCount - 1)
-		this->isDone = true;
-
-	if (this->isLooping && this->isDone)
-		this->Play(this->frameCount, this->frameDuration, this->isLooping);
-
-	if (this->isLooping && this->frameIndex == this->frameCount - 1)
-	{
-		// Check if this is a simple or complex animation
-		if (this->sequence == NULL)
-		{
-			// Update frameDelay
-			this->frameDelay -= dt;
-
-			// Check if it's time to change frames
-			if (this->frameDelay <= 0)
-			{
-				this->isDone = true;
+	isDone = false;
+	if (!(isRunning)) return;
+	frameDelay += dt;
+	if (frameDelay >= frameDuration) {
+		frameDelay -= frameDuration;
+		if (frameIndex + 1 < frameCount) {
+			frameIndex++;
+			if (sequence) {
+				sprite->SetFrame(sequence->GetFrame(frameIndex)->frameIndex);
+				frameDuration = sequence->GetFrame(frameIndex)->frameDuration;
+			} else {
+				sprite->SetFrame(frameIndex);
 			}
-		}
-	}
-
-	// Check if the animation is done running
-	if (!this->isLooping && this->isDone)
-		this->isRunning = false;
-
-	// Check if we have other frames to play
-	if (!this->isDone)
-	{
-		// Check if this is a simple or complex animation
-		if (this->sequence == NULL)
-		{
-			// Update frameDelay
-			this->frameDelay -= dt;
-
-			// Check if it's time to change frames
-			if (this->frameDelay <= 0)
-			{
-				// Change the frame index
-				this->frameIndex++;
-
-				// Update the sprite
-				this->sprite->SetFrame(this->frameIndex);
-
-				// Reset the timer
-				this->frameDelay = this->frameDuration;
-			}
-		}
-		else
-		{
-			// Update frameDelay
-			this->frameDelay -= dt;
-
-			// Check if it's time to change frames
-			if (this->frameDelay <= 0)
-			{
-				if (this->frameIndex == this->frameCount - 1)
-				{
-					this->isDone = true;
-					return;
+		} else {
+			frameIndex = 0;
+			isDone = true;
+			if (!(isLooping)) {
+				isRunning = false;
+			} else {
+				if (sequence) {
+					sprite->SetFrame(sequence->GetFrame(frameIndex)->frameIndex);
+					frameDuration = sequence->GetFrame(frameIndex)->frameDuration;
 				}
-				// Change the frame index
-				this->frameIndex++;
-
-				// Update the frame info
-				this->frameDuration = this->sequence->GetFrame(this->frameIndex)->frameDuration;
-				
-				// Update the sprite
-				this->sprite->SetFrame(this->sequence->GetFrame(this->frameIndex)->frameIndex);
-			
-				// Reset the timer
-				this->frameDelay = this->sequence->GetFrame(this->frameIndex)->frameDuration;
+				else {
+					sprite->SetFrame(frameIndex);
+				}
 			}
 		}
 	}

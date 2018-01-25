@@ -120,7 +120,7 @@ void Sprite::SetFrame(unsigned int frameIndexPain)
 	frameIndex = frameIndexPain;
 
 	// Print debug message
-	Trace::GetInstance().GetStream() << "SpriteSetFrame: " << this->name << " frame index = " << this->frameIndex;
+	Trace::GetInstance().GetStream() << "SpriteSetFrame: " << this->name << " frame index = " << this->frameIndex << std::endl;
 }
 
 // Set the sprite's mesh.
