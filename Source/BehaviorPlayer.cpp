@@ -129,13 +129,13 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 	}*/
 
 	// If we are touching a platform and were last frame, incrment a counter.
-	if (wasGrounded && platform)
+	if (wasGrounded && platform && platform->killsInTime)
 	{
 		touchTime += dt;
 
 		if (touchTime > maxPlayerTime)
 		{
-			//BehaviorCheckpoint::ResetUnconditional();
+			BehaviorCheckpoint::ResetUnconditional();
 		}
 	}
 	else
