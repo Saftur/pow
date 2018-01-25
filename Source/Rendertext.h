@@ -15,14 +15,6 @@
 #include "SpriteSource.h"
 
 class Text{
-private:
-	AEGfxVertexList* mesh;
-	AEGfxTexture* texture;
-	SpriteSource* spritesource;
-	Sprite sprite;
-	Transform transform;
-	char string[256];
-
 public:
 	Text(const char * text, Vector2D pos, Vector2D scale);
 	~Text();
@@ -31,4 +23,12 @@ public:
 	void draw();
 	void setLocation(Vector2D loc);
 	void setScale(Vector2D scale);
+
+private:
+	AEGfxVertexList* mesh;
+	AEGfxTexture* texture;
+	SpriteSource* spritesource;
+	Sprite sprite;
+	Transform transform;
+	char string[256];
 };

@@ -15,6 +15,7 @@
 #include "AEEngine.h"
 #include "GameStateManager.h"
 #include "System.h"
+#include <Windows.h>
 
 //------------------------------------------------------------------------------
 // Main Function:
@@ -27,6 +28,8 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 	// Change in time (in seconds) since the last game loop.
 	// A framerate controller is not required for this assignment.
 	float dt = 0.0167f;
+	DWORD lastTime = 0;
+	DWORD currentTime = GetTickCount();
 
 	// Store the Windows settings passed in WinMain.
 	System::GetInstance().StoreWindowSettings(instanceH, show);
@@ -37,6 +40,10 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 	// MAIN LOOP: Do not exit until instructed to do so by the game state manager (GSM).
 	while (GameStateManager::GetInstance().IsRunning())
 	{
+		currentTime = GetTickCount();
+		if (lastTime > 0) dt = (float) (currentTime - lastTime)/1000;
+		lastTime = currentTime;
+
 		// Update the game engine.
 		Engine::GetInstance().Update(dt);
 	}
