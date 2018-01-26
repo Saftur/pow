@@ -84,7 +84,7 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 	//If a jump button is pressed state that we are jumping and no longer grounded.
 	if (platform) {
 		if (!wasGrounded && platform->trampoline && vel.Y() < 0) {
-			vel.Y(-vel.Y());
+			vel.Y((-vel.Y() + platform->jump));
 		} else if (AEInputCheckCurr('W') || AEInputCheckCurr(VK_SPACE) || AEInputCheckCurr(VK_UP)) {
 			vel.Y(playerJumpSpeedMax+platform->jump);
 			playerSpeedModifier += 15.0f;

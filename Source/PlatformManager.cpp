@@ -18,8 +18,8 @@ void PlatformManager::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
 	Vector2D st = Transform::GetCamTranslation();
-	Vector2D scrMin = { AEGfxGetWinMinX(), AEGfxGetWinMinY() };
-	Vector2D scrMax = { AEGfxGetWinMaxX(), AEGfxGetWinMaxY() };
+	Vector2D scrMin = { AEGfxGetWinMinX() - st.X(), AEGfxGetWinMinY() - st.Y() };
+	Vector2D scrMax = { AEGfxGetWinMaxX() - st.X(), AEGfxGetWinMaxY() - st.Y() };
 	Transform *pt;
 	Vector2D ptrs;
 	Vector2D pscl;

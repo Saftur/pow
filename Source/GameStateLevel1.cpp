@@ -140,7 +140,7 @@ GameObject* GameStateLevel1::CreateGoal()
 	Collider* col = new Collider(*gameObjectGoal);
 	gameObjectGoal->SetCollider(*col);
 
-	Behavior* behavior = (Behavior*)new BehaviorGoal(*gameObjectGoal, GameStateTable::GsLevel2);
+	Behavior* behavior = (Behavior*)new BehaviorGoal(*gameObjectGoal, GameStateTable::GsPlatformLevel1);
 	gameObjectGoal->SetBehavior(*behavior);
 
 	return gameObjectGoal;

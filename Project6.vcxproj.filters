@@ -181,6 +181,9 @@
     <ClCompile Include="Source\LevelTimer.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameStatePlatformLevel1.cpp">
+      <Filter>Game\GameStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GameStateStub.h">
@@ -342,6 +345,9 @@
     </ClInclude>
     <ClInclude Include="Source\LevelTimer.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStatePlatformLevel1.h">
+      <Filter>Game\GameStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
