@@ -72,17 +72,17 @@ void GameStateLevel1::Load()
 {
 	Trace::GetInstance().GetStream() << "Stub: Load" << std::endl;
 
-	meshQuad = MeshCreateQuad(0.5f, 0.5f, 1.0f / 3, 1.0f / 3, "Mesh3x3");
-	textureMonkey = AEGfxTextureLoad("Assets\\MonkeyWalk.png");
-	spriteSourceMonkey = new SpriteSource(3, 3, textureMonkey);
+	meshQuad = MeshCreateQuad(0.5f, 0.5f, 1.0f, 1.0f, "Mesh3x3");
+	textureMonkey = AEGfxTextureLoad("Assets\\player.png");
+	spriteSourceMonkey = new SpriteSource(1, 1, textureMonkey);
 
-	meshCheckpoint = MeshCreateQuad(0.5f, 0.5f, 1.0f / 3, 1.0f / 3, "Mesh3x3");
-	textureCheckpoint = AEGfxTextureLoad("Assets\\player.png");
-	spriteSourceCheckpoint = new SpriteSource(3, 3, textureCheckpoint);
+	meshCheckpoint = MeshCreateQuad(0.5f, 0.5f, 1.0f, 1.0f, "Mesh3x3");
+	textureCheckpoint = AEGfxTextureLoad("Assets\\tileGreen.png");
+	spriteSourceCheckpoint = new SpriteSource(1, 1, textureCheckpoint);
 
-	meshGoal = MeshCreateQuad(0.5f, 0.5f, 1.0f / 3, 1.0f / 3, "Mesh3x3");
+	meshGoal = MeshCreateQuad(0.5f, 0.5f, 1.0f / 1, 1.0f / 4, "Mesh3x3");
 	textureGoal = AEGfxTextureLoad("Assets\\goal.png");
-	spriteSourceGoal = new SpriteSource(4, 1, textureGoal);
+	spriteSourceGoal = new SpriteSource(1, 4, textureGoal);
 }
 
 GameObject* GameStateLevel1::CreateMonkey()
@@ -185,11 +185,11 @@ void GameStateLevel1::Init()
 	CreateCheckpoint();
 	//CreateGoal();
 
-	GameObjectManager::GetInstance().Add(*gameObjectMonkey);
 	GameObjectManager::GetInstance().Add(*gameObjectCheckpoint);
 	//GameObjectManager::GetInstance().Add(*gameObjectGoal);
+	GameObjectManager::GetInstance().Add(*gameObjectMonkey);
 
-	AEGfxSetBackgroundColor(1, 1, 1);
+	AEGfxSetBackgroundColor(0, 0, 0);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 
 	PlatformManager::Init();

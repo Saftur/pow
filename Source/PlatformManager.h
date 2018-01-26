@@ -16,6 +16,7 @@ public:
 		bool killsInTime;
 		unsigned int pn;
 		Vector2D dir;
+		AEGfxVertexList* mesh;
 	};
 
 	static void Init();
@@ -26,10 +27,10 @@ public:
 	static Platform* IsOnPlatform(GameObject *object, Vector2D *groundPosition = nullptr);
 	// 0 = none, 1 = right, 2 = bottom, 3 = left, 4 = top
 	static int HittingSide(GameObject *object, Vector2D *newPosition = nullptr, Vector2D *newVelocity = nullptr);
+	static AEGfxVertexList* GenerateMesh();
 
 private:
 	static vector<Platform> platforms;
-	static AEGfxVertexList *platformMesh;
 	static Sprite *platformSprite;
 
 	//static float scroll;

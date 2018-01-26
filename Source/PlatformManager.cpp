@@ -2,33 +2,16 @@
 #include <AEEngine.h>
 #include "Mesh.h"
 #include "PlatformManager.h"
+#include "Random.h"
 
 vector<PlatformManager::Platform> PlatformManager::platforms;
-AEGfxVertexList *PlatformManager::platformMesh;
 Sprite *PlatformManager::platformSprite;
 
 //float PlatformManager::scroll = 0;
 
 void PlatformManager::Init()
 {
-	AEGfxVertexList* verts;
-
-	// Start adding vertices
-	AEGfxMeshStart();
-
-	// Add some triangles
-	AEGfxTriAdd(-0.5f, 0.5f, 0xFF000000, 0.0f, 0.0f,
-		0.5f, 0.5f, 0xFF000000, 1, 0.0f,
-		-0.5f, -0.5f, 0xFF000000, 0.0f, 1);
-	AEGfxTriAdd(0.5f, -0.5f, 0xFF000000, 1, 1,
-		0.5f, 0.5f, 0xFF000000, 1, 0.0f,
-		-0.5f, -0.5f, 0xFF000000, 0.0f, 1);
-
-	// Stop adding vertices
-	verts = AEGfxMeshEnd();
-	platformMesh = verts;//MeshCreateQuad(0.5f, 0.5f, 1, 1, "Platform Mesh");
 	platformSprite = new Sprite("Platform Sprite");
-	platformSprite->SetMesh(platformMesh);
 }
 
 void PlatformManager::Update(float dt)
@@ -61,7 +44,10 @@ void PlatformManager::Update(float dt)
 		}
 		if (ptrs.X() + pscl.X() / 2 > scrMin.X() && ptrs.X() - pscl.X() / 2 < scrMax.X() &&
 			ptrs.Y() + pscl.Y() / 2 > scrMin.Y() && ptrs.Y() - pscl.Y() / 2 < scrMax.Y()) {
+			AEGfxVertexList* mesh = GenerateMesh();
+			platformSprite->SetMesh(mesh);
 			platformSprite->Draw(*pt);
+			AEGfxMeshFree(mesh);
 		}
 	}
 	Transform::SetCamIsDirty(false);
@@ -69,15 +55,16 @@ void PlatformManager::Update(float dt)
 
 void PlatformManager::Shutdown()
 {
+	for (Platform p : platforms)
+		AEGfxMeshFree(p.mesh);
 	platforms.clear();
-	AEGfxMeshFree(platformMesh);
 	delete platformSprite;
 }
 
 void PlatformManager::AddPlatform(Transform transform, float jump, bool trampoline, float moveSpeed, vector<Vector2D> path, bool killsInTime)
 {
 	path.push_back(transform.GetTranslation());
-	platforms.push_back({ transform, jump, trampoline, moveSpeed, path, killsInTime, 0, {0, 0} });
+	platforms.push_back({ transform, jump, trampoline, moveSpeed, path, killsInTime, 0, {0, 0}, GenerateMesh() });
 }
 
 PlatformManager::Platform* PlatformManager::IsOnPlatform(GameObject * object, Vector2D * groundPosition)
@@ -155,4 +142,23 @@ int PlatformManager::HittingSide(GameObject * object, Vector2D * newPosition, Ve
 		}
 	}
 	return 0;
+}
+
+AEGfxVertexList * PlatformManager::GenerateMesh()
+{
+	unsigned int color = 0xFF000000 | (0x10000 * (unsigned)RandomRange(0x20, 0xFF)) | (0x100 * (unsigned)RandomRange(0x20, 0xFF)) | (unsigned)RandomRange(0x20, 0xFF);
+
+	// Start adding vertices
+	AEGfxMeshStart();
+
+	// Add some triangles
+	AEGfxTriAdd(-0.5f, 0.5f, color, 0.0f, 0.0f,
+		0.5f, 0.5f, color, 1, 0.0f,
+		-0.5f, -0.5f, color, 0.0f, 1);
+	AEGfxTriAdd(0.5f, -0.5f, color, 1, 1,
+		0.5f, 0.5f, color, 1, 0.0f,
+		-0.5f, -0.5f, color, 0.0f, 1);
+
+	// Stop adding vertices
+	return AEGfxMeshEnd();
 }
