@@ -17,6 +17,7 @@ public:
 		unsigned int pn;
 		Vector2D dir;
 		AEGfxVertexList* mesh;
+		GameObject* touchingPlayer;
 	};
 
 	static void Init();

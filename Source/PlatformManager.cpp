@@ -38,6 +38,12 @@ void PlatformManager::Update(float dt)
 				p.dir = { 0,0 };
 			}
 			pt->SetTranslation(ptrs);
+			/*if (p.touchingPlayer) {
+				Vector2D plPos = p.touchingPlayer->GetTransform()->GetTranslation();
+				plPos.X(plPos.X() + p.dir.X() * p.moveSpeed * dt);
+				plPos.Y(ptrs.Y() + pscl.Y() / 2 + p.touchingPlayer->GetTransform()->GetScale().Y() / 2 + p.dir.Y() * p.moveSpeed * dt);
+				p.touchingPlayer->GetTransform()->SetTranslation(plPos);
+			}*/
 		}
 		if (p.dir == Vector2D(0,0) && p.moveSpeed > 0) {
 			p.dir = (p.path[p.pn] - ptrs).Normalized();

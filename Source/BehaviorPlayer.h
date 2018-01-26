@@ -116,8 +116,9 @@ private:
 	static const float playerJumpSpeedMax;
 	static float playerGravity;
 	static bool jumping;
+	static bool wasJumping;
 	static bool inAir;
-	static bool wasGrounded;
+	static PlatformManager::Platform* wasGrounded;
 	static float touchTime;
 };
 

@@ -41,7 +41,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 	while (GameStateManager::GetInstance().IsRunning())
 	{
 		currentTime = GetTickCount();
-		if (lastTime > 0) dt = (float) (currentTime - lastTime)/1000;
+		//if (lastTime > 0) dt = (float) (currentTime - lastTime)/1000;
 		lastTime = currentTime;
 
 		// Update the game engine.

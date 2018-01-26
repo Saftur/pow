@@ -39,8 +39,9 @@ const float BehaviorPlayer::playerSpeedMax = 500.0f;
 const float BehaviorPlayer::playerJumpSpeedMax = 450.0f;
 float BehaviorPlayer::playerGravity = 800.0f;
 bool BehaviorPlayer::jumping = false;
+bool BehaviorPlayer::wasJumping = false;
 bool BehaviorPlayer::inAir = false;
-bool BehaviorPlayer::wasGrounded = false;
+PlatformManager::Platform* BehaviorPlayer::wasGrounded = nullptr;
 const float BehaviorPlayer::maxPlayerTime = 1.0f;
 float BehaviorPlayer::touchTime = 0.0f;
 
@@ -65,6 +66,7 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 		return;
 
 	Vector2D vel = p->GetVelocity();
+	jumping = false;
 
 	Vector2D newPos = Vector2D();
 	int hitSide = PlatformManager::HittingSide(&behavior.parent, &newPos);
@@ -84,8 +86,10 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 	//If a jump button is pressed state that we are jumping and no longer grounded.
 	if (platform) {
 		if (!wasGrounded && platform->trampoline && vel.Y() < 0) {
+			jumping = true;
 			vel.Y((-vel.Y() + platform->jump));
 		} else if (AEInputCheckCurr('W') || AEInputCheckCurr(VK_SPACE) || AEInputCheckCurr(VK_UP)) {
+			jumping = true;
 			vel.Y(playerJumpSpeedMax+platform->jump);
 			playerSpeedModifier += 15.0f;
 		} else {
@@ -107,16 +111,36 @@ void BehaviorPlayer::UpdateVelocity(Behavior& behavior, float dt)
 
 	if (platform) {
 		if (platform->dir != Vector2D(0, 0)) {
-			//newPos += platform->dir * platform->moveSpeed * dt;
 			newPos.X(newPos.X() + platform->dir.X() * platform->moveSpeed * dt);
 		}
+	}
+
+	/*if (!wasJumping) {
+		if (wasGrounded) {
+			if (wasGrounded->dir != Vector2D(0, 0)) {
+				if (!platform) {
+					newPos = behavior.parent.GetTransform()->GetTranslation();
+				}
+				newPos.X(newPos.X() + wasGrounded->dir.X() * wasGrounded->moveSpeed * dt);
+				newPos.Y(newPos.Y() + wasGrounded->dir.Y() * wasGrounded->moveSpeed * dt);
+				behavior.parent.GetTransform()->SetTranslation(newPos);
+			}
+		}
+	}*/
+
+	if (platform) {
+		platform->touchingPlayer = &behavior.parent;
 		behavior.parent.GetTransform()->SetTranslation(newPos);
+	} else {
+		if (wasGrounded) wasGrounded->touchingPlayer = nullptr;
 	}
 
 	if(!platform) inAir = true;
 
 	//if (vel.X() > playerSpeedMax) vel.X(playerSpeedMax);
 	//if (vel.X() < -playerSpeedMax) vel.X(-playerSpeedMax);
+
+	wasJumping = jumping;
 
 	p->SetVelocity(vel);
 
