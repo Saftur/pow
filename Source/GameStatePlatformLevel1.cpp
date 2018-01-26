@@ -63,10 +63,10 @@ LevelTimer* GameStatePlatformLevel1::timer;
 // Public Functions:
 //------------------------------------------------------------------------------
 
-// Load the resources associated with the Stub game state.
+// Load the resources associated with the GameStatePlatformLevel1 game state.
 void GameStatePlatformLevel1::Load()
 {
-	Trace::GetInstance().GetStream() << "Stub: Load" << std::endl;
+	Trace::GetInstance().GetStream() << "GameStatePlatformLevel1: Load" << std::endl;
 
 	meshQuad = MeshCreateQuad(0.5f, 0.5f, 1.0f, 1.0f, "Mesh3x3");
 	texturePlayer = AEGfxTextureLoad("Assets\\player.png");
@@ -81,10 +81,10 @@ void GameStatePlatformLevel1::Load()
 	spriteSourceGoal = new SpriteSource(4, 1, textureGoal);
 }
 
-// Initialize the memory associated with the Stub game state.
+// Initialize the memory associated with the GameStatePlatformLevel1 game state.
 void GameStatePlatformLevel1::Init()
 {
-	Trace::GetInstance().GetStream() << "Stub: Init" << std::endl;
+	Trace::GetInstance().GetStream() << "GameStatePlatformLevel1: Init" << std::endl;
 
 	AEGfxSetBackgroundColor(1, 1, 1);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
@@ -94,8 +94,7 @@ void GameStatePlatformLevel1::Init()
 	timer = new LevelTimer({ -300, 200 }, { 10, 10 });
 
 	CreatePlayer({-500, -100});
-	CreateGoal({ 1800, 350 }, GameStateTable::GsLevel1);
-	CreateGoal({ 800, 300 }, GameStateTable::GsAsteroids);
+	CreateGoal({ 2300, 600 }, GameStateTable::GsLevel1);
 
 	//Creating map.
 	Transform pt = Transform(-500, -150);
@@ -114,24 +113,30 @@ void GameStatePlatformLevel1::Init()
 	pt.SetTranslation({ 450, 300 });
 	pt.SetScale({ 200, 20 });
 	PlatformManager::AddPlatform(pt);
-	pt.SetTranslation({ 800, 300 });
 	pt.SetScale({ 100, 20 });
-	PlatformManager::AddPlatform(pt);
-	pt.SetTranslation({ 800, 0 }); //?
-	PlatformManager::AddPlatform(pt, 0, true); //?
-	pt.SetTranslation({ 1600, 300 });
-	PlatformManager::AddPlatform(pt);
+	pt.SetTranslation({ 800, 100 });
+	PlatformManager::AddPlatform(pt, 50, true);
+	CreateCheckpoint({ 1100, 500 });
+	pt.SetTranslation({ 1300, 450 });
+	PlatformManager::AddPlatform(pt, 0, false, 250, { {1100, 700}, {1500, 1000}, {1500, 450} }, false);
+	pt.SetTranslation({ 1700, 550 });
+	PlatformManager::AddPlatform(pt, 0, false, 250, { {1700, 1100}, {2300, 1400}, {2300, 800}, {2000, 800} }, false);
 }
 
-// Update the Stub game state.
+// Update the GameStatePlatformLevel1 game state.
 // Params:
 //	 dt = Change in time (in seconds) since the last game loop.
 void GameStatePlatformLevel1::Update(float dt)
 {
+	Trace::GetInstance().GetStream() << "GameStatePlatformLevel1: Update" << std::endl;
+
 	timer->Update(dt);
 	PlatformManager::Update(dt);
 
-	Trace::GetInstance().GetStream() << "Stub: Update" << std::endl;
+	if (AEInputCheckCurr('R'))
+	{
+		BehaviorCheckpoint::ResetUnconditional();
+	}
 }
 
 void GameStatePlatformLevel1::UpdateAO(float dt)
@@ -140,10 +145,10 @@ void GameStatePlatformLevel1::UpdateAO(float dt)
 	Transform::SetCamTranslation(-GameObjectManager::GetInstance().GetObjectByName("Player")->GetTransform()->GetTranslation());
 }
 
-// Shutdown any memory associated with the Stub game state.
+// Shutdown any memory associated with the GameStatePlatformLevel1 game state.
 void GameStatePlatformLevel1::Shutdown()
 {
-	Trace::GetInstance().GetStream() << "Stub: Shutdown" << std::endl;
+	Trace::GetInstance().GetStream() << "GameStatePlatformLevel1: Shutdown" << std::endl;
 
 	PlatformManager::Shutdown();
 	GameObjectManager::GetInstance().Shutdown();
@@ -155,10 +160,10 @@ void GameStatePlatformLevel1::Shutdown()
 	AEGfxTextureUnload(textureCheckpoint);
 }
 
-// Unload the resources associated with the Stub game state.
+// Unload the resources associated with the GameStatePlatformLevel1 game state.
 void GameStatePlatformLevel1::Unload()
 {
-	Trace::GetInstance().GetStream() << "Stub: Unload" << std::endl;
+	Trace::GetInstance().GetStream() << "GameStatePlatformLevel1: Unload" << std::endl;
 }
 
 void GameStatePlatformLevel1::CreatePlayer(Vector2D loc)
@@ -193,10 +198,6 @@ void GameStatePlatformLevel1::CreatePlayer(Vector2D loc)
 	BehaviorCheckpoint::SetPlayer(*gameObjectPlayer);
 
 	GameObjectManager::GetInstance().Add(*gameObjectPlayer);
-
-	Transform pTransform = Transform(loc.X(), loc.Y() - 50);
-	pTransform.SetScale({ 150, 20 });
-	PlatformManager::AddPlatform(pTransform, 0, false, 0, {}, false);
 }
 
 void GameStatePlatformLevel1::CreateGoal(Vector2D loc, int targetLevel)
