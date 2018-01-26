@@ -20,6 +20,7 @@
 #include "GameStateLevel2.h"
 #include "GameStateAsteroids.h"
 #include "GameStateDemo.h"
+#include "GameStatePlatformLevel1.h"
 
 //------------------------------------------------------------------------------
 
@@ -37,13 +38,14 @@ public:
 		GsLevel2,
 		GsAsteroids,
 		GsDemo,
+		GsPlatformLevel1,
 
 		/* Bookkeeping States: */
 		GsNum,
 		GsLast = GsNum - 1,
 
 		/* Specify the initial game state */
-		GsInitial = GsLevel1,
+		GsInitial = GsPlatformLevel1,
 	} GameStates;
 
 	//------------------------------------------------------------------------------
@@ -126,6 +128,7 @@ private:
 		{ GameStateLevel2::Load, GameStateLevel2::Init, GameStateLevel2::Update, GameStateLevel2::Shutdown, GameStateLevel2::Unload },
 		{ GameStateAsteroids::Load, GameStateAsteroids::Init, GameStateAsteroids::Update, GameStateAsteroids::Shutdown, GameStateAsteroids::Unload },
 		{ GameStateDemo::Load, GameStateDemo::Init, GameStateDemo::Update, GameStateDemo::Shutdown, GameStateDemo::Unload },
+		{ GameStatePlatformLevel1::Load, GameStatePlatformLevel1::Init, GameStatePlatformLevel1::Update, GameStatePlatformLevel1::Shutdown, GameStatePlatformLevel1::Unload, GameStatePlatformLevel1::UpdateAO },
 	};
 };
 //------------------------------------------------------------------------------
