@@ -1,18 +1,23 @@
+/*******************************************************************************************/
+//Authors: Arthur Bouvier (abouvier)
+//FileName: TileMap.h
+//Date: 10/17/17
+//Brief: File that contains the data for the tilemap
+/*******************************************************************************************/
+
 #pragma once
 
-#include "Component.h"
+#include <AEEngine.h>
 #include "Vector2D.h"
+#include "Sprite.h"
+#include "SpriteSource.h"
+#include "Mesh.h"
+#include "Transform.h"
 
-typedef class Sprite Sprite;
-typedef class SpriteSource SpriteSource;
-typedef struct AEGfxTexture AEGfxTexture;
-typedef struct AEGfxVertexList AEGfxVertexList;
-typedef class Transform Transform;
-
-class Tilemap : public Component {
+class Tilemap {
 public:
-	Tilemap(const char* spritesheetFilename, const char* tilemapFilename, const char* collisionMapFilename,
-		int onScreenOffsetX, int onScreenOffsetY, int onScreenWidth, int onScreenHeight,
+	Tilemap(const char* spritesheetFilename, const char* tilemapFilename, const char* collisionMapFilename, 
+		int onScreenOffsetX, int onScreenOffsetY, int onScreenWidth, int onScreenHeight, 
 		int spritesheetWidth, int spritesheetHeight);
 	~Tilemap();
 	void Draw();

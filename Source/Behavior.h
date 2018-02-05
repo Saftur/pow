@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 //
 // File Name:	Behavior.h
-// Author(s):	Mark Culp
+// Author(s):	Doug Schilling (dschilling)
 // Project:		MyGame
 // Course:		CS230S17
 //
@@ -15,6 +15,8 @@
 // Include Files:
 //------------------------------------------------------------------------------
 
+#include "Component.h"
+
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -24,59 +26,29 @@
 typedef class GameObject GameObject;
 
 //------------------------------------------------------------------------------
-// Public Consts:
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
 // Public Structures:
 //------------------------------------------------------------------------------
 
-typedef class Behavior Behavior;
-
-typedef Behavior*(*BehaviorFunctionPtrGo)(const Behavior& behavior, GameObject& parent);
-typedef void(*BehaviorFunctionPtr)(Behavior& behavior);
-typedef void(*BehaviorFunctionPtrDt)(Behavior& behavior, float dt);
-
 // NOTE: You are not allowed to change the contents of this structure, as it is
 // part of the public interface.
-class Behavior
+class Behavior : public Component
 {
 public:
-	//------------------------------------------------------------------------------
-	// Public Variables:
-	//------------------------------------------------------------------------------
-
-	friend class BehaviorAsteroid;
-	friend class BehaviorBullet;
-	friend class BehaviorSpaceship;
-	friend class BehaviorLevelButton;
-	friend class BehaviorButtonStub;
-	friend class BehaviorUnit;
-	friend class BehaviorCheckpoint;
-	friend class BehaviorStub;
-	friend class BehaviorPlayer;
-	friend class BehaviorGoal;
-
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
 
 	// Create a behavior, initialize variables to sane values.
-	// Params:
-	//  parent = A reference to the parent object (the object that owns this component).
-	Behavior(GameObject& parent);
+	Behavior();
+
+	// Destructor for Behavior class.
+	// Marked virtual so that correct destructor is called.
+	virtual ~Behavior();
 
 	// Clone an advanced behavior and return a pointer to the cloned object.
-	// Params:
-	//   parent = A reference to the parent object (the object that owns this component).
 	// Returns:
 	//   A pointer to a basic or advanced behavior.
-	Behavior* Clone(GameObject& parent) const;
-
-	// Destroy an advanced behavior.
-	// Params:
-	//   behavior = Reference to the behavior that will be destroyed.
-	static void Destroy(Behavior* behavior);
+	virtual Component* Clone() const = 0;
 
 	// Update the behavior component.
 	// (Hint: Refer to the Word document for detailed instructions regarding this function.)
@@ -84,45 +56,46 @@ public:
 	//	 dt = Change in time (in seconds) since the last game loop.
 	void Update(float dt);
 
-	// Remove copy constructor
-	Behavior(const Behavior& behavior) = delete;
+	// Executes when entering the current state of the behavior component.
+	virtual void OnEnter();
+	// Executes every update for the current state of the behavior component.
+	// Params:
+	//	 dt = Change in time (in seconds) since the last game loop.
+	virtual void OnUpdate(float dt);
+	// Executes upon exiting the current state of the behavior component.
+	virtual void OnExit();
 
+	// Gets the current state of the behavior state machine.
+	int GetCurrentState() const;
+	// Sets the next state of the behavior state machine.
+	// Params:
+	//	 state = The next state of the state machine.
+	void SetNextState(int state);
+
+	// Return the value of the behavior timer.
+	float GetTimer() const;
+	// Sets the behavior timer
+	// Params:
+	//	 timer = The new value for the timer (in seconds).
+	void SetTimer(float time);
+
+protected:
+	// Sets the current state of the behavior state machine. 
+	// DO NOT use except in special circumstances, e.g. initial behavior setup.
+	// Params:
+	//	 state = The new current state of the state machine.
+	void SetCurrentState(int state);
+
+	const int cBehaviorInvalid = -1;
 
 private:
-	//------------------------------------------------------------------------------
-	// Private Functions:
-	//------------------------------------------------------------------------------
-
-	// Copy a basic behavior object.
-	// (Hint: Perform a shallow copy of the member variables, then change the 'parent' pointer.)
-	// Params:
-	//	 other = Reference to the component to be cloned.
-	//   parent = Reference to object that owns this component.
-	Behavior(const Behavior& other, GameObject& parent);
-
-	// Destructor for Behavior class.
-	// No one is allowed to destroy a behavior except a behavior or friend class.
-	~Behavior();
-
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
 
-	// Reference to the behavior's parent game object.
-	GameObject& parent;
-
 	// Behavior Finite-State Machine (FSM) state variables.
 	int stateCurr;
 	int stateNext;
-
-	// Behavior Finite-State Machine (FSM) function pointers.
-	BehaviorFunctionPtr		onInit;
-	BehaviorFunctionPtrDt	onUpdate;
-	BehaviorFunctionPtr		onExit;
-
-	// Advanced behavior cloning and destruction function pointers.
-	BehaviorFunctionPtrGo	clone;
-	BehaviorFunctionPtr		destroy;
 
 	// Additional variables shared by all behaviors.
 	// NOTE: Variables that are unique to a specific behavior should not be placed here.

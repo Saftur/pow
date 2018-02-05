@@ -1,43 +1,20 @@
 //------------------------------------------------------------------------------
 //
-// File Name:	Mesh.h
-// Author(s):	Doug Schilling (dschilling)
-// Project:		MyGame
+// File Name:	Mesh.c
+// Author(s):	Jeremy Kings (j.kings)
+// Project:		Project 2 - Graphics
 // Course:		CS230S17
 //
 // Copyright © 2017 DigiPen (USA) Corporation.
 //
 //------------------------------------------------------------------------------
 
-
 //------------------------------------------------------------------------------
 // Include Files:
 //------------------------------------------------------------------------------
-
 #include "stdafx.h"
-#include "AEEngine.h"
 #include "Mesh.h"
-
-//------------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
-// Forward References:
-//------------------------------------------------------------------------------
-
-struct AEGfxVertexList;
-
-//------------------------------------------------------------------------------
-// Public Consts:
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Public Structures:
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Public Variables:
-//------------------------------------------------------------------------------
+#include "AEEngine.h"
 
 //------------------------------------------------------------------------------
 // Public Functions:
@@ -53,33 +30,21 @@ struct AEGfxVertexList;
 // Returns:
 //	 If the memory allocation was successful,
 //	   then return a pointer to the allocated memory,
-//	   else return NULL.
-struct AEGfxVertexList * MeshCreateQuad(float xHalfSize, float yHalfSize, float uSize, float vSize, const char * name)
+//	   else return nullptr.
+struct AEGfxVertexList * MeshCreateQuad(float xHalfSize, float yHalfSize, float uSize, float vSize)
 {
-	UNREFERENCED_PARAMETER(name);
-
-	AEGfxVertexList* verts;
-
-	// Start adding vertices
 	AEGfxMeshStart();
 
-	// Add some triangles
-	AEGfxTriAdd(-xHalfSize, yHalfSize, 0, 0.0f, 0.0f,
-		xHalfSize, yHalfSize, 0, uSize, 0.0f,
-		-xHalfSize, -yHalfSize, 0, 0.0f, vSize);
-	AEGfxTriAdd(xHalfSize, -yHalfSize, 0, uSize, vSize,
-		xHalfSize, yHalfSize, 0, uSize, 0.0f,
-		-xHalfSize, -yHalfSize, 0, 0.0f, vSize);
+	AEGfxTriAdd(
+		-xHalfSize, -yHalfSize, 0xFFFFFFFF, 0.0f, vSize,
+		xHalfSize, -yHalfSize, 0xFFFFFFFF, uSize, vSize,
+		-xHalfSize, yHalfSize, 0xFFFFFFFF, 0.0f, 0.0f);
+	AEGfxTriAdd(
+		xHalfSize, -yHalfSize, 0xFFFFFFFF, uSize, vSize,
+		xHalfSize, yHalfSize, 0xFFFFFFFF, uSize, 0.0f,
+		-xHalfSize, yHalfSize, 0xFFFFFFFF, 0.0f, 0.0f);
 
-	// Stop adding vertices
-	verts = AEGfxMeshEnd();
+	AEGfxVertexList* mesh = AEGfxMeshEnd();
 
-	if (verts == NULL)
-		return NULL;
-	else
-		return verts;
+	return mesh;
 }
-
-//------------------------------------------------------------------------------
-
-

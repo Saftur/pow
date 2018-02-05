@@ -13,95 +13,103 @@
 #include "GameStateManager.h"
 #include "GameStateTable.h"
 
-const int GameStateTable::GsQuit = -1;
-const int GameStateTable::GsRestart = -2;
-const int GameStateTable::GsInvalid = -3;
+//------------------------------------------------------------------------------
+// Public Consts:
+//------------------------------------------------------------------------------
 
+const int GameStateTable::GsQuit = -3;
+const int GameStateTable::GsRestart = -2;
+const int GameStateTable::GsInvalid = -1;
 
 //------------------------------------------------------------------------------
 // Public Functions:
 //------------------------------------------------------------------------------
 
 // Determine if the game state is valid.
-bool GameStateTable::StateIsValid(GameStates gameState) const
+bool GameStateTable::StateIsValid(int gameState) const
 {
-	return ((0 <= gameState) && (gameState < GsNum));
+	return ((0 <= gameState) && (gameState < GsNum) && GameStateTab[gameState] != nullptr);
 }
 
 // Determine if the game state is a "special" game state.
-bool GameStateTable::StateIsSpecial(GameStates gameState) const
+bool GameStateTable::StateIsSpecial(int gameState) const
 {
 	return ((gameState == GsRestart) || (gameState == GsQuit));
 }
 
 // Execute the Load function for the current game state.
-void GameStateTable::ExecuteLoad(GameStates gameState) const
+void GameStateTable::ExecuteLoad(int gameState)
 {
 	// First validate the game state and the function pointer.
-	if (StateIsValid(gameState) &&
-		((*GameStateTab[gameState].gameStateLoad) != NULL))
+	if (StateIsValid(gameState))
 	{
 		// Execute the Init function.
-		(*GameStateTab[gameState].gameStateLoad)();
+		GameStateTab[gameState]->Load();
 	}
 }
 
 // Execute the Init function for the current game state.
-void GameStateTable::ExecuteInit(GameStates gameState) const
+void GameStateTable::ExecuteInit(int gameState)
 {
 	// First validate the game state and the function pointer.
-	if (StateIsValid(gameState) &&
-		((*GameStateTab[gameState].gameStateInit) != NULL))
+	if (StateIsValid(gameState))
 	{
 		// Execute the Init function.
-		(*GameStateTab[gameState].gameStateInit)();
+		GameStateTab[gameState]->Init();
 	}
 }
 
 // Execute the Update function for the current game state.
-void GameStateTable::ExecuteUpdate(GameStates gameState, float dt) const
+void GameStateTable::ExecuteUpdate(int gameState, float dt)
 {
 	// First validate the game state and the function pointer.
-	if (StateIsValid(gameState) &&
-		((*GameStateTab[gameState].gameStateUpdate) != NULL))
+	if (StateIsValid(gameState))
 	{
 		// Execute the Update function.
-		(*GameStateTab[gameState].gameStateUpdate)(dt);
-	}
-}
-
-void GameStateTable::ExecuteUpdateAO(GameStates gameState, float dt) const
-{
-	// First validate the game state and the function pointer.
-	if (StateIsValid(gameState) &&
-		((*GameStateTab[gameState].gameStateUpdateAO) != NULL))
-	{
-		// Execute the Update function.
-		(*GameStateTab[gameState].gameStateUpdateAO)(dt);
+		GameStateTab[gameState]->Update(dt);
 	}
 }
 
 // Execute the Shutdown function for the current game state.
-void GameStateTable::ExecuteShutdown(GameStates gameState) const
+void GameStateTable::ExecuteShutdown(int gameState)
 {
 	// First validate the game state and the function pointer.
-	if (StateIsValid(gameState) &&
-		((*GameStateTab[gameState].gameStateShutdown) != NULL))
+	if (StateIsValid(gameState))
 	{
 		// Execute the Shutdown function.
-		(*GameStateTab[gameState].gameStateShutdown)();
+		GameStateTab[gameState]->Shutdown();
 	}
 }
 
 // Execute the Unload function for the current game state.
-void GameStateTable::ExecuteUnload(GameStates gameState) const
+void GameStateTable::ExecuteUnload(int gameState)
 {
 	// First validate the game state and the function pointer.
-	if (StateIsValid(gameState) &&
-		((*GameStateTab[gameState].gameStateUnload) != NULL))
+	if (StateIsValid(gameState))
 	{
 		// Execute the Init function.
-		(*GameStateTab[gameState].gameStateUnload)();
+		GameStateTab[gameState]->Unload();
+	}
+}
+
+// Retrieve the id of a named game state.
+int GameStateTable::GetStateId(const char * name) const
+{
+	for (unsigned i = 0; i < GsNum; ++i)
+	{
+		if (strcmp(GameStateTab[i]->GetName(), name) == 0)
+			return i;
+	}
+
+	return GsInvalid;
+}
+
+void GameStateTable::Clear()
+{
+	for (unsigned i = 0; i < GsNum; ++i)
+	{
+		delete GameStateTab[i];
+		GameStateTab[i] = nullptr;
 	}
 }
 
@@ -119,4 +127,10 @@ GameStateTable& GameStateTable::GetInstance()
 // Constructor is private to prevent accidental instantiation.
 GameStateTable::GameStateTable()
 {
+}
+
+// Destructor is private to prevent accidental destruction.
+GameStateTable::~GameStateTable()
+{
+	Clear();
 }

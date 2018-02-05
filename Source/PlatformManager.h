@@ -3,7 +3,10 @@
 #include <vector>
 using std::vector;
 #include "GameObject.h"
+#include "Transform.h"
+#include "Vector2D.h"
 
+typedef class Sprite Sprite;
 
 class PlatformManager {
 public:

@@ -1,8 +1,8 @@
 //------------------------------------------------------------------------------
 //
-// File Name:	Teleporter.h
-// Author(s):	Doug Schilling (dschilling)
-// Project:		MyGame
+// File Name:	Intersection2D.h
+// Author(s):	Jeremy Kings (j.kings)
+// Project:		Project 7
 // Course:		CS230S17
 //
 // Copyright © 2017 DigiPen (USA) Corporation.
@@ -15,21 +15,28 @@
 // Include Files:
 //------------------------------------------------------------------------------
 
+#include "Vector2D.h"
+
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // Forward References:
 //------------------------------------------------------------------------------
 
-typedef class GameObject GameObject;
-
 //------------------------------------------------------------------------------
-// Public Functions:
+// Public Structures:
 //------------------------------------------------------------------------------
 
-// When a game object goes off-screen, teleport it to the other side.
+//------------------------------------------------------------------------------
+// Public Function Declarations:
+//------------------------------------------------------------------------------
+
+// Check whether two circles intersect.
 // Params:
-//	 gameObject = Pointer to the game object to be checked.
-void TeleporterUpdateObject(GameObject& gameObject);
-
-//------------------------------------------------------------------------------
+//  center1 = Center of the first circle.
+//  radius1 = Radius of the first circle.
+//  center2 = Center of the second circle.
+//  radius2 = Radius of the second circle.
+// Returns:
+//   True if intersection, false otherwise.
+bool CircleCircleIntersection(const Vector2D& center1, float radius1, const Vector2D& center2, float radius2);

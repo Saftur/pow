@@ -16,8 +16,6 @@
 #include "Trace.h"
 #include "GameObjectManager.h"
 #include "Random.h"
-#include "SoundManager.h"
-#include "IOController.h"
 
 //------------------------------------------------------------------------------
 // Private Structures:
@@ -38,6 +36,9 @@ void Engine::Init()
 	// NOTE: Certain modules need to be initialized first.
 	//--------------------------------------------------------------------------
 
+	// Initialize random number generator
+	RandomInit();
+
 	// Initialize the Tracing/Logging module.
 	Trace::GetInstance().Init();
 
@@ -50,14 +51,11 @@ void Engine::Init()
 	// NOTE: Other modules can be initialized later and in any order.
 	//--------------------------------------------------------------------------
 
-	// Initialize the game state manager.
-	GameStateManager::GetInstance().Init();
-
+	// Initialize the game object manager.
 	GameObjectManager::GetInstance().Init();
 
-	SoundManager::GetInstance().Init();
-
-	RandomInit();
+	// Initialize the game state manager.
+	GameStateManager::GetInstance().Init();
 }
 
 // Update the game engine.
@@ -75,12 +73,12 @@ void Engine::Update(float dt)
 
 	// Update the game object manager.
 	GameObjectManager::GetInstance().Update(dt);
-	GameStateManager::GetInstance().UpdateAO(dt);
-	GameObjectManager::GetInstance().CheckCollisions();
-	GameObjectManager::GetInstance().Draw();
 
-	// Update the sound manager.
-	SoundManager::GetInstance().Update(dt);
+	// Check for collisions.
+	GameObjectManager::GetInstance().CheckCollisions();
+
+	// Draw objects.
+	GameObjectManager::GetInstance().Draw();
 
 	// Complete the draw process for the current game loop.
 	System::GetInstance().Draw();
@@ -95,10 +93,11 @@ void Engine::Shutdown()
 	// NOTE: Some modules can be shutdown in any order.
 	//--------------------------------------------------------------------------
 
+	// Shutdown the game object manager.
+	GameObjectManager::GetInstance().Shutdown();
+
 	// Shutdown the game state manager.
 	GameStateManager::GetInstance().Shutdown();
-	GameObjectManager::GetInstance().Shutdown();
-	SoundManager::GetInstance().Shutdown();
 
 	//--------------------------------------------------------------------------
 	// NOTE: Certain modules need to be shutdown last and in reverse order.

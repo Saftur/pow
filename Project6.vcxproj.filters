@@ -37,9 +37,6 @@
     <Filter Include="fmod">
       <UniqueIdentifier>{63bcaa8a-6cbb-4d94-b80d-bb7f693e59ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Buttons">
-      <UniqueIdentifier>{cacedcf3-a0e9-4c9c-9add-cd13f6e74dd5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Sound">
       <UniqueIdentifier>{b6342329-9d4c-47a5-824b-0c5c75c294cd}</UniqueIdentifier>
     </Filter>
@@ -106,18 +103,6 @@
     <ClCompile Include="Source\BehaviorSpaceship.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameStateAsteroids.cpp">
-      <Filter>Game\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameStateLevel1.cpp">
-      <Filter>Game\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameStateLevel2.cpp">
-      <Filter>Game\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameStateStub.cpp">
-      <Filter>Game\GameStates</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameStateTable.cpp">
       <Filter>Game\GameStates</Filter>
     </ClCompile>
@@ -136,20 +121,8 @@
     <ClCompile Include="Source\Behavior.cpp">
       <Filter>Engine\GameObjects\Behaviors</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BehaviorButtonStub.cpp">
-      <Filter>Engine\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BehaviorLevelButton.cpp">
-      <Filter>Engine\Buttons</Filter>
-    </ClCompile>
     <ClCompile Include="source\SoundManager.cpp">
       <Filter>Engine\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameStateDemo.cpp">
-      <Filter>Game\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Tilemap.cpp">
-      <Filter>Engine\Tilemap</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendertext.cpp">
       <Filter>Engine</Filter>
@@ -160,35 +133,32 @@
     <ClCompile Include="Source\Army.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BehaviorUnit.cpp">
-      <Filter>Game\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BehaviorCheckpoint.cpp">
-      <Filter>Game\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="source\BehaviorStub.cpp">
-      <Filter>Game\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BehaviorPlayer.cpp">
-      <Filter>Game\Behaviors</Filter>
-    </ClCompile>
     <ClCompile Include="Source\PlatformManager.cpp">
       <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BehaviorGoal.cpp">
-      <Filter>Game\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="Source\LevelTimer.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameStatePlatformLevel1.cpp">
+    <ClCompile Include="Source\Component.cpp">
+      <Filter>Engine\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameState.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameStateAsteroids.cpp">
       <Filter>Game\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tilemap.cpp">
+      <Filter>Engine\Tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ColliderCircle.cpp">
+      <Filter>Engine\GameObjects\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Intersection2D.cpp">
+      <Filter>Engine\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\GameStateStub.h">
-      <Filter>Game\GameStates</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GameStateManager.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -203,12 +173,6 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameStateTable.h">
-      <Filter>Game\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameStateLevel1.h">
-      <Filter>Game\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameStateLevel2.h">
       <Filter>Game\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="Source\Trace.h">
@@ -249,9 +213,6 @@
     </ClInclude>
     <ClInclude Include="Source\Physics.h">
       <Filter>Engine\GameObjects\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameStateAsteroids.h">
-      <Filter>Game\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjectManager.h">
       <Filter>Engine\GameObjects</Filter>
@@ -304,18 +265,6 @@
     <ClInclude Include="Source\Behavior.h">
       <Filter>Engine\GameObjects\Behaviors</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BehaviorLevelButton.h">
-      <Filter>Engine\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BehaviorButtonStub.h">
-      <Filter>Engine\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameStateDemo.h">
-      <Filter>Game\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Tilemap.h">
-      <Filter>Engine\Tilemap</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Rendertext.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -325,29 +274,29 @@
     <ClInclude Include="Source\Army.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BehaviorUnit.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BehaviorCheckpoint.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BehaviorStub.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BehaviorPlayer.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
     <ClInclude Include="Source\PlatformManager.h">
       <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BehaviorGoal.h">
-      <Filter>Game\Behaviors</Filter>
     </ClInclude>
     <ClInclude Include="Source\LevelTimer.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameStatePlatformLevel1.h">
+    <ClInclude Include="Source\Component.h">
+      <Filter>Engine\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameState.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameStateAsteroids.h">
       <Filter>Game\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Tilemap.h">
+      <Filter>Engine\Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ColliderCircle.h">
+      <Filter>Engine\GameObjects\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Intersection2D.h">
+      <Filter>Engine\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

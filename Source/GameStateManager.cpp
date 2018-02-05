@@ -13,6 +13,7 @@
 #include "GameStateManager.h"
 #include "GameStateTable.h"
 #include "Trace.h"
+#include "GameObjectManager.h" // Shutdown
 
 //------------------------------------------------------------------------------
 // Public Functions:
@@ -24,11 +25,11 @@ void GameStateManager::Init()
 	Trace::GetInstance().GetStream() << "GSM: Init" << std::endl;
 
 	// Set the previous and current game states to invalid.
-	gameState.previous = (GameStateTable::GameStates) GameStateTable::GsInvalid;
-	gameState.current = (GameStateTable::GameStates) GameStateTable::GsInvalid;
+	gameStateIndices.previous = GameStateTable::GsInvalid;
+	gameStateIndices.current = GameStateTable::GsInvalid;
 
 	// Set the initial game state to launch the game.
-	gameState.next = GameStateTable::GetInstance().GsInitial;
+	gameStateIndices.next = GameStateTable::GsInitial;
 }
 
 // Update the game state manager.
@@ -36,44 +37,43 @@ void GameStateManager::Update(float dt)
 {
 	Trace::GetInstance().GetStream() << "GSM: Update" << std::endl;
 
-	// Update the current game state.
-	GameStateTable::GetInstance().ExecuteUpdate(gameState.current, dt);
-
 	// Check for a game state change.
 	if (StateIsChanging())
 	{
 		// Shutdown the current game state.
-		GameStateTable::GetInstance().ExecuteShutdown(gameState.current);
+		GameStateTable::GetInstance().ExecuteShutdown(gameStateIndices.current);
+		// Free game objects
+		GameObjectManager::GetInstance().Shutdown();
 
-		// TODO: Implement code to properly handle unloading the current game state.
-		if (gameState.next != GameStateTable::GetInstance().GsRestart)
-			GameStateTable::GetInstance().ExecuteUnload(gameState.current);
+		// Handle unloading the current game state.
+		if (gameStateIndices.next != GameStateTable::GsRestart)
+		{
+			GameStateTable::GetInstance().ExecuteUnload(gameStateIndices.current);
+		}
 
 		// Update the recorded states.
-		gameState.previous = gameState.current;
-		gameState.current = gameState.next;
+		gameStateIndices.previous = gameStateIndices.current;
+		gameStateIndices.current = gameStateIndices.next;
 
-		// TODO: Implement code to properly handle loading the new game state.
-		if (gameState.current == GameStateTable::GetInstance().GsRestart)
+		// Handle loading the new game state.
+		if (gameStateIndices.current == GameStateTable::GsRestart)
 		{
 			// If we are restarting, current and next states should be the same as the previous
-			gameState.current = gameState.previous;
-			gameState.next = gameState.previous;
+			gameStateIndices.current = gameStateIndices.previous;
+			gameStateIndices.next = gameStateIndices.previous;
 		}
 		else
 		{
 			// Otherwise, load the next state
-			GameStateTable::GetInstance().ExecuteLoad(gameState.current);
+			GameStateTable::GetInstance().ExecuteLoad(gameStateIndices.current);
 		}
 
 		// Initialize the new game state.
-		GameStateTable::GetInstance().ExecuteInit(gameState.current);
+		GameStateTable::GetInstance().ExecuteInit(gameStateIndices.current);
 	}
-}
 
-void GameStateManager::UpdateAO(float dt)
-{
-	GameStateTable::GetInstance().ExecuteUpdateAO(gameState.current, dt);
+	// Update the current game state.
+	GameStateTable::GetInstance().ExecuteUpdate(gameStateIndices.current, dt);
 }
 
 // Shutdown the game state manager.
@@ -81,27 +81,29 @@ void GameStateManager::Shutdown()
 {
 	Trace::GetInstance().GetStream() << "GSM: Shutdown" << std::endl;
 
-	// Nothing needs to be done here.
+	// Delete all game states.
+	GameStateTable::GetInstance().Clear();
 }
 
 // Determine if the current game state is being restarted.
 bool GameStateManager::IsRestarting() const
 {
-	return gameState.next == GameStateTable::GetInstance().GsRestart;
+	return gameStateIndices.next == GameStateTable::GsRestart;
 }
 
 // Determine if the game is still running.
 bool GameStateManager::IsRunning() const
 {
-	return gameState.current != GameStateTable::GetInstance().GsQuit;
+	return gameStateIndices.current != GameStateTable::GsQuit;
 }
 
 // Set the next game state to run.
 void GameStateManager::SetNextState(int nextState)
 {
-	if (GameStateTable::GetInstance().StateIsValid((GameStateTable::GameStates)nextState) || GameStateTable::GetInstance().StateIsSpecial((GameStateTable::GameStates)nextState))
+	if (GameStateTable::GetInstance().StateIsValid(nextState) 
+		|| GameStateTable::GetInstance().StateIsSpecial(nextState))
 	{
-		gameState.next = (GameStateTable::GameStates)nextState;
+		gameStateIndices.next = nextState;
 	}
 	else
 	{
@@ -110,6 +112,13 @@ void GameStateManager::SetNextState(int nextState)
 		Trace::GetInstance().GetStream() << "ERROR: Invalid game state: " << nextState << std::endl;
 #endif
 	}
+}
+
+// Set the next game state to run.
+void GameStateManager::SetNextState(const char * name)
+{
+	int nextState = GameStateTable::GetInstance().GetStateId(name);
+	SetNextState(nextState);
 }
 
 // Retrieve the instance of the GameStateManager singleton.
@@ -126,7 +135,7 @@ GameStateManager& GameStateManager::GetInstance()
 // Determine if a game state change has been requested.
 bool GameStateManager::StateIsChanging() const
 {
-	return (gameState.current != gameState.next);
+	return (gameStateIndices.current != gameStateIndices.next);
 }
 
 // Constructor is private to prevent accidental instantiations.

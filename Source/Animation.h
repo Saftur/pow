@@ -15,6 +15,7 @@
 // Include Files:
 //------------------------------------------------------------------------------
 
+#include "Component.h"
 #include "AnimationSequence.h"
 
 //------------------------------------------------------------------------------
@@ -30,25 +31,18 @@ typedef class Sprite Sprite;
 //------------------------------------------------------------------------------
 // You are free to change the contents of this class as long as you do not
 // change the public functions declared in the header.
-class Animation
+class Animation : public Component
 {
 public:
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
 	// Allocate a new animation object.
-	// Params:
-	//	 sprite = Pointer to the sprite object associated with the animation.
-	Animation(Sprite* sprite);
+	Animation();
 
-	// Disable copy constructor
-	Animation(const Animation& other) = delete;
-
-	// Clone an Animation component from another Animation component.
-	// Params:
-	//	 other = The animation component to be cloned.
-	//	 sprite = Pointer to the sprite object associated with the animation.
-	Animation(const Animation& other, Sprite* sprite);
+	// Returns a dynamically allocated copy of the component.
+	// Must be implemented so correct component is copied during copy.
+	Component* Clone() const;
 
 	// Play a simple animation sequence (0 .. frameCount).
 	// Params:
@@ -71,14 +65,11 @@ public:
 	// Returns:
 	//	 The value in isDone.
 	bool IsDone() const;
-
+	
 	// Pauses/unpauses the current animation.
 	void TogglePause();
-
+	
 private:
-	// Pointer to the sprite associated with the animation.
-	Sprite* sprite;
-
 	// The current frame being displayed.
 	unsigned int frameIndex;
 

@@ -15,6 +15,8 @@
 // Include Files:
 //------------------------------------------------------------------------------
 
+#include "Component.h"
+
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -29,9 +31,18 @@ typedef class SpriteSource SpriteSource;
 // Public Structures:
 //------------------------------------------------------------------------------
 
+// Currently used only for blend color
+struct Color
+{
+	float r;
+	float g;
+	float b;
+	float a;
+};
+
 // You are free to change the contents of this structure as long as you do not
 //   change the public interface declared in the header.
-class Sprite
+class Sprite : public Component
 {
 public:
 	//------------------------------------------------------------------------------
@@ -40,14 +51,15 @@ public:
 
 	// Allocate a new sprite object.
 	// (NOTE: Make sure to initialize the 'alpha' member variable to 1.0f.)
-	// Params:
-	//	 name = The name of the sprite.
-	Sprite(const char * name);
+	Sprite();
+
+	// Returns a dynamically allocated copy of the component.
+	// Must be implemented so correct component is copied during copy.
+	Component* Clone() const;
 
 	// Draw a sprite (Sprite can be textured or untextured).
-	// Params:
-	//   transform = Reference to the object's transform.
-	void Draw(Transform& transform);
+	void Draw() const;
+	void Draw(Transform &transform) const;
 
 	// Adjust a sprite's alpha up/down.
 	// (NOTE: Make sure to clamp the resulting alpha value between 0.0f and 1.0f.)
@@ -76,10 +88,12 @@ public:
 	//	 spriteSource = A new sprite source for the sprite.
 	void SetSpriteSource(SpriteSource* spriteSource);
 
-private:
-	// The name of the sprite.
-	const char * name;
+	// Set the blend/tint color for the specified sprite.
+	// Params:
+	//	 color = A new color for the sprite.
+	void SetModulateColor(Color color);
 
+private:
 	// The frame currently being displayed (for sprite sheets).
 	unsigned int frameIndex;
 
@@ -91,5 +105,8 @@ private:
 
 	// The mesh used to draw the sprite.
 	AEGfxVertexList * mesh;
+
+	// Color used for blending/tint
+	Color color;
 };
 /*----------------------------------------------------------------------------*/

@@ -15,6 +15,7 @@
 // Include Files:
 //------------------------------------------------------------------------------
 
+#include "Component.h"
 #include "Vector2D.h"
 
 //------------------------------------------------------------------------------
@@ -34,7 +35,7 @@ typedef class Transform Transform;
 //------------------------------------------------------------------------------
 
 // An example of the structure to be defined in Physics.c.
-class Physics
+class Physics : public Component
 {
 public:
 	//------------------------------------------------------------------------------
@@ -47,6 +48,10 @@ public:
 
 	// Create a new physics component.
 	Physics();
+
+	// Returns a dynamically allocated copy of the component.
+	// Must be implemented so correct component is copied during copy.
+	virtual Component* Clone() const;
 
 	// Get the acceleration of a physics component.
 	// Returns:
@@ -63,7 +68,10 @@ public:
 	//		A reference to the component's oldTranslation structure,
 	const Vector2D& GetOldTranslation() const;
 
-	float Physics::GetRotationalVelocity() const;
+	// Get the rotational velocity of a physics component.
+	// Returns:
+	//	 A float representing the new rotational velocity.
+	float GetRotationalVelocity() const;
 
 	// Set the acceleration of a physics component.
 	// Params:
@@ -83,9 +91,8 @@ public:
 	// Update the state of a physics component.
 	// (NOTE: This function must verify that the transform pointer is valid.)
 	// Params:
-	//	 transform = Reference to the associated transform component.
 	//	 dt = Change in time (in seconds) since the last game loop.
-	void Update(Transform& transform, float dt);
+	void Update(float dt);
 
 private:
 	//------------------------------------------------------------------------------

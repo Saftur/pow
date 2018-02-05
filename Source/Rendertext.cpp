@@ -14,11 +14,11 @@
 #include "Rendertext.h"
 #include <stdio.h>
 
-Text::Text(const char * text, Vector2D pos, Vector2D scale) : sprite(Sprite("SpriteText")), transform(Transform(pos.X(), pos.Y())){
+Text::Text(const char * text, Vector2D pos, Vector2D scale) : sprite(Sprite()), transform(Transform(pos.X(), pos.Y())){
 	strcpy(string, text);
 	transform.SetScale(scale);
 
-	mesh = MeshCreateQuad(1.0f, 1.0f, 0.065666666F, 0.165666666f, "FontMesh");
+	mesh = MeshCreateQuad(1.0f, 1.0f, 0.065666666F, 0.165666666f);
 	texture = AEGfxTextureLoad("Assets\\FontSheet.png");
 	spritesource = new SpriteSource(16, 6, texture);
 

@@ -22,13 +22,16 @@
 #include "GameObjectManager.h"
 #include "GameStateManager.h"
 #include "GameStateTable.h"
+#include "Behavior.h"
+#include "Transform.h"
+#include "Collider.h"
 #include "BehaviorPlayer.h"
 
 //------------------------------------------------------------------------------
 // Enums:
 //------------------------------------------------------------------------------
 
-enum states { cCheckpointInvalid, cCheckpointIdle, cCheckpointReset };
+enum states { cCheckpointIdle, cCheckpointReset };
 
 //------------------------------------------------------------------------------
 // Public Consts:
@@ -46,36 +49,13 @@ enum states { cCheckpointInvalid, cCheckpointIdle, cCheckpointReset };
 // Params:
 //  parent = The object that owns this behavior.
 BehaviorCheckpoint::BehaviorCheckpoint(GameObject& parent)
-	: base(parent)
 {
-	base.stateCurr = cCheckpointInvalid;
-	base.stateNext = cCheckpointIdle;
-	base.onInit = BehaviorCheckpoint::Init;
-	base.onUpdate = BehaviorCheckpoint::Update;
-	base.onExit = BehaviorCheckpoint::Exit;
-	base.clone = BehaviorCheckpoint::Clone;
-	base.destroy = BehaviorCheckpoint::Destroy;
+	SetNextState(cCheckpointIdle);
 }
 
 //------------------------------------------------------------------------------
 // Private Functions:
 //------------------------------------------------------------------------------
-
-// Copy an existing asteroid behavior component.
-// Params:
-//  other  = The behavior being copied.
-//  parent = The object that owns this behavior.
-BehaviorCheckpoint::BehaviorCheckpoint(const Behavior& other, GameObject& parent)
-	: base(parent)
-{
-	base.stateCurr = other.stateCurr;
-	base.stateNext = other.stateNext;
-	base.onInit = other.onInit;
-	base.onUpdate = other.onUpdate;
-	base.onExit = other.onExit;
-	base.clone = other.clone;
-	base.destroy = other.destroy;
-}
 
 // Clone an advanced behavior and return a pointer to the cloned object.
 // Params:
@@ -83,31 +63,21 @@ BehaviorCheckpoint::BehaviorCheckpoint(const Behavior& other, GameObject& parent
 //   parent = A reference to the parent object (the object that owns this component).
 // Returns:
 //   A pointer to an advanced behavior.
-Behavior* BehaviorCheckpoint::Clone(const Behavior& behavior, GameObject& parent)
+Component* BehaviorCheckpoint::Clone() const
 {
-	return (Behavior*) new BehaviorCheckpoint(behavior, parent);
-}
-
-// Destroy an advanced behavior.
-// Params:
-//   behavior = Reference to the behavior that will be destroyed.
-void BehaviorCheckpoint::Destroy(Behavior& behavior)
-{
-	delete (BehaviorCheckpoint*)&behavior;
+	return new BehaviorCheckpoint(*this);
 }
 
 // Initialize the current state of the behavior component.
 // (Hint: Refer to the lecture notes on finite state machines (FSM).)
 // Params:
 //	 behavior = Pointer to the behavior component.
-void BehaviorCheckpoint::Init(Behavior& behavior)
+void BehaviorCheckpoint::OnEnter()
 {
-	switch (behavior.stateCurr)
+	switch (GetCurrentState())
 	{
-	case cCheckpointInvalid:
-		break;
 	case cCheckpointIdle:
-		behavior.parent.GetCollider()->SetCollisionHandler(CollisionHandler);
+		((Collider*)GetParent()->GetComponent("Collider"))->SetCollisionHandler(CollisionHandler);
 		break;
 	}
 }
@@ -117,32 +87,20 @@ void BehaviorCheckpoint::Init(Behavior& behavior)
 // Params:
 //	 behavior = Pointer to the behavior component.
 //	 dt = Change in time (in seconds) since the last game loop.
-void BehaviorCheckpoint::Update(Behavior& behavior, float dt)
+void BehaviorCheckpoint::OnUpdate(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
 
-	switch (behavior.stateCurr)
+	switch (GetCurrentState())
 	{
-	case cCheckpointInvalid:
-		break;
 	case cCheckpointIdle:
 		break;
 	case cCheckpointReset:
-		player->GetTransform()->SetTranslation(activeCheckpoint->GetTransform()->GetTranslation());
-		((BehaviorPlayer*)(player->GetBehavior()))->ResetSpeedModifier();
-		behavior.stateNext = cCheckpointIdle;
+		((Transform*)player->GetComponent("Transform"))->SetTranslation(((Transform*)activeCheckpoint->GetComponent("Transform"))->GetTranslation());
+		((BehaviorPlayer*)player->GetComponent("Behavior"))->ResetSpeedModifier();
+		SetNextState(cCheckpointIdle);
 		break;
 	}
-}
-
-// Exit the current state of the behavior component.
-// (Hint: Refer to the lecture notes on finite state machines (FSM).)
-// Params:
-//	 behavior = Pointer to the behavior component.
-//	 dt = Change in time (in seconds) since the last game loop.
-void BehaviorCheckpoint::Exit(Behavior& behavior)
-{
-	UNREFERENCED_PARAMETER(behavior);
 }
 
 // The collision handling function for Checkpoints.
@@ -163,7 +121,7 @@ void BehaviorCheckpoint::SetPlayer(GameObject& player_) {
 
 void BehaviorCheckpoint::CheckPos()
 {
-	if (player->GetTransform()->GetTranslation().Y() < AEGfxGetWinMinY())
+	if (((Transform*)player->GetComponent("Transform"))->GetTranslation().Y() < AEGfxGetWinMinY())
 	{
 		ResetUnconditional();
 	}
@@ -172,7 +130,7 @@ void BehaviorCheckpoint::CheckPos()
 void BehaviorCheckpoint::ResetUnconditional()
 {
 	if (activeCheckpoint)
-		activeCheckpoint->GetBehavior()->stateNext = cCheckpointReset;
+		((BehaviorCheckpoint*)activeCheckpoint->GetComponent("Behavior"))->SetNextState(cCheckpointReset);
 	else GameStateManager::GetInstance().SetNextState(GameStateTable::GsRestart);
 }
 

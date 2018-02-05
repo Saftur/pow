@@ -1,144 +1,95 @@
-//------------------------------------------------------------------------------
-//
-// File Name:	GameStateAsteroids.cpp
-// Author(s):	Mark Culp
-// Project:		MyGame
-// Course:		CS230S17
-//
-// Copyright © 2017 DigiPen (USA) Corporation.
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Include Files:
-//------------------------------------------------------------------------------
-
 #include "stdafx.h"
-#include "AEEngine.h"
+#include "GameStateAsteroids.h"
+#include <AEEngine.h>
 #include "GameStateManager.h"
 #include "GameObjectManager.h"
-#include "GameStateAsteroids.h"
-#include "BehaviorBullet.h"
+#include "GameObject.h"
+#include "Transform.h"
+#include "Sprite.h"
+#include "Physics.h"
 #include "BehaviorSpaceship.h"
+#include "BehaviorBullet.h"
 #include "BehaviorAsteroid.h"
-#include "Random.h"
-#include "SoundManager.h"
-#include <string>
+#include "ColliderCircle.h"
+#include "Trace.h"
 
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Forward References:
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Public Consts:
-//------------------------------------------------------------------------------
-
-AEGfxVertexList* GameStateAsteroids::pMeshSpaceship = NULL;
-AEGfxVertexList* GameStateAsteroids::pMeshBullet = NULL;
-AEGfxVertexList* GameStateAsteroids::pMeshAsteroid = NULL;
 int GameStateAsteroids::asteroidScore = 0;
 int GameStateAsteroids::asteroidHighScore = 0;
-int GameStateAsteroids::asteroidSpawnCount;
-int GameStateAsteroids::asteroidWaveCount;
+int GameStateAsteroids::asteroidWaveCount = 0;
 
-Sound testSound = "jazz.wav";
-Sound testMusic = "music.mp3";
+char GameStateAsteroids::score[scoreStringLength];
 
-//------------------------------------------------------------------------------
-// Public Structures:
-//------------------------------------------------------------------------------
+GameStateAsteroids::GameStateAsteroids() :
+		GameState("Asteroids")
+{
+}
 
-//------------------------------------------------------------------------------
-// Public Variables:
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Public Functions:
-//------------------------------------------------------------------------------
-
-// Load the resources associated with the Asteroids game state.
 void GameStateAsteroids::Load()
 {
+	Trace::GetInstance().GetStream() << "Asteroids: Load" << std::endl;
+
 	CreateMeshes();
 }
 
-// Initialize the memory associated with the Asteroids game state.
 void GameStateAsteroids::Init()
 {
+	Trace::GetInstance().GetStream() << "Asteroids: Init" << std::endl;
+
 	CreateSpaceship();
 	CreateBulletArchetype();
 	CreateAsteroidArchetype();
 
 	if (asteroidScore > asteroidHighScore)
 		asteroidHighScore = asteroidScore;
-
 	asteroidScore = 0;
 	asteroidWaveCount = 0;
 	asteroidSpawnCount = cAsteroidSpawnInitial;
-
 	SpawnAsteroidWave();
 
 	AEGfxSetBackgroundColor(0, 0, 0);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
-
-	SoundManager::GetInstance().Add(testSound);
-	SoundManager::GetInstance().Add(testMusic);
-	SoundManager::GetInstance().SetMusic(testMusic);
 }
 
-// Update the Asteroids game state.
-// Params:
-//	 dt = Change in time (in seconds) since the last game loop.
 void GameStateAsteroids::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
-	
-	UpdateCamera(dt);
 
-	if (AEInputCheckCurr('1'))
-		GameStateManager::GetInstance().SetNextState(GameStateTable::GsLevel1);
-	if (AEInputCheckCurr('2'))
-		GameStateManager::GetInstance().SetNextState(GameStateTable::GsLevel2);
-	if (AEInputCheckCurr('3'))
-		GameStateManager::GetInstance().SetNextState(GameStateTable::GsRestart);
-
-	if (AEInputCheckCurr('J'))
-		SoundManager::GetInstance().PlaySFX(testSound);
+	Trace::GetInstance().GetStream() << "Asteroids: Update" << std::endl;
 
 	if (!GameObjectManager::GetInstance().GetObjectByName("Asteroid"))
 		SpawnAsteroidWave();
+
+	if (AEInputCheckTriggered('1'))
+		GameStateManager::GetInstance().SetNextState("Level1");
+	if (AEInputCheckTriggered('2'))
+		GameStateManager::GetInstance().SetNextState("Level2");
+	if (AEInputCheckTriggered('3'))
+		GameStateManager::GetInstance().SetNextState(GameStateTable::GsRestart);
 }
 
-// Shutdown any memory associated with the Asteroids game state.
 void GameStateAsteroids::Shutdown()
 {
+	Trace::GetInstance().GetStream() << "Asteroids: Shutdown" << std::endl;
+
 	GameObjectManager::GetInstance().Shutdown();
 }
 
-// Unload the resources associated with the Asteroids game state.
 void GameStateAsteroids::Unload()
 {
+	Trace::GetInstance().GetStream() << "Asteroids: Unload" << std::endl;
+
 	FreeMeshes();
 }
 
-// Increase the asteroids score by score value.
-// Params:
-//	 scoreValue = The amount to be added to the game score.
 void GameStateAsteroids::IncreaseScore(unsigned int scoreValue)
 {
 	asteroidScore += scoreValue;
 	UpdateScore();
 }
 
-//------------------------------------------------------------------------------
-// Private Function Declarations:
-//------------------------------------------------------------------------------
-
-// Create meshes for spaceship and bullet
 void GameStateAsteroids::CreateMeshes(void)
 {
+	// Create a “unit” - sized triangular mesh, as follows :
 	AEGfxMeshStart();
 	AEGfxTriAdd(
 		-0.5f, -0.5f, 0xFFFF0000, 0.0f, 0.0f,
@@ -146,6 +97,10 @@ void GameStateAsteroids::CreateMeshes(void)
 		-0.5f, 0.5f, 0xFFFF0000, 0.0f, 0.0f);
 	pMeshSpaceship = AEGfxMeshEnd();
 
+	if (!pMeshSpaceship)
+		Trace::GetInstance().GetStream() << "Failed to create spaceship mesh!" << std::endl;
+
+	// Create a “unit” - sized triangular mesh, as follows :
 	AEGfxMeshStart();
 	AEGfxTriAdd(
 		-0.5f, -0.5f, 0xFF808080, 0.0f, 0.0f,
@@ -153,17 +108,42 @@ void GameStateAsteroids::CreateMeshes(void)
 		-0.5f, 0.5f, 0xFF808080, 0.0f, 0.0f);
 	pMeshBullet = AEGfxMeshEnd();
 
+	if (!pMeshBullet)
+		Trace::GetInstance().GetStream() << "Failed to create bullet mesh!" << std::endl;
+
+	// Create an asteroid mesh with a minimum of 5 sides.
 	AEGfxMeshStart();
-	AEGfxTriAdd(-0.5f, 0.25f, 0x704F4680, 0.0f, 0.0f, 0.0f, 0.5f, 0x704F4680, 0.0f, 0.0f, 0.0f, 0.0f, 0x704F4680, 0.0f, 0.0f);
-	AEGfxTriAdd(0.0f, 0.5f, 0x704F4680, 0.0f, 0.0f, 0.5f, 0.25f, 0x704F4680, 0.0f, 0.0f, 0.0f, 0.0f, 0x704F4680, 0.0f, 0.0f);
-	AEGfxTriAdd(0.5f, 0.25f, 0x704F4680, 0.0f, 0.0f, 0.5f, -0.25f, 0x704F4680, 0.0f, 0.0f, 0.0f, 0.0f, 0x704F4680, 0.0f, 0.0f);
-	AEGfxTriAdd(0.5f, -0.25f, 0x704F4680, 0.0f, 0.0f, 0.0f, -0.5f, 0x704F4680, 0.0f, 0.0f, 0.0f, 0.0f, 0x704F4680, 0.0f, 0.0f);
-	AEGfxTriAdd(0.0f, -0.5f, 0x704F4680, 0.0f, 0.0f, -0.5f, -0.25f, 0x704F4680, 0.0f, 0.0f, 0.0f, 0.0f, 0x704F4680, 0.0f, 0.0f);
-	AEGfxTriAdd(-0.5f, -0.25f, 0x704F4680, 0.0f, 0.0f, -0.5f, 0.25f, 0x704F4680, 0.0f, 0.0f, 0.0f, 0.0f, 0x704F4680, 0.0f, 0.0f);
+	// 4 sides for now, more later
+	AEGfxTriAdd(
+		-0.25f, -0.5f, 0xFF444444, 0.0f, 0.0f,
+		0.25f, -0.5f, 0xFF444444, 0.0f, 0.0f,
+		0.0f, 0.0f, 0xFF444444, 0.0f, 0.0f);
+	AEGfxTriAdd(
+		0.5f, 0.0f, 0xFF444444, 0.0f, 0.0f,
+		0.25f, -0.5f, 0xFF444444, 0.0f, 0.0f,
+		0.0f, 0.0f, 0xFF444444, 0.0f, 0.0f);
+	AEGfxTriAdd(
+		-0.5f, 0.0f, 0xFF444444, 0.0f, 0.0f,
+		-0.25f, -0.5f, 0xFF444444, 0.0f, 0.0f,
+		0.0f, 0.0f, 0xFF444444, 0.0f, 0.0f);
+	AEGfxTriAdd(
+		-0.25f, 0.5f, 0xFF444444, 0.0f, 0.0f,
+		0.25f, 0.5f, 0xFF444444, 0.0f, 0.0f,
+		0.0f, 0.0f, 0xFF444444, 0.0f, 0.0f);
+	AEGfxTriAdd(
+		-0.5f, 0.0f, 0xFF444444, 0.0f, 0.0f,
+		-0.25f, 0.5f, 0xFF444444, 0.0f, 0.0f,
+		0.0f, 0.0f, 0xFF444444, 0.0f, 0.0f);
+	AEGfxTriAdd(
+		0.5f, 0.0f, 0xFF444444, 0.0f, 0.0f,
+		0.25f, 0.5f, 0xFF444444, 0.0f, 0.0f,
+		0.0f, 0.0f, 0xFF444444, 0.0f, 0.0f);
 	pMeshAsteroid = AEGfxMeshEnd();
+
+	if(!pMeshAsteroid)
+		Trace::GetInstance().GetStream() << "Failed to create asteroid mesh!" << std::endl;
 }
 
-// Free all created meshes.
 void GameStateAsteroids::FreeMeshes(void)
 {
 	AEGfxMeshFree(pMeshSpaceship);
@@ -173,124 +153,87 @@ void GameStateAsteroids::FreeMeshes(void)
 
 void GameStateAsteroids::CreateSpaceship(void)
 {
-	GameObject* go = new GameObject("Spaceship");
-
-	Transform* t = new Transform(100, 0);
-	t->SetScale(Vector2D(50, 40));
-	go->SetTransform(*t);
-
-	Sprite* sprite = new Sprite("Spaceship Sprite");
+	GameObject *spaceship = new GameObject("Spaceship");
+	Transform *transform = new Transform(0, 0);
+	transform->SetRotation(0);
+	transform->SetScale({ 50, 40 });
+	Sprite *sprite = new Sprite();
 	sprite->SetMesh(pMeshSpaceship);
+	Physics *physics = new Physics();
+	Behavior *behavior = (Behavior*)(new BehaviorSpaceship());
+	Collider *collider = new ColliderCircle(25);
 
-	Collider* c = new Collider(*go);
+	spaceship->AddComponent(transform);
+	spaceship->AddComponent(sprite);
+	spaceship->AddComponent(physics);
+	spaceship->AddComponent(behavior);
+	spaceship->AddComponent(collider);
 
-	Physics* p = new Physics();
-
-	Behavior* b = (Behavior*)new BehaviorSpaceship(*go);
-
-	go->SetSprite(*sprite);
-	go->SetPhysics(*p);
-	go->SetBehavior(*b);
-	go->SetCollider(*c);
-
-	GameObjectManager::GetInstance().Add(*go);
+	GameObjectManager::GetInstance().Add(*spaceship);
 }
 
 void GameStateAsteroids::SpawnAsteroidWave(void)
 {
 	asteroidWaveCount++;
 	UpdateScore();
-	
 	for (int i = 0; i < asteroidSpawnCount; i++)
 		SpawnAsteroid();
-
 	if (asteroidSpawnCount < cAsteroidSpawnMaximum)
 		asteroidSpawnCount++;
 }
 
 void GameStateAsteroids::SpawnAsteroid(void)
 {
-	GameObject* newObj = new GameObject(*GameObjectManager::GetInstance().GetArchetype("Asteroid"));
-	GameObjectManager::GetInstance().Add(*newObj);
+	GameObject *asteroid = GameObjectManager::GetInstance().GetArchetype("Asteroid");
+	if (asteroid)
+		GameObjectManager::GetInstance().Add(*(new GameObject(*asteroid)));
 }
 
 void GameStateAsteroids::UpdateScore(void)
 {
-	std::string title = "CS230 Project 6 - Asteroids, Wave = ";
-	title += std::to_string(asteroidWaveCount);
-	title += ", Score = ";
-	title += std::to_string(asteroidScore);
-	title += ", High Score = ";
-	title += std::to_string(asteroidHighScore);
-	AESysSetWindowTitle(title.c_str());
+	char title[100];
+	sprintf(title, "CS230 Project 6 - Asteroids, Wave = %d, Score = %d, High Score = %d", asteroidWaveCount, asteroidScore, asteroidHighScore);
+	AESysSetWindowTitle(title);
 }
 
 void GameStateAsteroids::CreateBulletArchetype(void)
 {
-	GameObject* go = new GameObject("Bullet");
-
-	Transform* t = new Transform(0, 0);
-	t->SetScale(Vector2D(10, 10));
-	go->SetTransform(*t);
-
-	Sprite* sprite = new Sprite("Bullet Sprite");
+	GameObject *bullet = new GameObject("Bullet");
+	Transform *transform = new Transform(0, 0);
+	transform->SetRotation(0);
+	transform->SetScale({ 10, 10 });
+	Sprite *sprite = new Sprite();
 	sprite->SetMesh(pMeshBullet);
+	Physics *physics = new Physics();
+	Behavior *behavior = (Behavior*)(new BehaviorBullet());
+	Collider *collider = new ColliderCircle(5);
 
-	Physics* p = new Physics();
+	bullet->AddComponent(transform);
+	bullet->AddComponent(sprite);
+	bullet->AddComponent(physics);
+	bullet->AddComponent(behavior);
+	bullet->AddComponent(collider);
 
-	Collider* c = new Collider(*go);
-
-	Behavior* b = (Behavior*) new BehaviorBullet(*go);
-
-	go->SetSprite(*sprite);
-	go->SetPhysics(*p);
-	go->SetBehavior(*b);
-	go->SetCollider(*c);
-
-	GameObjectManager::GetInstance().AddArchetype(*go);
+	GameObjectManager::GetInstance().AddArchetype(*bullet);
 }
 
 void GameStateAsteroids::CreateAsteroidArchetype(void)
 {
-	GameObject* go = new GameObject("Asteroid");
+	GameObject *asteroid = new GameObject("Asteroid");
+	Transform *transform = new Transform(0, 0);
+	transform->SetRotation(0);
+	transform->SetScale({ 40, 40 });
+	Sprite *sprite = new Sprite();
+	sprite->SetMesh(pMeshAsteroid);
+	Physics *physics = new Physics();
+	Behavior *behavior = (Behavior*)(new BehaviorAsteroid());
+	Collider *collider = new ColliderCircle(20);
 
-	Transform* t = new Transform(0, 0);
-	t->SetScale(Vector2D(40, 40));
-	go->SetTransform(*t);
-	Sprite* s = new Sprite("Asteroid Sprite");
-	s->SetMesh(pMeshAsteroid);
+	asteroid->AddComponent(transform);
+	asteroid->AddComponent(sprite);
+	asteroid->AddComponent(physics);
+	asteroid->AddComponent(behavior);
+	asteroid->AddComponent(collider);
 
-	Physics* p = new Physics();
-	p->SetRotationalVelocity((float)M_PI / 4.0f);
-
-	Collider* c = new Collider(*go);
-
-	Behavior* b = (Behavior*) new BehaviorAsteroid(*go);
-
-	go->SetBehavior(*b);
-	go->SetCollider(*c);
-	go->SetPhysics(*p);
-	go->SetSprite(*s);
-
-	GameObjectManager::GetInstance().AddArchetype(*go);
+	GameObjectManager::GetInstance().AddArchetype(*asteroid);
 }
-
-void GameStateAsteroids::UpdateCamera(float dt)
-{
-	Vector2D camTranslation = Transform::GetCamTranslation();
-	if (AEInputCheckCurr('W'))
-		camTranslation.Y(camTranslation.Y() + 100 * dt);
-	if (AEInputCheckCurr('A'))
-		camTranslation.X(camTranslation.X() - 100 * dt);
-	if (AEInputCheckCurr('S'))
-		camTranslation.Y(camTranslation.Y() - 100 * dt);
-	if (AEInputCheckCurr('D'))
-		camTranslation.X(camTranslation.X() + 100 * dt);
-	Transform::SetCamTranslation(camTranslation);
-}
-
-void GameStateAsteroids::UpdateUIScore(void *data[]) {
-	UNREFERENCED_PARAMETER(data);
-}
-
-/*----------------------------------------------------------------------------*/

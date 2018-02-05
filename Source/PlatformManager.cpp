@@ -3,6 +3,10 @@
 #include "Mesh.h"
 #include "PlatformManager.h"
 #include "Random.h"
+#include "Vector2D.h"
+#include "Sprite.h"
+#include "Transform.h"
+#include "Physics.h"
 
 vector<PlatformManager::Platform> PlatformManager::platforms;
 Sprite *PlatformManager::platformSprite;
@@ -11,7 +15,7 @@ Sprite *PlatformManager::platformSprite;
 
 void PlatformManager::Init()
 {
-	platformSprite = new Sprite("Platform Sprite");
+	platformSprite = new Sprite();
 }
 
 void PlatformManager::Update(float dt)
@@ -75,7 +79,7 @@ void PlatformManager::AddPlatform(Transform transform, float jump, bool trampoli
 
 PlatformManager::Platform* PlatformManager::IsOnPlatform(GameObject * object, Vector2D * groundPosition)
 {
-	Transform *ot = object->GetTransform();
+	Transform *ot = (Transform*)object->GetComponent("Transform");
 	if (!ot) return nullptr;
 	Vector2D otrs = ot->GetTranslation();
 	Vector2D oscl = ot->GetScale();
@@ -101,7 +105,7 @@ PlatformManager::Platform* PlatformManager::IsOnPlatform(GameObject * object, Ve
 
 int PlatformManager::HittingSide(GameObject * object, Vector2D * newPosition, Vector2D * newVelocity)
 {
-	Transform *ot = object->GetTransform();
+	Transform *ot = (Transform*)object->GetComponent("Transform");
 	if (!ot) return 0;
 	Vector2D otrs = ot->GetTranslation();
 	Vector2D oscl = ot->GetScale();
@@ -121,7 +125,8 @@ int PlatformManager::HittingSide(GameObject * object, Vector2D * newPosition, Ve
 				newPosition->Y(ptrs.Y() - pscl.Y() / 2 - oscl.Y() / 2 - 1);
 			}
 			if (newVelocity) {
-				newVelocity->X(object->GetPhysics()->GetVelocity().X());
+				Physics *phy = (Physics*)object->GetComponent("Physics");
+				newVelocity->X(phy ? phy->GetVelocity().X() : 0);
 				newVelocity->Y(0);
 			}
 			return 2;
@@ -140,7 +145,8 @@ int PlatformManager::HittingSide(GameObject * object, Vector2D * newPosition, Ve
 			}
 			if (newVelocity) {
 				newVelocity->X(0);
-				newVelocity->Y(object->GetPhysics()->GetVelocity().Y());
+				Physics *phy = (Physics*)object->GetComponent("Physics");
+				newVelocity->Y(phy ? phy->GetVelocity().Y() : 0);
 			}
 			if (otrs.X() < ptrs.X())
 				return 3;

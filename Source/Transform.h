@@ -15,6 +15,7 @@
 // Include Files:
 //------------------------------------------------------------------------------
 
+#include "Component.h"
 #include "Vector2D.h"
 #include "Matrix2D.h"
 
@@ -27,7 +28,7 @@
 // An example of the structure to be defined in Transform.h.
 // You are free to change the contents of this structure as long as you do not
 //   change the public method declarations declared in the header.
-class Transform
+class Transform : public Component
 {
 public:
 	//------------------------------------------------------------------------------
@@ -40,6 +41,9 @@ public:
 	//	 x = Initial world position on the x-axis.
 	//	 y = Initial world position on the y-axis.
 	Transform(float x, float y);
+
+	// Clones the transform component, returning a dynamically allocated copy.
+	Component* Clone() const;
 
 	// Get the transform matrix, based upon translation, rotation and scale settings.
 	// Returns:
@@ -75,16 +79,16 @@ public:
 	// Params:
 	//	 translation = Reference to a scale vector.
 	void SetScale(const Vector2D& scale);
-	
+
 	void SetFollowCamera(bool fc);
-	
+
 
 	static void SetCamTranslation(const Vector2D& translation);
 
 	static Vector2D GetCamTranslation();
 
 	static void SetCamIsDirty(bool isDirty);
-
+	
 private:
 	//------------------------------------------------------------------------------
 	// Private Variables:
@@ -107,9 +111,7 @@ private:
 	// True if the transformation matrix needs to be recalculated.
 	// (Hint: this should be initialized to true.)
 	bool	isDirty;
-
 	bool followCamera;
-
 
 	static Vector2D camTranslation;
 	static bool camIsDirty;

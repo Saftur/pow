@@ -1,253 +1,193 @@
-//------------------------------------------------------------------------------
-//
-// File Name:	BehaviorAsteroid.cpp
-// Author(s):	Mark Culp
-// Project:		MyGame
-// Course:		CS230S17
-//
-// Copyright © 2017 DigiPen (USA) Corporation.
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Include Files:
-//------------------------------------------------------------------------------
-
 #include "stdafx.h"
-#include "Random.h"
-#include "AEEngine.h"
-#include "Teleporter.h"
-#include "GameStateAsteroids.h"
 #include "BehaviorAsteroid.h"
+#include <AEEngine.h>
 #include "GameObjectManager.h"
+#include "GameObject.h"
+#include "Transform.h"
+#include "Physics.h"
+#include "Collider.h"
+#include "Trace.h"
+#include "Random.h"
+#include "GameStateAsteroids.h"
+#include "Teleporter.h"
 
-//------------------------------------------------------------------------------
-enum AsteroidState {cAsteroidInvalid, cAsteroidIdle };
-enum AsteroidSize { cAsteroidSmall, cAsteroidMedium, cAsteroidLarge };
-//------------------------------------------------------------------------------
-// Public Consts:
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Public Structures:
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Public Functions:
-//------------------------------------------------------------------------------
-
-// Allocate a new (Asteroid) behavior component.
-// Params:
-//  parent = The object that owns this behavior.
-BehaviorAsteroid::BehaviorAsteroid(GameObject& parent)
-	: base(parent)
+enum AsteroidState
 {
-	base.stateCurr = cAsteroidInvalid;
-	base.stateNext = cAsteroidIdle;
-	base.onInit = BehaviorAsteroid::Init;
-	base.onUpdate = BehaviorAsteroid::Update;
-	base.onExit = BehaviorAsteroid::Exit;
-	base.clone = BehaviorAsteroid::Clone;
-	base.destroy = BehaviorAsteroid::Destroy;
-	size = cAsteroidLarge;
+	cAsteroidIdle,
+};
+
+typedef enum
+{
+	cAsteroidSmall,
+	cAsteroidMedium,
+	cAsteroidLarge,
+
+} AsteroidSize;
+
+typedef enum
+{
+	cAsteroidOriginTlc,
+	cAsteroidOriginTrc,
+	cAsteroidOriginBlc,
+	cAsteroidOriginBrc,
+	cAsteroidOriginCount,
+
+} AsteroidOrigin;
+
+BehaviorAsteroid::BehaviorAsteroid() :
+		size(cAsteroidLarge)
+{
+	SetNextState(cAsteroidIdle);
 }
 
-//------------------------------------------------------------------------------
-// Private Functions:
-//------------------------------------------------------------------------------
-
-// Copy an existing asteroid behavior component.
-// Params:
-//  other  = The behavior being copied.
-//  parent = The object that owns this behavior.
-BehaviorAsteroid::BehaviorAsteroid(const Behavior& other, GameObject& parent)
-	: base(parent)
+Component * BehaviorAsteroid::Clone() const
 {
-	base.stateCurr = other.stateCurr;
-	base.stateNext = other.stateNext;
-	base.onInit = other.onInit;
-	base.onUpdate = other.onUpdate;
-	base.onExit = other.onExit;
-	base.clone = other.clone;
-	base.destroy = other.destroy;
-	size = ((const BehaviorAsteroid&)other).size;
+	return new BehaviorAsteroid(*this);
 }
 
-// Clone an advanced behavior and return a pointer to the cloned object.
-// Params:
-//   behavior = Reference to the behavior that will be destroyed.
-//   parent = A reference to the parent object (the object that owns this component).
-// Returns:
-//   A pointer to an advanced behavior.
-Behavior* BehaviorAsteroid::Clone(const Behavior& behavior, GameObject& parent)
+void BehaviorAsteroid::OnEnter()
 {
-	return (Behavior*) new BehaviorAsteroid(behavior, parent);
-}
-
-// Destroy an advanced behavior.
-// Params:
-//   behavior = Reference to the behavior that will be destroyed.
-void BehaviorAsteroid::Destroy(Behavior& behavior)
-{
-	delete (BehaviorAsteroid*)&behavior;
-}
-
-// Initialize the current state of the behavior component.
-// (Hint: Refer to the lecture notes on finite state machines (FSM).)
-// Params:
-//	 behavior = Pointer to the behavior component.
-void BehaviorAsteroid::Init(Behavior& behavior)
-{
-	switch (behavior.stateCurr)
-	{
-	case cAsteroidIdle:
-		((BehaviorAsteroid&)behavior).origin = RandomRange(0, 3);
-		((BehaviorAsteroid&)behavior).SetPosition();
-		((BehaviorAsteroid&)behavior).SetVelocity();
-
-		if (behavior.parent.GetCollider())
-			behavior.parent.GetCollider()->SetCollisionHandler(CollisionHandler);
-		break;
+	if (GetCurrentState() == cAsteroidIdle) {
+		origin = RandomRange(0, 3);
+		SetPosition();
+		SetVelocity();
+		GameObject *parent_ = GetParent();
+		if (parent_) {
+			Collider *collider = (Collider*)parent_->GetComponent("Collider");
+			if (collider)
+				collider->SetCollisionHandler(CollisionHandler);
+		}
 	}
 }
 
-// Update the current state of the behavior component.
-// (Hint: Refer to the lecture notes on finite state machines (FSM).)
-// Params:
-//	 behavior = Pointer to the behavior component.
-//	 dt = Change in time (in seconds) since the last game loop.
-void BehaviorAsteroid::Update(Behavior& behavior, float dt)
+void BehaviorAsteroid::OnUpdate(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
-
-	switch (behavior.stateCurr)
-	{
-	case cAsteroidInvalid:
-		break;
-	case cAsteroidIdle:
-		break;
-	}
-
-	TeleporterUpdateObject(behavior.parent);
+	GameObject *parent_ = GetParent();
+	if (!parent_) return;
+	TeleporterUpdateObject(*parent_);
 }
 
-// Exit the current state of the behavior component.
-// (Hint: Refer to the lecture notes on finite state machines (FSM).)
-// Params:
-//	 behavior = Pointer to the behavior component.
-//	 dt = Change in time (in seconds) since the last game loop.
-void BehaviorAsteroid::Exit(Behavior& behavior)
+void BehaviorAsteroid::CollisionHandler(GameObject & asteroid, GameObject & other)
 {
-	UNREFERENCED_PARAMETER(behavior);
-}
+	if (other.IsNamed("Bullet") || other.IsNamed("Spaceship")) {
+		BehaviorAsteroid* behavior = (BehaviorAsteroid*)asteroid.GetComponent("Behavior");
 
-// The collision handling function for Asteroids.
-// Params:
-//	 asteroid = The asteroid object.
-//	 other = The object the asteroid is colliding with.
-void BehaviorAsteroid::CollisionHandler(GameObject& asteroid, GameObject& other)
-{
-	if (other.IsNamed("Bullet") || other.IsNamed("Spaceship"))
-	{
-		GameStateAsteroids::IncreaseScore(10);
-	 	((BehaviorAsteroid*)asteroid.GetBehavior())->SpawnNewAsteroids();
+		// Calculate score based on size of asteroid
+		float scoreValue = 20;
+		for (int sizeCategory = behavior->size; sizeCategory > 0; --sizeCategory)
+			scoreValue /= 2.0f;
+
+		// Add value to player's score
+		GameStateAsteroids::IncreaseScore((int)scoreValue);
+
+		// If asteroid is large, create smaller asteroids
+		behavior->SpawnNewAsteroids();
+
+		//Call GameObjectDestroy with gameObject1
 		asteroid.Destroy();
 	}
 }
 
-// Set position of asteroid based on origin
 void BehaviorAsteroid::SetPosition()
 {
-	switch (size)
-	{
-	case cAsteroidLarge:
-		switch (origin)
-		{
-		case 0:
-			base.parent.GetTransform()->SetTranslation(Vector2D((float)AEGfxGetWinMinX(), (float)AEGfxGetWinMinY()));
-			break;
-		case 1:
-			base.parent.GetTransform()->SetTranslation(Vector2D((float)AEGfxGetWinMaxX(), (float)AEGfxGetWinMinY()));
-			break;
-		case 2:
-			base.parent.GetTransform()->SetTranslation(Vector2D((float)AEGfxGetWinMinX(), (float)AEGfxGetWinMaxY()));
-			break;
-		case 3:
-			base.parent.GetTransform()->SetTranslation(Vector2D((float)AEGfxGetWinMaxX(), (float)AEGfxGetWinMaxY()));
-			break;
+	GameObject *parent_ = GetParent();
+	if (!parent_) return;
+	if (size == cAsteroidLarge) {
+		Transform *transform = (Transform*)parent_->GetComponent("Transform");
+		Trace::GetInstance().GetStream() << origin << std::endl;
+		if (transform) {
+			Vector2D pos;
+			switch (origin) {
+			case cAsteroidOriginTlc:
+				pos = { AEGfxGetWinMinX(), AEGfxGetWinMaxY() };
+				break;
+			case cAsteroidOriginTrc:
+				pos = { AEGfxGetWinMaxX(), AEGfxGetWinMaxY() };
+				break;
+			case cAsteroidOriginBlc:
+				pos = { AEGfxGetWinMinX(), AEGfxGetWinMinY() };
+				break;
+			case cAsteroidOriginBrc:
+				pos = { AEGfxGetWinMaxX(), AEGfxGetWinMinY() };
+			}
+			Trace::GetInstance().GetStream() << pos.X() << ", " << pos.Y() << std::endl;
+			transform->SetTranslation(pos);
 		}
-		break;
 	}
 }
 
-// Set velocity based on size
 void BehaviorAsteroid::SetVelocity()
 {
-	float angle = 0.0f;
-	switch (size)
-	{
+	GameObject *parent_ = GetParent();
+	if (!parent_) return;
+	Physics *physics = (Physics*)parent_->GetComponent("Physics");
+	if (!physics) return;
+	int angle = 0;
+	switch (size) {
 	case cAsteroidLarge:
-		switch (origin)
-		{
-		case 0:
-			angle = RandomRangeFloat(-10, -80);
+		switch (origin) {
+		case cAsteroidOriginTlc:
+			angle = RandomRange(-80, -10);
 			break;
-		case 1:
-			angle = RandomRangeFloat(-100, -170);
+		case cAsteroidOriginTrc:
+			angle = RandomRange(-170, -100);
 			break;
-		case 2:
-			angle = RandomRangeFloat(10, 80);
+		case cAsteroidOriginBlc:
+			angle = RandomRange(10, 80);
 			break;
-		case 3:
-			angle = RandomRangeFloat(100, 170);
+		case cAsteroidOriginBrc:
+			angle = RandomRange(100, 170);
 			break;
 		}
 		break;
-	case cAsteroidMedium:
-	case cAsteroidSmall:
-		angle = RandomRangeFloat(0, 359);
+	case cAsteroidMedium: case cAsteroidSmall:
+		angle = RandomRange(0, 359);
 		break;
 	}
-
-	base.parent.GetPhysics()->SetVelocity(Vector2D::FromAngleDegrees(angle) * RandomRangeFloat(asteroidSpeedMin, asteroidSpeedMax));
+	physics->SetVelocity(Vector2D::FromAngleDegrees((float)angle) * (float)RandomRange((int)asteroidSpeedMin, (int)asteroidSpeedMax));
 }
 
-// Generate new asteroids based off this asteroid
 void BehaviorAsteroid::SpawnNewAsteroids()
 {
-	float scale = 30.0f;
-	int size2 = cAsteroidMedium;
+	GameObject *parent_ = GetParent();
+	if (!parent_) return;
+	int numAsteroids = 0;
+	float scaleFactor = 0.8f;
 
 	switch (size)
 	{
-	case cAsteroidMedium:
-		size2 = cAsteroidSmall;
-		scale = 10.0f;
 	case cAsteroidLarge:
-		for (int i = 0; i < 2; i++)
-		{
-			GameObject* newAst = new GameObject(base.parent);
-			newAst->GetTransform()->SetScale(Vector2D(scale, scale));
-			((BehaviorAsteroid*)newAst->GetBehavior())->SetVelocity();
-			((BehaviorAsteroid*)newAst->GetBehavior())->size = size2;
-			newAst->GetBehavior()->stateCurr = cAsteroidIdle;
-			GameObjectManager::GetInstance().Add(*newAst);
-		}
+		numAsteroids = RandomRange(2, 3);
+		//numAsteroids = 3;
 		break;
-	case cAsteroidSmall:
+	case cAsteroidMedium:
+		numAsteroids = RandomRange(1, 2);
+		//numAsteroids = 2;
+		break;
+	default:
+		// Do nothing
 		break;
 	}
+
+	for (int i = 0; i < numAsteroids; ++i)
+	{
+		// Clone asteroid
+		GameObject* clone = new GameObject(*parent_);
+
+		// Decrease size category by one
+		BehaviorAsteroid* behavior = (BehaviorAsteroid*)clone->GetComponent("Behavior");
+		--behavior->size;
+
+		// Reset state
+		behavior->SetCurrentState(cBehaviorInvalid);
+		behavior->SetNextState(cAsteroidIdle);
+
+		// Scale asteroid down
+		Transform* transform = (Transform*)clone->GetComponent("Transform");
+		transform->SetScale(transform->GetScale() * scaleFactor);
+
+		// Add to object manager
+		GameObjectManager::GetInstance().Add(*clone);
+	}
 }
-
-//------------------------------------------------------------------------------
-// Private Variables:
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Private Consts:
-//------------------------------------------------------------------------------
-
-const float BehaviorAsteroid::asteroidSpeedMin = 50.0f;
-const float BehaviorAsteroid::asteroidSpeedMax = 100.0f;
-
-//------------------------------------------------------------------------------

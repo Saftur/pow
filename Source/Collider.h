@@ -1,11 +1,11 @@
 //------------------------------------------------------------------------------
 //
 // File Name:	Collider.h
-// Author(s):	Doug Schilling (dschilling)
+// Author(s):	Doug Schilling (dschilling), Jeremy Kings (j.kings)
 // Project:		MyGame
-// Course:		CS230S17
+// Course:		CS230S18
 //
-// Copyright © 2017 DigiPen (USA) Corporation.
+// Copyright © 2018 DigiPen (USA) Corporation.
 //
 //------------------------------------------------------------------------------
 
@@ -15,17 +15,19 @@
 // Include Files:
 //------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
+#include "Component.h"
 
 //------------------------------------------------------------------------------
-// Forward References:
-//------------------------------------------------------------------------------
-
-typedef class GameObject GameObject;
 
 //------------------------------------------------------------------------------
 // Public Consts:
 //------------------------------------------------------------------------------
+
+typedef enum ColliderType
+{
+	ColliderTypeNone,
+	ColliderTypeCircle,
+} ColliderType;
 
 //------------------------------------------------------------------------------
 // Public Structures:
@@ -33,8 +35,7 @@ typedef class GameObject GameObject;
 
 typedef void(*CollisionEventHandler)(GameObject& gameObject1, GameObject& gameObject2);
 
-// An example of the structure to be defined in Collider.c.
-class Collider
+class Collider : public Component
 {
 public:
 	//------------------------------------------------------------------------------
@@ -46,17 +47,18 @@ public:
 	//------------------------------------------------------------------------------
 
 	// Allocate a new collider component.
-	Collider(GameObject& parent);
-
-	// Disable copy constructor
-	Collider(const Collider& other) = delete;
-
-	// Copy an existing collider component.
-	// (Hint: Perform a shallow copy of the member variables.)
 	// Params:
-	//	 other = Reference to the component to be cloned.
-	//   parent = Reference to the object that owns this collider.
-	Collider(const Collider& other, GameObject& parent);
+	//   parent = Reference to the object that owns this component.
+	//   type = The type of collider (circle, line, etc.).
+	Collider(ColliderType type);
+
+	// Clone an collider and return a pointer to the cloned object.
+	// Returns:
+	//   A pointer to a collider.
+	virtual Component* Clone() const = 0;
+
+	// Debug drawing for colliders.
+	virtual void Draw() const;
 
 	// Check if two objects are colliding.
 	// (Hint: Refer to the project instructions for implementation suggestions.)
@@ -73,16 +75,22 @@ public:
 	//	 handler = Pointer to the collision event handler (may be nullptr).
 	void SetCollisionHandler(CollisionEventHandler handler);
 
-private:
+	// Perform intersection test between two arbitrary colliders.
+	// Params:
+	//	 other = Reference to the second collider component.
+	virtual bool IsCollidingWith(const Collider& other) const = 0;
 
+	// Get the type of this component.
+	ColliderType GetType() const;
+
+private:
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
 
-	float radius;
-
-	// Pointer to the collider's parent game object.
-	GameObject& parent;
+	// The type of collider used by this component.
+	// (Currently, Circle or Line).
+	ColliderType type;
 
 	// Pointer to a function that handles collisions between two objects.
 	CollisionEventHandler handler;

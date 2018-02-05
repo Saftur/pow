@@ -1,50 +1,30 @@
-//------------------------------------------------------------------------------
-//
-// File Name:	Teleporter.cpp
-// Author(s):	Mark Culp
-// Project:		MyGame
-// Course:		CS230S17
-//
-// Copyright © 2017 DigiPen (USA) Corporation.
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Include Files:
-//------------------------------------------------------------------------------
-
 #include "stdafx.h"
-#include "AEEngine.h"
 #include "Teleporter.h"
+#include <AEEngine.h>
 #include "GameObject.h"
+#include "Transform.h"
+#include "Trace.h"
 
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Forward References:
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Public Functions:
-//------------------------------------------------------------------------------
-
-// When a game object goes off-screen, teleport it to the other side.
-// Params:
-//	 gameObject = Reference to the game object to be checked.
-void TeleporterUpdateObject(GameObject& gameObject)
+void TeleporterUpdateObject(GameObject & gameObject)
 {
-	Vector2D pos = gameObject.GetTransform()->GetTranslation();
+	Transform *tr = (Transform*)gameObject.GetComponent("Transform");
+	if (!tr) return;
 
-	if (gameObject.GetTransform()->GetTranslation().X() >= AEGfxGetWinMaxX())
-		pos.X(AEGfxGetWinMinX());
-	if (gameObject.GetTransform()->GetTranslation().Y() >= AEGfxGetWinMaxY())
-		pos.Y(AEGfxGetWinMinY());
-	if (gameObject.GetTransform()->GetTranslation().X() <= AEGfxGetWinMinX())
-		pos.X(AEGfxGetWinMaxX());
-	if (gameObject.GetTransform()->GetTranslation().Y() <= AEGfxGetWinMinY())
-		pos.Y(AEGfxGetWinMaxY());
+	f32 maxX = AEGfxGetWinMaxX();
+	f32 minX = AEGfxGetWinMinX();
+	f32 maxY = AEGfxGetWinMaxY();
+	f32 minY = AEGfxGetWinMinY();
+	Vector2D pos = tr->GetTranslation();
+	Vector2D scale = tr->GetScale();
+	
+	if (pos.X() - (scale.X() / 2) > maxX)
+		pos.X(minX - (scale.X() / 2));
+	else if (pos.X() + (scale.X() / 2) < minX)
+		pos.X(maxX + (scale.X() / 2));
+	if (pos.Y() - (scale.Y() / 2) > maxY)
+		pos.Y(minY - (scale.Y() / 2));
+	else if (pos.Y() + (scale.Y() / 2) < minY)
+		pos.Y(maxY + (scale.Y() / 2));
 
-	gameObject.GetTransform()->SetTranslation(pos);
+	tr->SetTranslation(pos);
 }
-
-//------------------------------------------------------------------------------

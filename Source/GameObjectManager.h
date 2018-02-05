@@ -95,10 +95,10 @@ public:
 	//   If the named object is found,
 	//	   then return the pointer to the named game object,
 	//	   else return nullptr.
-	GameObject* GetObjectByName(const char* name);
-
+	GameObject* GetObjectByName(const char* name) const;
+	
 	vector<GameObject*> GetObjectsByName(const char* name);
-
+	
 	// Returns a pointer to the first game object archetype matching the specified name.
 	// (Hint: This function and the GameObjectManagerGetObjectByName functions require
 	//    the same code.  Consider creating a single, private function that searches
@@ -109,7 +109,7 @@ public:
 	//   If the named archetype is found,
 	//	   then return the pointer to the named game object archetype,
 	//	   else return nullptr.
-	GameObject* GetArchetype(const char* name);
+	GameObject* GetArchetype(const char* name) const;
 
 	// Returns a reference to the singleton instance of the GameObjectManager.
 	static GameObjectManager& GetInstance();

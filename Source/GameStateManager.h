@@ -32,8 +32,6 @@ public:
 	// Update the game state manager.
 	void Update(float dt);
 
-	void UpdateAO(float dt);
-
 	// Shutdown the game state manager.
 	void Shutdown();
 
@@ -45,6 +43,7 @@ public:
 
 	// Set the next game state to run.
 	void SetNextState(int nextState);
+	void SetNextState(const char* name);
 
 	// Retrieve the instance of the GameStateManager singleton.
 	static GameStateManager& GetInstance();
@@ -55,16 +54,15 @@ private:
 	//------------------------------------------------------------------------------
 	typedef struct
 	{
-		GameStateTable::GameStates	current;	/* Index of the current game state. */
-		GameStateTable::GameStates	previous;	/* Index of the previous game state. */
-		GameStateTable::GameStates	next;		/* Index of the next game state. */
-
-	} GameState;
+		int	current;	/* Index of the current game state. */
+		int	previous;	/* Index of the previous game state. */
+		int	next;		/* Index of the next game state. */
+	} GameStateIndices;
 
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
-	GameState gameState;
+	GameStateIndices gameStateIndices;
 
 	//------------------------------------------------------------------------------
 	// Private Function Declarations:

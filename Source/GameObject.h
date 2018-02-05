@@ -1,11 +1,11 @@
 //------------------------------------------------------------------------------
 //
 // File Name:	GameObject.h
-// Author(s):	Doug Schilling (dschilling)
-// Project:		MyGame
-// Course:		CS230S17
+// Author(s):	Doug Schilling (dschilling), Jeremy Kings (j.kings)
+// Project:		Project 7
+// Course:		CS230
 //
-// Copyright © 2017 DigiPen (USA) Corporation.
+// Copyright © 2018 DigiPen (USA) Corporation.
 //
 //------------------------------------------------------------------------------
 
@@ -15,20 +15,18 @@
 // Include Files:
 //------------------------------------------------------------------------------
 
-#include "Animation.h"
-#include "Behavior.h"
-#include "Collider.h"
-#include "Physics.h"
-#include "Sprite.h"
-#include "Transform.h"
+//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+// Forward References:
+//------------------------------------------------------------------------------
+
+typedef class Component Component;
 
 //------------------------------------------------------------------------------
 // Public Structures:
 //------------------------------------------------------------------------------
 
-// An example of the structure to be defined in GameObject.c.
 // You are free to change the contents of this structure as long as you do not
 //   change the public interface declared in the header.
 class GameObject
@@ -51,65 +49,11 @@ public:
 	// Free the memory associated with a game object.
 	~GameObject();
 
-	// Attach an animation component to a game object.
-	// Params:
-	//   animation = Reference to the animation component to be attached.
-	void SetAnimation(Animation& animation);
+	// Adds a component to the object.
+	void AddComponent(Component* component);
 
-	// Attach a behavior component to a game object.
-	// Params:
-	//   behavior = Reference to the behavior component to be attached.
-	void SetBehavior(Behavior& behavior);
-
-	// Attach a collider component to a game object.
-	// Params:
-	//   collider = Reference to the collider component to be attached.
-	void SetCollider(Collider& collider);
-
-	// Attach a physics component to a game object.
-	// Params:
-	//   physics = Reference to the physics component to be attached.
-	void SetPhysics(Physics& physics);
-
-	// Attach a sprite component to a game object.
-	// Params:
-	//   sprite = Reference to the sprite component to be attached.
-	void SetSprite(Sprite& sprite);
-
-	// Attach a transform component to a game object.
-	// Params:
-	//   transform = Reference to the transform component to be attached.
-	void SetTransform(Transform& transform);
-
-	// Get the animation component attached to a game object.
-	// Returns:
-	//		A pointer to the attached animation component.	
-	Animation* GetAnimation();
-
-	// Get the behavior component attached to a game object.
-	// Returns:
-	//		A pointer to the attached behavior component.	
-	Behavior* GetBehavior();
-
-	// Get the collider component attached to a game object.
-	// Returns:
-	//		A pointer to the attached collider component.	
-	Collider* GetCollider();
-
-	// Get the physics component attached to a game object.
-	// Returns:
-	//		A pointer to the attached physics component.
-	Physics* GetPhysics();
-
-	// Get the sprite component attached to a game object.
-	// Returns:
-	//		A pointer to the attached sprite component.
-	Sprite* GetSprite();
-
-	// Get the transform component attached to a game object.
-	// Returns:
-	//		A pointer to the attached transform component.
-	Transform* GetTransform();
+	// Retrieves the component with the given name if it exists.
+	Component* GetComponent(const char* name) const;
 
 	// Get the name of the object.
 	// Returns:
@@ -148,28 +92,20 @@ private:
 	// Private Variables:
 	//------------------------------------------------------------------------------
 
+	// Maximum number of components
+	static const int maxNumComponents = 10;
+
 	// The name of the game object.
 	const char * name;
 
-	// Pointer to an attached animation component.
-	Animation* animation;
+	// Array of components
+	Component* components[maxNumComponents];
 
-	// Pointer to an attached behavior component.
-	Behavior* behavior;
-
-	// Pointer to an attached collider component.
-	Collider* collider;
-
-	// Pointer to an attached physics component.
-	Physics* physics;
-
-	// Pointer to an attached sprite component.
-	Sprite* sprite;
-
-	// Pointer to an attached transform component.
-	Transform* transform;
+	// Number of components currently in the object
+	unsigned numComponents;
 
 	// Whether the object has been marked for destruction.
 	bool isDestroyed;
 };
+
 //------------------------------------------------------------------------------

@@ -11,11 +11,11 @@
 
 #pragma once
 
-#include "GUIManager.h"
-
 //------------------------------------------------------------------------------
 // Include Files:
 //------------------------------------------------------------------------------
+
+#include "GameState.h"
 
 //------------------------------------------------------------------------------
 
@@ -33,33 +33,32 @@ typedef struct AEGfxVertexList AEGfxVertexList;
 // Public Structures:
 //------------------------------------------------------------------------------
 
-class GameStateAsteroids
+class GameStateAsteroids : public GameState
 {
 public:
-	//------------------------------------------------------------------------------
-	// Public Variables:
-	//------------------------------------------------------------------------------
-
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
 
+	// Create an instance of Asteroids
+	GameStateAsteroids();
+
 	// Load the resources associated with the Asteroids game state.
-	static void Load();
+	void Load();
 
 	// Initialize the memory associated with the Asteroids game state.
-	static void Init();
+	void Init();
 
 	// Update the Asteroids game state.
 	// Params:
 	//	 dt = Change in time (in seconds) since the last game loop.
-	static void Update(float dt);
+	void Update(float dt);
 
 	// Shutdown any memory associated with the Asteroids game state.
-	static void Shutdown();
+	void Shutdown();
 
 	// Unload the resources associated with the Asteroids game state.
-	static void Unload();
+	void Unload();
 
 	// Increase the asteroids score by score value.
 	// Params:
@@ -70,16 +69,16 @@ private:
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
-	static const int cAsteroidSpawnInitial = 8;
-	static const int cAsteroidSpawnMaximum = 20;
+	const int cAsteroidSpawnInitial = 8;
+	const int cAsteroidSpawnMaximum = 20;
 	static const int scoreStringLength = 128;
 
-	static AEGfxVertexList*	pMeshSpaceship;
-	static AEGfxVertexList*	pMeshBullet;
-	static AEGfxVertexList*	pMeshAsteroid;
+	AEGfxVertexList*	pMeshSpaceship;
+	AEGfxVertexList*	pMeshBullet;
+	AEGfxVertexList*	pMeshAsteroid;
 	static int asteroidScore;
 	static int asteroidHighScore;
-	static int asteroidSpawnCount;
+	int asteroidSpawnCount;
 	static int asteroidWaveCount;
 
 	static char score[scoreStringLength];
@@ -89,22 +88,19 @@ private:
 	//------------------------------------------------------------------------------
 
 	// Create meshes for spaceship and bullet
-	static void CreateMeshes(void);
+	void CreateMeshes(void);
 	// Free all created meshes.
-	static void FreeMeshes(void);
+	void FreeMeshes(void);
 
 	// Single objects
-	static void CreateSpaceship(void);
-	static void SpawnAsteroidWave(void);
-	static void SpawnAsteroid(void);
+	void CreateSpaceship(void);
+	void SpawnAsteroidWave(void);
+	void SpawnAsteroid(void);
 	static void UpdateScore(void);
 
 	// Archetypes
-	static void CreateBulletArchetype(void);
-	static void CreateAsteroidArchetype(void);
-	
-	static void UpdateCamera(float dt);
-	static UIUpdateFunc UpdateUIScore;
+	void CreateBulletArchetype(void);
+	void CreateAsteroidArchetype(void);
 };
 
 /*----------------------------------------------------------------------------*/

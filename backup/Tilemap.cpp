@@ -1,12 +1,13 @@
+/*******************************************************************************************/
+//Authors: Adam Doolittle (a.doolittle) & Arthur Bouvier (abouvier)
+//FileName: TileMap.cpp
+//Date: 10/17/17
+//Brief: File for reading and printing the Tilemap 
+/*******************************************************************************************/
+
 #include "stdafx.h"
 #include "Tilemap.h"
-#include "GameObject.h"
-#include "Transform.h"
-#include "Sprite.h"
-#include "SpriteSource.h"
-#include "Mesh.h"
 #include "Trace.h"
-#include "AEEngine.h"
 #include <cstdio>
 #include <cstdlib>
 
@@ -15,7 +16,6 @@
 Tilemap::Tilemap(const char* spritesheetFilename, const char* tilemapFilename, const char* collisionMapFilename, 
 	int onScreenOffsetX, int onScreenOffsetY, int onScreenWidth, int onScreenHeight, 
 		int spritesheetWidth, int spritesheetHeight) :
-		Component("Tilemap"),
 		offsetX(onScreenOffsetX), offsetY(onScreenOffsetY), width(onScreenWidth), height(onScreenHeight), 
 		sprite(new Sprite()), texture(AEGfxTextureLoad(spritesheetFilename)), 
 		transform(new Transform(0.0f, 0.0f))
@@ -51,7 +51,6 @@ Tilemap::~Tilemap()
 
 void Tilemap::Draw()
 {
-	Transform *parentTR = GetParent() ? (Transform*)GetParent()->GetComponent("Transform") : nullptr;
 	for (int y = 0; y < tilemapHeight; y++)
 	{
 		for (int x = 0; x < tilemapWidth; x++)
@@ -60,10 +59,7 @@ void Tilemap::Draw()
 			{
 				sprite->SetFrame(getTilenum(x, y));
 				//sprite->Draw({ (f32)(tileWidth * x + offsetX - width / 2 + tileWidth / 2), -(f32)(tileHeight * y + offsetY - height / 2 + tileHeight / 2) });
-				Vector2D translation = { (f32)(tileWidth * x + offsetX - width / 2 + tileWidth / 2), -(f32)(tileHeight * y + offsetY - height / 2 + tileHeight / 2) };
-				if (parentTR)
-					translation += parentTR->GetTranslation();
-				transform->SetTranslation(translation);
+				transform->SetTranslation({ (f32)(tileWidth * x + offsetX - width / 2 + tileWidth / 2), -(f32)(tileHeight * y + offsetY - height / 2 + tileHeight / 2) });
 				sprite->Draw(*transform);
 			}
 		}

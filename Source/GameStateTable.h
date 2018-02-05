@@ -16,11 +16,7 @@
 //------------------------------------------------------------------------------
 
 /* Include all game state headers here. */
-#include "GameStateLevel1.h"
-#include "GameStateLevel2.h"
 #include "GameStateAsteroids.h"
-#include "GameStateDemo.h"
-#include "GameStatePlatformLevel1.h"
 
 //------------------------------------------------------------------------------
 
@@ -28,36 +24,18 @@ class GameStateTable
 {
 public:
 	//------------------------------------------------------------------------------
-	// Public Structures:
-	//------------------------------------------------------------------------------
-	typedef enum
-	{
-		/* Normal Game States: */
-		// Add new game states here.
-		GsLevel1,
-		GsLevel2,
-		GsAsteroids,
-		GsDemo,
-		GsPlatformLevel1,
-
-		/* Bookkeeping States: */
-		GsNum,
-		GsLast = GsNum - 1,
-
-		/* Specify the initial game state */
-		GsInitial = GsPlatformLevel1,
-	} GameStates;
-
-	//------------------------------------------------------------------------------
 	// Public Consts:
 	//------------------------------------------------------------------------------
 
+	// Starting state - currently set to first state in list
+	static const int GsInitial = 0;
+	// Number of states - set to the number of states you intend to use
+	static const int GsNum = 3;
+
 	// Quit state value
 	static const int GsQuit;
-
 	// Restart state value
 	static const int GsRestart;
-
 	// Invalid state value
 	static const int GsInvalid;
 
@@ -66,27 +44,31 @@ public:
 	//------------------------------------------------------------------------------
 
 	// Determine if the game state is valid.
-	bool StateIsValid(GameStates gameState) const;
+	bool StateIsValid(int gameState) const;
 
 	// Determine if the game state is a "special" game state.
-	bool StateIsSpecial(GameStates gameState) const;
+	bool StateIsSpecial(int gameState) const;
 
 	// Execute the Load function for the current game state.
-	void ExecuteLoad(GameStates gameState) const;
+	void ExecuteLoad(int gameState);
 
 	// Execute the Init function for the current game state.
-	void ExecuteInit(GameStates gameState) const;
+	void ExecuteInit(int gameState);
 
 	// Execute the Update function for the current game state.
-	void ExecuteUpdate(GameStates gameState, float dt) const;
-
-	void ExecuteUpdateAO(GameStates gameState, float dt) const;
+	void ExecuteUpdate(int gameState, float dt);
 
 	// Execute the Shutdown function for the current game state.
-	void ExecuteShutdown(GameStates gameState) const;
+	void ExecuteShutdown(int gameState);
 
 	// Execute the Unload function for the current game state.
-	void ExecuteUnload(GameStates gameState) const;
+	void ExecuteUnload(int gameState);
+
+	// Retrieve the id of a named game state.
+	int GetStateId(const char* name) const;
+
+	// Clear out game state tab
+	void Clear();
 
 	// Retrieve the instance of the GameStateTable singleton.
 	static GameStateTable& GetInstance();
@@ -99,36 +81,17 @@ private:
 	// Constructor is private to prevent accidental instantiation.
 	GameStateTable();
 
+	// Destructor is private to prevent accidental destruction.
+	~GameStateTable();
+
 	// Disable copy constructor and assignment operator
 	GameStateTable(const GameStateTable&) = delete;
 	GameStateTable& operator=(const GameStateTable&) = delete;
 
-	//------------------------------------------------------------------------------
-	// Private Structures:
-	//------------------------------------------------------------------------------
-	typedef void(*GameStateVoidFunctionPtr)();
-	typedef void(*GameStateDtFunctionPtr)(float dt);
-
-	struct TableEntry
+	// List of all game states
+	GameState* GameStateTab[GsNum] =
 	{
-		GameStateVoidFunctionPtr	gameStateLoad;		/* Pointer to a game state load function. */
-		GameStateVoidFunctionPtr	gameStateInit;		/* Pointer to a game state initialization function. */
-		GameStateDtFunctionPtr		gameStateUpdate;	/* Pointer to a game state update function. */
-		GameStateVoidFunctionPtr	gameStateShutdown;	/* Pointer to a game state shutdown function. */
-		GameStateVoidFunctionPtr	gameStateUnload;	/* Pointer to a game state unload function. */
-		GameStateDtFunctionPtr		gameStateUpdateAO;	/* update after objects */
-	};
-
-	//------------------------------------------------------------------------------
-	// Private Consts:
-	//------------------------------------------------------------------------------
-	const TableEntry GameStateTab[GsNum] =
-	{
-		{ GameStateLevel1::Load, GameStateLevel1::Init, GameStateLevel1::Update, GameStateLevel1::Shutdown, GameStateLevel1::Unload, GameStateLevel1::UpdateAO },
-		{ GameStateLevel2::Load, GameStateLevel2::Init, GameStateLevel2::Update, GameStateLevel2::Shutdown, GameStateLevel2::Unload },
-		{ GameStateAsteroids::Load, GameStateAsteroids::Init, GameStateAsteroids::Update, GameStateAsteroids::Shutdown, GameStateAsteroids::Unload },
-		{ GameStateDemo::Load, GameStateDemo::Init, GameStateDemo::Update, GameStateDemo::Shutdown, GameStateDemo::Unload },
-		{ GameStatePlatformLevel1::Load, GameStatePlatformLevel1::Init, GameStatePlatformLevel1::Update, GameStatePlatformLevel1::Shutdown, GameStatePlatformLevel1::Unload, GameStatePlatformLevel1::UpdateAO },
+		new GameStateAsteroids(),
 	};
 };
 //------------------------------------------------------------------------------

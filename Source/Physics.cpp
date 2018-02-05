@@ -1,109 +1,61 @@
-//------------------------------------------------------------------------------
-//
-// File Name:	Physics.cpp
-// Author(s):	Mark Culp
-// Project:		MyGame
-// Course:		CS230S17
-//
-// Copyright © 2017 DigiPen (USA) Corporation.
-//
-//------------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
-// Include Files:
-//------------------------------------------------------------------------------
-
 #include "stdafx.h"
 #include "Physics.h"
+#include "GameObject.h"
 #include "Transform.h"
-#include "Vector2D.h"
 
-//------------------------------------------------------------------------------
+Physics::Physics() :
+		Component("Physics"), oldTranslation(0,0), acceleration(0,0), velocity(0,0), rotationalVelocity(0), inverseMass(0)
+{
+}
 
-//------------------------------------------------------------------------------
-// Forward References:
-//------------------------------------------------------------------------------
+Component * Physics::Clone() const
+{
+	return new Physics(*this);
+}
 
-
-//------------------------------------------------------------------------------
-// Public Consts:
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Public Structures:
-//------------------------------------------------------------------------------
-
-// Create a new physics component.
-Physics::Physics()
-	: oldTranslation(Vector2D()), acceleration(Vector2D()), velocity(Vector2D()), rotationalVelocity(0), inverseMass(0.0f) {}
-
-// Get the acceleration of a physics component.
-// Returns:
-//	 A reference to the component's acceleration structure.
-const Vector2D& Physics::GetAcceleration() const
+const Vector2D & Physics::GetAcceleration() const
 {
 	return acceleration;
 }
 
-// Get the velocity of a physics component.
-// Returns:
-//		A reference to the component's velocity structure.
-const Vector2D& Physics::GetVelocity() const
+const Vector2D & Physics::GetVelocity() const
 {
 	return velocity;
 }
 
-// Get the old translation (position) of a physics component.
-// Returns: 
-//		A reference to the component's oldTranslation structure,
-const Vector2D& Physics::GetOldTranslation() const
+const Vector2D & Physics::GetOldTranslation() const
 {
 	return oldTranslation;
 }
 
-// Get the rotational velocity of a physics component.
-// Returns:
-//	 A float representing the new rotational velocity.
 float Physics::GetRotationalVelocity() const
 {
 	return rotationalVelocity;
 }
 
-// Set the acceleration of a physics component.
-// Params:
-//	 acceleration = Reference to an acceleration vector.
-void Physics::SetAcceleration(const Vector2D& anAcceleration)
+void Physics::SetAcceleration(const Vector2D & acceleration_)
 {
-	acceleration = anAcceleration;
+	this->acceleration = acceleration_;
 }
 
-// Set the velocity of a physics component.
-// Params:
-//	 velocity = Reference to a velocity vector.
-void Physics::SetVelocity(const Vector2D& trashVelocity)
+void Physics::SetVelocity(const Vector2D & velocity_)
 {
-	velocity = trashVelocity;
+	this->velocity = velocity_;
 }
 
-// Set the rotational velocity of a physics component.
-// Params:
-//	 velocity = Float representing the new rotational velocity.
-void Physics::SetRotationalVelocity(float theRotationalVelocity)
+void Physics::SetRotationalVelocity(float velocity_)
 {
-	rotationalVelocity = theRotationalVelocity;
+	this->rotationalVelocity = velocity_;
 }
 
-// Update the state of a physics component.
-// Params:
-//	 transform = Reference to the associated transform component.
-//	 dt = Change in time (in seconds) since the last game loop.
-void Physics::Update(Transform& someTransform, float dt)
+void Physics::Update(float dt)
 {
-	oldTranslation = someTransform.GetTranslation();
-
-	velocity = acceleration * dt + velocity;
-	someTransform.SetTranslation(velocity * dt + oldTranslation);
-	someTransform.SetRotation(someTransform.GetRotation() + (rotationalVelocity * dt));
+	GameObject *parent_ = GetParent();
+	if (!parent_) return;
+	Transform *transform = (Transform*)parent_->GetComponent("Transform");
+	if (!transform) return;
+	oldTranslation = transform->GetTranslation();
+	velocity += acceleration * dt;
+	transform->SetTranslation(oldTranslation + velocity * dt);
+	transform->SetRotation(transform->GetRotation() + rotationalVelocity * dt);
 }
-//------------------------------------------------------------------------------

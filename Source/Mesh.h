@@ -38,6 +38,6 @@ typedef struct AEGfxVertexList AEGfxVertexList;
 //	 If the memory allocation was successful,
 //	   then return a pointer to the allocated memory,
 //	   else return nullptr.
-AEGfxVertexList * MeshCreateQuad(float xHalfSize, float yHalfSize, float uSize, float vSize, const char * name);
+AEGfxVertexList * MeshCreateQuad(float xHalfSize, float yHalfSize, float uSize, float vSize);
 
 //------------------------------------------------------------------------------

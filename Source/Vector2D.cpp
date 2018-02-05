@@ -140,7 +140,7 @@ float Vector2D::DotProduct(const Vector2D &other) const
 // Static functions (2)
 Vector2D Vector2D::FromAngleDegrees(float angle)
 {
-	return FromAngleRadians(angle * (float)M_PI * 180.0f);
+	return FromAngleRadians(angle * (float)M_PI / 180.0f);
 }
 
 Vector2D Vector2D::FromAngleRadians(float angle)
