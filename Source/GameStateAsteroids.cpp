@@ -12,6 +12,7 @@
 #include "BehaviorAsteroid.h"
 #include "ColliderCircle.h"
 #include "Trace.h"
+#include "LevelManager.h"
 
 int GameStateAsteroids::asteroidScore = 0;
 int GameStateAsteroids::asteroidHighScore = 0;
@@ -27,6 +28,8 @@ GameStateAsteroids::GameStateAsteroids() :
 void GameStateAsteroids::Load()
 {
 	Trace::GetInstance().GetStream() << "Asteroids: Load" << std::endl;
+
+	LevelManager::Load("TestLevel");
 
 	CreateMeshes();
 }

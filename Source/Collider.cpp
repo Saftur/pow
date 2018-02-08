@@ -31,3 +31,8 @@ ColliderType Collider::GetType() const
 {
 	return type;
 }
+
+void Collider::Load(const rapidjson::Value& obj)
+{
+
+}

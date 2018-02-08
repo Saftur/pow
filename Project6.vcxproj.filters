@@ -46,6 +46,12 @@
     <Filter Include="Engine\I/O">
       <UniqueIdentifier>{2e9b1b5b-ed9b-4200-a64c-607a3e0d94dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RapidJSON">
+      <UniqueIdentifier>{62df1557-bc04-424d-8a87-18b54221e19e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Levels">
+      <UniqueIdentifier>{7fca3aa8-d8c1-4bc5-9673-39c9fb955182}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -156,6 +162,18 @@
     </ClCompile>
     <ClCompile Include="Source\Intersection2D.cpp">
       <Filter>Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorCheckpoint.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorGoal.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="source\LevelManager.cpp">
+      <Filter>Engine\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Serializable.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -297,6 +315,78 @@
     </ClInclude>
     <ClInclude Include="Source\Intersection2D.h">
       <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorCheckpoint.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorGoal.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="source\LevelManager.h">
+      <Filter>Engine\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\allocators.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\cursorstreamwrapper.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\document.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\encodedstream.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\encodings.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\filereadstream.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\filewritestream.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\fwd.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\istreamwrapper.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\memorybuffer.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\memorystream.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\ostreamwrapper.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\pointer.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\prettywriter.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\rapidjson.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\reader.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\schema.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\stream.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\stringbuffer.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\writer.h">
+      <Filter>RapidJSON</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Serializable.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

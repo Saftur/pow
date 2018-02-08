@@ -58,3 +58,7 @@ void Behavior::SetCurrentState(int state)
 {
 	this->stateCurr = state;
 }
+
+void Behavior::Load(const rapidjson::Value& obj)
+{
+}

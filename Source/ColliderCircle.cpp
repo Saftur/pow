@@ -43,3 +43,8 @@ bool ColliderCircle::IsCollidingWith(const Collider & other) const
 		return other.IsCollidingWith(*this);
 	}
 }
+
+void ColliderCircle::Load(const rapidjson::Value& obj)
+{
+
+}

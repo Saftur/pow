@@ -16,6 +16,7 @@
 #include "Trace.h"
 #include "GameObjectManager.h"
 #include "Random.h"
+#include "LevelManager.h"
 
 //------------------------------------------------------------------------------
 // Private Structures:
@@ -67,6 +68,8 @@ void Engine::Update(float dt)
 
 	// Update the System (Windows, Event Handlers).
 	System::GetInstance().Update(dt);
+
+	LevelManager::GetInstance().Update(dt);
 
 	// Update the game state manager.
 	GameStateManager::GetInstance().Update(dt);

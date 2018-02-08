@@ -83,6 +83,7 @@ public:
 	// Get the type of this component.
 	ColliderType GetType() const;
 
+	virtual void Load(const rapidjson::Value& obj);
 private:
 	//------------------------------------------------------------------------------
 	// Private Variables:

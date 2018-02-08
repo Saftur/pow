@@ -1,0 +1,68 @@
+{
+	"0" :
+	{
+		"Name" : "TestObj",
+		"Transform" :
+		{
+			"Translation" : [0, 0],
+			"Scale" : [1, 1],
+			"Rotation" : 0
+		},
+		"Sprite" :
+		{
+			"SpriteSource" :
+			{
+				"Name" : "TestSpriteSource",
+				"Texture" : "MonkeyWalk.png"
+			},
+			"Mesh" :
+			{
+				"Name" : "TestMesh",
+				"HalfSize" : [0.5, 0.5],
+				"UV" : [1, 1]
+			},
+			"Alpha" : 1,
+			"FrameIndex" : 0,
+			"ModulateColor" : [1, 0, 0, 0]
+		},
+		"Animation" : {},
+		"Physics" : {},
+		"Collider" : 
+		{
+			"Type" : "Circle"
+		}
+	},
+	"1" :
+	{
+		"Name" : "TestObj2",
+		"Transform" :
+		{
+			"Translation" : [0, 0],
+			"Scale" : [1.5, 1.5],
+			"Rotation" : 45
+		},
+		"Sprite" :
+		{
+			"SpriteSource" :
+			{
+				"Name" : "TestSpriteSource",
+				"Texture" : "MonkeyWalk.png"
+			},
+			"Mesh" :
+			{
+				"Name" : "TestMesh",
+				"HalfSize" : [0.75, 0.75],
+				"UV" : [1, 1]
+			},
+			"Alpha" : 1,
+			"FrameIndex" : 0,
+			"ModulateColor" : [1, 1, 1, 0]
+		},
+		"Animation" : {},
+		"Physics" : {},
+		"Collider" : 
+		{
+			"Type" : "Circle"
+		}
+	}
+}
