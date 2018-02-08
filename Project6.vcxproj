@@ -26,8 +26,13 @@
     <ClInclude Include="Source\Behavior.h" />
     <ClInclude Include="Source\BehaviorAsteroid.h" />
     <ClInclude Include="Source\BehaviorBullet.h" />
+    <ClInclude Include="Source\BehaviorPlatform.h" />
+    <ClInclude Include="Source\BehaviorPlayer.h" />
     <ClInclude Include="Source\BehaviorSpaceship.h" />
+    <ClInclude Include="Source\BehaviorStub.h" />
+    <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\Collider.h" />
+    <ClInclude Include="Source\ColliderBox.h" />
     <ClInclude Include="Source\ColliderCircle.h" />
     <ClInclude Include="Source\Component.h" />
     <ClInclude Include="Source\Engine.h" />
@@ -39,6 +44,8 @@
     <ClInclude Include="Source\GameStateTable.h" />
     <ClInclude Include="Source\Intersection2D.h" />
     <ClInclude Include="source\IOController.h" />
+    <ClInclude Include="Source\LevelButton.h" />
+    <ClInclude Include="Source\LevelManager.h" />
     <ClInclude Include="Source\LevelTimer.h" />
     <ClInclude Include="Source\Matrix2D.h" />
     <ClInclude Include="Source\Mesh.h" />
@@ -66,8 +73,13 @@
     <ClCompile Include="Source\Behavior.cpp" />
     <ClCompile Include="Source\BehaviorAsteroid.cpp" />
     <ClCompile Include="Source\BehaviorBullet.cpp" />
+    <ClCompile Include="Source\BehaviorPlatform.cpp" />
+    <ClCompile Include="Source\BehaviorPlayer.cpp" />
     <ClCompile Include="Source\BehaviorSpaceship.cpp" />
+    <ClCompile Include="Source\BehaviorStub.cpp" />
+    <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
+    <ClCompile Include="Source\ColliderBox.cpp" />
     <ClCompile Include="Source\ColliderCircle.cpp" />
     <ClCompile Include="Source\Component.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
@@ -79,6 +91,8 @@
     <ClCompile Include="Source\GameStateTable.cpp" />
     <ClCompile Include="Source\Intersection2D.cpp" />
     <ClCompile Include="source\IOController.cpp" />
+    <ClCompile Include="Source\LevelButton.cpp" />
+    <ClCompile Include="Source\LevelManager.cpp" />
     <ClCompile Include="Source\LevelTimer.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Matrix2D.cpp" />

@@ -157,6 +157,27 @@
     <ClCompile Include="Source\Intersection2D.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
+    <ClCompile Include="Source\LevelManager.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorPlayer.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorStub.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Button.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LevelButton.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorPlatform.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ColliderBox.cpp">
+      <Filter>Engine\GameObjects\Colliders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GameStateManager.h">
@@ -297,6 +318,27 @@
     </ClInclude>
     <ClInclude Include="Source\Intersection2D.h">
       <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelManager.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorPlayer.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorStub.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Button.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelButton.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorPlatform.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ColliderBox.h">
+      <Filter>Engine\GameObjects\Colliders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

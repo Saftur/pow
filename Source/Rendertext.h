@@ -9,26 +9,16 @@
 
 #pragma once
 
-#include "Vector2D.h"
-#include "Sprite.h"
-#include "Transform.h"
-#include "SpriteSource.h"
+#include "Component.h"
 
-class Text{
+class Text : public Component {
 public:
-	Text(const char * text, Vector2D pos, Vector2D scale);
-	~Text();
+	Text(const char * text = "");
 
 	void setText(const char* string);
-	void draw();
-	void setLocation(Vector2D loc);
-	void setScale(Vector2D scale);
+
+	void Update(float dt);
 
 private:
-	AEGfxVertexList* mesh;
-	AEGfxTexture* texture;
-	SpriteSource* spritesource;
-	Sprite sprite;
-	Transform transform;
-	char string[256];
+	char string[512];
 };
