@@ -10,6 +10,7 @@
 #pragma once
 
 #include "Rendertext.h"
+#include "Vector2D.h"
 
 class LevelTimer {
 public:

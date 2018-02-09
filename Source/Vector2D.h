@@ -76,13 +76,13 @@ public:
 	bool operator==(const Vector2D& other) const;
 	bool operator!=(const Vector2D& other) const;
 
+	float x; // The x-coordinate of a Vector2D
+	float y; // The y-coordinate of a Vector2D
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Data
 	//------------------------------------------------------------------------------
-
-	float x; // The x-coordinate of a Vector2D
-	float y; // The y-coordinate of a Vector2D
 };
 
 //------------------------------------------------------------------------------

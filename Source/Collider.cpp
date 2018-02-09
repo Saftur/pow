@@ -2,7 +2,7 @@
 #include "Collider.h"
 
 Collider::Collider(ColliderType type) :
-		Component("Collider"), type(type), handler(nullptr)
+		Component("Collider"), transform(0, 0), type(type), handler(nullptr)
 {
 }
 
@@ -30,4 +30,14 @@ void Collider::SetCollisionHandler(CollisionEventHandler handler_)
 ColliderType Collider::GetType() const
 {
 	return type;
+}
+
+const Transform & Collider::GetTransform() const
+{
+	return transform;
+}
+
+void Collider::SetTransform(const Transform trs)
+{
+	transform = trs;
 }

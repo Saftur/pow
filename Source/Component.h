@@ -55,7 +55,7 @@ public:
 	GameObject* GetParent() const;
 
 	// Set component's parent object/owner.
-	void SetParent(GameObject* object);
+	virtual void SetParent(GameObject* object);
 
 	// Get the name of this component's type.
 	const char* GetName() const;

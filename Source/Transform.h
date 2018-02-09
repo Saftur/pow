@@ -54,31 +54,39 @@ public:
 	// Returns:
 	//	 A reference to the component's translation structure.
 	const Vector2D& GetTranslation() const;
+	const Vector2D GetWorldTranslation() const;
 
 	// Get the rotation value of a transform component.
 	// Returns:
 	//	 The component's rotation value (in radians).
 	float GetRotation() const;
+	float GetWorldRotation() const;
 
 	// Get the scale of a transform component.
 	// Returns:
 	//	 A reference to the component's scale structure.
 	const Vector2D& GetScale() const;
+	const Vector2D GetWorldScale() const;
 
 	// Set the translation of a transform component.
 	// Params:
 	//	 translation = Reference to a translation vector.
 	void SetTranslation(const Vector2D& translation);
+	void SetWorldTranslation(const Vector2D& translation);
 
 	// Set the rotation of a transform component.
 	// Params:
 	//	 rotation = The rotation value (in radians).
 	void SetRotation(float rotation);
+	void SetWorldRotation(float rotation);
 
 	// Set the scale of a transform component.
 	// Params:
 	//	 translation = Reference to a scale vector.
 	void SetScale(const Vector2D& scale);
+	void SetWorldScale(const Vector2D& scale);
+
+	void SetParent(Transform *transform);
 
 	void SetFollowCamera(bool fc);
 
@@ -93,6 +101,8 @@ private:
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
+
+	Transform *parent;
 
 	// The translation (or world position) of a game object.
 	Vector2D	translation;

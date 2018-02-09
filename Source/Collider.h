@@ -16,6 +16,7 @@
 //------------------------------------------------------------------------------
 
 #include "Component.h"
+#include "Transform.h"
 
 //------------------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ typedef enum ColliderType
 {
 	ColliderTypeNone,
 	ColliderTypeCircle,
+	ColliderTypeBox,
 } ColliderType;
 
 //------------------------------------------------------------------------------
@@ -83,11 +85,17 @@ public:
 	// Get the type of this component.
 	ColliderType GetType() const;
 
-private:
+	const Transform& GetTransform() const;
+	void SetTransform(const Transform trs);
+
+protected:
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
 
+	Transform transform;
+
+private:
 	// The type of collider used by this component.
 	// (Currently, Circle or Line).
 	ColliderType type;
