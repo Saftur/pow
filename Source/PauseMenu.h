@@ -55,9 +55,7 @@ public:
 
 private:
 	GameObject* CreateBackground(float alpha);
-	
-	template <typename T>
-	GameObject* CreateButton(const char* objName, Vector2D pos, Vector2D scale, const char* spritePath = nullptr);
+	void Shutdown();
 
 	std::vector<AEGfxTexture*> textures;
 	std::vector<GameObject*> buttons;

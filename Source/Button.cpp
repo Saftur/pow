@@ -74,3 +74,27 @@ void Button::Update(float dt) {
 void Button::OnUpdate(float dt) {
 	UNREFERENCED_PARAMETER(dt);
 }
+
+template <typename T>
+GameObject* Button::CreateButton(const char* objName, Vector2D pos, Vector2D scale, const char* spritePath) {
+	GameObject* button = new GameObject(objName);
+	Transform* transform = new Transform(pos.X(), pos.Y());
+	transform->SetScale(scale);
+	button->AddComponent(transform);
+	Sprite* sprite = new Sprite();
+	sprite->SetMesh(mesh);
+	if (spritePath) {
+		AEGfxTexture* texture = AEGfxTextureLoad(spritePath);
+		textures.push_back(texture);
+		SpriteSource* spriteSource = new SpriteSource(1, 1, texture);
+		button->AddComponent(spriteSource);
+		sprite->SetSpriteSource(spriteSource);
+	}
+	button->AddComponent(sprite);
+
+	T buttonType = new T();
+	button->AddComponent(buttonType);
+
+	buttons.push_back(button);
+	return button;
+}

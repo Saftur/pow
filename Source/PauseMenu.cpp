@@ -30,8 +30,16 @@ PauseMenu::PauseMenu() : Component("PauseMenu") {
 }
 
 PauseMenu::~PauseMenu() {
+	Shutdown();
+}
+
+void PauseMenu::Shutdown() {
 	for (unsigned i = 0; i < textures.size(); i++) AEGfxTextureUnload(textures[i]);
 	for (unsigned i = 0; i < buttons.size(); i++) delete buttons[i];
+	if (background) {
+		delete background;
+		background = nullptr;
+	}
 
 	textures.clear();
 	buttons.clear();
@@ -45,14 +53,9 @@ void PauseMenu::Update(float dt) {
 	//If the game is currently paused.
 	if (((TimeSpace*)GetParent()->GetComponent("TimeSpace"))->IsPaused() && !background) {
 		background = CreateBackground(0.5f);
-		CreateButton<QuitButton>("Quit Button", { 0.0f, 0.0f }, { 100.0f, 50.0f });
-		GameObject* button = CreateButton<LevelButton>("asdasdas", { 0.0f, 0.0f }, { 100.0f, 50.0f });
-		((LevelButton*)button->GetComponent("Button"))->SetLevel(1);
+		Button::CreateButton<QuitButton>("Quit Button", { 0.0f, 0.0f }, { 100.0f, 50.0f });
 	}
-	if (!((TimeSpace*)GetParent()->GetComponent("TimeSpace"))->IsPaused() && background) {
-		background->Destroy();
-		background = nullptr;
-	}
+	if (!((TimeSpace*)GetParent()->GetComponent("TimeSpace"))->IsPaused() && background) Shutdown();
 }
 
 Component* PauseMenu::Clone() const {
@@ -70,28 +73,4 @@ GameObject* PauseMenu::CreateBackground(float alpha) {
 	Transform* transform = new Transform(0.0, 0.0);
 	transform->SetScale({ 1000, 1000 });
 	background->AddComponent(transform);
-}
-
-template <typename T>
-GameObject* PauseMenu::CreateButton(const char* objName, Vector2D pos, Vector2D scale, const char* spritePath) {
-	GameObject* button = new GameObject(objName);
-	Transform* transform = new Transform(pos.X(), pos.Y());
-	transform->SetScale(scale);
-	button->AddComponent(transform);
-	Sprite* sprite = new Sprite();
-	sprite->SetMesh(mesh);
-	if (spritePath) {
-		AEGfxTexture* texture = AEGfxTextureLoad(spritePath);
-		textures.push_back(texture);
-		SpriteSource* spriteSource = new SpriteSource(1, 1, texture);
-		button->AddComponent(spriteSource);
-		sprite->SetSpriteSource(spriteSource);
-	}
-	button->AddComponent(sprite);
-
-	T buttonType = new T();
-	button->AddComponent(buttonType);
-
-	buttons.push_back(button);
-	return button;
 }

@@ -38,6 +38,9 @@ public:
 	// Allocate a new Button component.
 	Button();
 
+	template <typename T>
+	static GameObject* CreateButton(const char* objName, Vector2D pos = { 0.0f, 0.0f }, Vector2D scale = { 100.0f, 50.0f }, const char* spritePath = nullptr);
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Functions:
