@@ -1,20 +1,29 @@
+#include "stdafx.h"
 #include "LevelManager.h"
 #include <AEEngine.h>
 #include "SpriteSource.h"
 
-void LevelManager::Load(string name)
+void LevelManager::Init()
 {
+}
+
+void LevelManager::Load(const char *name)
+{
+	UNREFERENCED_PARAMETER(name);
 }
 
 void LevelManager::Update(float dt)
 {
-	if (changeLevel) {
+	UNREFERENCED_PARAMETER(dt);
+	if (levelStatus) {
 		Shutdown();
 
-		Load(nextLevel);
+		if (levelStatus != cLevelQuit) {
+			Load(nextLevel);
 
-		currLevel = nextLevel;
-		changeLevel = false;
+			currLevel = nextLevel;
+			levelStatus = cLevelUpdate;
+		}
 	}
 }
 
@@ -32,12 +41,32 @@ void LevelManager::Shutdown()
 }
 
 void LevelManager::SetNextLevel(const char *name) {
+	if (!name) return;
 	nextLevel = name;
-	changeLevel = true;
+	levelStatus = cLevelChange;
+}
+
+void LevelManager::Restart()
+{
+	levelStatus = cLevelRestart;
+}
+
+void LevelManager::Quit()
+{
+	levelStatus = cLevelQuit;
+}
+
+bool LevelManager::IsRunning()
+{
+	return levelStatus != cLevelQuit;
 }
 
 LevelManager & LevelManager::GetInstance()
 {
 	static LevelManager instance;
 	return instance;
+}
+
+LevelManager::LevelManager()
+{
 }

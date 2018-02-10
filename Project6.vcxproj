@@ -24,11 +24,6 @@
     <ClInclude Include="Source\AnimationSequence.h" />
     <ClInclude Include="Source\Army.h" />
     <ClInclude Include="Source\Behavior.h" />
-    <ClInclude Include="Source\BehaviorAsteroid.h" />
-    <ClInclude Include="Source\BehaviorBullet.h" />
-    <ClInclude Include="Source\BehaviorPlatform.h" />
-    <ClInclude Include="Source\BehaviorPlayer.h" />
-    <ClInclude Include="Source\BehaviorSpaceship.h" />
     <ClInclude Include="Source\BehaviorStub.h" />
     <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\Collider.h" />
@@ -38,10 +33,6 @@
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\GameObjectManager.h" />
-    <ClInclude Include="Source\GameState.h" />
-    <ClInclude Include="Source\GameStateAsteroids.h" />
-    <ClInclude Include="Source\GameStateManager.h" />
-    <ClInclude Include="Source\GameStateTable.h" />
     <ClInclude Include="Source\Intersection2D.h" />
     <ClInclude Include="source\IOController.h" />
     <ClInclude Include="Source\LevelButton.h" />
@@ -71,11 +62,6 @@
     <ClCompile Include="Source\AnimationSequence.cpp" />
     <ClCompile Include="Source\Army.cpp" />
     <ClCompile Include="Source\Behavior.cpp" />
-    <ClCompile Include="Source\BehaviorAsteroid.cpp" />
-    <ClCompile Include="Source\BehaviorBullet.cpp" />
-    <ClCompile Include="Source\BehaviorPlatform.cpp" />
-    <ClCompile Include="Source\BehaviorPlayer.cpp" />
-    <ClCompile Include="Source\BehaviorSpaceship.cpp" />
     <ClCompile Include="Source\BehaviorStub.cpp" />
     <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
@@ -85,10 +71,6 @@
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\GameObjectManager.cpp" />
-    <ClCompile Include="Source\GameState.cpp" />
-    <ClCompile Include="Source\GameStateAsteroids.cpp" />
-    <ClCompile Include="Source\GameStateManager.cpp" />
-    <ClCompile Include="Source\GameStateTable.cpp" />
     <ClCompile Include="Source\Intersection2D.cpp" />
     <ClCompile Include="source\IOController.cpp" />
     <ClCompile Include="Source\LevelButton.cpp" />

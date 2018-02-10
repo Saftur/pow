@@ -1,11 +1,15 @@
 #include "stdafx.h"
 #include "ColliderBox.h"
-#include "GameObject.h"
 
 ColliderBox::ColliderBox() :
 		Collider(ColliderTypeBox)
 {
-	transform.SetParent((Transform*)GetParent()->GetComponent("Transform"));
+}
+
+ColliderBox::ColliderBox(Transform transform_) :
+		Collider(ColliderTypeBox)
+{
+	SetTransform(transform_);
 }
 
 ColliderBox * ColliderBox::Clone() const
@@ -19,5 +23,6 @@ void ColliderBox::Draw() const
 
 bool ColliderBox::IsCollidingWith(const Collider & other) const
 {
+	UNREFERENCED_PARAMETER(other);
 	return false;
 }

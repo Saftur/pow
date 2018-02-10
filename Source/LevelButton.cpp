@@ -17,7 +17,7 @@
 #include "GameObject.h" // GameObjectIsNamed, GameObjectDestroy
 #include "AEEngine.h" // AEGfxGetWinMaxX, MinX, MaxY, MinY
 #include "GameObjectManager.h" // GameObjectManagerAdd
-#include "GameStateManager.h"
+#include "LevelManager.h"
 #include "LevelButton.h"
 
 //------------------------------------------------------------------------------
@@ -31,11 +31,11 @@
 //------------------------------------------------------------------------------
 
 // Allocate a new (Asteroid) behavior component.
-LevelButton::LevelButton(int level) : targetLevel(level) {
+LevelButton::LevelButton(const char *level) : targetLevel(level) {
 
 }
 
-void LevelButton::SetLevel(int level) {
+void LevelButton::SetLevel(const char *level) {
 	targetLevel = level;
 }
 
@@ -53,5 +53,5 @@ Component* LevelButton::Clone() const {
 //What happens when a button is clicked.
 void LevelButton::ClickEffect(float dt) {
 	UNREFERENCED_PARAMETER(dt);
-	GameStateManager::GetInstance().SetNextState(targetLevel);
+	LevelManager::GetInstance().SetNextLevel(targetLevel);
 }

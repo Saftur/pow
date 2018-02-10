@@ -25,8 +25,8 @@ vector<Vector2D> BoxBoxIntersection(const Transform & t1, const Transform & t2, 
 	int dx, dy;
 
 	for (int i = 0; i < pps; i++) {
-		dx = i * (scl1.x / (pps + 1));
-		dy = i * (scl1.y / (pps + 1));
+		dx = (int)(i * (scl1.x / (pps + 1)));
+		dy = (int)(i * (scl1.y / (pps + 1)));
 		point = {trs1.x + dx, trs1.y};
 		if (PointBoxIntersection(point, trs2, scl2))
 			contact.push_back(point);
@@ -40,8 +40,8 @@ vector<Vector2D> BoxBoxIntersection(const Transform & t1, const Transform & t2, 
 		if (PointBoxIntersection(point, trs2, scl2))
 			contact.push_back(point);
 
-		dx = i * (scl2.x / (pps + 1));
-		dy = i * (scl2.y / (pps + 1));
+		dx = (int)(i * (scl2.x / (pps + 1)));
+		dy = (int)(i * (scl2.y / (pps + 1)));
 		point = {trs2.x + dx, trs2.y};
 		if (PointBoxIntersection(point, trs1, scl1))
 			contact.push_back(point);

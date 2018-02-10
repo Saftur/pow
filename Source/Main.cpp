@@ -13,7 +13,7 @@
 #include <windows.h>
 #include "Engine.h"
 #include "AEEngine.h"
-#include "GameStateManager.h"
+#include "LevelManager.h"
 #include "System.h"
 #include <Windows.h>
 
@@ -38,7 +38,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 	Engine::GetInstance().Init();
 
 	// MAIN LOOP: Do not exit until instructed to do so by the game state manager (GSM).
-	while (GameStateManager::GetInstance().IsRunning())
+	while (LevelManager::GetInstance().IsRunning())
 	{
 		currentTime = GetTickCount();
 		//if (lastTime > 0) dt = (float) (currentTime - lastTime)/1000;

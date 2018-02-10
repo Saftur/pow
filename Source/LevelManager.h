@@ -6,26 +6,38 @@ using std::pair;
 #include <string>
 using std::string;
 
-typedef class AEGfxTexture AEGfxTexture;
-typedef class AEGfxVertexList AEGfxVertexList;
+typedef struct AEGfxTexture AEGfxTexture;
+typedef struct AEGfxVertexList AEGfxVertexList;
 typedef class SpriteSource SpriteSource;
 
 class LevelManager {
 public:
-	void Load(string name);
+	void Init();
+	void Load(const char *name);
 	void Update(float dt);
 	void Shutdown();
 
 	void SetNextLevel(const char *name);
+	void Restart();
+	void Quit();
+
+	bool IsRunning();
 
 	static LevelManager& GetInstance();
 
 private:
+	enum LevelStatus {
+		cLevelUpdate,
+		cLevelChange,
+		cLevelRestart,
+		cLevelQuit,
+	};
+
 	LevelManager();
 
-	bool changeLevel = true;
-	string currLevel = "";
-	string nextLevel = "";
+	LevelStatus levelStatus = cLevelChange;
+	const char *currLevel = "";
+	const char *nextLevel = "";
 
 	map<const char*, AEGfxTexture*> textures;
 	map<const char*, AEGfxVertexList*> meshes;

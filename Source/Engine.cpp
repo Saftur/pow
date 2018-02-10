@@ -11,7 +11,7 @@
 
 #include "stdafx.h"
 #include "Engine.h"
-#include "GameStateManager.h"
+#include "LevelManager.h"
 #include "System.h"
 #include "Trace.h"
 #include "GameObjectManager.h"
@@ -55,7 +55,7 @@ void Engine::Init()
 	GameObjectManager::GetInstance().Init();
 
 	// Initialize the game state manager.
-	GameStateManager::GetInstance().Init();
+	LevelManager::GetInstance().Init();
 }
 
 // Update the game engine.
@@ -69,7 +69,7 @@ void Engine::Update(float dt)
 	System::GetInstance().Update(dt);
 
 	// Update the game state manager.
-	GameStateManager::GetInstance().Update(dt);
+	LevelManager::GetInstance().Update(dt);
 
 	// Update the game object manager.
 	GameObjectManager::GetInstance().Update(dt);
@@ -97,7 +97,7 @@ void Engine::Shutdown()
 	GameObjectManager::GetInstance().Shutdown();
 
 	// Shutdown the game state manager.
-	GameStateManager::GetInstance().Shutdown();
+	LevelManager::GetInstance().Shutdown();
 
 	//--------------------------------------------------------------------------
 	// NOTE: Certain modules need to be shutdown last and in reverse order.

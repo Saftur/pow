@@ -65,7 +65,7 @@ void Transform::SetTranslation(const Vector2D & translation_)
 
 void Transform::SetWorldTranslation(const Vector2D & translation_)
 {
-	SetTranslation(parent ? translation - parent->GetWorldTranslation() : translation);
+	SetTranslation(parent ? translation_ - parent->GetWorldTranslation() : translation_);
 }
 
 void Transform::SetRotation(float rotation_)
@@ -76,7 +76,7 @@ void Transform::SetRotation(float rotation_)
 
 void Transform::SetWorldRotation(float rotation_)
 {
-	SetRotation(parent ? rotation - parent->GetWorldRotation() : rotation);
+	SetRotation(parent ? rotation_ - parent->GetWorldRotation() : rotation_);
 }
 
 void Transform::SetScale(const Vector2D & scale_)
@@ -87,7 +87,7 @@ void Transform::SetScale(const Vector2D & scale_)
 
 void Transform::SetWorldScale(const Vector2D & scale_)
 {
-	SetScale(parent ? scale - parent->GetWorldScale() : scale);
+	SetScale(parent ? scale_ - parent->GetWorldScale() : scale_);
 }
 
 void Transform::SetParent(Transform * transform)

@@ -7,9 +7,6 @@
     <Filter Include="Game">
       <UniqueIdentifier>{441702e7-464c-4436-8b65-1eeccb71892b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\GameStates">
-      <UniqueIdentifier>{0fc2ef2e-d98c-4889-a1c2-72ec1c09f16d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\GameObjects">
       <UniqueIdentifier>{ec1c66bc-f13f-4730-a58d-cb7a14e7d50a}</UniqueIdentifier>
     </Filter>
@@ -88,23 +85,11 @@
     <ClCompile Include="Source\Engine.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameStateManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\Trace.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BehaviorBullet.cpp">
-      <Filter>Game\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BehaviorSpaceship.cpp">
-      <Filter>Game\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameStateTable.cpp">
-      <Filter>Game\GameStates</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collider.cpp">
       <Filter>Engine\GameObjects\Colliders</Filter>
@@ -114,9 +99,6 @@
     </ClCompile>
     <ClCompile Include="Source\Random.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BehaviorAsteroid.cpp">
-      <Filter>Game\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Behavior.cpp">
       <Filter>Engine\GameObjects\Behaviors</Filter>
@@ -142,12 +124,6 @@
     <ClCompile Include="Source\Component.cpp">
       <Filter>Engine\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameState.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameStateAsteroids.cpp">
-      <Filter>Game\GameStates</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Tilemap.cpp">
       <Filter>Engine\Tilemap</Filter>
     </ClCompile>
@@ -160,9 +136,6 @@
     <ClCompile Include="Source\LevelManager.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BehaviorPlayer.cpp">
-      <Filter>Game\Behaviors</Filter>
-    </ClCompile>
     <ClCompile Include="Source\BehaviorStub.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
@@ -172,17 +145,11 @@
     <ClCompile Include="Source\LevelButton.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BehaviorPlatform.cpp">
-      <Filter>Game\Behaviors</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ColliderBox.cpp">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\GameStateManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\stdafx.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -192,9 +159,6 @@
     <ClInclude Include="Source\Stub.h" />
     <ClInclude Include="Source\Engine.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameStateTable.h">
-      <Filter>Game\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="Source\Trace.h">
       <Filter>Engine</Filter>
@@ -238,12 +202,6 @@
     <ClInclude Include="Source\GameObjectManager.h">
       <Filter>Engine\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BehaviorSpaceship.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BehaviorBullet.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Collider.h">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClInclude>
@@ -280,9 +238,6 @@
     <ClInclude Include="source\SoundManager.h">
       <Filter>Engine\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BehaviorAsteroid.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Behavior.h">
       <Filter>Engine\GameObjects\Behaviors</Filter>
     </ClInclude>
@@ -304,12 +259,6 @@
     <ClInclude Include="Source\Component.h">
       <Filter>Engine\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameState.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameStateAsteroids.h">
-      <Filter>Game\GameStates</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Tilemap.h">
       <Filter>Engine\Tilemap</Filter>
     </ClInclude>
@@ -322,9 +271,6 @@
     <ClInclude Include="Source\LevelManager.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BehaviorPlayer.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
     <ClInclude Include="Source\BehaviorStub.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
@@ -333,9 +279,6 @@
     </ClInclude>
     <ClInclude Include="Source\LevelButton.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BehaviorPlatform.h">
-      <Filter>Game\Behaviors</Filter>
     </ClInclude>
     <ClInclude Include="Source\ColliderBox.h">
       <Filter>Engine\GameObjects\Colliders</Filter>

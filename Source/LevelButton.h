@@ -36,10 +36,10 @@ public:
 	//------------------------------------------------------------------------------
 
 	// Allocate a new (Asteroid) behavior component.
-	LevelButton(int level = 0);
+	LevelButton(const char *level = "");
 
 	//Set the target level.
-	void SetLevel(int level);
+	void SetLevel(const char *level);
 
 private:
 	//------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ private:
 	//What happens when a button is clicked.
 	void ClickEffect(float dt);
 
-	int targetLevel = GameStateTable::GsInitial;
+	const char *targetLevel = "";
 };
 
 //------------------------------------------------------------------------------

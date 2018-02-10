@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "AEEngine.h"
 #include "System.h"
-#include "GameStateManager.h"
+#include "LevelManager.h"
 
 //------------------------------------------------------------------------------
 // Libraries
@@ -77,7 +77,7 @@ void System::Update(float dt)
 	// check if forcing the application to quit
 	if (AEInputCheckTriggered(VK_ESCAPE) || !AESysDoesWindowExist())
 	{
-		GameStateManager::GetInstance().SetNextState(GameStateTable::GsQuit);
+		LevelManager::GetInstance().Quit();
 	}
 }
 

@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "Collider.h"
+#include "GameObject.h"
 
 Collider::Collider(ColliderType type) :
 		Component("Collider"), transform(0, 0), type(type), handler(nullptr)
 {
+	transform.SetParent((Transform*)GetParent()->GetComponent("Transform"));
 }
 
 void Collider::Draw() const
@@ -39,5 +41,7 @@ const Transform & Collider::GetTransform() const
 
 void Collider::SetTransform(const Transform trs)
 {
-	transform = trs;
+	transform.SetTranslation(trs.GetTranslation());
+	transform.SetRotation(trs.GetRotation());
+	transform.SetScale(trs.GetScale());
 }
