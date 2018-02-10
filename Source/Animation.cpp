@@ -93,7 +93,7 @@ void Animation::TogglePause()
        isRunning = !isRunning;
 }
 
-void Animation::Load(const rapidjson::Value& obj)
+void Animation::Load(rapidjson::Value& obj)
 {
-
+	Play(obj["FrameCount"].GetInt(), obj["FrameDuration"].GetFloat(), obj["IsLooping"].GetBool());
 }

@@ -32,7 +32,7 @@ ColliderType Collider::GetType() const
 	return type;
 }
 
-void Collider::Load(const rapidjson::Value& obj)
+void Collider::Load(rapidjson::Value& obj)
 {
-
+	UNREFERENCED_PARAMETER(obj);
 }

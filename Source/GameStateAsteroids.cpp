@@ -29,7 +29,7 @@ void GameStateAsteroids::Load()
 {
 	Trace::GetInstance().GetStream() << "Asteroids: Load" << std::endl;
 
-	LevelManager::Load("TestLevel");
+	LevelManager::GetInstance().Load("TestLevel");
 
 	CreateMeshes();
 }

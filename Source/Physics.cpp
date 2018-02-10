@@ -59,3 +59,8 @@ void Physics::Update(float dt)
 	transform->SetTranslation(oldTranslation + velocity * dt);
 	transform->SetRotation(transform->GetRotation() + rotationalVelocity * dt);
 }
+
+void Physics::Load(rapidjson::Value& obj)
+{
+	UNREFERENCED_PARAMETER(obj);
+}

@@ -10,7 +10,7 @@
 #include "Transform.h"
 #include "Sprite.h"
 #include "Behavior.h"
-#include "Collider.h"
+#include "ColliderCircle.h"
 #include "Animation.h"
 #include "Physics.h"
 #include "GameObjectManager.h"
@@ -21,20 +21,8 @@ using namespace rapidjson;
 LM_STATE LevelManager::stateCurr = IDLE;
 LM_STATE LevelManager::stateNext = IDLE;
 
-Document levelDoc;
-
 void LevelManager::Update(float dt)
 {
-	UNREFERENCED_PARAMETER(dt);
-	switch (stateCurr)
-	{
-	case LOADING:
-		loadObject();
-		break;
-	} 
-
-	if (stateCurr != stateNext)
-		stateCurr = stateNext;
 }
 
 void LevelManager::Load(const char* fileName)
@@ -46,6 +34,8 @@ void LevelManager::Load(const char* fileName)
 
 	ifstream file(path);
 	string line, contents;
+
+	Document levelDoc;
 
 	// Load the file into contents.
 	while (getline(file, line))
@@ -61,9 +51,12 @@ void LevelManager::Load(const char* fileName)
 	//int id = 0;
 
 	stateNext = LOADING;
+
+	while (stateNext != IDLE)
+		loadObject(levelDoc);
 }
 
-void LevelManager::loadObject()
+void LevelManager::loadObject(Document& levelDoc)
 {
 	// Check if we're done loading.
 	if (!levelDoc.HasMember(to_string(id).c_str()))
@@ -81,30 +74,101 @@ void LevelManager::loadObject()
 	// Create the game object.
 	GameObject* go = new GameObject(v["Name"].GetString());
 
-	UNREFERENCED_PARAMETER(go);
+	id++;
 
 	// Load the transform component.
 	if (v.HasMember("Transform"))
 	{
-		Value& t = v["Transform"];
-		Value& tmp = t["Translation"];
+		Transform* t = new Transform(0, 0);
+		t->Load(v["Transform"]);
 
-		Transform* transform = new Transform(tmp[0].GetFloat(), tmp[1].GetFloat());
-
-		tmp = t["Scale"];
-		transform->SetScale(Vector2D(tmp[0].GetFloat(), tmp[1].GetFloat()));
-
-		tmp = t["Rotation"];
-		transform->SetRotation(tmp.GetFloat());
-
-		go->AddComponent(transform);
+		go->AddComponent(t);
 	}
 
 	// Load the sprite component.
+	if (v.HasMember("Sprite"))
+	{
+		Sprite* s = new Sprite();
+		s->Load(v["Sprite"]);
+
+		go->AddComponent(s);
+	}
+
 	// Load the animation component.
+	if (v.HasMember("Animation"))
+	{
+		Animation* s = new Animation();
+		s->Load(v["Animation"]);
+
+		go->AddComponent(s);
+	}
+
 	// Load the physics component.
+	if (v.HasMember("Physics"))
+	{
+		Physics* s = new Physics();
+		s->Load(v["Physics"]);
+
+		go->AddComponent(s);
+	}
+
 	// Load the collider component.
+	if (v.HasMember("Collider"))
+	{
+		Collider* s = nullptr;
+
+		if (!strcmp(v["Collider"]["Type"].GetString(), "Circle"))
+		{
+			s = new ColliderCircle(v["Collider"]["Radius"].GetFloat());
+		}
+
+		s->Load(v["Collider"]);
+
+		go->AddComponent(s);
+	}
+
 	// Load the behavior component.
+	/*if (v.HasMember("Behavior"))
+	{
+		Behavior* s = new Behavior();
+		s->Load(v["Behavior"]);
+
+		go->AddComponent(s);
+	}*/
+
+	/// TODO: Behaviors.
+
+	GameObjectManager::GetInstance().Add(*go);
+}
+
+void LevelManager::AddMesh(const char* name, AEGfxVertexList* mesh)
+{
+	meshes[name] = mesh;
+}
+
+void LevelManager::AddTexture(const char* name, AEGfxTexture* texture)
+{
+	textures[name] = texture;
+}
+
+void LevelManager::AddSpriteSource(const char* name, SpriteSource* spriteSource)
+{
+	spriteSources[name] = spriteSource;
+}
+
+AEGfxVertexList* LevelManager::GetMesh(const char* name)
+{
+	return meshes[name];
+}
+
+AEGfxTexture* LevelManager::GetTexture(const char* name)
+{
+	return textures[name];
+}
+
+SpriteSource* LevelManager::GetSpriteSource(const char* name)
+{
+	return spriteSources[name];
 }
 
 LevelManager& LevelManager::GetInstance()

@@ -13,7 +13,9 @@
 			"SpriteSource" :
 			{
 				"Name" : "TestSpriteSource",
-				"Texture" : "MonkeyWalk.png"
+				"Texture" : "MonkeyWalk.png",
+				"Cols" : 1,
+				"Rows" : 1
 			},
 			"Mesh" :
 			{
@@ -25,11 +27,17 @@
 			"FrameIndex" : 0,
 			"ModulateColor" : [1, 0, 0, 0]
 		},
-		"Animation" : {},
+		"Animation" : 
+		{
+			"FrameCount" : 0,
+			"FrameDuration" : 0,
+			"IsLooping" : true
+		},
 		"Physics" : {},
 		"Collider" : 
 		{
-			"Type" : "Circle"
+			"Type" : "Circle",
+			"Radius" : 1.0
 		}
 	},
 	"1" :
@@ -46,7 +54,9 @@
 			"SpriteSource" :
 			{
 				"Name" : "TestSpriteSource",
-				"Texture" : "MonkeyWalk.png"
+				"Texture" : "MonkeyWalk.png",
+				"Cols" : 1,
+				"Rows" : 1
 			},
 			"Mesh" :
 			{
@@ -58,11 +68,17 @@
 			"FrameIndex" : 0,
 			"ModulateColor" : [1, 1, 1, 0]
 		},
-		"Animation" : {},
+		"Animation" :
+		{
+			"FrameCount" : 4,
+			"FrameDuration" : 0.25,
+			"IsLooping" : true
+		},
 		"Physics" : {},
 		"Collider" : 
 		{
-			"Type" : "Circle"
+			"Type" : "Circle",
+			"Radius" : 1.0
 		}
 	}
 }

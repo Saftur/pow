@@ -44,7 +44,10 @@ bool ColliderCircle::IsCollidingWith(const Collider & other) const
 	}
 }
 
-void ColliderCircle::Load(const rapidjson::Value& obj)
+void ColliderCircle::Load(rapidjson::Value& obj)
 {
-
+	if (obj.HasMember("Radius"))
+	{
+		SetRadius(obj["Radius"].GetFloat());
+	}
 }

@@ -69,7 +69,7 @@ public:
 	// Pauses/unpauses the current animation.
 	void TogglePause();
 
-	void Load(const rapidjson::Value& obj);
+	void Load(rapidjson::Value& obj);
 	
 private:
 	// The current frame being displayed.
