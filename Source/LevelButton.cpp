@@ -14,9 +14,7 @@
 //------------------------------------------------------------------------------
 
 #include "stdafx.h"
-#include "GameObject.h" // GameObjectIsNamed, GameObjectDestroy
 #include "AEEngine.h" // AEGfxGetWinMaxX, MinX, MaxY, MinY
-#include "GameObjectManager.h" // GameObjectManagerAdd
 #include "GameStateManager.h"
 #include "LevelButton.h"
 

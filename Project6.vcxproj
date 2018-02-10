@@ -49,8 +49,10 @@
     <ClInclude Include="Source\LevelTimer.h" />
     <ClInclude Include="Source\Matrix2D.h" />
     <ClInclude Include="Source\Mesh.h" />
+    <ClInclude Include="Source\PauseMenu.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\PlatformManager.h" />
+    <ClInclude Include="Source\QuitButton.h" />
     <ClInclude Include="Source\Random.h" />
     <ClInclude Include="Source\Rendertext.h" />
     <ClInclude Include="source\SoundManager.h" />
@@ -62,6 +64,7 @@
     <ClInclude Include="Source\targetver.h" />
     <ClInclude Include="Source\Teleporter.h" />
     <ClInclude Include="Source\Tilemap.h" />
+    <ClInclude Include="Source\TimeSpace.h" />
     <ClInclude Include="Source\Trace.h" />
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\Vector2D.h" />
@@ -97,8 +100,10 @@
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Matrix2D.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
+    <ClCompile Include="Source\PauseMenu.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\PlatformManager.cpp" />
+    <ClCompile Include="Source\QuitButton.cpp" />
     <ClCompile Include="Source\Random.cpp" />
     <ClCompile Include="Source\Rendertext.cpp" />
     <ClCompile Include="source\SoundManager.cpp" />
@@ -111,6 +116,7 @@
     <ClCompile Include="Source\System.cpp" />
     <ClCompile Include="Source\Teleporter.cpp" />
     <ClCompile Include="Source\Tilemap.cpp" />
+    <ClCompile Include="Source\TimeSpace.cpp" />
     <ClCompile Include="Source\Trace.cpp" />
     <ClCompile Include="Source\Transform.cpp" />
     <ClCompile Include="Source\Vector2D.cpp" />
