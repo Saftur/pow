@@ -31,6 +31,7 @@ PauseMenu::PauseMenu() : Component("PauseMenu") {
 
 PauseMenu::~PauseMenu() {
 	Shutdown();
+	AEGfxMeshFree(mesh);
 }
 
 void PauseMenu::Shutdown() {
@@ -43,7 +44,6 @@ void PauseMenu::Shutdown() {
 
 	textures.clear();
 	buttons.clear();
-	AEGfxMeshFree(mesh);
 }
 
 void PauseMenu::Update(float dt) {

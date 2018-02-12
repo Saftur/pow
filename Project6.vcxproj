@@ -46,7 +46,6 @@
     <ClInclude Include="source\IOController.h" />
     <ClInclude Include="Source\LevelButton.h" />
     <ClInclude Include="Source\LevelManager.h" />
-    <ClInclude Include="Source\LevelTimer.h" />
     <ClInclude Include="Source\Matrix2D.h" />
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\PauseMenu.h" />
@@ -96,7 +95,6 @@
     <ClCompile Include="source\IOController.cpp" />
     <ClCompile Include="Source\LevelButton.cpp" />
     <ClCompile Include="Source\LevelManager.cpp" />
-    <ClCompile Include="Source\LevelTimer.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Matrix2D.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
