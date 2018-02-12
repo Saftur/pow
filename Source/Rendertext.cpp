@@ -23,7 +23,7 @@
 Text::Text(const char * text) : Component("Text") {
 	strcpy(string, text);
 	
-	mesh = MeshCreateQuad(1.0f, 1.0f, 0.0131578947f, 0.0131578947f);
+	mesh = MeshCreateQuad(1.0f, 1.0f, 0.065666666f, 0.165666666f);
 	texture = AEGfxTextureLoad("Assets\\FontSheet.png");
 	spritesource = new SpriteSource(16, 6, texture);
 	
@@ -130,7 +130,7 @@ void Text::Load(rapidjson::Value & obj)
 	sprite->SetMesh(mesh);
 	sprite->SetSpriteSource(spritesource);
 
-	string = obj["Text"].getstring();
+	strcpy(string, obj["Text"].getstring());
 
 	/*alpha = obj["alpha"].getfloat();
 	frameindex = obj["frameindex"].getint();
