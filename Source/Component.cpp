@@ -3,7 +3,7 @@
 #include "Trace.h"
 
 Component::Component(const char * name) : 
-		name(name)
+		Serializable(name), name(name)
 {
 }
 

@@ -94,6 +94,8 @@ public:
 	//	 dt = Change in time (in seconds) since the last game loop.
 	void Update(float dt);
 
+	void Load(rapidjson::Value& obj);
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Variables:

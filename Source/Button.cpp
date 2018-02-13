@@ -5,7 +5,7 @@
 // Project:		MyGame
 // Course:		CS230S17
 //
-// Copyright © 2017 DigiPen (USA) Corporation.
+// Copyright Â© 2017 DigiPen (USA) Corporation.
 //
 //------------------------------------------------------------------------------
 

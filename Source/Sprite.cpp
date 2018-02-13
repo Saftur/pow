@@ -5,6 +5,8 @@
 #include "SpriteSource.h"
 #include "Transform.h"
 #include "Trace.h"
+#include "LevelManager.h"
+#include "Mesh.h"
 
 Sprite::Sprite() :
 		Component("Sprite"), alpha(1), color({ 0, 0, 0, 0 })
@@ -68,4 +70,55 @@ void Sprite::SetSpriteSource(SpriteSource * spriteSource_)
 void Sprite::SetModulateColor(Color color_)
 {
 	this->color = color_;
+}
+
+void Sprite::Load(rapidjson::Value& obj)
+{
+	if (obj.HasMember("SpriteSource") && obj["SpriteSource"].GetType() == rapidjson::Type::kStringType)
+	{
+		// Add a sprite source by name.
+		spriteSource = LevelManager::GetInstance().GetSpriteSource(obj["SpriteSource"].GetString());
+	}
+	else if (obj.HasMember("SpriteSource"))
+	{
+		// Create and add a sprite source.
+		SpriteSource* ss = new SpriteSource(0, 0, nullptr);
+
+		ss->Load(obj["SpriteSource"]);
+		spriteSource = ss;
+
+		rapidjson::Value& tmp = obj["SpriteSource"];
+
+		// Add the sprite source to the map.
+		LevelManager::GetInstance().AddSpriteSource(tmp["Name"].GetString(), ss);
+	}
+
+	if (obj.HasMember("Mesh") && obj["Mesh"].GetType() == rapidjson::Type::kStringType)
+	{
+		// Add a mesh by name.
+		mesh = LevelManager::GetInstance().GetMesh(obj["Mesh"].GetString());
+	}
+	else if (obj.HasMember("Mesh"))
+	{
+		// Create and add a mesh.
+		rapidjson::Value& tmp = obj["Mesh"];
+		rapidjson::Value& tmp1 = tmp["HalfSize"];
+		rapidjson::Value& tmp2 = tmp["UV"];
+
+		mesh = MeshCreateQuad(tmp1[0].GetFloat(), tmp1[1].GetFloat(), tmp2[0].GetFloat(), tmp2[1].GetFloat());
+
+		// Add the mesh to the map.
+		LevelManager::GetInstance().AddMesh(tmp["Name"].GetString(), mesh);
+	}
+
+	alpha = obj["Alpha"].GetFloat();
+	frameIndex = obj["FrameIndex"].GetInt();
+
+	Color color_ = Color();
+	color.r = obj["ModulateColor"].GetArray()[0].GetFloat();
+	color.g = obj["ModulateColor"].GetArray()[1].GetFloat();
+	color.b = obj["ModulateColor"].GetArray()[2].GetFloat();
+	color.a = obj["ModulateColor"].GetArray()[3].GetFloat();
+
+	color = color_;
 }

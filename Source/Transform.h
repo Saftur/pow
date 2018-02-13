@@ -96,6 +96,8 @@ public:
 	static Vector2D GetCamTranslation();
 
 	static void SetCamIsDirty(bool isDirty);
+
+	void Load(rapidjson::Value& obj);
 	
 private:
 	//------------------------------------------------------------------------------

@@ -1,0 +1,78 @@
+{
+	"0" :
+	{
+		"Name" : "TestObj",
+		"Transform" :
+		{
+			"Translation" : [0, 0],
+			"Scale" : [100, 100],
+			"Rotation" : 0
+		},
+		"Sprite" :
+		{
+			"SpriteSource" :
+			{
+				"Name" : "TestSpriteSource",
+				"Texture" : "Assets\\MonkeyStand.png",
+				"Cols" : 1,
+				"Rows" : 1
+			},
+			"Mesh" :
+			{
+				"Name" : "TestMesh",
+				"HalfSize" : [0.5, 0.5],
+				"UV" : [1, 1]
+			},
+			"Alpha" : 1,
+			"FrameIndex" : 0,
+			"ModulateColor" : [1, 0, 0, 0]
+		},
+		"Animation" : 
+		{
+			"FrameCount" : 0,
+			"FrameDuration" : 0,
+			"IsLooping" : true
+		},
+		"Physics" : {},
+		"Collider" : 
+		{
+			"Type" : "Circle",
+			"Radius" : 1.0
+		}
+	},
+	"1" :
+	{
+		"Name" : "TestObj2",
+		"Transform" :
+		{
+			"Translation" : [0, 0],
+			"Scale" : [1.5, 1.5],
+			"Rotation" : 45
+		},
+		"Sprite" :
+		{
+			"SpriteSource" : "TestSpriteSource",
+			"Mesh" :
+			{
+				"Name" : "TestMesh",
+				"HalfSize" : [0.75, 0.75],
+				"UV" : [1, 1]
+			},
+			"Alpha" : 1,
+			"FrameIndex" : 0,
+			"ModulateColor" : [1, 1, 1, 0]
+		},
+		"Animation" :
+		{
+			"FrameCount" : 4,
+			"FrameDuration" : 0.25,
+			"IsLooping" : true
+		},
+		"Physics" : {},
+		"Collider" : 
+		{
+			"Type" : "Circle",
+			"Radius" : 1.0
+		}
+	}
+}

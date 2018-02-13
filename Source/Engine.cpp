@@ -16,6 +16,7 @@
 #include "Trace.h"
 #include "GameObjectManager.h"
 #include "Random.h"
+#include "LevelManager.h"
 
 //------------------------------------------------------------------------------
 // Private Structures:
@@ -55,7 +56,7 @@ void Engine::Init()
 	GameObjectManager::GetInstance().Init();
 
 	// Initialize the game state manager.
-	LevelManager::GetInstance().Init();
+	LevelManager::GetInstance().Init("StartLevel");
 }
 
 // Update the game engine.

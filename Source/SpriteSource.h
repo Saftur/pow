@@ -11,6 +11,9 @@
 
 #pragma once
 
+#include "rapidjson.h"
+#include "Serializable.h"
+
 //------------------------------------------------------------------------------
 // Include Files:
 //------------------------------------------------------------------------------
@@ -28,7 +31,7 @@ typedef struct AEGfxTexture AEGfxTexture;
 //------------------------------------------------------------------------------
 // You are free to change the contents of this structure as long as you do not
 //   change the public interface declared in the header.
-class SpriteSource
+class SpriteSource : Serializable
 {
 public:
 	//------------------------------------------------------------------------------
@@ -60,6 +63,8 @@ public:
 	//   u = Pointer to a f32 to contain the U coordinate. 
 	//   v = Pointer to a f32 to contain the V coordinate. 
 	void GetUV(unsigned int frameIndex, float* u, float* v) const;
+
+	void Load(rapidjson::Value& obj);
 
 private:
 	// The dimensions of the sprite sheet.

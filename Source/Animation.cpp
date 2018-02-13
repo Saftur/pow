@@ -92,3 +92,8 @@ void Animation::TogglePause()
 {
        isRunning = !isRunning;
 }
+
+void Animation::Load(rapidjson::Value& obj)
+{
+	Play(obj["FrameCount"].GetInt(), obj["FrameDuration"].GetFloat(), obj["IsLooping"].GetBool());
+}

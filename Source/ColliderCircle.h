@@ -62,6 +62,8 @@ public:
 	//	 Return the results of the collision check.
 	bool IsCollidingWith(const Collider& other) const;
 
+	void Load(rapidjson::Value& obj);
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Variables:

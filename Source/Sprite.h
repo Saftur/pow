@@ -93,6 +93,8 @@ public:
 	//	 color = A new color for the sprite.
 	void SetModulateColor(Color color);
 
+	void Load(rapidjson::Value& obj);
+
 private:
 	// The frame currently being displayed (for sprite sheets).
 	unsigned int frameIndex;

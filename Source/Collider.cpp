@@ -5,11 +5,16 @@
 Collider::Collider(ColliderType type) :
 		Component("Collider"), transform(0, 0), type(type), handler(nullptr)
 {
-	transform.SetParent((Transform*)GetParent()->GetComponent("Transform"));
 }
 
 void Collider::Draw() const
 {
+}
+
+void Collider::SetParent(GameObject * object)
+{
+	Component::SetParent(object);
+	transform.SetParent((Transform*)GetParent()->GetComponent("Transform"));
 }
 
 void Collider::CheckCollision(const Collider & other)
@@ -32,6 +37,11 @@ void Collider::SetCollisionHandler(CollisionEventHandler handler_)
 ColliderType Collider::GetType() const
 {
 	return type;
+}
+
+void Collider::Load(rapidjson::Value& obj)
+{
+	UNREFERENCED_PARAMETER(obj);
 }
 
 const Transform & Collider::GetTransform() const

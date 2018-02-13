@@ -62,6 +62,8 @@ public:
 	// Debug drawing for colliders.
 	virtual void Draw() const;
 
+	virtual void SetParent(GameObject* object);
+
 	// Check if two objects are colliding.
 	// (Hint: Refer to the project instructions for implementation suggestions.)
 	// (Hint: Make sure to call the handler for both colliders, passing the 
@@ -84,6 +86,8 @@ public:
 
 	// Get the type of this component.
 	ColliderType GetType() const;
+
+	virtual void Load(rapidjson::Value& obj);
 
 	const Transform& GetTransform() const;
 	void SetTransform(const Transform trs);

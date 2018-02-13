@@ -79,6 +79,8 @@ public:
 	//	 timer = The new value for the timer (in seconds).
 	void SetTimer(float time);
 
+	void Load(rapidjson::Value& obj);
+
 protected:
 	// Sets the current state of the behavior state machine. 
 	// DO NOT use except in special circumstances, e.g. initial behavior setup.

@@ -58,3 +58,8 @@ void Behavior::SetCurrentState(int state)
 {
 	this->stateCurr = state;
 }
+
+void Behavior::Load(rapidjson::Value& obj)
+{
+	UNREFERENCED_PARAMETER(obj);
+}

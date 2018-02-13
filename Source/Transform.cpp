@@ -115,3 +115,18 @@ void Transform::SetCamIsDirty(bool isDirty)
 {
        camIsDirty = isDirty;
 }
+
+void Transform::Load(rapidjson::Value& obj)
+{
+	using namespace rapidjson;
+
+	Value& tmp = obj["Translation"];
+
+	SetTranslation(Vector2D(tmp[0].GetFloat(), tmp[1].GetFloat()));
+
+	tmp = obj["Scale"];
+	SetScale(Vector2D(tmp[0].GetFloat(), tmp[1].GetFloat()));
+
+	tmp = obj["Rotation"];
+	SetRotation(tmp.GetFloat());
+}

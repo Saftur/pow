@@ -17,6 +17,8 @@
 #include "stdafx.h"
 #include "AEEngine.h"
 #include "SpriteSource.h"
+#include "document.h"
+#include "LevelManager.h"
 
 //------------------------------------------------------------------------------
 
@@ -55,7 +57,7 @@ typedef struct AEGfxTexture AEGfxTexture;
 //	   else return NULL.
 // Create a new SpriteSource (dynamic memory allocation).
 SpriteSource::SpriteSource(int numCols, int numRows, struct AEGfxTexture* pTexture)
-	: numCols(numCols), numRows(numRows), pTexture(pTexture) {}
+	: Serializable("SpriteSource"), numCols(numCols), numRows(numRows), pTexture(pTexture) {}
 
 // Returns a pointer to the texture, for the purposes of rendering a sprite.
 // Params:
@@ -98,6 +100,23 @@ void SpriteSource::GetUV(unsigned int frameIndex, float * u, float * v) const
 
 	(*u) = (1.0f / framesPerRow) * (frameIndex % framesPerRow);
 	(*v) = 1.0f / (framesTotal / framesPerRow) * (frameIndex / framesPerRow);
+}
+
+void SpriteSource::Load(rapidjson::Value& obj)
+{
+	AEGfxTexture* tex = LevelManager::GetInstance().GetTexture(obj["Texture"].GetString());
+
+	if (!tex)
+	{
+		tex = AEGfxTextureLoad(obj["Texture"].GetString());
+
+		numCols = obj["Cols"].GetInt();
+		numRows = obj["Rows"].GetInt();
+
+		// Add the texture to the map.
+		LevelManager::GetInstance().AddTexture(obj["Name"].GetString(), tex);
+	}
+	pTexture = tex;
 }
 
 /*----------------------------------------------------------------------------*/

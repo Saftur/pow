@@ -19,6 +19,26 @@
     <ClInclude Include="fmodAPI\inc\fmod_dsp_effects.h" />
     <ClInclude Include="fmodAPI\inc\fmod_errors.h" />
     <ClInclude Include="fmodAPI\inc\fmod_output.h" />
+    <ClInclude Include="rapidjson\allocators.h" />
+    <ClInclude Include="rapidjson\cursorstreamwrapper.h" />
+    <ClInclude Include="rapidjson\document.h" />
+    <ClInclude Include="rapidjson\encodedstream.h" />
+    <ClInclude Include="rapidjson\encodings.h" />
+    <ClInclude Include="rapidjson\filereadstream.h" />
+    <ClInclude Include="rapidjson\filewritestream.h" />
+    <ClInclude Include="rapidjson\fwd.h" />
+    <ClInclude Include="rapidjson\istreamwrapper.h" />
+    <ClInclude Include="rapidjson\memorybuffer.h" />
+    <ClInclude Include="rapidjson\memorystream.h" />
+    <ClInclude Include="rapidjson\ostreamwrapper.h" />
+    <ClInclude Include="rapidjson\pointer.h" />
+    <ClInclude Include="rapidjson\prettywriter.h" />
+    <ClInclude Include="rapidjson\rapidjson.h" />
+    <ClInclude Include="rapidjson\reader.h" />
+    <ClInclude Include="rapidjson\schema.h" />
+    <ClInclude Include="rapidjson\stream.h" />
+    <ClInclude Include="rapidjson\stringbuffer.h" />
+    <ClInclude Include="rapidjson\writer.h" />
     <ClInclude Include="Source\Animation.h" />
     <ClInclude Include="Source\AnimationFrame.h" />
     <ClInclude Include="Source\AnimationSequence.h" />
@@ -44,6 +64,7 @@
     <ClInclude Include="Source\PlatformManager.h" />
     <ClInclude Include="Source\Random.h" />
     <ClInclude Include="Source\Rendertext.h" />
+    <ClInclude Include="source\Serializable.h" />
     <ClInclude Include="source\SoundManager.h" />
     <ClInclude Include="Source\Sprite.h" />
     <ClInclude Include="Source\SpriteSource.h" />
@@ -83,6 +104,7 @@
     <ClCompile Include="Source\PlatformManager.cpp" />
     <ClCompile Include="Source\Random.cpp" />
     <ClCompile Include="Source\Rendertext.cpp" />
+    <ClCompile Include="source\Serializable.cpp" />
     <ClCompile Include="source\SoundManager.cpp" />
     <ClCompile Include="Source\Sprite.cpp" />
     <ClCompile Include="Source\SpriteSource.cpp" />
@@ -137,13 +159,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>.\AE\include;.\fmodAPI\inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)AE\include;$(SolutionDir)rapidjson\include;.\fmodAPI\inc;$(IncludePath)</IncludePath>
     <LibraryPath>.\AE\lib;.\fmodAPI\lib;$(LibraryPath)</LibraryPath>
     <CustomBuildAfterTargets />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>.\AE\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)AE\include;$(SolutionDir)rapidjson\include;$(IncludePath);</IncludePath>
     <LibraryPath>.\AE\lib;$(LibraryPath)</LibraryPath>
     <CustomBuildAfterTargets />
   </PropertyGroup>
@@ -156,7 +178,7 @@
       <SDLCheck>true</SDLCheck>
       <CompileAs>CompileAsCpp</CompileAs>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories />
+      <AdditionalIncludeDirectories>$(SolutionDir)rapidjson/include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -179,7 +201,7 @@ xcopy .\fmodAPI\lib\fmodL.dll "$(OutDir)" /Y</Command>
       <SDLCheck>true</SDLCheck>
       <CompileAs>CompileAsCpp</CompileAs>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories />
+      <AdditionalIncludeDirectories>$(SolutionDir)rapidjson/include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
