@@ -74,8 +74,8 @@ void System::Update(float dt)
 	// Handling Input
 	AEInputUpdate();
 
-	// check if forcing the application to quit
-	if (AEInputCheckTriggered(VK_ESCAPE) || !AESysDoesWindowExist())
+	// check if the window doesn't exist.
+	if (!AESysDoesWindowExist())
 	{
 		LevelManager::GetInstance().Quit();
 	}

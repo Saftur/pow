@@ -14,11 +14,9 @@
 //------------------------------------------------------------------------------
 
 #include "stdafx.h"
-#include "GameObject.h" // GameObjectIsNamed, GameObjectDestroy
 #include "AEEngine.h" // AEGfxGetWinMaxX, MinX, MaxY, MinY
-#include "GameObjectManager.h" // GameObjectManagerAdd
-#include "LevelManager.h"
-#include "LevelButton.h"
+#include "GameStateManager.h"
+#include "QuitButton.h"
 
 //------------------------------------------------------------------------------
 
@@ -31,12 +29,8 @@
 //------------------------------------------------------------------------------
 
 // Allocate a new (Asteroid) behavior component.
-LevelButton::LevelButton(const char *level) : targetLevel(level) {
+QuitButton::QuitButton() {
 
-}
-
-void LevelButton::SetLevel(const char *level) {
-	targetLevel = level;
 }
 
 //------------------------------------------------------------------------------
@@ -46,12 +40,12 @@ void LevelButton::SetLevel(const char *level) {
 // Clone an advanced behavior and return a pointer to the cloned object.
 // Returns:
 //   A pointer to a dynamically allocated clone of the advanced behavior.
-Component* LevelButton::Clone() const {
-	return new LevelButton(*this);
+Component* QuitButton::Clone() const {
+	return new QuitButton(*this);
 }
 
 //What happens when a button is clicked.
-void LevelButton::ClickEffect(float dt) {
+void QuitButton::ClickEffect(float dt) {
 	UNREFERENCED_PARAMETER(dt);
-	LevelManager::GetInstance().SetNextLevel(targetLevel);
+	GameStateManager::GetInstance().SetNextState(GameStateTable::GsQuit);
 }
