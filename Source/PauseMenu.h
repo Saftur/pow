@@ -57,7 +57,6 @@ private:
 	GameObject* CreateBackground(float alpha);
 	void Shutdown();
 
-	std::vector<AEGfxTexture*> textures;
 	std::vector<GameObject*> buttons;
 	AEGfxVertexList* mesh;
 	GameObject* background;

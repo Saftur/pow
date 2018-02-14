@@ -19,9 +19,11 @@
 #include "SpriteSource.h"
 #include "Vector2D.h"
 #include <cctype>
+#include "rapidjson.h"
+#include "LevelManager.h"
 
-Text::Text(const char * text) : Component("Text") {
-	strcpy(string, text);
+Text::Text() : Component("Text") {
+	/*strcpy(string, text);
 	
 	mesh = MeshCreateQuad(1.0f, 1.0f, 0.065666666f, 0.165666666f);
 	texture = AEGfxTextureLoad("Assets\\FontSheet.png");
@@ -29,7 +31,7 @@ Text::Text(const char * text) : Component("Text") {
 	
 	sprite = new Sprite();
 	sprite->SetMesh(mesh);
-	sprite->SetSpriteSource(spritesource);
+	sprite->SetSpriteSource(spritesource);*/
 }
 
 void Text::setText(const char* text) {
@@ -37,6 +39,7 @@ void Text::setText(const char* text) {
 }
 
 void Text::Update(float dt) {
+	UNREFERENCED_PARAMETER(dt);
 	int len = (int)strlen(string);
 	Transform* transform = (Transform*)GetParent()->GetComponent("Transform");
 	Vector2D startPos = transform->GetTranslation();
@@ -98,17 +101,17 @@ void Text::Update(float dt) {
 
 void Text::Load(rapidjson::Value & obj)
 {
-	if (obj.HasMemeber("Texture") && obj["Texture"].GetType() == rapidjson::Type::kStringType) {
-		texture = obj["Texture"];
+	if (obj.HasMember("Texture") && obj["Texture"].GetType() == rapidjson::Type::kStringType) {
+		texture = LevelManager::GetInstance().GetTexture(obj["Texture"].GetString());
 	}
 	else if (obj.HasMember("Texture")) {
-		texture = AEGfxTextureLoad("Assets\\FontSheet.png");
+		texture = AEGfxTextureLoad(obj["Texture"].GetString());
 	}
 
 	if (obj.HasMember("SpriteSource") && obj["SpriteSource"].GetType() == rapidjson::Type::kStringType)
 	{
 		// Add a sprite source by name.
-		spritesource = obj["SpriteSource"];
+		spritesource = LevelManager::GetInstance().GetSpriteSource(obj["SpriteSource"].GetString());
 
 	}
 	else if (obj.HasMember("SpriteSource"))
@@ -119,7 +122,7 @@ void Text::Load(rapidjson::Value & obj)
 
 	if (obj.HasMember("Mesh") && obj["Mesh"].GetType() == rapidjson::Type::kStringType)
 	{
-		mesh = obj["Mesh"];
+		mesh = LevelManager::GetInstance().GetMesh(obj["Mesh"].GetString());
 	}
 	else if (obj.HasMember("Mesh"))
 	{
@@ -130,7 +133,7 @@ void Text::Load(rapidjson::Value & obj)
 	sprite->SetMesh(mesh);
 	sprite->SetSpriteSource(spritesource);
 
-	strcpy(string, obj["Text"].getstring());
+	strcpy(string, obj["Text"].GetString());
 
 	/*alpha = obj["alpha"].getfloat();
 	frameindex = obj["frameindex"].getint();

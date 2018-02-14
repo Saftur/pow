@@ -21,7 +21,7 @@ typedef class Sprite Sprite;
 
 class Text : public Component {
 public:
-	Text(const char * text = "");
+	Text();
 
 	void setText(const char* string); //Set the text.
 

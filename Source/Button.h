@@ -17,6 +17,12 @@
 
 #include "Behavior.h"
 
+typedef class Vector2D Vector2D;
+typedef class GameObject GameObject;
+typedef class Transform Transform;
+typedef struct AEGfxTexture AEGfxTexture;
+typedef class Component Component;
+
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -39,7 +45,25 @@ public:
 	Button();
 
 	template <typename T>
-	static GameObject* CreateButton(const char* objName, Vector2D pos = { 0.0f, 0.0f }, Vector2D scale = { 100.0f, 50.0f }, const char* spritePath = nullptr);
+	static GameObject* CreateButton(const char* objName, AEGfxVertexList* mesh, Vector2D pos = { 0.0f, 0.0f }, Vector2D scale = { 100.0f, 50.0f }, const char* spritePath = nullptr) {
+		GameObject* button = new GameObject(objName);
+		Transform* transform = new Transform(pos.X(), pos.Y());
+		transform->SetScale(scale);
+		button->AddComponent(transform);
+		Sprite* sprite = new Sprite();
+		sprite->SetMesh(mesh);
+		if (spritePath) {
+			AEGfxTexture* texture = AEGfxTextureLoad(spritePath);
+			SpriteSource* spriteSource = new SpriteSource(1, 1, texture);
+			button->AddComponent((Component*)spriteSource);
+			sprite->SetSpriteSource(spriteSource);
+		}
+		button->AddComponent(sprite);
+
+		T* buttonType = new T();
+		button->AddComponent((Component*)buttonType);
+		return button;
+	}
 
 private:
 	//------------------------------------------------------------------------------

@@ -15,8 +15,8 @@
 
 #include "stdafx.h"
 #include "AEEngine.h" // AEGfxGetWinMaxX, MinX, MaxY, MinY
-#include "GameStateManager.h"
 #include "QuitButton.h"
+#include "LevelManager.h"
 
 //------------------------------------------------------------------------------
 
@@ -47,5 +47,5 @@ Component* QuitButton::Clone() const {
 //What happens when a button is clicked.
 void QuitButton::ClickEffect(float dt) {
 	UNREFERENCED_PARAMETER(dt);
-	GameStateManager::GetInstance().SetNextState(GameStateTable::GsQuit);
+	LevelManager::GetInstance().Quit();
 }
