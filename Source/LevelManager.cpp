@@ -47,15 +47,15 @@ void LevelManager::Update(float dt)
 
 void LevelManager::Shutdown()
 {
-	for (pair<const char*, AEGfxTexture*> p : textures) {
+	for (pair<string, AEGfxTexture*> p : textures) {
 		AEGfxTextureUnload(p.second);
 	}
 	textures.clear();
-	for (pair<const char*, AEGfxVertexList*> p : meshes) {
+	for (pair<string, AEGfxVertexList*> p : meshes) {
 		AEGfxMeshFree(p.second);
 	}
 	meshes.clear();
-	for (pair<const char*, SpriteSource*> p : spriteSources) {
+	for (pair<string, SpriteSource*> p : spriteSources) {
 		delete p.second;
 	}
 	spriteSources.clear();

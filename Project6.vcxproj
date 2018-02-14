@@ -124,6 +124,7 @@
   <ItemGroup>
     <None Include="fmodAPI\lib\fmod.dll" />
     <None Include="fmodAPI\lib\fmodL.dll" />
+    <None Include="Levels\StartLevel.json" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="fmodAPI\lib\fmodL_vc.lib" />

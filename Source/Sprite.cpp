@@ -42,6 +42,7 @@ void Sprite::Draw(Transform &transform) const {
 		AEGfxSetRenderMode(AE_GFX_RM_COLOR);
 	}
 	AEGfxSetTransparency(alpha);
+	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	AEGfxSetBlendColor(color.r, color.g, color.b, color.a);
 	AEGfxSetTransform(transform.GetMatrix().m);
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
@@ -114,11 +115,8 @@ void Sprite::Load(rapidjson::Value& obj)
 	alpha = obj["Alpha"].GetFloat();
 	frameIndex = obj["FrameIndex"].GetInt();
 
-	Color color_ = Color();
 	color.r = obj["ModulateColor"].GetArray()[0].GetFloat();
 	color.g = obj["ModulateColor"].GetArray()[1].GetFloat();
 	color.b = obj["ModulateColor"].GetArray()[2].GetFloat();
 	color.a = obj["ModulateColor"].GetArray()[3].GetFloat();
-
-	color = color_;
 }

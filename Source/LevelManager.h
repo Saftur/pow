@@ -56,7 +56,7 @@ private:
 	const char *currLevel = "";
 	const char *nextLevel = "";
 
-	map<const char*, AEGfxTexture*> textures;
-	map<const char*, AEGfxVertexList*> meshes;
-	map<const char*, SpriteSource*> spriteSources;
+	map<string, AEGfxTexture*> textures;
+	map<string, AEGfxVertexList*> meshes;
+	map<string, SpriteSource*> spriteSources;
 };

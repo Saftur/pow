@@ -384,6 +384,9 @@
     <None Include="fmodAPI\lib\fmodL.dll">
       <Filter>fmod</Filter>
     </None>
+    <None Include="Levels\StartLevel.json">
+      <Filter>Game\Levels</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Library Include="fmodAPI\lib\fmod_vc.lib">
