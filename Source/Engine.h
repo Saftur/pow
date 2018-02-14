@@ -50,6 +50,12 @@ public:
 	// Retrieve the instance of the Engine singleton
 	static Engine& GetInstance();
 
+	//Is the game paused?
+	bool IsPaused();
+
+	//Toggle paused.
+	void TogglePaused();
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Variables:
@@ -65,5 +71,7 @@ private:
 	// Disable copy constructor and assignment operator
 	Engine(const Engine&) = delete;
 	Engine& operator=(const Engine&) = delete;
+
+	bool paused = false; //Is the game paused?
 };
 /*----------------------------------------------------------------------------*/

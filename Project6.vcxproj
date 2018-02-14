@@ -75,7 +75,6 @@
     <ClInclude Include="Source\targetver.h" />
     <ClInclude Include="Source\Teleporter.h" />
     <ClInclude Include="Source\Tilemap.h" />
-    <ClInclude Include="Source\TimeSpace.h" />
     <ClInclude Include="Source\Trace.h" />
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\Vector2D.h" />
@@ -118,7 +117,6 @@
     <ClCompile Include="Source\System.cpp" />
     <ClCompile Include="Source\Teleporter.cpp" />
     <ClCompile Include="Source\Tilemap.cpp" />
-    <ClCompile Include="Source\TimeSpace.cpp" />
     <ClCompile Include="Source\Trace.cpp" />
     <ClCompile Include="Source\Transform.cpp" />
     <ClCompile Include="Source\Vector2D.cpp" />

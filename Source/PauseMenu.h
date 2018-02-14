@@ -35,27 +35,25 @@ typedef class Vector2D Vector2D;
 
 // You are free to change the contents of this structure as long as you do not
 //   change the public interface (function prototypes) declared in the header.
-class PauseMenu : public Component
+class PauseMenu
 {
 public:
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
 
-	// Constructor
-	PauseMenu();
-
-	~PauseMenu();
-
-	// Clones the component, returning a dynamically allocated copy.
-	Component* Clone() const;
+	void Init();
+	static PauseMenu& GetInstance();
 
 	// Logic update for this component.
 	void Update(float dt);
 
 private:
+	// Constructor
+	PauseMenu();
+
 	GameObject* CreateBackground(float alpha);
-	void Shutdown();
+	void Shutdown(bool done);
 
 	std::vector<GameObject*> buttons;
 	AEGfxVertexList* mesh;

@@ -17,6 +17,8 @@
 #include "Physics.h"
 #include "GameObjectManager.h"
 
+#include "PauseMenu.h"
+
 using namespace std;
 using namespace rapidjson;
 

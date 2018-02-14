@@ -17,6 +17,8 @@
 #include "GameObjectManager.h"
 #include "Random.h"
 #include "LevelManager.h"
+#include "AEEngine.h"
+#include "PauseMenu.h"
 
 //------------------------------------------------------------------------------
 // Private Structures:
@@ -57,6 +59,9 @@ void Engine::Init()
 
 	// Initialize the game state manager.
 	LevelManager::GetInstance().Init("StartLevel");
+
+	//Initialize the pause menu.
+	PauseMenu::GetInstance().Init();
 }
 
 // Update the game engine.
@@ -65,6 +70,7 @@ void Engine::Init()
 void Engine::Update(float dt)
 {
 	Trace::GetInstance().GetStream() << "Engine: Update" << std::endl;
+	if (AEInputCheckTriggered(VK_ESCAPE)) TogglePaused();
 
 	// Update the System (Windows, Event Handlers).
 	System::GetInstance().Update(dt);
@@ -73,13 +79,15 @@ void Engine::Update(float dt)
 	LevelManager::GetInstance().Update(dt);
 
 	// Update the game object manager.
-	GameObjectManager::GetInstance().Update(dt);
+	if(!paused) GameObjectManager::GetInstance().Update(dt);
 
 	// Check for collisions.
 	GameObjectManager::GetInstance().CheckCollisions();
 
 	// Draw objects.
 	GameObjectManager::GetInstance().Draw();
+
+	PauseMenu::GetInstance().Update(dt);
 
 	// Complete the draw process for the current game loop.
 	System::GetInstance().Draw();
@@ -116,6 +124,14 @@ Engine& Engine::GetInstance()
 {
 	static Engine instance;
 	return instance;
+}
+
+bool Engine::IsPaused() {
+	return paused;
+}
+
+void Engine::TogglePaused() {
+	paused = !paused;
 }
 
 //------------------------------------------------------------------------------

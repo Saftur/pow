@@ -52,9 +52,6 @@
     <Filter Include="Engine\Buttons">
       <UniqueIdentifier>{a481df7b-2589-4396-ad8f-001cf95cf24f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GameObjects\Space Components">
-      <UniqueIdentifier>{34668a66-3e94-465a-b72f-ab776fb8cc5a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -130,9 +127,6 @@
     <ClCompile Include="Source\PlatformManager.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LevelTimer.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Component.cpp">
       <Filter>Engine\GameObjects</Filter>
     </ClCompile>
@@ -172,11 +166,8 @@
     <ClCompile Include="Source\QuitButton.cpp">
       <Filter>Engine\Buttons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\TimeSpace.cpp">
-      <Filter>Engine\GameObjects\Space Components</Filter>
-    </ClCompile>
     <ClCompile Include="Source\PauseMenu.cpp">
-      <Filter>Engine\GameObjects\Space Components</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -283,9 +274,6 @@
     <ClInclude Include="Source\PlatformManager.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\LevelTimer.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Component.h">
       <Filter>Engine\GameObjects</Filter>
     </ClInclude>
@@ -310,9 +298,6 @@
     <ClInclude Include="Source\LevelButton.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BehaviorPlatform.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ColliderBox.h">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClInclude>
@@ -324,12 +309,6 @@
     </ClInclude>
     <ClInclude Include="Source\QuitButton.h">
       <Filter>Engine\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TimeSpace.h">
-      <Filter>Engine\GameObjects\Space Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\PauseMenu.h">
-      <Filter>Engine\GameObjects\Space Components</Filter>
     </ClInclude>
     <ClInclude Include="rapidjson\allocators.h">
       <Filter>RapidJSON</Filter>
@@ -392,6 +371,9 @@
       <Filter>RapidJSON</Filter>
     </ClInclude>
     <ClInclude Include="source\Serializable.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PauseMenu.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>

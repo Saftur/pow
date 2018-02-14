@@ -3,6 +3,7 @@
 #include "AEEngine.h"
 #include "Transform.h"
 #include "Collider.h"
+#include "Button.h"
 
 void GameObjectManager::Init(void)
 {
@@ -67,6 +68,7 @@ void GameObjectManager::Shutdown(void)
 
 	gameObjectActiveList.objectCount = 0;
 	gameObjectArchetypes.objectCount = 0;
+	Button::Shutdown();
 }
 
 void GameObjectManager::Add(GameObject & gameObject)

@@ -24,6 +24,8 @@
 
 //------------------------------------------------------------------------------
 
+vector<AEGfxTexture*> Button::textures;
+
 //------------------------------------------------------------------------------
 // Public Consts:
 //------------------------------------------------------------------------------
@@ -74,4 +76,8 @@ void Button::Update(float dt) {
 //optionally if it needs something to happen every frame.
 void Button::OnUpdate(float dt) {
 	UNREFERENCED_PARAMETER(dt);
+}
+
+void Button::Shutdown() {
+	for (unsigned i = 0; i < textures.size(); i++) AEGfxTextureUnload(textures[i]);
 }

@@ -16,6 +16,7 @@
 //------------------------------------------------------------------------------
 
 #include "Behavior.h"
+#include <vector>
 
 typedef class Vector2D Vector2D;
 typedef class GameObject GameObject;
@@ -54,6 +55,7 @@ public:
 		sprite->SetMesh(mesh);
 		if (spritePath) {
 			AEGfxTexture* texture = AEGfxTextureLoad(spritePath);
+			textures.push_back(texture);
 			SpriteSource* spriteSource = new SpriteSource(1, 1, texture);
 			button->AddComponent((Component*)spriteSource);
 			sprite->SetSpriteSource(spriteSource);
@@ -64,6 +66,8 @@ public:
 		button->AddComponent((Component*)buttonType);
 		return button;
 	}
+
+	static void Shutdown();
 
 private:
 	//------------------------------------------------------------------------------
@@ -83,6 +87,8 @@ private:
 
 	//What happens when a button is clicked.
 	virtual void ClickEffect(float dt) = 0;
+
+	static std::vector<AEGfxTexture*> textures;
 };
 
 //------------------------------------------------------------------------------
