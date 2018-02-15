@@ -15,7 +15,8 @@
 // Include Files:
 //------------------------------------------------------------------------------
 
-#include "Behavior.h"
+#include "Component.h"
+#include "Rendertext.h"
 #include <vector>
 
 typedef class Vector2D Vector2D;
@@ -24,7 +25,8 @@ typedef class Transform Transform;
 typedef struct AEGfxTexture AEGfxTexture;
 typedef class Component Component;
 typedef class SpriteSource SpriteSource;
-//typedef class Text Text;
+typedef class Text Text;
+typedef struct Color color;
 
 //------------------------------------------------------------------------------
 
@@ -48,25 +50,22 @@ public:
 	Button();
 
 	template <typename T>
-	static GameObject* CreateButton(const char* objName, AEGfxVertexList* mesh, Vector2D pos = { 0.0f, 0.0f }, Vector2D scale = { 100.0f, 50.0f }, const char* spritePath = nullptr) {
+	static GameObject* CreateButton(const char* objName, AEGfxVertexList* mesh, 
+		Vector2D pos = { 0.0f, 0.0f }, Vector2D scale = { 100.0f, 50.0f }, 
+		const char* text = nullptr, Vector2D textScale = {15, 15}, Color color = { 0, 0, 0, 0 },
+		const char* font = "Assets\\Comic Sans.png") 
+	{
 		GameObject* button = new GameObject(objName);
 		Transform* transform = new Transform(pos.X(), pos.Y());
 		transform->SetScale(scale);
 		button->AddComponent(transform);
 		Sprite* sprite = new Sprite();
 		sprite->SetMesh(mesh);
-		if (spritePath) {
-			AEGfxTexture* texture = AEGfxTextureLoad(spritePath);
-			textures.push_back(texture);
-			SpriteSource* spriteSource = new SpriteSource(1, 1, texture);
-			sprite->SetSpriteSource(spriteSource);
-		}
-		/*if(text) {
-			Text* textObj = new Text(true, text, font);
+		button->AddComponent(sprite);
+		if(text) {
+			Text* textObj = new Text(true, text, font, color, textScale);
 			button->AddComponent((Component*)textObj);
 		}
-		*/
-		button->AddComponent(sprite);
 
 		T* buttonType = new T();
 		button->AddComponent((Component*)buttonType);

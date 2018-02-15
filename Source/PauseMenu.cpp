@@ -56,7 +56,8 @@ void PauseMenu::Update(float dt) {
 	//If the game is currently paused.
 	if (Engine::GetInstance().IsPaused() && !background) {
 		background = CreateBackground(0.5f);
-		buttons.push_back(Button::CreateButton<QuitButton>("Quit Button", mesh, { 0.0f, -200.0f }, { 50.0f, 25.0f }, "Assets\\QuitButton.png"));
+		buttons.push_back(Button::CreateButton<QuitButton>("Quit Button", mesh, { 0.0f, -200.0f },
+			{ 100.0f, 25.0f }, "Quit Game!", {25, 15}, { 0, 0, 0, 1 }));
 	}
 	if (!Engine::GetInstance().IsPaused() && background) Shutdown(false);
 }
