@@ -23,6 +23,7 @@ typedef class GameObject GameObject;
 typedef class Transform Transform;
 typedef struct AEGfxTexture AEGfxTexture;
 typedef class Component Component;
+typedef class SpriteSource SpriteSource;
 
 //------------------------------------------------------------------------------
 
@@ -57,7 +58,6 @@ public:
 			AEGfxTexture* texture = AEGfxTextureLoad(spritePath);
 			textures.push_back(texture);
 			SpriteSource* spriteSource = new SpriteSource(1, 1, texture);
-			button->AddComponent((Component*)spriteSource);
 			sprite->SetSpriteSource(spriteSource);
 		}
 		button->AddComponent(sprite);
