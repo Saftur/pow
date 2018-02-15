@@ -12,6 +12,7 @@
 #include "Sprite.h"
 #include "SpriteSource.h"
 #include "Behavior.h"
+#include "ColliderBox.h"
 #include "ColliderCircle.h"
 #include "Animation.h"
 #include "Physics.h"
@@ -28,6 +29,12 @@ LM_STATE LevelManager::stateNext = IDLE;
 void LevelManager::Init(const char *name)
 {
 	SetNextLevel(name);
+	AddComponentType("Transform", new Transform(0, 0));
+	AddComponentType("Sprite", new Sprite());
+	AddComponentType("Animation", new Animation());
+	AddComponentType("Physics", new Physics());
+	AddComponentType("ColliderBox", new ColliderBox());
+	AddComponentType("ColliderCircle", new ColliderCircle(0));
 }
 
 void LevelManager::Update(float dt)
@@ -140,69 +147,21 @@ void LevelManager::loadObject(Document& levelDoc)
 
 	id++;
 
-	// Load the transform component.
-	if (v.HasMember("Transform"))
-	{
-		Transform* t = new Transform(0, 0);
-		t->Load(v["Transform"]);
-
-		go->AddComponent(t);
-	}
-
-	// Load the sprite component.
-	if (v.HasMember("Sprite"))
-	{
-		Sprite* s = new Sprite();
-		s->Load(v["Sprite"]);
-
-		go->AddComponent(s);
-	}
-
-	// Load the animation component.
-	if (v.HasMember("Animation"))
-	{
-		Animation* s = new Animation();
-		s->Load(v["Animation"]);
-
-		go->AddComponent(s);
-	}
-
-	// Load the physics component.
-	if (v.HasMember("Physics"))
-	{
-		Physics* s = new Physics();
-		s->Load(v["Physics"]);
-
-		go->AddComponent(s);
-	}
-
-	// Load the collider component.
-	if (v.HasMember("Collider"))
-	{
-		Collider* s = nullptr;
-
-		if (!strcmp(v["Collider"]["Type"].GetString(), "Circle"))
-		{
-			s = new ColliderCircle(v["Collider"]["Radius"].GetFloat());
+	for (Value::MemberIterator itr = v.MemberBegin(); itr != v.MemberEnd(); itr++) {
+		Component *c = GetComponentType(itr->name.GetString());
+		if (c) {
+			c = c->Clone();
+			c->Load(itr->value);
+			go->AddComponent(c);
 		}
-
-		s->Load(v["Collider"]);
-
-		go->AddComponent(s);
 	}
-
-	// Load the behavior component.
-	/*if (v.HasMember("Behavior"))
-	{
-		Behavior* s = new Behavior();
-		s->Load(v["Behavior"]);
-
-		go->AddComponent(s);
-	}*/
-
-	/// TODO: Behaviors.
 
 	GameObjectManager::GetInstance().Add(*go);
+}
+
+void LevelManager::AddComponentType(const char * name, Component * component)
+{
+	components[name] = component;
 }
 
 void LevelManager::AddMesh(const char* name, AEGfxVertexList* mesh)
@@ -218,6 +177,11 @@ void LevelManager::AddTexture(const char* name, AEGfxTexture* texture)
 void LevelManager::AddSpriteSource(const char* name, SpriteSource* spriteSource)
 {
 	spriteSources[name] = spriteSource;
+}
+
+Component * LevelManager::GetComponentType(const char * name)
+{
+	return components.count(name) > 0 ? components.at(name) : nullptr;
 }
 
 AEGfxVertexList* LevelManager::GetMesh(const char* name)

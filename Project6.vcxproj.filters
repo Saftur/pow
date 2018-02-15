@@ -52,6 +52,9 @@
     <Filter Include="Engine\Buttons">
       <UniqueIdentifier>{a481df7b-2589-4396-ad8f-001cf95cf24f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Levels">
+      <UniqueIdentifier>{eec3befe-3433-43d5-8608-9c72ebc290de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -151,9 +154,6 @@
     <ClCompile Include="Source\LevelButton.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="source\Serializable.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ColliderBox.cpp">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClCompile>
@@ -168,6 +168,12 @@
     </ClCompile>
     <ClCompile Include="Source\PauseMenu.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorList.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Serializable.cpp">
+      <Filter>Engine\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -370,11 +376,14 @@
     <ClInclude Include="rapidjson\writer.h">
       <Filter>RapidJSON</Filter>
     </ClInclude>
-    <ClInclude Include="source\Serializable.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\PauseMenu.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorList.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Serializable.h">
+      <Filter>Engine\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

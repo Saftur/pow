@@ -10,6 +10,7 @@ using std::string;
 
 typedef struct AEGfxTexture AEGfxTexture;
 typedef struct AEGfxVertexList AEGfxVertexList;
+typedef class Component Component;
 typedef class SpriteSource SpriteSource;
 enum LM_STATE { IDLE, LOADING };
 
@@ -29,9 +30,13 @@ public:
 
 	static LevelManager& GetInstance();
 
+	void AddComponentType(const char* name, Component* component);
+
 	void AddMesh(const char* name, AEGfxVertexList* mesh);
 	void AddTexture(const char* name,  AEGfxTexture* texture);
 	void AddSpriteSource(const char* name,  SpriteSource* spriteSource);
+
+	Component *GetComponentType(const char* name);
 
 	AEGfxVertexList* GetMesh(const char* name);
 	AEGfxTexture* GetTexture(const char* name);
@@ -55,6 +60,8 @@ private:
 	LevelStatus levelStatus = cLevelUpdate;
 	const char *currLevel = "";
 	const char *nextLevel = "";
+
+	map<string, Component*> components;
 
 	map<string, AEGfxTexture*> textures;
 	map<string, AEGfxVertexList*> meshes;

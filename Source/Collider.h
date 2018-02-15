@@ -54,6 +54,8 @@ public:
 	//   type = The type of collider (circle, line, etc.).
 	Collider(ColliderType type);
 
+	Collider *NewCollider(ColliderType type);
+
 	// Clone an collider and return a pointer to the cloned object.
 	// Returns:
 	//   A pointer to a collider.

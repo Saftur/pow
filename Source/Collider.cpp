@@ -1,10 +1,24 @@
 #include "stdafx.h"
 #include "Collider.h"
+#include "ColliderBox.h"
+#include "ColliderCircle.h"
 #include "GameObject.h"
 
 Collider::Collider(ColliderType type) :
 		Component("Collider"), transform(0, 0), type(type), handler(nullptr)
 {
+}
+
+Collider * Collider::NewCollider(ColliderType type_)
+{
+	switch (type_) {
+	case ColliderTypeBox:
+		return new ColliderBox();
+	case ColliderTypeCircle:
+		return new ColliderCircle(0);
+	default:
+		return nullptr;
+	}
 }
 
 void Collider::Draw() const

@@ -30,7 +30,7 @@ typedef class GameObject GameObject;
 
 // You are free to change the contents of this structure as long as you do not
 //   change the public interface (function prototypes) declared in the header.
-class Component : Serializable
+class Component : public Serializable
 {
 public:
 	//------------------------------------------------------------------------------

@@ -44,6 +44,7 @@
     <ClInclude Include="Source\AnimationSequence.h" />
     <ClInclude Include="Source\Army.h" />
     <ClInclude Include="Source\Behavior.h" />
+    <ClInclude Include="Source\BehaviorList.h" />
     <ClInclude Include="Source\BehaviorStub.h" />
     <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\Collider.h" />
@@ -84,6 +85,7 @@
     <ClCompile Include="Source\AnimationSequence.cpp" />
     <ClCompile Include="Source\Army.cpp" />
     <ClCompile Include="Source\Behavior.cpp" />
+    <ClCompile Include="Source\BehaviorList.cpp" />
     <ClCompile Include="Source\BehaviorStub.cpp" />
     <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
