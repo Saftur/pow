@@ -105,6 +105,8 @@ void Engine::Shutdown()
 	// Shutdown the game object manager.
 	GameObjectManager::GetInstance().Shutdown();
 
+	PauseMenu::GetInstance().Shutdown(true);
+
 	// Shutdown the game state manager.
 	LevelManager::GetInstance().Shutdown();
 
