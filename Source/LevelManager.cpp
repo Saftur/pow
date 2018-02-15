@@ -147,6 +147,8 @@ void LevelManager::loadObject(Document& levelDoc)
 
 	id++;
 
+	bool archetype = v.HasMember("Archetype") && v["Archetype"].GetType() == rapidjson::Type::kTrueType;
+
 	for (Value::MemberIterator itr = v.MemberBegin(); itr != v.MemberEnd(); itr++) {
 		Component *c = GetComponentType(itr->name.GetString());
 		if (c) {
@@ -156,7 +158,9 @@ void LevelManager::loadObject(Document& levelDoc)
 		}
 	}
 
-	GameObjectManager::GetInstance().Add(*go);
+	if (archetype)
+		GameObjectManager::GetInstance().AddArchetype(*go);
+	else GameObjectManager::GetInstance().Add(*go);
 }
 
 void LevelManager::AddComponentType(const char * name, Component * component)

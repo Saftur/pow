@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-// File Name:	BehaviorStub.h
+// File Name:	BehaviorUnit.h
 // Author(s):	Doug Schilling (dschilling)
 // Project:		MyGame
 // Course:		CS230S17
@@ -16,6 +16,8 @@
 //------------------------------------------------------------------------------
 
 #include "Behavior.h"
+#include "Vector2D.h"
+#include "Army.h"
 
 //------------------------------------------------------------------------------
 
@@ -23,9 +25,9 @@
 // Public Consts:
 //------------------------------------------------------------------------------
 
-// An example of the enums to be defined in BehaviorStub.cpp.
+// An example of the enums to be defined in BehaviorUnit.cpp.
 #if 0
-enum StubState
+enum UnitState
 {
 };
 #endif
@@ -34,18 +36,29 @@ enum StubState
 // Public Structures:
 //------------------------------------------------------------------------------
 
-// An example of the class to be defined in BehaviorStub.h
-class BehaviorStub : public Behavior
+// An example of the class to be defined in BehaviorUnit.h
+class BehaviorUnit : public Behavior
 {
 public:
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
 
-	// Allocate a new (Stub) behavior component.
+	// Allocate a new (Unit) behavior component.
 	// Params:
 	//  parent = The object that owns this behavior.
-	BehaviorStub();
+	BehaviorUnit();
+
+	Vector2D GetScrPos();
+	Vector2D GetMapPos();
+	Vector2D GetNextDir();
+	Vector2D GetNextScrPos();
+	Vector2D GetNextPos();
+
+	bool IsMoving();
+
+	bool IsAdjacent(BehaviorUnit *other);
+	bool WillBeAdjacent(BehaviorUnit *other);
 
 private:
 	// Clone an advanced behavior and return a pointer to the cloned object.
@@ -71,7 +84,9 @@ private:
 
 	void OnExit();
 
-	// The collision handling function for Stubs.
+	void Load(rapidjson::Value& obj);
+
+	// The collision handling function for Units.
 	// Params:
 	//	 stub = The stub object.
 	//	 other = The object the asteroid is colliding with.
@@ -80,6 +95,17 @@ private:
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
+
+	Army::Unit unitData;
+	float hp;
+	Vector2D startPos;
+	vector<Vector2D> path;
+	BehaviorUnit *target;
+	//bool follow;
+	float attackTimer;
+	GameObject* abilityOverlay;
+
+	const float attackCooldown = 0.5;
 };
 
 //------------------------------------------------------------------------------

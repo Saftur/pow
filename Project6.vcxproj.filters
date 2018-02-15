@@ -175,6 +175,15 @@
     <ClCompile Include="source\Serializable.cpp">
       <Filter>Engine\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Source\BehaviorUnit.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorArmy.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Control.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h">
@@ -384,6 +393,15 @@
     </ClInclude>
     <ClInclude Include="source\Serializable.h">
       <Filter>Engine\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorUnit.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorArmy.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Control.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

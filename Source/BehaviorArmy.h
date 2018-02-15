@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-// File Name:	BehaviorStub.h
+// File Name:	BehaviorArmy.h
 // Author(s):	Doug Schilling (dschilling)
 // Project:		MyGame
 // Course:		CS230S17
@@ -16,6 +16,11 @@
 //------------------------------------------------------------------------------
 
 #include "Behavior.h"
+#include <vector>
+using std::vector;
+
+
+typedef class Sprite Sprite;
 
 //------------------------------------------------------------------------------
 
@@ -23,9 +28,9 @@
 // Public Consts:
 //------------------------------------------------------------------------------
 
-// An example of the enums to be defined in BehaviorStub.cpp.
+// An example of the enums to be defined in BehaviorArmy.cpp.
 #if 0
-enum StubState
+enum ArmyState
 {
 };
 #endif
@@ -34,18 +39,30 @@ enum StubState
 // Public Structures:
 //------------------------------------------------------------------------------
 
-// An example of the class to be defined in BehaviorStub.h
-class BehaviorStub : public Behavior
+// An example of the class to be defined in BehaviorArmy.h
+class BehaviorArmy : public Behavior
 {
 public:
+	struct UnitData {
+		enum Ability { NONE, ARMOR, BOW, BUILDER };
+
+		int hp;
+		int damage;
+		int speed;
+		Ability ability;
+		BehaviorArmy *army;
+		char name[100];
+		Sprite* abilitySprite;
+	};
+
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
 
-	// Allocate a new (Stub) behavior component.
+	// Allocate a new (Army) behavior component.
 	// Params:
 	//  parent = The object that owns this behavior.
-	BehaviorStub();
+	BehaviorArmy();
 
 private:
 	// Clone an advanced behavior and return a pointer to the cloned object.
@@ -71,7 +88,9 @@ private:
 
 	void OnExit();
 
-	// The collision handling function for Stubs.
+	void Load(rapidjson::Value& obj);
+
+	// The collision handling function for Armys.
 	// Params:
 	//	 stub = The stub object.
 	//	 other = The object the asteroid is colliding with.
@@ -80,6 +99,8 @@ private:
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
+
+	vector<UnitData> units;
 };
 
 //------------------------------------------------------------------------------

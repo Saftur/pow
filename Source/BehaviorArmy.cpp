@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-// File Name:	BehaviorStub.cpp
+// File Name:	BehaviorArmy.cpp
 // Author(s):	Mark Culp
 // Project:		MyGame
 // Course:		CS230S17
@@ -17,14 +17,14 @@
 #include "Random.h"
 #include "AEEngine.h"
 #include "Teleporter.h"
-#include "BehaviorStub.h"
+#include "BehaviorArmy.h"
 #include "GameObjectManager.h"
 
 //------------------------------------------------------------------------------
 // Enums:
 //------------------------------------------------------------------------------
 
-enum states { cStubIdle};
+enum states { cArmyIdle};
 
 //------------------------------------------------------------------------------
 // Public Consts:
@@ -38,13 +38,13 @@ enum states { cStubIdle};
 // Public Functions:
 //------------------------------------------------------------------------------
 
-// Allocate a new (Stub) behavior component.
+// Allocate a new (Army) behavior component.
 // Params:
 //  parent = The object that owns this behavior.
-BehaviorStub::BehaviorStub()
+BehaviorArmy::BehaviorArmy()
 {
 	SetCurrentState(cBehaviorInvalid);
-	SetNextState(cStubIdle);
+	SetNextState(cArmyIdle);
 }
 
 // Clone an advanced behavior and return a pointer to the cloned object.
@@ -53,20 +53,20 @@ BehaviorStub::BehaviorStub()
 //   parent = A reference to the parent object (the object that owns this component).
 // Returns:
 //   A pointer to an advanced behavior.
-Component* BehaviorStub::Clone() const
+Component* BehaviorArmy::Clone() const
 {
-	return new BehaviorStub(*this);
+	return new BehaviorArmy(*this);
 }
 
 // Initialize the current state of the behavior component.
 // (Hint: Refer to the lecture notes on finite state machines (FSM).)
 // Params:
 //	 behavior = Pointer to the behavior component.
-void BehaviorStub::OnEnter()
+void BehaviorArmy::OnEnter()
 {
 	switch (GetCurrentState())
 	{
-	case cStubIdle:
+	case cArmyIdle:
 		break;
 	}
 }
@@ -76,27 +76,34 @@ void BehaviorStub::OnEnter()
 // Params:
 //	 behavior = Pointer to the behavior component.
 //	 dt = Change in time (in seconds) since the last game loop.
-void BehaviorStub::OnUpdate(float dt)
+void BehaviorArmy::OnUpdate(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
 
 	switch (GetCurrentState())
 	{
-	case cStubIdle:
+	case cArmyIdle:
 		break;
 	}
 }
 
-void BehaviorStub::OnExit()
+void BehaviorArmy::OnExit()
 {
-
+	units.clear();
 }
 
-// The collision handling function for Stubs.
+void BehaviorArmy::Load(rapidjson::Value & obj)
+{
+	if (obj.HasMember("ArmyFile") && obj["ArmyFile"].GetType() == rapidjson::Type::kStringType) {
+		// TODO Load army from file
+	}
+}
+
+// The collision handling function for Armys.
 // Params:
 //	 stub = The stub object.
 //	 other = The object the asteroid is colliding with.
-void BehaviorStub::CollisionHandler(GameObject& stub, GameObject& other)
+void BehaviorArmy::CollisionHandler(GameObject& stub, GameObject& other)
 {
 	UNREFERENCED_PARAMETER(stub);
 	UNREFERENCED_PARAMETER(other);
