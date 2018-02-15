@@ -22,16 +22,18 @@
 #include "rapidjson.h"
 #include "LevelManager.h"
 
-Text::Text() : Component("Text") {
-	/*strcpy(string, text);
-	
-	mesh = MeshCreateQuad(1.0f, 1.0f, 0.065666666f, 0.165666666f);
-	texture = AEGfxTextureLoad("Assets\\FontSheet.png");
-	spritesource = new SpriteSource(16, 6, texture);
-	
-	sprite = new Sprite();
-	sprite->SetMesh(mesh);
-	sprite->SetSpriteSource(spritesource);*/
+Text::Text(bool manualCreation, const char* text, const char* font) : Component("Text") {
+	if (manualCreation) {
+		strcpy(string, text);
+
+		mesh = MeshCreateQuad(1.0f, 1.0f, 0.065666666f, 0.165666666f);
+		texture = AEGfxTextureLoad(font);
+		spritesource = new SpriteSource(16, 6, texture);
+
+		sprite = new Sprite();
+		sprite->SetMesh(mesh);
+		sprite->SetSpriteSource(spritesource);
+	}
 }
 
 void Text::setText(const char* text) {

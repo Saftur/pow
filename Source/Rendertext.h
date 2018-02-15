@@ -21,7 +21,7 @@ typedef class Sprite Sprite;
 
 class Text : public Component {
 public:
-	Text();
+	Text(bool manualCreation = false, const char* text = "", const char* font = "Assets\\FontSheet.png");
 
 	void setText(const char* string); //Set the text.
 
@@ -30,16 +30,6 @@ public:
 	void Load(rapidjson::Value& obj);
 
 private:
-	/***********************************************
-	* Spritesheet Format
-	*
-	* 		Space
-	* 		0-9
-	* 		a-z
-	* 		A-Z
-	* 		!  #  $  (  )  :  ;  ?  ,  /  .
-	*
-	***********************************************/
 	char string[512];
 	
 	AEGfxVertexList* mesh;			//Mesh component for drawing the text.

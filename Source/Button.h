@@ -24,6 +24,7 @@ typedef class Transform Transform;
 typedef struct AEGfxTexture AEGfxTexture;
 typedef class Component Component;
 typedef class SpriteSource SpriteSource;
+//typedef class Text Text;
 
 //------------------------------------------------------------------------------
 
@@ -60,6 +61,11 @@ public:
 			SpriteSource* spriteSource = new SpriteSource(1, 1, texture);
 			sprite->SetSpriteSource(spriteSource);
 		}
+		/*if(text) {
+			Text* textObj = new Text(true, text, font);
+			button->AddComponent((Component*)textObj);
+		}
+		*/
 		button->AddComponent(sprite);
 
 		T* buttonType = new T();
