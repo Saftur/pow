@@ -60,7 +60,7 @@ void Text::Draw() const {
 	Transform* transform = (Transform*)GetParent()->GetComponent("Transform");
 	Vector2D startPos = transform->GetTranslation();
 	Vector2D startScale = transform->GetScale();
-	transform->SetTranslation(transform->GetTranslation() + Vector2D(-startScale.x + startScale.x / 4, 0));
+	transform->SetTranslation(transform->GetTranslation() + Vector2D(-startScale.x + scale.x, 0));
 	transform->SetScale(scale);
 
 	
