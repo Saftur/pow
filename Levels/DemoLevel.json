@@ -1,5 +1,5 @@
-{
-  "0": {
+[
+  {
     "Name": "Tilemap",
     "Tilemap": {
       "SpritesheetFilename": "Assets\\Hexidecimal.png",
@@ -10,7 +10,7 @@
       "SpritesheetHeight": 4
     }
   },
-  "1": {
+  {
     "Name": "UnitArchetype",
     "Archetype": true,
     "Transform": {
@@ -65,7 +65,7 @@
       }
     ]
   },
-  "2": {
+  {
     "Name": "Army 1",
     "BehaviorArmy": {
       "Name": "Army1",
@@ -73,7 +73,7 @@
       "FrontLine": 0
     }
   },
-  "3": {
+  {
     "Name": "Army 2",
     "BehaviorArmy": {
       "Name": "Army2",
@@ -81,4 +81,4 @@
       "FrontLine": 5
     }
   }
-}
+]

@@ -129,7 +129,8 @@ void LevelManager::Load(const char* fileName)
 	// Parse it into a levelDoc.
 	levelDoc.Parse(contents.c_str());
 	
-	assert(levelDoc.IsObject());
+	//assert(levelDoc.IsObject());
+	assert(levelDoc.IsArray());
 
 	//int id = 0;
 
@@ -142,22 +143,19 @@ void LevelManager::Load(const char* fileName)
 void LevelManager::loadObject(Document& levelDoc)
 {
 	// Check if we're done loading.
-	if (!levelDoc.HasMember(to_string(id).c_str()))
-	{
+	if (id >= levelDoc.GetArray().Size()) {
 		stateNext = IDLE;
 		return;
 	}
 
 	// Load the game object.
-	Value& v = levelDoc[to_string(id).c_str()];
+	Value& v = levelDoc[id];
 
 	// If this fails, we weren't loading an object.
-	assert(levelDoc[to_string(id).c_str()].IsObject());
+	assert(v.IsObject());
 
 	// Create the game object.
 	GameObject* go = new GameObject(v["Name"].GetString());
-
-	id++;
 
 	bool archetype = v.HasMember("Archetype") && v["Archetype"].GetType() == rapidjson::Type::kTrueType;
 
@@ -186,6 +184,8 @@ void LevelManager::loadObject(Document& levelDoc)
 	if (archetype)
 		GameObjectManager::GetInstance().AddArchetype(*go);
 	else GameObjectManager::GetInstance().Add(*go);
+
+	id++;
 }
 
 void LevelManager::AddComponentType(const char * name, Component * component)
