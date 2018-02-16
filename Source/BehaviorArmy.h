@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 //
 // File Name:	BehaviorArmy.h
-// Author(s):	Doug Schilling (dschilling)
+// Author(s):	Arthur Bouvier
 // Project:		MyGame
 // Course:		CS230S17
 //
@@ -16,8 +16,11 @@
 //------------------------------------------------------------------------------
 
 #include "Behavior.h"
+#include "Tilemap.h"
 #include <vector>
 using std::vector;
+#include "Vector2D.h"
+#include "Control.h"
 
 
 typedef class Sprite Sprite;
@@ -44,7 +47,8 @@ class BehaviorArmy : public Behavior
 {
 public:
 	struct UnitData {
-		enum Ability { NONE, ARMOR, BOW, BUILDER };
+		// NUMABILITIES isn't an actual ability, it's just a counter
+		enum Ability { NONE, ARMOR, BOW, BUILDER, NUMABILITIES };
 
 		int hp;
 		int damage;
@@ -55,6 +59,10 @@ public:
 		Sprite* abilitySprite;
 	};
 
+	enum Side {
+		sIllegal, sLeft, sRight
+	};
+
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
@@ -63,6 +71,10 @@ public:
 	// Params:
 	//  parent = The object that owns this behavior.
 	BehaviorArmy();
+
+	void PushFrontLine(Vector2D pos);
+
+	Side GetSide();
 
 private:
 	// Clone an advanced behavior and return a pointer to the cloned object.
@@ -90,17 +102,24 @@ private:
 
 	void Load(rapidjson::Value& obj);
 
-	// The collision handling function for Armys.
-	// Params:
-	//	 stub = The stub object.
-	//	 other = The object the asteroid is colliding with.
-	static void CollisionHandler(GameObject& stub, GameObject& other);
+	void CreateUnit(const char *unitName, Vector2D startPos, vector<Vector2D> path);
+	bool LegalSpawn(Vector2D pos);
+	bool BehindFrontLine(Vector2D pos);
+
+	UnitData GetUnitData(const char *name) const;
 
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
 
+
+	Tilemap *tilemap;
 	vector<UnitData> units;
+	Side side;
+	int frontLine;
+	vector<Control> controls;
+
+	vector<Vector2D> path_;
 };
 
 //------------------------------------------------------------------------------

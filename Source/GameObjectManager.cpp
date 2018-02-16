@@ -22,11 +22,13 @@ void GameObjectManager::Update(float dt)
 	for (unsigned int i = 0; i < gameObjectActiveList.objectCount; i++) {
 		gameObject = gameObjectActiveList.objectList[i];
 		if (gameObject->IsDestroyed()) {
-			delete gameObject;
-			for (unsigned int a = i + 1; a < gameObjectActiveList.objectCount; a++)
-				gameObjectActiveList.objectList[a - 1] = gameObjectActiveList.objectList[a];
-			i--;
-			gameObjectActiveList.objectCount--;
+			if (gameObject->CheckDestroyNow()) {
+				delete gameObject;
+				for (unsigned int a = i + 1; a < gameObjectActiveList.objectCount; a++)
+					gameObjectActiveList.objectList[a - 1] = gameObjectActiveList.objectList[a];
+				i--;
+				gameObjectActiveList.objectCount--;
+			} else gameObject->SetDestroyNext();
 		}
 	}
 }
@@ -97,7 +99,7 @@ vector<GameObject*> GameObjectManager::GetObjectsByName(const char * name)
 {
 	vector<GameObject*> objects;
 
-	for (int i = 0; i < objectListSize; i++)
+	for (unsigned int i = 0; i < gameObjectActiveList.objectCount; i++)
 	{
 		if (!gameObjectActiveList.objectList[i]->IsDestroyed() && gameObjectActiveList.objectList[i]->IsNamed(name))
 			objects.push_back(gameObjectActiveList.objectList[i]);

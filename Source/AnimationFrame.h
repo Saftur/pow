@@ -32,7 +32,5 @@ typedef struct AnimationFrame
 
 } AnimationFrame;
 
-typedef const AnimationFrame * AnimationFramePtr;
-
 //------------------------------------------------------------------------------
 

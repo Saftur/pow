@@ -31,7 +31,22 @@
     "Collider": {
       "Type": "Circle",
       "Radius": 1.0
-    }
+    },
+    "Extras": [
+      {
+        "CompType": "Sprite",
+        "SpriteSource": {
+          "Name": "Bleh",
+          "Texture": "Assets\\baseunit.png",
+          "Cols": 1,
+          "Rows": 1
+        },
+        "Mesh": "TestMesh",
+        "Alpha": 1,
+        "FrameIndex": 0,
+        "ModulateColor": [ 0, 0, 0, 0 ]
+      }
+    ]
   },
   "1": {
     "Name": "TestObj2",

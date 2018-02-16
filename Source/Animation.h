@@ -95,6 +95,8 @@ private:
 	// (Hint: This should be true for only one game loop.)
 	bool isDone;
 
+	int spriteNum;
+
 	// The animation sequence currently being played, if any.
 	AnimationSequence*	sequence;
 };

@@ -58,7 +58,7 @@ void Engine::Init()
 	GameObjectManager::GetInstance().Init();
 
 	// Initialize the game state manager.
-	LevelManager::GetInstance().Init("StartLevel");
+	LevelManager::GetInstance().Init("DemoLevel");
 
 	//Initialize the pause menu.
 	PauseMenu::GetInstance().Init();

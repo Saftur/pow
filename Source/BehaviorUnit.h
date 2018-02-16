@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 //
 // File Name:	BehaviorUnit.h
-// Author(s):	Doug Schilling (dschilling)
+// Author(s):	Arthur Bouvier
 // Project:		MyGame
 // Course:		CS230S17
 //
@@ -17,7 +17,10 @@
 
 #include "Behavior.h"
 #include "Vector2D.h"
-#include "Army.h"
+#include "BehaviorArmy.h"
+#include "Animation.h"
+#include "AnimationSequence.h"
+#include "Tilemap.h"
 
 //------------------------------------------------------------------------------
 
@@ -49,6 +52,8 @@ public:
 	//  parent = The object that owns this behavior.
 	BehaviorUnit();
 
+	void Init(BehaviorArmy::UnitData unitData, vector<Vector2D> path, Tilemap *tilemap);
+
 	Vector2D GetScrPos();
 	Vector2D GetMapPos();
 	Vector2D GetNextDir();
@@ -59,6 +64,8 @@ public:
 
 	bool IsAdjacent(BehaviorUnit *other);
 	bool WillBeAdjacent(BehaviorUnit *other);
+
+	BehaviorArmy *GetArmy();
 
 private:
 	// Clone an advanced behavior and return a pointer to the cloned object.
@@ -96,14 +103,17 @@ private:
 	// Private Variables:
 	//------------------------------------------------------------------------------
 
-	Army::Unit unitData;
+	BehaviorArmy::UnitData unitData;
 	float hp;
 	Vector2D startPos;
 	vector<Vector2D> path;
 	BehaviorUnit *target;
 	//bool follow;
 	float attackTimer;
-	GameObject* abilityOverlay;
+	Sprite *abilitySprite;
+	Animation *abilityAnimation;
+	AnimationSequence abilityAnimSequence;
+	Tilemap *tilemap;
 
 	const float attackCooldown = 0.5;
 };

@@ -9,7 +9,7 @@
 #include "Mesh.h"
 
 Sprite::Sprite() :
-		Component("Sprite"), alpha(1), color({ 0, 0, 0, 0 })
+		Component("Sprite"), alpha(1), color({ 0, 0, 0, 0 }), frameIndex(0)
 {
 }
 

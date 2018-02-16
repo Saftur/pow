@@ -20,13 +20,13 @@ Tilemap::Tilemap(const char* spritesheetFilename, const char* tilemapFilename, c
 		sprite(new Sprite()), texture(AEGfxTextureLoad(spritesheetFilename)), 
 		transform(new Transform(0.0f, 0.0f))
 {
-	readFiles(tilemapFilename, collisionMapFilename); // Initializes: tilemap, collisionMap, tilemapWidth, tilemapHeight
+	ReadFiles(tilemapFilename, collisionMapFilename); // Initializes: tilemap, collisionMap, tilemapWidth, tilemapHeight
 	Trace::GetInstance().GetStream() << tilemapWidth << ", " << tilemapHeight << std::endl;
 	for (int y = 0; y < tilemapHeight; y++)
 	{
 		for (int x = 0; x < tilemapWidth; x++)
 		{
-			Trace::GetInstance().GetStream() << x << ", " << y << ": " << getTilenum(x, y) << std::endl;
+			Trace::GetInstance().GetStream() << x << ", " << y << ": " << GetTilenum(x, y) << std::endl;
 		}
 	}
 	tileWidth = onScreenWidth / tilemapWidth;
@@ -38,27 +38,57 @@ Tilemap::Tilemap(const char* spritesheetFilename, const char* tilemapFilename, c
 	sprite->SetSpriteSource(spriteSource);
 }
 
-Tilemap::~Tilemap()
+Tilemap::Tilemap() :
+		Component("Tilemap"), offsetX(0), offsetY(0), width(0), height(0),
+		tileWidth(0), tileHeight(0), tilemap(nullptr), tilemapWidth(0), tilemapHeight(0),
+		collisionMap(nullptr), sprite(nullptr), spriteSource(nullptr),
+		texture(nullptr), meshQuad(nullptr), transform(nullptr)
 {
-	delete[] tilemap;
-	delete[] collisionMap;
-	delete sprite;
-	delete spriteSource;
-	delete transform;
-	AEGfxTextureUnload(texture);
-	AEGfxMeshFree(meshQuad);
 }
 
-void Tilemap::Draw()
+Tilemap::~Tilemap()
+{
+	if (tilemap) delete[] tilemap;
+	if (collisionMap) delete[] collisionMap;
+	if (sprite) delete sprite;
+	if (spriteSource) delete spriteSource;
+	if (transform) delete transform;
+	if (texture) AEGfxTextureUnload(texture);
+	if (meshQuad) AEGfxMeshFree(meshQuad);
+}
+
+Component * Tilemap::Clone() const
+{
+	Tilemap *newTilemap = new Tilemap(*this);
+	if (tilemap) {
+		newTilemap->tilemap = new int[tilemapWidth*tilemapHeight];
+		for (int i = 0; i < tilemapWidth*tilemapHeight; i++) {
+			newTilemap->tilemap[i] = tilemap[i];
+		}
+	}
+	if (collisionMap) {
+		newTilemap->collisionMap = new bool[tilemapWidth*tilemapHeight];
+		for (int i = 0; i < tilemapWidth*tilemapHeight; i++) {
+			newTilemap->collisionMap[i] = collisionMap[i];
+		}
+	}
+	//newTilemap->sprite = (Sprite*)sprite->Clone();
+	//newTilemap->spriteSource = new SpriteSource(*spriteSource);
+	if (transform)
+		newTilemap->transform = (Transform*)transform->Clone();
+	return newTilemap;
+}
+
+void Tilemap::Draw() const
 {
 	Transform *parentTR = GetParent() ? (Transform*)GetParent()->GetComponent("Transform") : nullptr;
 	for (int y = 0; y < tilemapHeight; y++)
 	{
 		for (int x = 0; x < tilemapWidth; x++)
 		{
-			if (getTilenum(x, y) != -1)
+			if (GetTilenum(x, y) != -1)
 			{
-				sprite->SetFrame(getTilenum(x, y));
+				sprite->SetFrame(GetTilenum(x, y));
 				//sprite->Draw({ (f32)(tileWidth * x + offsetX - width / 2 + tileWidth / 2), -(f32)(tileHeight * y + offsetY - height / 2 + tileHeight / 2) });
 				Vector2D translation = { (f32)(tileWidth * x + offsetX - width / 2 + tileWidth / 2), -(f32)(tileHeight * y + offsetY - height / 2 + tileHeight / 2) };
 				if (parentTR)
@@ -70,7 +100,7 @@ void Tilemap::Draw()
 	}
 }
 
-Vector2D Tilemap::getPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile)
+Vector2D Tilemap::GetPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile) const
 {
 	Vector2D pos;
 	pos.X((float)(int)((screenPos.X() - offsetX + (width / 2)) / tileWidth));
@@ -82,7 +112,7 @@ Vector2D Tilemap::getPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile)
 	return pos;
 }
 
-Vector2D Tilemap::getPosOnScreen(Vector2D tilePos)
+Vector2D Tilemap::GetPosOnScreen(Vector2D tilePos) const
 {
 	Vector2D pos;
 	pos.X(tileWidth * tilePos.X() + offsetX - width / 2 + tileWidth / 2);
@@ -90,7 +120,7 @@ Vector2D Tilemap::getPosOnScreen(Vector2D tilePos)
 	return pos;
 }
 
-bool Tilemap::isObjectCollidingWithMap(Vector2D objectPosition, Vector2D objectScale)
+bool Tilemap::IsObjectCollidingWithMap(Vector2D objectPosition, Vector2D objectScale) const
 {
 	UNREFERENCED_PARAMETER(objectPosition);
 	UNREFERENCED_PARAMETER(objectScale);
@@ -143,7 +173,7 @@ bool Tilemap::isObjectCollidingWithMap(Vector2D objectPosition, Vector2D objectS
 			if (tileX < 0 || tileX >= tilemapWidth || tileY < 0 || tileY >= tilemapHeight)
 				continue;
 
-			bool collides = getCollides(tileX, tileY);
+			bool collides = GetCollides(tileX, tileY);
 
 			if (collides) return true;
 		}
@@ -152,45 +182,47 @@ bool Tilemap::isObjectCollidingWithMap(Vector2D objectPosition, Vector2D objectS
 	return false;
 }
 
-void Tilemap::setOffset(int onScreenOffsetX, int onScreenOffsetY)
+void Tilemap::SetOffset(int onScreenOffsetX, int onScreenOffsetY)
 {
 	offsetX = onScreenOffsetX;
 	offsetY = onScreenOffsetY;
 }
 
-int Tilemap::getTileWidth()
+int Tilemap::GetTileWidth() const
 {
 	return tileWidth;
 }
 
-int Tilemap::getTileHeight()
+int Tilemap::GetTileHeight() const
 {
 	return tileHeight;
 }
 
-int Tilemap::getTilemapWidth()
+int Tilemap::GetTilemapWidth() const
 {
 	return tilemapWidth;
 }
 
-int Tilemap::getTilemapHeight()
+int Tilemap::GetTilemapHeight() const
 {
 	return tilemapHeight;
 }
 
-void Tilemap::readFiles(const char* tilemapFilename, const char* collisionMapFilename)
+void Tilemap::ReadFiles(const char* tilemapFilename, const char* collisionMapFilename)
 {
 	FILE *tmFile = fopen(tilemapFilename, "rt");
 	FILE *cmFile = fopen(collisionMapFilename, "rt");
 	tilemapWidth = 0;
 	tilemapHeight = 0;
-	if (!tmFile || !cmFile) {
-		if (tmFile) fclose(tmFile);
+	if (!tmFile) {
 		if (cmFile) fclose(cmFile);
 		tilemap = nullptr;
 		collisionMap = nullptr;
+		return;
 	}
+
 	char c;
+
 	int lineLength = 0;
 	while (true) {
 		c = (char)fgetc(tmFile);
@@ -208,8 +240,8 @@ void Tilemap::readFiles(const char* tilemapFilename, const char* collisionMapFil
 		}
 	}
 	fseek(tmFile, 0, SEEK_SET);
+
 	tilemap = new int[tilemapHeight*tilemapWidth];
-	collisionMap = new bool[tilemapHeight*tilemapWidth];
 	int lineNum = 0, tileNum = 0;
 	char tile[3];
 	tile[2] = 0;
@@ -231,27 +263,63 @@ void Tilemap::readFiles(const char* tilemapFilename, const char* collisionMapFil
 		Trace::GetInstance().GetStream() << lineNum << ", " << tileNum << ":" << lineNum*tilemapWidth + tileNum << ": " << strtol(tile, nullptr, 16) << std::endl;
 		tilemap[lineNum*tilemapWidth + tileNum++] = (tile[0] == ' ' && tile[1] == ' ') ? -1 : strtol(tile, nullptr, 16);
 	}
-	lineNum = 0; tileNum = 0;
-	tile[1] = 0;
-	while ((c = (char)fgetc(cmFile)) != EOF) {
-		if (c == '\n') {
-			lineNum++;
-			tileNum = 0;
-		}  else {
-			tile[0] = c;
-			collisionMap[lineNum*tilemapWidth + tileNum++] = atoi(tile) != 0;
-		}
-	}
 	fclose(tmFile);
-	fclose(cmFile);
+
+	if (cmFile) {
+		collisionMap = new bool[tilemapHeight*tilemapWidth];
+		lineNum = 0; tileNum = 0;
+		tile[1] = 0;
+		while ((c = (char)fgetc(cmFile)) != EOF) {
+			if (c == '\n') {
+				lineNum++;
+				tileNum = 0;
+			} else {
+				tile[0] = c;
+				collisionMap[lineNum*tilemapWidth + tileNum++] = atoi(tile) != 0;
+			}
+		}
+		fclose(cmFile);
+	}
 }
 
-int Tilemap::getTilenum(int x, int y)
+int Tilemap::GetTilenum(int x, int y) const
 {
-	return tilemap[y*tilemapWidth + x];
+	return tilemap ? tilemap[y*tilemapWidth + x] : 0;
 }
 
-int Tilemap::getCollides(int x, int y)
+int Tilemap::GetCollides(int x, int y) const
 {
-	return collisionMap[y*tilemapWidth + x];
+	return collisionMap ? collisionMap[y*tilemapWidth + x] : 0;
+}
+
+void Tilemap::Load(rapidjson::Value & obj)
+{
+	if (obj.HasMember("SpritesheetFilename") && obj["SpritesheetFilename"].IsString() &&
+		obj.HasMember("TilemapFilename") && obj["TilemapFilename"].IsString() &&
+		obj.HasMember("OnScreenWidth") && obj["OnScreenWidth"].IsInt() &&
+		obj.HasMember("OnScreenHeight") && obj["OnScreenHeight"].IsInt() &&
+		obj.HasMember("SpritesheetWidth") && obj["SpritesheetWidth"].IsInt() &&
+		obj.HasMember("SpritesheetHeight") && obj["SpritesheetHeight"].IsInt()) {
+		if (obj.HasMember("OnScreenOffsetX") && obj["OnScreenOffsetX"].IsInt())
+			offsetX = obj["OnScreenOffsetX"].GetInt();
+		else offsetX = 0;
+		if (obj.HasMember("OnScreenOffsetY") && obj["OnScreenOffsetY"].IsInt())
+			offsetY = obj["OnScreenOffsetY"].GetInt();
+		else offsetY = 0;
+		width = obj["OnScreenWidth"].GetInt();
+		height = obj["OnScreenHeight"].GetInt();
+		sprite = new Sprite();
+		texture = AEGfxTextureLoad(obj["SpritesheetFilename"].GetString());
+		transform = new Transform(0.0f, 0.0f);
+		transform->SetScale({ 1.0f, 1.0f });
+		if (obj.HasMember("CollisionmapFilename") && obj["CollisionmapFilename"].IsString())
+			ReadFiles(obj["TilemapFilename"].GetString(), obj["CollisionmapFilename"].GetString());
+		else ReadFiles(obj["TilemapFilename"].GetString(), "");
+		tileWidth = obj["OnScreenWidth"].GetInt() / tilemapWidth;
+		tileHeight = obj["OnScreenHeight"].GetInt() / tilemapHeight;
+		meshQuad = MeshCreateQuad((float)tileWidth / 2.0f, (float)tileHeight / 2.0f, 1.0f / obj["SpritesheetWidth"].GetInt(), 1.0f / obj["SpritesheetHeight"].GetInt());
+		spriteSource = new SpriteSource(obj["SpritesheetWidth"].GetInt(), obj["SpritesheetHeight"].GetInt(), texture);
+		sprite->SetMesh(meshQuad);
+		sprite->SetSpriteSource(spriteSource);
+	}
 }

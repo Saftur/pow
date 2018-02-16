@@ -5,12 +5,12 @@
 #include "Trace.h"
 
 GameObject::GameObject(const char * name) :
-		name(name)
+		name(name), isDestroyed(false), destroyNext(false), numComponents(0)
 {
 }
 
 GameObject::GameObject(const GameObject & other) :
-		name(other.name)
+		name(other.name), isDestroyed(false), destroyNext(false), numComponents(0)
 {
 	for (unsigned i = 0; i < other.numComponents; i++) {
 		AddComponent(other.components[i]->Clone());
@@ -43,19 +43,59 @@ Component * GameObject::GetComponent(const char * name_) const
 	return nullptr;
 }
 
+Component * GameObject::GetComponent(const char * name_, int number) const
+{
+	int counter = number;
+	for (unsigned i = 0; i < numComponents; i++) {
+		Component * c = components[i];
+		if (strcmp(c->GetName(), name_) == 0) {
+			if (counter) counter--;
+			else return c;
+		}
+	}
+	return nullptr;
+}
+
+vector<Component*> GameObject::GetComponents(const char * name_) const
+{
+	vector<Component*> comps;
+	for (unsigned i = 0; i < numComponents; i++) {
+		Component * c = components[i];
+		if (strcmp(c->GetName(), name_) == 0) {
+			comps.push_back(c);
+		}
+	}
+	return comps;
+}
+
 const char * GameObject::GetName() const
 {
-	return name;
+	return name.c_str();
+}
+
+void GameObject::SetName(const char * name_)
+{
+	name = name_;
 }
 
 bool GameObject::IsNamed(const char * name_) const
 {
-	return strcmp(name, name_) == 0;
+	return name == string(name_);
 }
 
 bool GameObject::IsDestroyed() const
 {
 	return isDestroyed;
+}
+
+void GameObject::SetDestroyNext()
+{
+	destroyNext = true;
+}
+
+bool GameObject::CheckDestroyNow()
+{
+	return destroyNext;
 }
 
 void GameObject::Update(float dt)

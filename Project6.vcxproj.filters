@@ -37,9 +37,6 @@
     <Filter Include="Engine\Sound">
       <UniqueIdentifier>{b6342329-9d4c-47a5-824b-0c5c75c294cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Tilemap">
-      <UniqueIdentifier>{26f6a7a3-cd51-4873-a8dc-d6d4ac3d337b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\I/O">
       <UniqueIdentifier>{2e9b1b5b-ed9b-4200-a64c-607a3e0d94dc}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,9 @@
     </Filter>
     <Filter Include="Game\Levels">
       <UniqueIdentifier>{eec3befe-3433-43d5-8608-9c72ebc290de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameObjects\Tilemap">
+      <UniqueIdentifier>{26f6a7a3-cd51-4873-a8dc-d6d4ac3d337b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -134,7 +134,7 @@
       <Filter>Engine\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Source\Tilemap.cpp">
-      <Filter>Engine\Tilemap</Filter>
+      <Filter>Engine\GameObjects\Tilemap</Filter>
     </ClCompile>
     <ClCompile Include="Source\ColliderCircle.cpp">
       <Filter>Engine\GameObjects\Colliders</Filter>
@@ -169,9 +169,6 @@
     <ClCompile Include="Source\PauseMenu.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BehaviorList.cpp">
-      <Filter>Game\Behaviors</Filter>
-    </ClCompile>
     <ClCompile Include="source\Serializable.cpp">
       <Filter>Engine\GameObjects</Filter>
     </ClCompile>
@@ -183,6 +180,9 @@
     </ClCompile>
     <ClCompile Include="Source\Control.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CompList.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -293,7 +293,7 @@
       <Filter>Engine\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Source\Tilemap.h">
-      <Filter>Engine\Tilemap</Filter>
+      <Filter>Engine\GameObjects\Tilemap</Filter>
     </ClInclude>
     <ClInclude Include="Source\ColliderCircle.h">
       <Filter>Engine\GameObjects\Colliders</Filter>
@@ -388,9 +388,6 @@
     <ClInclude Include="Source\PauseMenu.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BehaviorList.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
     <ClInclude Include="source\Serializable.h">
       <Filter>Engine\GameObjects</Filter>
     </ClInclude>
@@ -403,6 +400,9 @@
     <ClInclude Include="Source\Control.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Source\CompList.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fmodAPI\lib\fmod.dll">
@@ -412,6 +412,9 @@
       <Filter>fmod</Filter>
     </None>
     <None Include="Levels\StartLevel.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Levels\DemoLevel.json">
       <Filter>Game\Levels</Filter>
     </None>
   </ItemGroup>

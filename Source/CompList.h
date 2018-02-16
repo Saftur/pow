@@ -1,6 +1,6 @@
 #pragma once
 
-class BehaviorList {
+class CompList {
 public:
 	static void List();
 };

@@ -1,0 +1,84 @@
+{
+  "0": {
+    "Name": "Tilemap",
+    "Tilemap": {
+      "SpritesheetFilename": "Assets\\Hexidecimal.png",
+      "TilemapFilename": "Data\\Tilemap1.txt",
+      "OnScreenWidth": 768,
+      "OnScreenHeight": 512,
+      "SpritesheetWidth": 4,
+      "SpritesheetHeight": 4
+    }
+  },
+  "1": {
+    "Name": "UnitArchetype",
+    "Archetype": true,
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 1, 1 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "TestSpriteSource",
+        "Texture": "Assets\\baseunit.png",
+        "Cols": 1,
+        "Rows": 1
+      },
+      "Mesh": {
+        "Name": "UnitMesh",
+        "HalfSize": [ 32, 32 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "FrameIndex": 0,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Animation": {
+      "SpriteNum": 1
+    },
+    "Physics": {},
+    "Collider": {
+      "Type": "Box",
+      "Radius": 1.0
+    },
+    "BehaviorUnit": {
+
+    },
+    "Extras": [
+      {
+        "CompType": "Sprite",
+        "SpriteSource": {
+          "Name": "AbilitySpriteSource",
+          "Texture": "Assets\\abilities.png",
+          "Cols": 4,
+          "Rows": 2
+        },
+        "Mesh": {
+          "Name": "AbilityMesh",
+          "HalfSize": [ 32, 32 ],
+          "UV": [ 0.25, 0.5 ]
+        },
+        "Alpha": 1,
+        "FrameIndex": 0,
+        "ModulateColor": [ 0, 0, 0, 0 ]
+      }
+    ]
+  },
+  "2": {
+    "Name": "Army 1",
+    "BehaviorArmy": {
+      "Name": "Army1",
+      "Side": "Left",
+      "FrontLine": 0
+    }
+  },
+  "3": {
+    "Name": "Army 2",
+    "BehaviorArmy": {
+      "Name": "Army2",
+      "Side": "Right",
+      "FrontLine": 5
+    }
+  }
+}

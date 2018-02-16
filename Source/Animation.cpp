@@ -23,7 +23,7 @@ void Animation::Play(int frameCount_, float frameDuration_, bool isLooping_)
 	this->isLooping = isLooping_;
 	GameObject* parent_ = GetParent();
 	if (parent_) {
-		Sprite *sprite = (Sprite*)parent_->GetComponent("Sprite");
+		Sprite *sprite = (Sprite*)parent_->GetComponent("Sprite", spriteNum);
 		if (sprite)
 			sprite->SetFrame(this->frameIndex);
 	}
@@ -40,7 +40,7 @@ void Animation::PlaySequence(AnimationSequence * sequence_)
 	this->isLooping = sequence_->IsLooping();
 	GameObject* parent_ = GetParent();
 	if (parent_) {
-		Sprite *sprite = (Sprite*)parent_->GetComponent("Sprite");
+		Sprite *sprite = (Sprite*)parent_->GetComponent("Sprite", spriteNum);
 		if (sprite)
 			sprite->SetFrame(sequence_->GetFrame(0)->frameIndex);
 	}
@@ -50,7 +50,7 @@ void Animation::Update(float dt)
 {
 	GameObject *parent_ = GetParent();
 	if (!parent_) return;
-	Sprite *sprite = (Sprite*)parent_->GetComponent("Sprite");
+	Sprite *sprite = (Sprite*)parent_->GetComponent("Sprite", spriteNum);
 	if (!sprite) return;
 	isDone = false;
 	if (!(isRunning)) return;
@@ -95,5 +95,12 @@ void Animation::TogglePause()
 
 void Animation::Load(rapidjson::Value& obj)
 {
-	Play(obj["FrameCount"].GetInt(), obj["FrameDuration"].GetFloat(), obj["IsLooping"].GetBool());
+	if (obj.HasMember("SpriteNum") && obj["SpriteNum"].IsInt())
+		spriteNum = obj["SpriteNum"].GetInt();
+	else spriteNum = 0;
+	if (obj.HasMember("FrameCount") && obj["FrameCount"].IsInt() &&
+		obj.HasMember("FrameDuration") && obj["FrameDuration"].IsFloat() &&
+		obj.HasMember("IsLooping") && obj["IsLooping"].IsBool()) {
+		Play(obj["FrameCount"].GetInt(), obj["FrameDuration"].GetFloat(), obj["IsLooping"].GetBool());
+	}
 }

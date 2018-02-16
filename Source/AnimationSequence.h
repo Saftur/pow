@@ -16,6 +16,8 @@
 //------------------------------------------------------------------------------
 
 #include "AnimationFrame.h"
+#include <vector>
+using std::vector;
 
 //------------------------------------------------------------------------------
 
@@ -35,7 +37,9 @@ public:
 	//	 frameCount = The number of frames in the sequence.
 	//	 frameList = A pointer to an array of AnimationFrame records.
 	//	 isLooping = True if the animation loops, false otherwise.
-	AnimationSequence(unsigned int frameCount, AnimationFrame* frameList, bool isLooping);
+	AnimationSequence(vector<AnimationFrame> frameList, bool isLooping);
+
+	AnimationSequence();
 
 	// Get the specified frame information from the animation sequence.
 	// Params:
@@ -57,11 +61,8 @@ public:
 	bool IsLooping() const;
 
 private:
-	// The number of frames in the animation sequence.
-	unsigned int frameCount;
-
 	// A pointer to an array of AnimationFrame records.
-	AnimationFrame* frameList;
+	vector<AnimationFrame> frameList;
 
 	// True if the animation loops, false otherwise.
 	bool isLooping;

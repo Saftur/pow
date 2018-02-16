@@ -18,6 +18,7 @@ class LevelManager {
 public:
 	void Init(const char *name);
 	void Update(float dt);
+	void OnExit();
 	void Shutdown();
 
 	void SetNextLevel(const char *name);

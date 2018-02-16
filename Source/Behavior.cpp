@@ -2,8 +2,8 @@
 #include "Behavior.h"
 #include "Component.h"
 
-Behavior::Behavior() :
-		Component("Behavior"), stateCurr(cBehaviorInvalid)
+Behavior::Behavior(const char *name_) :
+		Component(name_), stateCurr(cBehaviorInvalid)
 {
 }
 

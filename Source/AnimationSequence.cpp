@@ -49,8 +49,12 @@ const AnimationFrame nullFrame = { 0, 0.0f };
 //	 If the memory allocation was successful,
 //	   then return a pointer to the allocated memory,
 //	   else return NULL.
-AnimationSequence::AnimationSequence(unsigned int frameCount, AnimationFrame* frameList, bool isLooping)
-	: frameCount(frameCount), frameList(frameList), isLooping(isLooping) {}
+AnimationSequence::AnimationSequence(vector<AnimationFrame> frameList, bool isLooping)
+	: frameList(frameList), isLooping(isLooping) {}
+
+AnimationSequence::AnimationSequence()
+{
+}
 
 // Get the specified frame information from the animation sequence.
 // Params:
@@ -75,7 +79,7 @@ const AnimationFrame* AnimationSequence::GetFrame(unsigned int sequenceIndex) co
 //		else return 0.
 unsigned int AnimationSequence::GetFrameCount() const
 {
-	return this->frameCount;
+	return frameList.size();
 }
 
 // Determine if the animation sequence is set to loop.
@@ -87,7 +91,7 @@ unsigned int AnimationSequence::GetFrameCount() const
 //		else return false.
 bool AnimationSequence::IsLooping() const
 {
-	return this->isLooping;
+	return isLooping;
 }
 
 /*----------------------------------------------------------------------------*/

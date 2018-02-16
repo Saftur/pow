@@ -17,6 +17,8 @@
 #include "Animation.h"
 #include "Physics.h"
 #include "GameObjectManager.h"
+#include "Tilemap.h"
+#include "CompList.h"
 
 #include "PauseMenu.h"
 
@@ -35,13 +37,15 @@ void LevelManager::Init(const char *name)
 	AddComponentType("Physics", new Physics());
 	AddComponentType("ColliderBox", new ColliderBox());
 	AddComponentType("ColliderCircle", new ColliderCircle(0));
+	AddComponentType("Tilemap", new Tilemap());
+	CompList::List();
 }
 
 void LevelManager::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
 	if (levelStatus) {
-		Shutdown();
+		OnExit();
 
 		if (levelStatus != cLevelQuit) {
 			Load(nextLevel);
@@ -52,7 +56,7 @@ void LevelManager::Update(float dt)
 	}
 }
 
-void LevelManager::Shutdown()
+void LevelManager::OnExit()
 {
 	for (pair<string, AEGfxTexture*> p : textures) {
 		AEGfxTextureUnload(p.second);
@@ -67,6 +71,14 @@ void LevelManager::Shutdown()
 	}
 	spriteSources.clear();
 	GameObjectManager::GetInstance().Shutdown();
+}
+
+void LevelManager::Shutdown() {
+	OnExit();
+	for (pair<string, Component*> p : components) {
+		delete p.second;
+	}
+	components.clear();
 }
 
 void LevelManager::SetNextLevel(const char *name) {
@@ -153,8 +165,21 @@ void LevelManager::loadObject(Document& levelDoc)
 		Component *c = GetComponentType(itr->name.GetString());
 		if (c) {
 			c = c->Clone();
-			c->Load(itr->value);
 			go->AddComponent(c);
+			c->Load(itr->value);
+		}
+	}
+
+	if (v.HasMember("Extras") && v["Extras"].IsArray()) {
+		for (Value::ValueIterator itr = v["Extras"].Begin(); itr != v["Extras"].End(); itr++) {
+			if (itr->IsObject() && itr->HasMember("CompType") && (*itr)["CompType"].IsString()) {
+				Component *c = GetComponentType((*itr)["CompType"].GetString());
+				if (c) {
+					c = c->Clone();
+					go->AddComponent(c);
+					c->Load(*itr);
+				}
+			}
 		}
 	}
 

@@ -41,7 +41,8 @@ enum states { cStubIdle};
 // Allocate a new (Stub) behavior component.
 // Params:
 //  parent = The object that owns this behavior.
-BehaviorStub::BehaviorStub()
+BehaviorStub::BehaviorStub() :
+		Behavior("BehaviorStub")
 {
 	SetCurrentState(cBehaviorInvalid);
 	SetNextState(cStubIdle);
@@ -89,7 +90,10 @@ void BehaviorStub::OnUpdate(float dt)
 
 void BehaviorStub::OnExit()
 {
-
+	switch (GetCurrentState()) {
+	case cStubIdle:
+		break;
+	}
 }
 
 // The collision handling function for Stubs.

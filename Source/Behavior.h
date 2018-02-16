@@ -39,7 +39,7 @@ public:
 	//------------------------------------------------------------------------------
 
 	// Create a behavior, initialize variables to sane values.
-	Behavior();
+	Behavior(const char *name_);
 
 	// Destructor for Behavior class.
 	// Marked virtual so that correct destructor is called.

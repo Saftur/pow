@@ -11,6 +11,11 @@
 
 #pragma once
 
+#include <vector>
+using std::vector;
+#include <string>
+using std::string;
+
 //------------------------------------------------------------------------------
 // Include Files:
 //------------------------------------------------------------------------------
@@ -55,10 +60,15 @@ public:
 	// Retrieves the component with the given name if it exists.
 	Component* GetComponent(const char* name) const;
 
+	Component* GetComponent(const char* name, int number) const;
+	vector<Component*> GetComponents(const char* name) const;
+
 	// Get the name of the object.
 	// Returns:
 	//		A string literal containing the name of the object.	
 	const char* GetName() const;
+
+	void SetName(const char *name);
 
 	// Check to see if the name of an object equals a given string.
 	// Params:
@@ -71,6 +81,9 @@ public:
 	// Returns:
 	//		True if the object will be destroyed, false otherwise.
 	bool IsDestroyed() const;
+
+	void SetDestroyNext();
+	bool CheckDestroyNow();
 
 	// Update any components attached to the game object.
 	// (Hint: You will need to call Update on the Animation and Physics components.)
@@ -96,7 +109,7 @@ private:
 	static const int maxNumComponents = 10;
 
 	// The name of the game object.
-	const char * name;
+	string name;
 
 	// Array of components
 	Component* components[maxNumComponents];
@@ -106,6 +119,8 @@ private:
 
 	// Whether the object has been marked for destruction.
 	bool isDestroyed;
+
+	bool destroyNext;
 };
 
 //------------------------------------------------------------------------------
