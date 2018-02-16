@@ -12,35 +12,36 @@
 
 #pragma once
 
+#include "Sprite.h"
+#include "Vector2D.h"
 #include "Component.h"
 
 typedef struct AEGfxVertexList AEGfxVertexList;
 typedef struct AEGfxTexture AEGfxTexture;
 typedef class SpriteSource SpriteSource;
 typedef class Sprite Sprite;
+typedef struct Color color;
+typedef class Vector2D Vector2D;
 
 class Text : public Component {
 public:
-	Text();
+	Text(bool manualCreation = false, const char* text = "", const char* font = "Assets\\Comic Sans.png",
+		Color color = { 0, 0, 0, 0 }, Vector2D textScale = { 15, 15 });
 
-	void setText(const char* string); //Set the text.
+	// Clones the component, returning a dynamically allocated copy.
+	Component* Clone() const;
 
-	void Update(float dt); //Update the text on screen.
+	void SetText(const char* string); //Set the text.
+	void SetColor(Color color);
+	void SetScale(Vector2D textScale);
+
+	void Draw() const; //Update the text on screen.
 
 	void Load(rapidjson::Value& obj);
 
 private:
-	/***********************************************
-	* Spritesheet Format
-	*
-	* 		Space
-	* 		0-9
-	* 		a-z
-	* 		A-Z
-	* 		!  #  $  (  )  :  ;  ?  ,  /  .
-	*
-	***********************************************/
 	char string[512];
+	Vector2D scale;
 	
 	AEGfxVertexList* mesh;			//Mesh component for drawing the text.
 	AEGfxTexture* texture;			//Texture component for drawing the text.

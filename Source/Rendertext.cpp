@@ -22,81 +22,62 @@
 #include "rapidjson.h"
 #include "LevelManager.h"
 
-Text::Text() : Component("Text") {
-	/*strcpy(string, text);
-	
-	mesh = MeshCreateQuad(1.0f, 1.0f, 0.065666666f, 0.165666666f);
-	texture = AEGfxTextureLoad("Assets\\FontSheet.png");
-	spritesource = new SpriteSource(16, 6, texture);
-	
-	sprite = new Sprite();
-	sprite->SetMesh(mesh);
-	sprite->SetSpriteSource(spritesource);*/
+Text::Text(bool manualCreation, const char* text, const char* font, Color color, Vector2D textScale) : Component("Text") {
+	if (manualCreation) {
+		strcpy(string, text);
+		scale = textScale;
+
+		mesh = MeshCreateQuad(1.0f, 1.0f, 0.0625f, 0.16666667f);
+		texture = AEGfxTextureLoad(font);
+		spritesource = new SpriteSource(16, 6, texture);
+
+		sprite = new Sprite();
+		sprite->SetMesh(mesh);
+		sprite->SetSpriteSource(spritesource);
+		sprite->SetModulateColor(color);
+	}
 }
 
-void Text::setText(const char* text) {
+Component* Text::Clone() const{
+	return new Text(*this);
+}
+
+void Text::SetText(const char* text) {
 	strcpy(string, text);
 }
 
-void Text::Update(float dt) {
-	UNREFERENCED_PARAMETER(dt);
+void Text::SetColor(Color color) {
+	sprite->SetModulateColor(color);
+}
+
+void Text::SetScale(Vector2D textScale)
+{
+	scale = textScale;
+}
+
+void Text::Draw() const {
 	int len = (int)strlen(string);
 	Transform* transform = (Transform*)GetParent()->GetComponent("Transform");
 	Vector2D startPos = transform->GetTranslation();
+	Vector2D startScale = transform->GetScale();
+	transform->SetTranslation(transform->GetTranslation() + Vector2D(-startScale.x + scale.x, 0));
+	transform->SetScale(scale);
+
 	
 	//Print each character in the string.
 	for (int i = 0; i < len; i++){
-		if(std::isdigit(string[i])) sprite->SetFrame(atoi(&string[i]) + 1); //Print out a number.
-		else if(std::isalpha(string[i]) && std::islower(string[i])) sprite->SetFrame(string[i] - 'a' + 11); //Print out a lower case letter.
-		else if(std::isalpha(string[i]) && std::isupper(string[i])) sprite->SetFrame(string[i] - 'A' + 37); //Print out an upper case letter.
-		else { //Print out a special character.
-			switch (string[i]){
-			case '!':
-				sprite->SetFrame(63);
-				break;
-			case '#':
-				sprite->SetFrame(64);
-				break;
-			case '$':
-				sprite->SetFrame(65);
-				break;
-			case '(':
-				sprite->SetFrame(66);
-				break;
-			case ')':
-				sprite->SetFrame(67);
-				break;
-			case ':':
-				sprite->SetFrame(68);
-				break;
-			case ';':
-				sprite->SetFrame(69);
-				break;
-			case '?':
-				sprite->SetFrame(70);
-				break;
-			case ',':
-				sprite->SetFrame(71);
-				break;
-			case '/':
-				sprite->SetFrame(72);
-				break;
-			case '.':
-				sprite->SetFrame(73);
-				break;
-			case '=':
-				sprite->SetFrame(74);
-				break;
-			default:
-				sprite->SetFrame(0); //Space bar or an unsupported character.
-			}
-		}
+		if (string[i] >= 32 && string[i] <= 125) sprite->SetFrame(string[i] - 32);
+		else sprite->SetFrame(0);
 		
 		sprite->Draw(*transform);
-		transform->SetTranslation(transform->GetTranslation() + Vector2D(1.8f * transform->GetScale().X(), 0.0f));
+
+		const char c = string[i];
+		if(c == 'i' || c == '!' || c == '\'' || c == '`' || c == ':' || c == ';') transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x/4, 0.0f));
+		else transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x * 1.2f, 0.0f));
 	}
 
 	transform->SetTranslation(startPos);
+	transform->SetScale(startScale);
 }
 
 void Text::Load(rapidjson::Value & obj)

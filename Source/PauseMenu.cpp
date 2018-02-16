@@ -56,8 +56,10 @@ void PauseMenu::Update(float dt) {
 	//If the game is currently paused.
 	if (Engine::GetInstance().IsPaused() && !background) {
 		background = CreateBackground(0.5f);
-		buttons.push_back(Button::CreateButton<QuitButton>("Quit Button", mesh, { 0.0f, 0.0f }, { 50.0f, 25.0f }));
-		((Sprite*)buttons[0]->GetComponent("Sprite"))->SetModulateColor({1.0f, 0.0f, 0.0f, 1.0f});
+		buttons.push_back(Button::CreateButton<QuitButton>("Quit Button", mesh, { 0.0f, -200.0f },
+			{ 100.0f, 25.0f }, "Quit Game!", {18, 20}, { 0, 0, 0, 1 }));
+		buttons.push_back(Button::CreateButton<QuitButton>("Quit Button2", mesh, { 0.0f, -100.0f },
+		{ 100.0f, 25.0f }, "(Probably) a Quit Button?", { 10, 12 }, { 1, 51/255, 0, 1 }));
 	}
 	if (!Engine::GetInstance().IsPaused() && background) Shutdown(false);
 }

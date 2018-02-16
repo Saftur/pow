@@ -80,4 +80,5 @@ void Button::OnUpdate(float dt) {
 
 void Button::Shutdown() {
 	for (unsigned i = 0; i < textures.size(); i++) AEGfxTextureUnload(textures[i]);
+	textures.clear();
 }

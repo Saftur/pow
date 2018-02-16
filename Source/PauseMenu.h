@@ -45,6 +45,8 @@ public:
 	void Init();
 	static PauseMenu& GetInstance();
 
+	void Shutdown(bool done);
+
 	// Logic update for this component.
 	void Update(float dt);
 
@@ -53,7 +55,6 @@ private:
 	PauseMenu();
 
 	GameObject* CreateBackground(float alpha);
-	void Shutdown(bool done);
 
 	std::vector<GameObject*> buttons;
 	AEGfxVertexList* mesh;
