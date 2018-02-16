@@ -18,6 +18,7 @@
 #include "Physics.h"
 #include "GameObjectManager.h"
 #include "Tilemap.h"
+#include "Rendertext.h"
 #include "CompList.h"
 
 #include "PauseMenu.h"
@@ -38,6 +39,7 @@ void LevelManager::Init(const char *name)
 	AddComponentType("ColliderBox", new ColliderBox());
 	AddComponentType("ColliderCircle", new ColliderCircle(0));
 	AddComponentType("Tilemap", new Tilemap());
+	AddComponentType("Text", new Text());
 	CompList::List();
 }
 

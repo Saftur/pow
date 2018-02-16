@@ -28,7 +28,7 @@ PauseMenu::PauseMenu() {
 }
 
 void PauseMenu::Init() {
-	mesh = MeshCreateQuad(1.0f, 1.0f, 1.0f, 1.0f);
+	mesh = MeshCreateQuad(0.5f, 0.5f, 1.0f, 1.0f);
 	background = nullptr;
 }
 
@@ -57,9 +57,9 @@ void PauseMenu::Update(float dt) {
 	if (Engine::GetInstance().IsPaused() && !background) {
 		background = CreateBackground(0.5f);
 		buttons.push_back(Button::CreateButton<QuitButton>("Quit Button", mesh, { 0.0f, -200.0f },
-			{ 100.0f, 25.0f }, "Quit Game!", {18, 20}, { 0, 0, 0, 1 }));
+			{ 200.0f, 50.0f }, "Quit Game!", {36, 40}, { 0, 0, 0, 1 }));
 		buttons.push_back(Button::CreateButton<QuitButton>("Quit Button2", mesh, { 0.0f, -100.0f },
-		{ 100.0f, 25.0f }, "(Probably) a Quit Button?", { 10, 12 }, { 1, 51/255, 0, 1 }));
+		{ 200.0f, 50.0f }, "(Probably) a Quit Button?", { 20, 24 }, { 1, 51/255, 0, 1 }));
 	}
 	if (!Engine::GetInstance().IsPaused() && background) Shutdown(false);
 }

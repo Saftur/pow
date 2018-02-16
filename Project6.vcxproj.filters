@@ -55,6 +55,9 @@
     <Filter Include="Engine\GameObjects\Tilemap">
       <UniqueIdentifier>{26f6a7a3-cd51-4873-a8dc-d6d4ac3d337b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameObjects\RenderText">
+      <UniqueIdentifier>{1624beb4-3d38-4c80-a6b5-a71e834c37dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -118,9 +121,6 @@
     <ClCompile Include="source\SoundManager.cpp">
       <Filter>Engine\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Rendertext.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="source\IOController.cpp">
       <Filter>Engine\I/O</Filter>
     </ClCompile>
@@ -183,6 +183,9 @@
     </ClCompile>
     <ClCompile Include="Source\CompList.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rendertext.cpp">
+      <Filter>Engine\GameObjects\RenderText</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -276,9 +279,6 @@
     </ClInclude>
     <ClInclude Include="Source\Behavior.h">
       <Filter>Engine\GameObjects\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Rendertext.h">
-      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="source\IOController.h">
       <Filter>Engine\I/O</Filter>
@@ -402,6 +402,9 @@
     </ClInclude>
     <ClInclude Include="Source\CompList.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendertext.h">
+      <Filter>Engine\GameObjects\RenderText</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

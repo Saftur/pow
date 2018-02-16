@@ -23,6 +23,7 @@ using std::vector;
 using std::string;
 #include "Vector2D.h"
 #include "Control.h"
+#include "Rendertext.h"
 
 
 typedef class Sprite Sprite;
@@ -59,6 +60,8 @@ public:
 		BehaviorArmy *army;
 		char name[100];
 		Sprite* abilitySprite;
+
+		unsigned GetCost();
 	};
 
 	enum Side {
@@ -121,8 +124,11 @@ private:
 	int frontLine, flStart;
 	string flObjName;
 	Transform *flTransform;
+	string fundsObjName;
+	Text *fundsText;
 	vector<Control> controls;
 
+	unsigned funds, startFunds;
 	vector<Vector2D> path_;
 };
 

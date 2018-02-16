@@ -156,6 +156,9 @@ void BehaviorArmy::OnEnter()
 		GameObject *fl = GameObjectManager::GetInstance().GetObjectByName(flObjName.c_str());
 		if (fl) flTransform = (Transform*)fl->GetComponent("Transform");
 		else flTransform = nullptr;
+		GameObject *fd = GameObjectManager::GetInstance().GetObjectByName(fundsObjName.c_str());
+		if (fd) fundsText = (Text*)fd->GetComponent("Text");
+		else fundsText = nullptr;
 		switch (side) {
 		case sLeft:
 			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ 1, 0 });
@@ -177,6 +180,10 @@ void BehaviorArmy::OnEnter()
 		frontLine = flStart;
 		if (flTransform) {
 			PushFrontLine({ (float)frontLine, 0 });
+		}
+		funds = startFunds;
+		if (fundsText) {
+			fundsText->SetText(std::to_string(funds).c_str());
 		}
 		break;
 	}
@@ -276,11 +283,26 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 		}
 	}
 	frontLine = -1;
+	if (obj.HasMember("FundsDisplayName") && obj["FundsDisplayName"].IsString()) {
+		fundsObjName = obj["FundsDisplayName"].GetString();
+	} else {
+		fundsObjName = "";
+	}
+	if (obj.HasMember("StartFunds") && obj["StartFunds"].IsUint()) {
+		startFunds = obj["StartFunds"].GetUint();
+	} else {
+		startFunds = 0;
+	}
+	funds = 0;
 }
 
 void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos, vector<Vector2D> path)
 {
+	UnitData unitData = GetUnitData(unitName);
+	if (funds < unitData.GetCost()) return;
 	if (!LegalSpawn(startPos)) return;
+	funds -= unitData.GetCost();
+	if (fundsText) fundsText->SetText(std::to_string(funds).c_str());
 	GameObject *go = GameObjectManager::GetInstance().GetArchetype("UnitArchetype");
 	if (!go) {
 		Trace::GetInstance().GetStream() << "No Unit archetype found" << std::endl;
@@ -298,7 +320,6 @@ void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos, vector<Ve
 		delete go;
 		return;
 	}
-	UnitData unitData = GetUnitData(unitName);
 	if (unitData.hp == -1) {
 		Trace::GetInstance().GetStream() << "No Unit \"" << unitName << "\" found" << std::endl;
 		delete go;
@@ -357,3 +378,8 @@ BehaviorArmy::UnitData BehaviorArmy::GetUnitData(const char * name_) const
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+
+unsigned BehaviorArmy::UnitData::GetCost()
+{
+	return (unsigned)((float)hp / 10 + 0.5f) + (unsigned)((float)damage / 10 + 0.5f) + (unsigned)((float)speed / 5 + 0.5f);
+}

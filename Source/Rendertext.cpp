@@ -27,7 +27,7 @@ Text::Text(bool manualCreation, const char* text, const char* font, Color color,
 		strcpy(string, text);
 		scale = textScale;
 
-		mesh = MeshCreateQuad(1.0f, 1.0f, 0.0625f, 0.16666667f);
+		mesh = MeshCreateQuad(0.5f, 0.5f, 0.0625f, 0.16666667f);
 		texture = AEGfxTextureLoad(font);
 		spritesource = new SpriteSource(16, 6, texture);
 
@@ -60,7 +60,7 @@ void Text::Draw() const {
 	Transform* transform = (Transform*)GetParent()->GetComponent("Transform");
 	Vector2D startPos = transform->GetTranslation();
 	Vector2D startScale = transform->GetScale();
-	transform->SetTranslation(transform->GetTranslation() + Vector2D(-startScale.x + scale.x, 0));
+	transform->SetTranslation(transform->GetTranslation() + Vector2D(-startScale.x/2 + scale.x/2, 0));
 	transform->SetScale(scale);
 
 	
@@ -72,8 +72,8 @@ void Text::Draw() const {
 		sprite->Draw(*transform);
 
 		const char c = string[i];
-		if(c == 'i' || c == '!' || c == '\'' || c == '`' || c == ':' || c == ';') transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x/4, 0.0f));
-		else transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x * 1.2f, 0.0f));
+		if(c == 'i' || c == '!' || c == '\'' || c == '`' || c == ':' || c == ';') transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x/8, 0.0f));
+		else transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x * 0.6f, 0.0f));
 	}
 
 	transform->SetTranslation(startPos);
@@ -82,7 +82,7 @@ void Text::Draw() const {
 
 void Text::Load(rapidjson::Value & obj)
 {
-	if (obj.HasMember("Texture") && obj["Texture"].GetType() == rapidjson::Type::kStringType) {
+	/*if (obj.HasMember("Texture") && obj["Texture"].GetType() == rapidjson::Type::kStringType) {
 		texture = LevelManager::GetInstance().GetTexture(obj["Texture"].GetString());
 	}
 	else if (obj.HasMember("Texture")) {
@@ -108,13 +108,15 @@ void Text::Load(rapidjson::Value & obj)
 	else if (obj.HasMember("Mesh"))
 	{
 		mesh = MeshCreateQuad(1.0f, 1.0f, 0.065666666f, 0.165666666f);
-	}
+	}*/
 
 	sprite = new Sprite();
-	sprite->SetMesh(mesh);
-	sprite->SetSpriteSource(spritesource);
+	sprite->Load(obj);
+	//sprite->SetMesh(mesh);
+	//sprite->SetSpriteSource(spritesource);
 
 	strcpy(string, obj["Text"].GetString());
+	scale = Vector2D((float)obj["Scale"][0].GetInt(), (float)obj["Scale"][1].GetInt());
 
 	/*alpha = obj["alpha"].getfloat();
 	frameindex = obj["frameindex"].getint();
