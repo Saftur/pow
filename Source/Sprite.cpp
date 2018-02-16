@@ -75,7 +75,7 @@ void Sprite::SetModulateColor(Color color_)
 
 void Sprite::Load(rapidjson::Value& obj)
 {
-	if (obj.HasMember("SpriteSource") && obj["SpriteSource"].GetType() == rapidjson::Type::kStringType)
+	if (obj.HasMember("SpriteSource") && obj["SpriteSource"].IsString())
 	{
 		// Add a sprite source by name.
 		spriteSource = LevelManager::GetInstance().GetSpriteSource(obj["SpriteSource"].GetString());
@@ -94,7 +94,7 @@ void Sprite::Load(rapidjson::Value& obj)
 		LevelManager::GetInstance().AddSpriteSource(tmp["Name"].GetString(), ss);
 	}
 
-	if (obj.HasMember("Mesh") && obj["Mesh"].GetType() == rapidjson::Type::kStringType)
+	if (obj.HasMember("Mesh") && obj["Mesh"].IsString())
 	{
 		// Add a mesh by name.
 		mesh = LevelManager::GetInstance().GetMesh(obj["Mesh"].GetString());
@@ -112,11 +112,15 @@ void Sprite::Load(rapidjson::Value& obj)
 		LevelManager::GetInstance().AddMesh(tmp["Name"].GetString(), mesh);
 	}
 
-	alpha = obj["Alpha"].GetFloat();
-	frameIndex = obj["FrameIndex"].GetInt();
+	if (obj.HasMember("Alpha") && obj["Alpha"].IsFloat())
+		alpha = obj["Alpha"].GetFloat();
+	if (obj.HasMember("FrameIndex") && obj["FrameIndex"].IsInt())
+		frameIndex = obj["FrameIndex"].GetInt();
 
-	color.r = obj["ModulateColor"].GetArray()[0].GetFloat();
-	color.g = obj["ModulateColor"].GetArray()[1].GetFloat();
-	color.b = obj["ModulateColor"].GetArray()[2].GetFloat();
-	color.a = obj["ModulateColor"].GetArray()[3].GetFloat();
+	if (obj.HasMember("ModulateColor") && obj["ModulateColor"].IsArray() && obj["ModulateColor"].Size() == 4) {
+		color.r = obj["ModulateColor"][0].GetFloat();
+		color.g = obj["ModulateColor"][1].GetFloat();
+		color.b = obj["ModulateColor"][2].GetFloat();
+		color.a = obj["ModulateColor"][3].GetFloat();
+	}
 }

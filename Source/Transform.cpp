@@ -120,13 +120,14 @@ void Transform::Load(rapidjson::Value& obj)
 {
 	using namespace rapidjson;
 
-	Value& tmp = obj["Translation"];
+	Value* tmp;// = &(obj["Translation"]);
 
-	SetTranslation(Vector2D(tmp[0].GetFloat(), tmp[1].GetFloat()));
+	if (obj.HasMember("Translation") && (tmp=&(obj["Translation"]))->IsArray() && tmp->Size() == 2)
+		SetTranslation(Vector2D(tmp->GetArray()[0].GetFloat(), tmp->GetArray()[1].GetFloat()));
 
-	tmp = obj["Scale"];
-	SetScale(Vector2D(tmp[0].GetFloat(), tmp[1].GetFloat()));
+	if (obj.HasMember("Scale") && (tmp=&(obj["Scale"]))->IsArray() && tmp->Size() == 2)
+		SetScale(Vector2D(tmp->GetArray()[0].GetFloat(), tmp->GetArray()[1].GetFloat()));
 
-	tmp = obj["Rotation"];
-	SetRotation(tmp.GetFloat());
+	if (obj.HasMember("Rotation") && (tmp=&(obj["Rotation"]))->IsFloat())
+		SetRotation(tmp->GetFloat());
 }

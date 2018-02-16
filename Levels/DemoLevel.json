@@ -66,19 +66,55 @@
     ]
   },
   {
-    "Name": "Army 1",
+    "Name": "Army",
     "BehaviorArmy": {
       "Name": "Army1",
       "Side": "Left",
-      "FrontLine": 0
+      "FrontLineName": "FrontLine1",
+      "FrontLineStart": 0
     }
   },
   {
-    "Name": "Army 2",
+    "Name": "Army",
     "BehaviorArmy": {
       "Name": "Army2",
       "Side": "Right",
-      "FrontLine": 5
+      "FrontLineName": "FrontLine2",
+      "FrontLineStart": 5
+    }
+  },
+  {
+    "Name": "FrontLine1",
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 1, 1 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "Mesh": {
+        "Name": "FrontLineMesh",
+        "HalfSize": [ 8, 256 ],
+        "UV": [ 0.5, 0.5 ]
+      },
+      "Alpha": 0.5,
+      "ModulateColor": [ 1, 0, 0, 1 ]
+    }
+  },
+  {
+    "Name": "FrontLine2",
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 1, 1 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "Mesh": {
+        "Name": "FrontLineMesh",
+        "HalfSize": [ 8, 256 ],
+        "UV": [ 0.5, 0.5 ]
+      },
+      "Alpha": 0.5,
+      "ModulateColor": [ 0, 0, 1, 1 ]
     }
   }
 ]

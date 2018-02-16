@@ -142,17 +142,17 @@ void BehaviorUnit::OnEnter()
 	{
 	case cUnitMoving:
 		unitData.army->PushFrontLine(GetMapPos());
+		if (path.empty() || target) {
+			SetCurrentState(cUnitWaiting);
+			SetNextState(cUnitWaiting);
+			break;
+		}
 		Vector2D nextPos = GetNextPos();
 		while (nextPos.X() < 0 || nextPos.Y() < 0 ||
 			nextPos.X() >= tilemap->GetTilemapWidth() ||
 			nextPos.Y() >= tilemap->GetTilemapHeight()) {
 			path.erase(path.begin());
 			nextPos = GetNextPos();
-		}
-		if (path.empty()) {
-			SetCurrentState(cUnitWaiting);
-			SetNextState(cUnitWaiting);
-			break;
 		}
 		SetCurrentState(cUnitCheckMove); // Prevent  self detection
 		vector<GameObject*> units = GameObjectManager::GetInstance().GetObjectsByName("Unit");
@@ -260,8 +260,7 @@ void BehaviorUnit::OnUpdate(float dt)
 				}
 			}
 		}
-		if (!target && !path.empty())
-			SetNextState(cUnitMoving);
+		SetNextState(cUnitMoving);
 		break;
 	}
 }

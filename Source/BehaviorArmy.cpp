@@ -58,6 +58,7 @@ BehaviorArmy::BehaviorArmy() :
 void BehaviorArmy::PushFrontLine(Vector2D pos)
 {
 	vector<GameObject*> unitGOs = GameObjectManager::GetInstance().GetObjectsByName("Unit");
+	vector<GameObject*> armyGOs = GameObjectManager::GetInstance().GetObjectsByName("Army");
 	switch (side) {
 	case sLeft:
 		if (pos.x > frontLine) {
@@ -65,13 +66,18 @@ void BehaviorArmy::PushFrontLine(Vector2D pos)
 			for (GameObject *unit : unitGOs) {
 				Transform *t = (Transform*)unit->GetComponent("Transform");
 				BehaviorUnit *bu = (BehaviorUnit*)unit->GetComponent("BehaviorUnit");
-				if (!t || !bu) return;
-				if (bu->GetArmy()->GetSide() != side && t->GetTranslation().x <= frontLine) {
-					frontLine = (int)t->GetTranslation().x - 1;
-					if (frontLine < 0) frontLine = 0;
+				if (!t || !bu) continue;
+				Vector2D mapPos = tilemap->GetPosOnMap(t->GetTranslation());
+				if (bu->GetArmy()->GetSide() != side && mapPos.x <= frontLine) {
+					frontLine = (int)mapPos.x - 1;
 				}
 			}
 		}
+		if (frontLine < 0) frontLine = 0;
+		if (frontLine >= tilemap->GetTilemapWidth() - 1) frontLine = tilemap->GetTilemapWidth() - 2;
+		if (flTransform)
+			flTransform->SetTranslation(tilemap->GetPosOnScreen({ (float)frontLine, (float)(tilemap->GetTilemapHeight()) / 2 }) + 
+										Vector2D((float)(tilemap->GetTileWidth())/2, (float)(tilemap->GetTileHeight())/2));
 		break;
 	case sRight:
 		if (pos.x < frontLine) {
@@ -79,14 +85,45 @@ void BehaviorArmy::PushFrontLine(Vector2D pos)
 			for (GameObject *unit : unitGOs) {
 				Transform *t = (Transform*)unit->GetComponent("Transform");
 				BehaviorUnit *bu = (BehaviorUnit*)unit->GetComponent("BehaviorUnit");
-				if (!t || !bu) return;
-				if (bu->GetArmy()->GetSide() != side && t->GetTranslation().x >= frontLine) {
-					frontLine = (int)t->GetTranslation().x + 1;
-					if (frontLine >= tilemap->GetTilemapWidth()) frontLine = tilemap->GetTilemapWidth();
+				if (!t || !bu) continue;
+				Vector2D mapPos = tilemap->GetPosOnMap(t->GetTranslation());
+				if (bu->GetArmy()->GetSide() != side && mapPos.x >= frontLine) {
+					frontLine = (int)mapPos.x + 1;
 				}
 			}
 		}
+		if (frontLine >= tilemap->GetTilemapWidth()) frontLine = tilemap->GetTilemapWidth()-1;
+		if (frontLine <= 0) frontLine = 1;
+		if (flTransform)
+			flTransform->SetTranslation(tilemap->GetPosOnScreen({ (float)frontLine, (float)(tilemap->GetTilemapHeight()) / 2 }) + 
+										Vector2D(-(float)(tilemap->GetTileWidth())/2, (float)(tilemap->GetTileHeight())/2));
 		break;
+	}
+	for (GameObject *army : armyGOs) {
+		BehaviorArmy *ba = (BehaviorArmy*)army->GetComponent("BehaviorArmy");
+		if (!ba || ba->frontLine < 0) continue;
+		if (ba->GetSide() != side) {
+			switch (ba->GetSide()) {
+			case sLeft:
+				if (pos.x <= ba->frontLine) {
+					ba->frontLine = (int)pos.x - 1;
+					if (ba->frontLine < 0) ba->frontLine = 0;
+				}
+				if (ba->flTransform)
+					ba->flTransform->SetTranslation(tilemap->GetPosOnScreen({ (float)ba->frontLine, (float)(tilemap->GetTilemapHeight()) / 2 }) + 
+												Vector2D((float)(tilemap->GetTileWidth())/2, (float)(tilemap->GetTileHeight())/2));
+				break;
+			case sRight:
+				if (pos.x >= ba->frontLine) {
+					ba->frontLine = (int)pos.x + 1;
+					if (ba->frontLine >= tilemap->GetTilemapWidth()) ba->frontLine = tilemap->GetTilemapWidth()-1;
+				}
+				if (ba->flTransform)
+					ba->flTransform->SetTranslation(tilemap->GetPosOnScreen({ (float)ba->frontLine, (float)(tilemap->GetTilemapHeight()) / 2 }) + 
+												Vector2D(-(float)(tilemap->GetTileWidth())/2, (float)(tilemap->GetTileHeight())/2));
+				break;
+			}
+		}
 	}
 }
 
@@ -116,6 +153,9 @@ void BehaviorArmy::OnEnter()
 	{
 	case cArmyNormal:
 		tilemap = (Tilemap*)GameObjectManager::GetInstance().GetObjectByName("Tilemap")->GetComponent("Tilemap");
+		GameObject *fl = GameObjectManager::GetInstance().GetObjectByName(flObjName.c_str());
+		if (fl) flTransform = (Transform*)fl->GetComponent("Transform");
+		else flTransform = nullptr;
 		switch (side) {
 		case sLeft:
 			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ 1, 0 });
@@ -123,6 +163,7 @@ void BehaviorArmy::OnEnter()
 			controls.push_back({ Control::tKeyboard, 'Q' });
 			controls.push_back({ Control::tKeyboard, 'A' });
 			controls.push_back({ Control::tKeyboard, 'Z' });
+			flStart = flStart < 0 ? 0 : flStart;
 			break;
 		case sRight:
 			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ -1, 0 });
@@ -130,7 +171,12 @@ void BehaviorArmy::OnEnter()
 			controls.push_back({ Control::tKeyboard, 'U' });
 			controls.push_back({ Control::tKeyboard, 'J' });
 			controls.push_back({ Control::tKeyboard, 'M' });
+			flStart = flStart < 0 ? tilemap->GetTilemapWidth() - 1 : flStart;
 			break;
+		}
+		frontLine = flStart;
+		if (flTransform) {
+			PushFrontLine({ (float)frontLine, 0 });
 		}
 		break;
 	}
@@ -212,9 +258,24 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 			side = sIllegal;
 		}
 	}
-	if (obj.HasMember("FrontLine") && obj["FrontLine"].IsInt()) {
-		frontLine = obj["FrontLine"].GetInt();
+	if (obj.HasMember("FrontLineName") && obj["FrontLineName"].IsString()) {
+		flObjName = obj["FrontLineName"].GetString();
+	} else {
+		flObjName = "";
 	}
+	if (obj.HasMember("FrontLineStart") && obj["FrontLineStart"].IsInt()) {
+		flStart = obj["FrontLineStart"].GetInt();
+	} else {
+		switch (side) {
+		case sLeft:
+			flStart = 0;
+			break;
+		case sRight:
+			flStart = -1;
+			break;
+		}
+	}
+	frontLine = -1;
 }
 
 void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos, vector<Vector2D> path)

@@ -19,6 +19,8 @@
 #include "Tilemap.h"
 #include <vector>
 using std::vector;
+#include <string>
+using std::string;
 #include "Vector2D.h"
 #include "Control.h"
 
@@ -116,7 +118,9 @@ private:
 	Tilemap *tilemap;
 	vector<UnitData> units;
 	Side side;
-	int frontLine;
+	int frontLine, flStart;
+	string flObjName;
+	Transform *flTransform;
 	vector<Control> controls;
 
 	vector<Vector2D> path_;
