@@ -76,6 +76,8 @@ private:
 	//   A pointer to an advanced behavior.
 	Component* Clone() const;
 
+	void OnDestroy();
+
 	// Initialize the current state of the behavior component.
 	// (Hint: Refer to the lecture notes on finite state machines (FSM).)
 	// Params:
@@ -110,12 +112,14 @@ private:
 	BehaviorUnit *target;
 	//bool follow;
 	float attackTimer;
+	float payTimer;
 	Sprite *abilitySprite;
 	Animation *abilityAnimation;
 	AnimationSequence abilityAnimSequence;
 	Tilemap *tilemap;
 
 	const float attackCooldown = 0.5;
+	const float payCooldown = 1;
 };
 
 //------------------------------------------------------------------------------

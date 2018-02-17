@@ -22,6 +22,10 @@ void Component::Draw() const
 	Trace::GetInstance().GetStream() << "Component " << name << ": Draw" << std::endl;
 }
 
+void Component::OnDestroy()
+{
+}
+
 GameObject * Component::GetParent() const
 {
 	return parent;

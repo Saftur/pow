@@ -60,12 +60,15 @@ void BehaviorUnit::Init(BehaviorArmy::UnitData unitData_, vector<Vector2D> path_
 	path = path_;
 	target = nullptr;
 	attackTimer = 0;
+	payTimer = 0;
 	abilitySprite = (Sprite*)GetParent()->GetComponent("Sprite", 1);
 	abilityAnimation = (Animation*)GetParent()->GetComponent("Animation");
 	vector<AnimationFrame> seq;
 	seq.push_back({ unitData.ability + BehaviorArmy::UnitData::NUMABILITIES, 0.333f });
 	seq.push_back({ unitData.ability, 0.0f });
 	abilityAnimSequence = AnimationSequence(seq, false);
+
+	unitData.army->IncreaseUnits();
 }
 
 Vector2D BehaviorUnit::GetScrPos()
@@ -132,6 +135,11 @@ Component* BehaviorUnit::Clone() const
 	return new BehaviorUnit(*this);
 }
 
+void BehaviorUnit::OnDestroy()
+{
+	unitData.army->DescreaseUnits();
+}
+
 // Initialize the current state of the behavior component.
 // (Hint: Refer to the lecture notes on finite state machines (FSM).)
 // Params:
@@ -172,6 +180,12 @@ void BehaviorUnit::OnEnter()
 					SetNextState(cUnitWaiting);
 					break;
 				}
+			}
+		}
+		if (unitData.army->costType == 0) {
+			if (!(unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 15 + 0.5f)))) {
+				SetCurrentState(cUnitWaiting);
+				SetNextState(cUnitWaiting);
 			}
 		}
 		if (GetCurrentState() == cUnitCheckMove) {
@@ -232,21 +246,7 @@ void BehaviorUnit::OnUpdate(float dt)
 	}
 		break;
 	case cUnitWaiting:
-		if (target) {
-			if (!(target->GetParent()->IsDestroyed()) && IsAdjacent(target)) {
-				if (attackTimer <= 0) {
-					//Trace::GetInstance().GetStream() << "Attack!" << std::endl;
-					abilityAnimation->PlaySequence(&abilityAnimSequence);
-					target->hp -= (float)(unitData.damage) / 4;
-					if (target->hp <= 0) {
-						target->GetParent()->Destroy();
-						target = nullptr;
-					}
-					attackTimer = attackCooldown;
-				} else attackTimer -= dt;
-				break;
-			} else target = nullptr;
-		} else {
+		if (!target) {
 			vector<GameObject*> units = GameObjectManager::GetInstance().GetObjectsByName("Unit");
 			for (GameObject* obj : units) {
 				BehaviorUnit *bu = (BehaviorUnit*)(obj->GetComponent("BehaviorUnit"));
@@ -258,6 +258,31 @@ void BehaviorUnit::OnUpdate(float dt)
 						break;
 					}
 				}
+			}
+		}
+		if (target) {
+			if (!(target->GetParent()->IsDestroyed()) && IsAdjacent(target)) {
+				if (attackTimer <= 0) {
+					if (unitData.army->costType != 0 || unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 10 + 0.5f))) {
+						//Trace::GetInstance().GetStream() << "Attack!" << std::endl;
+						abilityAnimation->PlaySequence(&abilityAnimSequence);
+						target->hp -= (float)(unitData.damage) / 4;
+						if (target->hp <= 0) {
+							target->GetParent()->Destroy();
+							target = nullptr;
+						}
+						attackTimer = attackCooldown;
+					}
+				} else attackTimer -= dt;
+				break;
+			} else target = nullptr;
+		} else {
+			if (unitData.army->costType == 0) {
+				if (payTimer <= 0) {
+					if (!(unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 20 + 0.5f))))
+						GetParent()->Destroy();
+					payTimer = payCooldown;
+				} else payTimer -= dt;
 			}
 		}
 		SetNextState(cUnitMoving);

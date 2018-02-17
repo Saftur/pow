@@ -116,4 +116,7 @@ void GameObject::Draw()
 void GameObject::Destroy()
 {
 	isDestroyed = true;
+	for (unsigned i = 0; i < numComponents; i++) {
+		components[i]->OnDestroy();
+	}
 }

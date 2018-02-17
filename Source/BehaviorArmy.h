@@ -80,6 +80,15 @@ public:
 	void PushFrontLine(Vector2D pos);
 
 	Side GetSide();
+	void IncreaseUnits();
+	void DescreaseUnits();
+	unsigned GetFunds();
+	bool TakeFromFunds(unsigned amount);
+	void AddToFunds(unsigned amount);
+
+	// 0 = cost over time
+	// 1 = higher train cost for bigger army
+	static const int costType = -1;
 
 private:
 	// Clone an advanced behavior and return a pointer to the cloned object.
@@ -112,6 +121,7 @@ private:
 	bool BehindFrontLine(Vector2D pos);
 
 	UnitData GetUnitData(const char *name) const;
+	void UpdateFundsText();
 
 	//------------------------------------------------------------------------------
 	// Private Variables:
@@ -130,6 +140,7 @@ private:
 
 	unsigned funds, startFunds;
 	vector<Vector2D> path_;
+	unsigned numUnits;
 };
 
 //------------------------------------------------------------------------------

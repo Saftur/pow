@@ -52,6 +52,8 @@ public:
 	// Rendering phase for this component.
 	virtual void Draw() const;
 
+	virtual void OnDestroy();
+
 	// Retrieve component's parent object (if any).
 	GameObject* GetParent() const;
 
