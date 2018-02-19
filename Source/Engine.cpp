@@ -21,6 +21,7 @@
 #include "PauseMenu.h"
 #include "Transform.h"
 #include "Sprite.h"
+#include "Button.h"
 
 //------------------------------------------------------------------------------
 // Private Structures:
@@ -58,6 +59,7 @@ void Engine::Init()
 
 	// Initialize the game object manager.
 	GameObjectManager::GetInstance().Init();
+	Button::ListEffects();
 
 	// Initialize the game state manager.
 	LevelManager::GetInstance().Init("DemoLevel");

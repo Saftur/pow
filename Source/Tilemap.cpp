@@ -111,6 +111,10 @@ Vector2D Tilemap::GetPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile) cons
 		offsetFromTile->X(screenPos.X() - (offsetX - (width / 2) + (tileWidth / 2) + (tileWidth * pos.X())));
 		offsetFromTile->Y(-screenPos.Y() - -(offsetY - (height / 2) + (tileHeight / 2) + (tileHeight * pos.Y())));
 	}
+	if (pos.X() < 0)
+		pos.X(0);
+	if (pos.Y() < 0)
+		pos.Y(0);
 	if (pos.X() >= tilemapWidth)
 		pos.X((float)(tilemapWidth - 1));
 	if (pos.Y() >= tilemapHeight)

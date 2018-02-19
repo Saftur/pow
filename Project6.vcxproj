@@ -42,9 +42,9 @@
     <ClInclude Include="Source\Animation.h" />
     <ClInclude Include="Source\AnimationFrame.h" />
     <ClInclude Include="Source\AnimationSequence.h" />
-    <ClInclude Include="Source\Army.h" />
     <ClInclude Include="Source\Behavior.h" />
     <ClInclude Include="Source\BehaviorArmy.h" />
+    <ClInclude Include="Source\ButtonEffects.h" />
     <ClInclude Include="Source\CompList.h" />
     <ClInclude Include="Source\BehaviorStub.h" />
     <ClInclude Include="Source\BehaviorUnit.h" />
@@ -58,15 +58,12 @@
     <ClInclude Include="Source\GameObjectManager.h" />
     <ClInclude Include="Source\Gamepad.h" />
     <ClInclude Include="Source\Intersection2D.h" />
-    <ClInclude Include="source\IOController.h" />
     <ClInclude Include="Source\LevelButton.h" />
     <ClInclude Include="Source\LevelManager.h" />
     <ClInclude Include="Source\Matrix2D.h" />
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\PauseMenu.h" />
     <ClInclude Include="Source\Physics.h" />
-    <ClInclude Include="Source\PlatformManager.h" />
-    <ClInclude Include="Source\QuitButton.h" />
     <ClInclude Include="Source\Random.h" />
     <ClInclude Include="Source\Rendertext.h" />
     <ClInclude Include="source\Serializable.h" />
@@ -86,9 +83,9 @@
   <ItemGroup>
     <ClCompile Include="Source\Animation.cpp" />
     <ClCompile Include="Source\AnimationSequence.cpp" />
-    <ClCompile Include="Source\Army.cpp" />
     <ClCompile Include="Source\Behavior.cpp" />
     <ClCompile Include="Source\BehaviorArmy.cpp" />
+    <ClCompile Include="Source\ButtonEffects.cpp" />
     <ClCompile Include="Source\CompList.cpp" />
     <ClCompile Include="Source\BehaviorStub.cpp" />
     <ClCompile Include="Source\BehaviorUnit.cpp" />
@@ -102,7 +99,6 @@
     <ClCompile Include="Source\GameObjectManager.cpp" />
     <ClCompile Include="Source\Gamepad.cpp" />
     <ClCompile Include="Source\Intersection2D.cpp" />
-    <ClCompile Include="source\IOController.cpp" />
     <ClCompile Include="Source\LevelButton.cpp" />
     <ClCompile Include="Source\LevelManager.cpp" />
     <ClCompile Include="Source\Main.cpp" />
@@ -110,8 +106,6 @@
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\PauseMenu.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
-    <ClCompile Include="Source\PlatformManager.cpp" />
-    <ClCompile Include="Source\QuitButton.cpp" />
     <ClCompile Include="Source\Random.cpp" />
     <ClCompile Include="Source\Rendertext.cpp" />
     <ClCompile Include="source\Serializable.cpp" />
