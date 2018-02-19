@@ -20,7 +20,7 @@
 #include "GameObjectManager.h" //Add GameObject to the game.
 #include "Vector2D.h" //Use Vector2D on components.
 #include "SpriteSource.h" //Allow use of SpriteSource on buttons.
-#include "QuitButton.h" //Allow use of quit button.
+#include "Button.h"
 #include "Engine.h"
 
 PauseMenu::PauseMenu() {

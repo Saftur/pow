@@ -55,6 +55,9 @@
     <Filter Include="Engine\Control">
       <UniqueIdentifier>{24c27d79-129e-4255-877a-39ec8e039fcd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameObjects\Button">
+      <UniqueIdentifier>{ed05ba28-4811-4472-a13d-55c96845190d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -136,9 +139,6 @@
     <ClCompile Include="Source\BehaviorStub.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Button.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\LevelButton.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -174,6 +174,9 @@
     </ClCompile>
     <ClCompile Include="Source\ButtonEffects.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Button.cpp">
+      <Filter>Engine\GameObjects\Button</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -286,9 +289,6 @@
     <ClInclude Include="Source\BehaviorStub.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Button.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\LevelButton.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -384,6 +384,9 @@
     </ClInclude>
     <ClInclude Include="Source\ButtonEffects.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Button.h">
+      <Filter>Engine\GameObjects\Button</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

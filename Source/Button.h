@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 //
 // File Name:	Button.h
-// Author(s):	Brand Knutson
+// Author(s):	Brand Knutson & Arthur Bouvier
 // Project:		MyGame
 // Course:		CS230S17
 //
@@ -56,6 +56,8 @@ public:
 	Button(const char *effectName);
 
 	void SetEffect(const char *effectName);
+
+	void Load(rapidjson::Value& obj);
 
 	//template <typename T>
 	static GameObject* CreateButton(const char* objName, const char* effectName, AEGfxVertexList* mesh,

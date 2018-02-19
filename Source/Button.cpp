@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 //
 // File Name:	Button.cpp
-// Author(s):	Brand Knutson
+// Author(s):	Brand Knutson & Arthur Bouvier
 // Project:		MyGame
 // Course:		CS230S17
 //
@@ -52,6 +52,11 @@ Button::Button(const char * effectName) :
 void Button::SetEffect(const char * effectName)
 {
 	ClickEffect = GetClickEffect(effectName);
+}
+
+void Button::Load(rapidjson::Value & obj)
+{
+	UNREFERENCED_PARAMETER(obj);
 }
 
 GameObject * Button::CreateButton(const char * objName, const char * effectName, AEGfxVertexList * mesh, Vector2D pos, Vector2D scale, const char * text, Vector2D textScale, Color color, const char * font)
