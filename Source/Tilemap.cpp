@@ -218,6 +218,16 @@ int Tilemap::GetTilemapHeight() const
 	return tilemapHeight;
 }
 
+Vector2D Tilemap::GetTilemapScreenTopLeft() const
+{
+	return GetPosOnScreen({ 0, 0 }) + Vector2D( -(float)tileWidth / 2, (float)tileHeight / 2);
+}
+
+Vector2D Tilemap::GetTilemapScreenBottomRight() const
+{
+	return GetPosOnScreen({ (float)tilemapWidth-1, (float)tilemapHeight-1 }) + Vector2D( (float)tileWidth / 2, -(float)tileHeight / 2);
+}
+
 void Tilemap::ReadFiles(const char* tilemapFilename, const char* collisionMapFilename)
 {
 	FILE *tmFile = fopen(tilemapFilename, "rt");

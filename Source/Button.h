@@ -88,8 +88,8 @@ public:
 	static void Shutdown();
 	
 	static void ListEffects();
-	static void AddClickEffect(const char *name, void(*effectFunc)(float));
-	static void (*GetClickEffect(const char *name))(float);
+	static void AddClickEffect(const char *name, void(*effectFunc)(Button&,float));
+	static void (*GetClickEffect(const char *name))(Button&,float);
 
 private:
 	//------------------------------------------------------------------------------
@@ -105,16 +105,17 @@ private:
 	void Update(float dt);
 
 	//Update anything on the button that needs updating.
-	virtual void OnUpdate(float dt);
+	//virtual void OnUpdate(float dt);
 
 	//What happens when a button is clicked.
 	//virtual void ClickEffect(float dt) = 0;
-	void(*ClickEffect)(float dt);
+	void(*ClickEffect)(Button& button, float dt);
 
-	static map<string, void(*)(float)> clickEffects;
+	static map<string, void(*)(Button&,float)> clickEffects;
 
 	// Click effects
-	static void QuitEffect(float dt);
+	static void RestartEffect(Button &button, float dt);
+	static void QuitEffect(Button &button, float dt);
 	// End click effects
 
 	static vector<AEGfxTexture*> textures;

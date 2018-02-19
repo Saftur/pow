@@ -62,6 +62,7 @@ public:
 	//	 The component's rotation value (in radians).
 	float GetRotation() const;
 	float GetWorldRotation() const;
+	float GetScreenRotation() const;
 
 	// Get the scale of a transform component.
 	// Returns:
@@ -75,18 +76,21 @@ public:
 	//	 translation = Reference to a translation vector.
 	void SetTranslation(const Vector2D& translation);
 	void SetWorldTranslation(const Vector2D& translation);
+	void SetScreenTranslation(const Vector2D& translation);
 
 	// Set the rotation of a transform component.
 	// Params:
 	//	 rotation = The rotation value (in radians).
 	void SetRotation(float rotation);
 	void SetWorldRotation(float rotation);
+	void SetScreenRotation(float rotation);
 
 	// Set the scale of a transform component.
 	// Params:
 	//	 translation = Reference to a scale vector.
 	void SetScale(const Vector2D& scale);
 	void SetWorldScale(const Vector2D& scale);
+	void SetScreenScale(const Vector2D& scale);
 
 	void SetParent(Transform *transform);
 

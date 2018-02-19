@@ -148,9 +148,6 @@
     <ClCompile Include="Source\LevelButton.cpp">
       <Filter>Engine\Buttons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Button.cpp">
-      <Filter>Engine\Buttons</Filter>
-    </ClCompile>
     <ClCompile Include="Source\PauseMenu.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -178,6 +175,7 @@
     <ClCompile Include="Source\Button.cpp">
       <Filter>Engine\GameObjects\Button</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Button.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h">
@@ -298,9 +296,6 @@
     <ClInclude Include="Source\LevelButton.h">
       <Filter>Engine\Buttons</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Button.h">
-      <Filter>Engine\Buttons</Filter>
-    </ClInclude>
     <ClInclude Include="rapidjson\allocators.h">
       <Filter>RapidJSON</Filter>
     </ClInclude>
@@ -388,6 +383,7 @@
     <ClInclude Include="Source\Button.h">
       <Filter>Engine\GameObjects\Button</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Button.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fmodAPI\lib\fmod.dll">

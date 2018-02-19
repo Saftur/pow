@@ -19,6 +19,7 @@
 #include "GameObjectManager.h"
 #include "Tilemap.h"
 #include "Rendertext.h"
+#include "Button.h"
 #include "CompList.h"
 
 #include "PauseMenu.h"
@@ -40,6 +41,7 @@ void LevelManager::Init(const char *name)
 	AddComponentType("ColliderCircle", new ColliderCircle(0));
 	AddComponentType("Tilemap", new Tilemap());
 	AddComponentType("Text", new Text());
+	AddComponentType("Button", new Button());
 	CompList::List();
 }
 
@@ -138,6 +140,7 @@ void LevelManager::Load(const char* fileName)
 
 	stateNext = LOADING;
 
+	id = 0;
 	while (stateNext != IDLE)
 		loadObject(levelDoc);
 }

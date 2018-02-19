@@ -27,6 +27,8 @@ public:
 	int GetTileHeight() const;
 	int GetTilemapWidth() const;
 	int GetTilemapHeight() const;
+	Vector2D GetTilemapScreenTopLeft() const;
+	Vector2D GetTilemapScreenBottomRight() const;
 
 private:
 	void ReadFiles(const char* tilemapFilename, const char* collisionMapFilename);

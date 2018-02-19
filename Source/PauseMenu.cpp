@@ -62,8 +62,8 @@ void PauseMenu::Update(float dt) {
 		{ 200.0f, 50.0f }, "(Probably) a Quit Button?", { 20, 24 }, { 1, 51/255, 0, 1 }));*/
 		buttons.push_back(Button::CreateButton("Quit Button", "Quit", mesh, { 0.0f, -200.0f },
 			{ 200.0f, 50.0f }, "Quit Game!", {36, 40}, { 0, 0, 0, 1 }));
-		buttons.push_back(Button::CreateButton("Quit Button2", "Quit", mesh, { 0.0f, -100.0f },
-		{ 200.0f, 50.0f }, "(Probably) a Quit Button?", { 20, 24 }, { 1, 51/255, 0, 1 }));
+		buttons.push_back(Button::CreateButton("Restart Button", "Restart", mesh, { 0.0f, -100.0f },
+		{ 200.0f, 50.0f }, "Restart Game!", { 20, 24 }, { 1, 51/255, 0, 1 }));
 	}
 	if (!Engine::GetInstance().IsPaused() && background) Shutdown(false);
 }

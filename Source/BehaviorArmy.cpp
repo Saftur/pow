@@ -234,25 +234,44 @@ void BehaviorArmy::OnUpdate(float dt)
 	{
 	case cArmyNormal:
 		gamepad.Update();
-		Vector2D curspos = cursor->GetTranslation();
+		Vector2D curspos = cursor->GetScreenTranslation();
 		curspos.x += gamepad.GetAxis(Gamepad::aLStickX) * 500 * dt;
 		curspos.y += gamepad.GetAxis(Gamepad::aLStickY) * 500 * dt;
 		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(Gamepad::aLStickX) << std::endl;
 		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(Gamepad::aLStickY) << std::endl;
+		Vector2D tmTopLeft = tilemap->GetTilemapScreenTopLeft();
+		Vector2D tmBottomRight = tilemap->GetTilemapScreenBottomRight();
 		if (gamepad.GetButtonTriggered(Gamepad::bDpadUp)) {
 			curspos.y += tilemap->GetTileHeight();
+			if (curspos.y > tmTopLeft.y)
+				curspos.y -= tilemap->GetTileHeight() * tilemap->GetTilemapHeight();
 			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
 		} else if (gamepad.GetButtonTriggered(Gamepad::bDpadDown)) {
 			curspos.y -= tilemap->GetTileHeight();
+			if (curspos.y < tmBottomRight.y)
+				curspos.y += tilemap->GetTileHeight() * tilemap->GetTilemapHeight();
 			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
 		} else if (gamepad.GetButtonTriggered(Gamepad::bDpadLeft)) {
 			curspos.x -= tilemap->GetTileHeight();
+			if (curspos.x < tmTopLeft.x)
+				curspos.x += tilemap->GetTileWidth() * tilemap->GetTilemapWidth();
 			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
 		} else if (gamepad.GetButtonTriggered(Gamepad::bDpadRight)) {
 			curspos.x += tilemap->GetTileHeight();
+			if (curspos.x > tmBottomRight.x)
+				curspos.x -= tilemap->GetTileWidth() * tilemap->GetTilemapWidth();
 			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
 		}
-		cursor->SetTranslation(curspos);
+		Vector2D cursscl = cursor->GetScreenScale();
+		if (curspos.x + cursscl.x / 2 > AEGfxGetWinMaxX())
+			curspos.x = AEGfxGetWinMaxX() - cursscl.x / 2;
+		if (curspos.x - cursscl.x / 2 < AEGfxGetWinMinX())
+			curspos.x = AEGfxGetWinMinX() + cursscl.x / 2;
+		if (curspos.y + cursscl.y / 2 > AEGfxGetWinMaxY())
+			curspos.y = AEGfxGetWinMaxY() - cursscl.y / 2;
+		if (curspos.y - cursscl.y / 2 < AEGfxGetWinMinY())
+			curspos.y = AEGfxGetWinMinY() + cursscl.y / 2;
+		cursor->SetScreenTranslation(curspos);
 		//if (camera)
 		//	*camera = -curspos;
 		if (gamepad.GetButtonTriggered(Gamepad::bA)) {

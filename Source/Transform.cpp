@@ -53,6 +53,11 @@ float Transform::GetWorldRotation() const
 	return parent ? rotation + parent->GetRotation() : rotation;
 }
 
+float Transform::GetScreenRotation() const
+{
+	return GetWorldRotation();
+}
+
 const Vector2D & Transform::GetScale() const
 {
 	return scale;
@@ -89,6 +94,11 @@ void Transform::SetWorldTranslation(const Vector2D & translation_)
 	SetTranslation(parent ? translation_ - parent->GetWorldTranslation() : translation_);
 }
 
+void Transform::SetScreenTranslation(const Vector2D & translation_)
+{
+	SetWorldTranslation(translation_ - (followCamera ? -camTranslation : Vector2D(0, 0)));
+}
+
 void Transform::SetRotation(float rotation_)
 {
 	this->rotation = rotation_;
@@ -100,6 +110,11 @@ void Transform::SetWorldRotation(float rotation_)
 	SetRotation(parent ? rotation_ - parent->GetWorldRotation() : rotation_);
 }
 
+void Transform::SetScreenRotation(float rotation_)
+{
+	SetWorldRotation(rotation_);
+}
+
 void Transform::SetScale(const Vector2D & scale_)
 {
 	this->scale = scale_;
@@ -108,7 +123,23 @@ void Transform::SetScale(const Vector2D & scale_)
 
 void Transform::SetWorldScale(const Vector2D & scale_)
 {
-	SetScale(parent ? scale_ - parent->GetWorldScale() : scale_);
+	Vector2D scl = scale_;
+	if (parent) {
+		scl.x /= parent->GetWorldScale().x;
+		scl.y /= parent->GetWorldScale().y;
+	}
+	SetScale(scl);
+	//SetScale(parent ? scale_ - parent->GetWorldScale() : scale_);
+}
+
+void Transform::SetScreenScale(const Vector2D & scale_)
+{
+	Vector2D scl = scale_;
+	if (followCamera) {
+		scl.x *= camScale.x;
+		scl.y *= camScale.y;
+	}
+	SetWorldScale(scl);
 }
 
 void Transform::SetParent(Transform * transform)

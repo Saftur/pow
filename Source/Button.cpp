@@ -23,10 +23,11 @@
 #include "Transform.h"
 #include "Mesh.h"
 #include "ButtonEffects.h"
+#include "Engine.h"
 
 //------------------------------------------------------------------------------
 
-map<string, void(*)(float)> Button::clickEffects;
+map<string, void(*)(Button&,float)> Button::clickEffects;
 
 vector<AEGfxTexture*> Button::textures;
 
@@ -56,7 +57,8 @@ void Button::SetEffect(const char * effectName)
 
 void Button::Load(rapidjson::Value & obj)
 {
-	UNREFERENCED_PARAMETER(obj);
+	if (obj.HasMember("ClickEffect") && obj["ClickEffect"].IsString())
+		SetEffect(obj["ClickEffect"].GetString());
 }
 
 GameObject * Button::CreateButton(const char * objName, const char * effectName, AEGfxVertexList * mesh, Vector2D pos, Vector2D scale, const char * text, Vector2D textScale, Color color, const char * font)
@@ -95,7 +97,7 @@ Component * Button::Clone() const
 // Params:
 //	 dt = Change in time (in seconds) since the last game loop.
 void Button::Update(float dt) {
-	OnUpdate(dt);
+	//OnUpdate(dt);
 	if (AEInputCheckCurr(VK_LBUTTON)) {
 		//Get the mouse position on screen.
 		s32 mouseX;
@@ -115,25 +117,31 @@ void Button::Update(float dt) {
 		if (mousePos.X() > buttonPos.X() - (buttonScale.X() / 2) && mousePos.X() <= buttonPos.X() + (buttonScale.X() / 2)
 			&& mousePos.Y() > buttonPos.Y() - (buttonScale.Y() / 2) && mousePos.Y() <= buttonPos.Y() + (buttonScale.Y() / 2)) {
 			if (ClickEffect)
-				ClickEffect(dt);
+				ClickEffect(*this, dt);
 		}
 	}
 }
 
 //Extra update function called from OnUpdate() that each button can have
 //optionally if it needs something to happen every frame.
-void Button::OnUpdate(float dt) {
+/*void Button::OnUpdate(float dt) {
 	UNREFERENCED_PARAMETER(dt);
+}*/
+
+void Button::RestartEffect(Button & button, float dt)
+{
+	LevelManager::GetInstance().Restart();
+	Engine::GetInstance().TogglePaused();
 }
 
-void Button::QuitEffect(float dt)
+void Button::QuitEffect(Button &button, float dt)
 {
-	UNREFERENCED_PARAMETER(dt);
 	LevelManager::GetInstance().Quit();
 }
 
 void Button::ListEffects()
 {
+	AddClickEffect("Restart", RestartEffect);
 	AddClickEffect("Quit", QuitEffect);
 	ButtonEffects::List();
 }
@@ -143,12 +151,12 @@ void Button::Shutdown() {
 	textures.clear();
 }
 
-void Button::AddClickEffect(const char * name, void(*effectFunc)(float))
+void Button::AddClickEffect(const char * name, void(*effectFunc)(Button&,float))
 {
 	clickEffects[name] = effectFunc;
 }
 
-void(*Button::GetClickEffect(const char * name))(float)
+void(*Button::GetClickEffect(const char * name))(Button&,float)
 {
 	return clickEffects.count(name) > 0 ? clickEffects.at(name) : nullptr;
 }
