@@ -53,10 +53,10 @@
     <ClInclude Include="Source\ColliderBox.h" />
     <ClInclude Include="Source\ColliderCircle.h" />
     <ClInclude Include="Source\Component.h" />
-    <ClInclude Include="Source\Control.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\GameObjectManager.h" />
+    <ClInclude Include="Source\Gamepad.h" />
     <ClInclude Include="Source\Intersection2D.h" />
     <ClInclude Include="source\IOController.h" />
     <ClInclude Include="Source\LevelButton.h" />
@@ -97,10 +97,10 @@
     <ClCompile Include="Source\ColliderBox.cpp" />
     <ClCompile Include="Source\ColliderCircle.cpp" />
     <ClCompile Include="Source\Component.cpp" />
-    <ClCompile Include="Source\Control.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\GameObjectManager.cpp" />
+    <ClCompile Include="Source\Gamepad.cpp" />
     <ClCompile Include="Source\Intersection2D.cpp" />
     <ClCompile Include="source\IOController.cpp" />
     <ClCompile Include="Source\LevelButton.cpp" />
@@ -171,14 +171,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)AE\include;$(SolutionDir)rapidjson\include;.\fmodAPI\inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)AE\include;$(SolutionDir)rapidjson\include;$(IncludePath);.\fmodAPI\inc;</IncludePath>
     <LibraryPath>.\AE\lib;.\fmodAPI\lib;$(LibraryPath)</LibraryPath>
     <CustomBuildAfterTargets />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)AE\include;$(SolutionDir)rapidjson\include;$(IncludePath);</IncludePath>
-    <LibraryPath>.\AE\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)AE\include;$(SolutionDir)rapidjson\include;$(IncludePath);.\fmodAPI\inc;</IncludePath>
+    <LibraryPath>.\AE\lib;.\fmodAPI\lib;$(LibraryPath)</LibraryPath>
     <CustomBuildAfterTargets />
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -186,7 +186,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions); _CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32; _CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <CompileAs>CompileAsCpp</CompileAs>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -196,6 +196,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy .\AE\lib\Alpha_Engine_D.dll "$(OutDir)" /Y
@@ -210,18 +212,20 @@ xcopy .\fmodAPI\lib\fmodL.dll "$(OutDir)" /Y</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32; _CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <CompileAs>CompileAsCpp</CompileAs>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(SolutionDir)rapidjson/include/</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4127</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>.\AE\lib\Alpha_Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy .\AE\lib\Alpha_Engine.dll "$(OutDir)" /Y

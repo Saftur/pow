@@ -16,7 +16,7 @@
     "Archetype": true,
     "Transform": {
       "Translation": [ 0, 0 ],
-      "Scale": [ 1, 1 ],
+      "Scale": [ 64, 64 ],
       "Rotation": 0
     },
     "Sprite": {
@@ -28,7 +28,7 @@
       },
       "Mesh": {
         "Name": "UnitMesh",
-        "HalfSize": [ 32, 32 ],
+        "HalfSize": [ 0.5, 0.5 ],
         "UV": [ 1, 1 ]
       },
       "Alpha": 1,
@@ -57,7 +57,7 @@
         },
         "Mesh": {
           "Name": "AbilityMesh",
-          "HalfSize": [ 32, 32 ],
+          "HalfSize": [ 0.5, 0.5 ],
           "UV": [ 0.25, 0.5 ]
         },
         "Alpha": 1,
@@ -74,7 +74,9 @@
       "FrontLineName": "FrontLine1",
       "FrontLineStart": 0,
       "FundsDisplayName": "FundsDisplay1",
-      "StartFunds": 1000
+      "StartFunds": 1000,
+      "GamepadNum": 0,
+      "CursorName": "Cursor1"
     }
   },
   {
@@ -85,20 +87,22 @@
       "FrontLineName": "FrontLine2",
       "FrontLineStart": 5,
       "FundsDisplayName": "FundsDisplay2",
-      "StartFunds": 1000
+      "StartFunds": 1000,
+      "GamepadNum": 1,
+      "CursorName": "Cursor2"
     }
   },
   {
     "Name": "FrontLine1",
     "Transform": {
       "Translation": [ 0, 0 ],
-      "Scale": [ 1, 1 ],
+      "Scale": [ 16, 512 ],
       "Rotation": 0
     },
     "Sprite": {
       "Mesh": {
         "Name": "FrontLineMesh",
-        "HalfSize": [ 8, 256 ],
+        "HalfSize": [ 0.5, 0.5 ],
         "UV": [ 1, 1 ]
       },
       "Alpha": 0.5,
@@ -109,7 +113,7 @@
     "Name": "FrontLine2",
     "Transform": {
       "Translation": [ 0, 0 ],
-      "Scale": [ 1, 1 ],
+      "Scale": [ 16, 512 ],
       "Rotation": 0
     },
     "Sprite": {
@@ -156,14 +160,47 @@
         "Cols": 16,
         "Rows": 6
       },
-      "Mesh": {
-        "Name": "FundsDisplayMesh",
-        "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 0.0625, 0.1666666666667 ]
-      },
+      "Mesh": "FundsDisplayMesh",
       "ModulateColor": [ 1, 0, 0, 1 ],
       "Text": "",
       "Scale": [ 30, 30 ]
+    }
+  },
+  {
+    "Name": "Cursor1",
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 128, 128 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "CursorTexture",
+        "Texture": "Assets\\cursor.png",
+        "Cols": 1,
+        "Rows": 1
+      },
+      "Mesh": {
+        "Name": "CursorMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 0.5,
+      "ModulateColor": [ 1, 0, 0, 1 ]
+    }
+  },
+  {
+    "Name": "Cursor2",
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 128, 128 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": "CursorTexture",
+      "Mesh": "CursorMesh",
+      "Alpha": 0.5,
+      "ModulateColor": [ 0, 0, 1, 1 ]
     }
   }
 ]

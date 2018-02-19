@@ -58,6 +58,9 @@
     <Filter Include="Engine\GameObjects\RenderText">
       <UniqueIdentifier>{1624beb4-3d38-4c80-a6b5-a71e834c37dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Control">
+      <UniqueIdentifier>{24c27d79-129e-4255-877a-39ec8e039fcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -178,14 +181,14 @@
     <ClCompile Include="Source\BehaviorArmy.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Control.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\CompList.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendertext.cpp">
       <Filter>Engine\GameObjects\RenderText</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gamepad.cpp">
+      <Filter>Engine\Control</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -397,14 +400,14 @@
     <ClInclude Include="Source\BehaviorArmy.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Control.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\CompList.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rendertext.h">
       <Filter>Engine\GameObjects\RenderText</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Gamepad.h">
+      <Filter>Engine\Control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

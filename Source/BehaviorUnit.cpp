@@ -162,6 +162,11 @@ void BehaviorUnit::OnEnter()
 			path.erase(path.begin());
 			nextPos = GetNextPos();
 		}
+		if (path.empty()) {
+			SetCurrentState(cUnitWaiting);
+			SetNextState(cUnitWaiting);
+			break;
+		}
 		SetCurrentState(cUnitCheckMove); // Prevent  self detection
 		vector<GameObject*> units = GameObjectManager::GetInstance().GetObjectsByName("Unit");
 		for (GameObject* obj : units) {

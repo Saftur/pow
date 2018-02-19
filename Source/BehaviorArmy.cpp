@@ -193,18 +193,10 @@ void BehaviorArmy::OnEnter()
 		switch (side) {
 		case sLeft:
 			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ 1, 0 });
-			controls.push_back({ Control::tKeyboard, '1' });
-			controls.push_back({ Control::tKeyboard, 'Q' });
-			controls.push_back({ Control::tKeyboard, 'A' });
-			controls.push_back({ Control::tKeyboard, 'Z' });
 			flStart = flStart < 0 ? 0 : flStart;
 			break;
 		case sRight:
 			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ -1, 0 });
-			controls.push_back({ Control::tKeyboard, '7' });
-			controls.push_back({ Control::tKeyboard, 'U' });
-			controls.push_back({ Control::tKeyboard, 'J' });
-			controls.push_back({ Control::tKeyboard, 'M' });
 			flStart = flStart < 0 ? tilemap->GetTilemapWidth() - 1 : flStart;
 			break;
 		}
@@ -214,6 +206,8 @@ void BehaviorArmy::OnEnter()
 		}
 		funds = startFunds;
 		UpdateFundsText();
+		//cursor = Vector2D(0, 0);
+		cursor = (Transform*)GameObjectManager::GetInstance().GetObjectByName(cursorObjName.c_str())->GetComponent("Transform");
 		break;
 	}
 }
@@ -230,18 +224,41 @@ void BehaviorArmy::OnUpdate(float dt)
 	switch (GetCurrentState())
 	{
 	case cArmyNormal:
-		for (unsigned i = 0; i < controls.size(); i++) {
-			if (controls[i].CheckTriggered()) {
-				switch (side) {
-				case sLeft:
-					CreateUnit("Unit1", { 0, (float)i }, path_);
-					break;
-				case sRight:
-					CreateUnit("Unit1", { (float)tilemap->GetTilemapWidth()-1, (float)i }, path_);
-					break;
-				}
-			}
+		gamepad.Update();
+		Vector2D curspos = cursor->GetTranslation();
+		curspos.x += gamepad.GetAxis(Gamepad::aLStickX) * 500 * dt;
+		curspos.y += gamepad.GetAxis(Gamepad::aLStickY) * 500 * dt;
+		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(Gamepad::aLStickX) << std::endl;
+		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(Gamepad::aLStickY) << std::endl;
+		if (gamepad.GetButtonTriggered(Gamepad::bDpadUp)) {
+			curspos.y += tilemap->GetTileHeight();
+			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
+		} else if (gamepad.GetButtonTriggered(Gamepad::bDpadDown)) {
+			curspos.y -= tilemap->GetTileHeight();
+			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
+		} else if (gamepad.GetButtonTriggered(Gamepad::bDpadLeft)) {
+			curspos.x -= tilemap->GetTileHeight();
+			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
+		} else if (gamepad.GetButtonTriggered(Gamepad::bDpadRight)) {
+			curspos.x += tilemap->GetTileHeight();
+			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
 		}
+		cursor->SetTranslation(curspos);
+		if (gamepad.GetButtonTriggered(Gamepad::bA)) {
+			CreateUnit("Unit1", tilemap->GetPosOnMap(curspos), path_);
+		}
+		//for (unsigned i = 0; i < controls.size(); i++) {
+		//	if (controls[i].CheckTriggered()) {
+		//		switch (side) {
+		//		case sLeft:
+		//			CreateUnit("Unit1", { 0, (float)i }, path_);
+		//			break;
+		//		case sRight:
+		//			CreateUnit("Unit1", { (float)tilemap->GetTilemapWidth()-1, (float)i }, path_);
+		//			break;
+		//		}
+		//	}
+		//}
 		break;
 	}
 }
@@ -251,7 +268,6 @@ void BehaviorArmy::OnExit()
 	switch (GetCurrentState()) {
 	case cArmyNormal:
 		units.clear();
-		controls.clear();
 		path_.clear();
 		break;
 	}
@@ -324,6 +340,12 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 	}
 	funds = 0;
 	numUnits = 0;
+	if (obj.HasMember("GamepadNum") && obj["GamepadNum"].IsInt()) {
+		gamepad = Gamepad(obj["GamepadNum"].GetInt());
+	}
+	if (obj.HasMember("CursorName") && obj["CursorName"].IsString()) {
+		cursorObjName = obj["CursorName"].GetString();
+	}
 }
 
 void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos, vector<Vector2D> path)
@@ -375,6 +397,8 @@ bool BehaviorArmy::LegalSpawn(Vector2D pos)
 				return false;
 		}
 	}
+	if (pos.x < 0 || pos.x >= tilemap->GetTilemapWidth() || pos.y < 0 || pos.y >= tilemap->GetTilemapHeight())
+		return false;
 	return BehindFrontLine(pos);
 }
 

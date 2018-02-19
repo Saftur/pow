@@ -22,7 +22,7 @@ using std::vector;
 #include <string>
 using std::string;
 #include "Vector2D.h"
-#include "Control.h"
+#include "Gamepad.h"
 #include "Rendertext.h"
 
 
@@ -136,7 +136,10 @@ private:
 	Transform *flTransform;
 	string fundsObjName;
 	Text *fundsText;
-	vector<Control> controls;
+	Gamepad gamepad;
+	//Vector2D cursor;
+	string cursorObjName;
+	Transform *cursor;
 
 	unsigned funds, startFunds;
 	vector<Vector2D> path_;
