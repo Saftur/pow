@@ -129,23 +129,11 @@ private:
 	//------------------------------------------------------------------------------
 	// Private Structures:
 	//------------------------------------------------------------------------------
-	struct GameObjectList
-	{
-		// The current number of game objects currently in the list.
-		unsigned int objectCount;
-
-		// The maximum number of game objects ever in the list, at any given moment.
-		unsigned int objectMax;
-
-		// This list can be a fixed-length array (minimum size of 100 entries)
-		// or a dynamically sized array, such as a linked list.
-		GameObject*	objectList[objectListSize];
-	};
 
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
-	GameObjectList gameObjectActiveList;
-	GameObjectList gameObjectArchetypes;
+	vector<GameObject*> activeList;
+	vector<GameObject*> archetypes;
 };
 //------------------------------------------------------------------------------

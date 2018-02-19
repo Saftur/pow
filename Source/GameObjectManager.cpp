@@ -4,30 +4,28 @@
 #include "Transform.h"
 #include "Collider.h"
 #include "Button.h"
+#include "Trace.h"
 
 void GameObjectManager::Init(void)
 {
-	gameObjectActiveList = { 0, objectListSize };
-	gameObjectArchetypes = { 0, objectListSize };
 }
 
 void GameObjectManager::Update(float dt)
 {
 	GameObject *gameObject;
-	for (unsigned int i = 0; i < gameObjectActiveList.objectCount; i++) {
-		gameObject = gameObjectActiveList.objectList[i];
+	unsigned int numObj = activeList.size();
+	for (unsigned int i = 0; i < numObj; i++) {
+		gameObject = activeList[i];
 		if (!gameObject->IsDestroyed())
 			gameObject->Update(dt);
 	}
-	for (unsigned int i = 0; i < gameObjectActiveList.objectCount; i++) {
-		gameObject = gameObjectActiveList.objectList[i];
+	for (unsigned i = 0; i < activeList.size(); i++) {
+		gameObject = activeList[i];
 		if (gameObject->IsDestroyed()) {
 			if (gameObject->CheckDestroyNow()) {
 				delete gameObject;
-				for (unsigned int a = i + 1; a < gameObjectActiveList.objectCount; a++)
-					gameObjectActiveList.objectList[a - 1] = gameObjectActiveList.objectList[a];
+				activeList.erase(activeList.begin() + i);
 				i--;
-				gameObjectActiveList.objectCount--;
 			} else gameObject->SetDestroyNext();
 		}
 	}
@@ -36,15 +34,15 @@ void GameObjectManager::Update(float dt)
 void GameObjectManager::CheckCollisions()
 {
 	Collider *collider1, *collider2;
-	for (unsigned int i = 0; i < gameObjectActiveList.objectCount; i++) {
-		if (gameObjectActiveList.objectList[i]->IsDestroyed())
+	for (unsigned i = 0; i < activeList.size(); i++) {
+		if (activeList[i]->IsDestroyed())
 			continue;
-		collider1 = (Collider*)gameObjectActiveList.objectList[i]->GetComponent("Collider");
+		collider1 = (Collider*)activeList[i]->GetComponent("Collider");
 		if (!collider1) continue;
-		for (unsigned int j = i + 1; j < gameObjectActiveList.objectCount; j++) {
-			if (gameObjectActiveList.objectList[j]->IsDestroyed())
+		for (unsigned j = i + 1; j < activeList.size(); j++) {
+			if (activeList[j]->IsDestroyed())
 				continue;
-			collider2 = (Collider*)gameObjectActiveList.objectList[j]->GetComponent("Collider");
+			collider2 = (Collider*)activeList[j]->GetComponent("Collider");
 			if (!collider2) continue;
 			collider1->CheckCollision(*collider2);
 		}
@@ -55,43 +53,39 @@ void GameObjectManager::Draw(void)
 {
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	
-	for (unsigned int i = 0; i < gameObjectActiveList.objectCount; i++)
-		gameObjectActiveList.objectList[i]->Draw();
+	for (GameObject *gameObject : activeList)
+		gameObject->Draw();
 	
 	Transform::SetCamIsDirty(false);
 }
 
 void GameObjectManager::Shutdown(void)
 {
-	for (unsigned int i = 0; i < gameObjectActiveList.objectCount; i++)
-		delete gameObjectActiveList.objectList[i];
-	for (unsigned int i = 0; i < gameObjectArchetypes.objectCount; i++)
-		delete gameObjectArchetypes.objectList[i];
+	for (GameObject *gameObject : activeList)
+		delete gameObject;
+	for (GameObject *gameObject : archetypes)
+		delete gameObject;
 
-	gameObjectActiveList.objectCount = 0;
-	gameObjectArchetypes.objectCount = 0;
+	activeList.clear();
+	archetypes.clear();
 	Button::Shutdown();
 }
 
 void GameObjectManager::Add(GameObject & gameObject)
 {
-	unsigned int &objectCount = gameObjectActiveList.objectCount;
-	if (objectCount < gameObjectActiveList.objectMax)
-		gameObjectActiveList.objectList[objectCount++] = &gameObject;
+	activeList.push_back(&gameObject);
 }
 
 void GameObjectManager::AddArchetype(GameObject & gameObject)
 {
-	unsigned int &objectCount = gameObjectArchetypes.objectCount;
-	if (objectCount < gameObjectArchetypes.objectMax)
-		gameObjectArchetypes.objectList[objectCount++] = &gameObject;
+	archetypes.push_back(&gameObject);
 }
 
 GameObject * GameObjectManager::GetObjectByName(const char * name) const
 {
-	for (unsigned int i = 0; i < gameObjectActiveList.objectCount; i++)
-		if (!gameObjectActiveList.objectList[i]->IsDestroyed() && gameObjectActiveList.objectList[i]->IsNamed(name))
-			return gameObjectActiveList.objectList[i];
+	for (GameObject *gameObject : activeList)
+		if (!gameObject->IsDestroyed() && gameObject->IsNamed(name))
+			return gameObject;
 	return nullptr;
 }
 
@@ -99,20 +93,18 @@ vector<GameObject*> GameObjectManager::GetObjectsByName(const char * name)
 {
 	vector<GameObject*> objects;
 
-	for (unsigned int i = 0; i < gameObjectActiveList.objectCount; i++)
-	{
-		if (!gameObjectActiveList.objectList[i]->IsDestroyed() && gameObjectActiveList.objectList[i]->IsNamed(name))
-			objects.push_back(gameObjectActiveList.objectList[i]);
-	}
+	for (GameObject *gameObject : activeList)
+		if (!gameObject->IsDestroyed() && gameObject->IsNamed(name))
+			objects.push_back(gameObject);
 
 	return objects;
 }
 
 GameObject * GameObjectManager::GetArchetype(const char * name) const
 {
-	for (unsigned int i = 0; i < gameObjectArchetypes.objectCount; i++)
-		if (gameObjectArchetypes.objectList[i]->IsNamed(name))
-			return gameObjectArchetypes.objectList[i];
+	for (GameObject *gameObject : archetypes)
+		if (gameObject->IsNamed(name))
+			return gameObject;
 	return nullptr;
 }
 
