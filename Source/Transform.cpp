@@ -2,6 +2,7 @@
 #include "Transform.h"
 
 Vector2D Transform::camTranslation = { 0, 0 };
+Vector2D Transform::camScale = { 1, 1 };
 bool Transform::camIsDirty = false;
 
 Transform::Transform(float x, float y) :
@@ -37,6 +38,11 @@ const Vector2D Transform::GetWorldTranslation() const
 	return parent ? translation + parent->GetWorldTranslation() : translation;
 }
 
+const Vector2D Transform::GetScreenTranslation() const
+{
+	return GetWorldTranslation() + (followCamera ? -camTranslation : Vector2D(0, 0));
+}
+
 float Transform::GetRotation() const
 {
 	return rotation;
@@ -54,7 +60,22 @@ const Vector2D & Transform::GetScale() const
 
 const Vector2D Transform::GetWorldScale() const
 {
-	return parent ? scale + parent->GetScale() : scale;
+	Vector2D scl = scale;
+	if (parent) {
+		scl.x *= parent->GetScale().x;
+		scl.y *= parent->GetScale().y;
+	}
+	return scl;
+}
+
+const Vector2D Transform::GetScreenScale() const
+{
+	Vector2D scl = GetWorldScale();
+	if (followCamera) {
+		scl.x /= camScale.x;
+		scl.y /= camScale.y;
+	}
+	return scl;
 }
 
 void Transform::SetTranslation(const Vector2D & translation_)

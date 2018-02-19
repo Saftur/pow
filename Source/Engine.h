@@ -11,6 +11,10 @@
 
 #pragma once
 
+#include <vector>
+using std::vector;
+#include "Vector2D.h"
+
 //------------------------------------------------------------------------------
 // Include Files:
 //------------------------------------------------------------------------------
@@ -56,7 +60,16 @@ public:
 	//Toggle paused.
 	void TogglePaused();
 
+	Vector2D* AddCamera(Vector2D screenPos, Vector2D topLeft, Vector2D bottomRight, Vector2D worldPos);
+
 private:
+	struct Camera {
+		Vector2D screenPos;
+		Vector2D topLeft;
+		Vector2D bottomRight;
+		Vector2D worldPos;
+	};
+
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
@@ -73,5 +86,7 @@ private:
 	Engine& operator=(const Engine&) = delete;
 
 	bool paused = false; //Is the game paused?
+
+	vector<Camera> cameras;
 };
 /*----------------------------------------------------------------------------*/

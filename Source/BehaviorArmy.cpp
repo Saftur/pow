@@ -22,6 +22,7 @@
 #include "BehaviorUnit.h"
 #include "Transform.h"
 #include "Trace.h"
+#include "Engine.h"
 #include <iostream>
 #include <sstream>
 using std::ifstream;
@@ -190,14 +191,22 @@ void BehaviorArmy::OnEnter()
 		GameObject *fd = GameObjectManager::GetInstance().GetObjectByName(fundsObjName.c_str());
 		if (fd) fundsText = (Text*)fd->GetComponent("Text");
 		else fundsText = nullptr;
+		f32 winWidth = AEGfxGetWinMaxX() - AEGfxGetWinMinX();
+		f32 winHeight = AEGfxGetWinMaxY() - AEGfxGetWinMinY();
 		switch (side) {
 		case sLeft:
 			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ 1, 0 });
 			flStart = flStart < 0 ? 0 : flStart;
+			camera = Engine::GetInstance().AddCamera({AEGfxGetWinMinX() + winWidth/4, AEGfxGetWinMinY() + winHeight/2}, 
+													 {AEGfxGetWinMinX(), AEGfxGetWinMaxY()}, {AEGfxGetWinMaxX(), AEGfxGetWinMinY()}, 
+													 {0, 0});
 			break;
 		case sRight:
 			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ -1, 0 });
 			flStart = flStart < 0 ? tilemap->GetTilemapWidth() - 1 : flStart;
+			/*camera = Engine::GetInstance().AddCamera({AEGfxGetWinMaxX() - winWidth/4, AEGfxGetWinMinY() + winHeight/2}, 
+													 {AEGfxGetWinMinX(), AEGfxGetWinMaxY()}, {AEGfxGetWinMaxX(), AEGfxGetWinMinY()}, 
+													 {0, 0});*/
 			break;
 		}
 		frontLine = flStart;
@@ -244,6 +253,8 @@ void BehaviorArmy::OnUpdate(float dt)
 			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
 		}
 		cursor->SetTranslation(curspos);
+		//if (camera)
+		//	*camera = -curspos;
 		if (gamepad.GetButtonTriggered(Gamepad::bA)) {
 			CreateUnit("Unit1", tilemap->GetPosOnMap(curspos), path_);
 		}

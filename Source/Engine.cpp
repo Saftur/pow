@@ -19,6 +19,8 @@
 #include "LevelManager.h"
 #include "AEEngine.h"
 #include "PauseMenu.h"
+#include "Transform.h"
+#include "Sprite.h"
 
 //------------------------------------------------------------------------------
 // Private Structures:
@@ -85,7 +87,11 @@ void Engine::Update(float dt)
 	GameObjectManager::GetInstance().CheckCollisions();
 
 	// Draw objects.
-	GameObjectManager::GetInstance().Draw();
+	for (Camera c : cameras) {
+		Transform::SetCamTranslation(c.worldPos);
+		Sprite::SetBounds(c.topLeft, c.bottomRight);
+		GameObjectManager::GetInstance().Draw();
+	}
 
 	PauseMenu::GetInstance().Update(dt);
 
@@ -134,6 +140,12 @@ bool Engine::IsPaused() {
 
 void Engine::TogglePaused() {
 	paused = !paused;
+}
+
+Vector2D* Engine::AddCamera(Vector2D screenPos, Vector2D topLeft, Vector2D bottomRight, Vector2D worldPos)
+{
+	cameras.push_back({ screenPos, topLeft, bottomRight, worldPos });
+	return &(cameras.at(cameras.size() - 1).worldPos);
 }
 
 //------------------------------------------------------------------------------

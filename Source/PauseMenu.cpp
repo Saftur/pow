@@ -71,6 +71,8 @@ GameObject* PauseMenu::CreateBackground(float alpha) {
 	sprite->AdjustAlpha(-(1.0f - alpha));
 	sprite->SetModulateColor({ 0.4f, 0.4f, 0.4f, 1.0f });
 	sprite->SetMesh(mesh);
+	sprite->SetMeshHalfSize({ 0.5f, 0.5f });
+	sprite->SetMeshUV({ 1.0f, 1.0f });
 	tmpBackground->AddComponent(sprite);
 	Transform* transform = new Transform(0.0, 0.0);
 	transform->SetScale({ 1000, 1000 });

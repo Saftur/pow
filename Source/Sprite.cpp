@@ -45,6 +45,11 @@ void Sprite::Draw(Transform &transform) const {
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	AEGfxSetBlendColor(color.r, color.g, color.b, color.a);
 	AEGfxSetTransform(transform.GetMatrix().m);
+	//AEGfxVertexList *newMesh = CutMesh(transform);
+	//if (newMesh) {
+	//	AEGfxMeshDraw(newMesh, AE_GFX_MDM_TRIANGLES);
+	//	AEGfxMeshFree(newMesh);
+	//} else AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 }
 
@@ -61,6 +66,16 @@ void Sprite::SetFrame(unsigned int frameIndex_)
 void Sprite::SetMesh(AEGfxVertexList * mesh_)
 {
 	this->mesh = mesh_;
+}
+
+void Sprite::SetMeshHalfSize(Vector2D halfSize)
+{
+	meshHalfSize = halfSize;
+}
+
+void Sprite::SetMeshUV(Vector2D UV)
+{
+	meshUV = UV;
 }
 
 void Sprite::SetSpriteSource(SpriteSource * spriteSource_)
@@ -107,6 +122,8 @@ void Sprite::Load(rapidjson::Value& obj)
 		rapidjson::Value& tmp2 = tmp["UV"];
 
 		mesh = MeshCreateQuad(tmp1[0].GetFloat(), tmp1[1].GetFloat(), tmp2[0].GetFloat(), tmp2[1].GetFloat());
+		meshHalfSize = {tmp1[0].GetFloat(), tmp1[1].GetFloat()};
+		meshUV = {tmp2[0].GetFloat(), tmp2[1].GetFloat()};
 
 		// Add the mesh to the map.
 		LevelManager::GetInstance().AddMesh(tmp["Name"].GetString(), mesh);
@@ -123,4 +140,53 @@ void Sprite::Load(rapidjson::Value& obj)
 		color.b = obj["ModulateColor"][2].GetFloat();
 		color.a = obj["ModulateColor"][3].GetFloat();
 	}
+}
+
+Vector2D Sprite::topLeftBound = Vector2D(0, 0);
+Vector2D Sprite::bottomRightBound = Vector2D(0, 0);
+
+void Sprite::SetBounds(Vector2D topLeft, Vector2D bottomRight)
+{
+	topLeftBound = topLeft;
+	bottomRightBound = bottomRight;
+}
+
+AEGfxVertexList * Sprite::CutMesh(Transform &transform) const
+{
+	Vector2D pos = transform.GetScreenTranslation();
+	Vector2D scl = transform.GetScreenScale();
+	bool newMesh = false;
+	Vector2D cutMin = { -1, -1 };
+	Vector2D cutMax = { 1, 1 };
+	if (pos.x + scl.x / 2 >= bottomRightBound.x) {
+		//cutMax.x = (bottomRightBound.x - pos.x) / meshHalfSize.x;
+		newMesh = true;
+	}
+	if (pos.x - scl.x / 2 <= topLeftBound.x) {
+		//cutMin.x = (topLeftBound.x - pos.x) / meshHalfSize.x;
+		newMesh = true;
+	}
+	if (pos.y + scl.y / 2 >= topLeftBound.y) {
+		//cutMax.y = (topLeftBound.y - pos.y) / meshHalfSize.y;
+		newMesh = true;
+	}
+	if (pos.y - scl.y / 2 <= bottomRightBound.y) {
+		//cutMin.y = (bottomRightBound.y - pos.y) / meshHalfSize.y;
+		newMesh = true;
+	}
+
+	if (newMesh) {
+		AEGfxMeshStart();
+
+		AEGfxTriAdd(
+			cutMin.x * meshHalfSize.x, cutMin.y * meshHalfSize.y, 0xFFFFFFFF, (cutMin.x + 1) / 2 * meshUV.x, (cutMax.y + 1) / 2 * meshUV.y,
+			cutMax.x * meshHalfSize.x, cutMin.y * meshHalfSize.y, 0xFFFFFFFF, (cutMax.x + 1) / 2 * meshUV.x, (cutMax.y + 1) / 2 * meshUV.y,
+			cutMin.x * meshHalfSize.x, cutMax.y * meshHalfSize.y, 0xFFFFFFFF, (cutMin.x + 1) / 2 * meshUV.x, (cutMin.y + 1) / 2 * meshUV.y);
+		AEGfxTriAdd(
+			cutMax.x * meshHalfSize.x, cutMin.y * meshHalfSize.y, 0xFFFFFFFF, (cutMax.x + 1) / 2 * meshUV.x, (cutMax.y + 1) / 2 * meshUV.y,
+			cutMax.x * meshHalfSize.x, cutMax.y * meshHalfSize.y, 0xFFFFFFFF, (cutMax.x + 1) / 2 * meshUV.x, (cutMin.y + 1) / 2 * meshUV.y,
+			cutMin.x * meshHalfSize.x, cutMax.y * meshHalfSize.y, 0xFFFFFFFF, (cutMin.x + 1) / 2 * meshUV.x, (cutMin.y + 1) / 2 * meshUV.y);
+
+		return AEGfxMeshEnd();
+	} else return nullptr;
 }

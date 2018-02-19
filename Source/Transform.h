@@ -55,6 +55,7 @@ public:
 	//	 A reference to the component's translation structure.
 	const Vector2D& GetTranslation() const;
 	const Vector2D GetWorldTranslation() const;
+	const Vector2D GetScreenTranslation() const;
 
 	// Get the rotation value of a transform component.
 	// Returns:
@@ -67,6 +68,7 @@ public:
 	//	 A reference to the component's scale structure.
 	const Vector2D& GetScale() const;
 	const Vector2D GetWorldScale() const;
+	const Vector2D GetScreenScale() const;
 
 	// Set the translation of a transform component.
 	// Params:
@@ -90,14 +92,14 @@ public:
 
 	void SetFollowCamera(bool fc);
 
+	void Load(rapidjson::Value& obj);
+
 
 	static void SetCamTranslation(const Vector2D& translation);
 
 	static Vector2D GetCamTranslation();
 
 	static void SetCamIsDirty(bool isDirty);
-
-	void Load(rapidjson::Value& obj);
 	
 private:
 	//------------------------------------------------------------------------------
@@ -126,6 +128,7 @@ private:
 	bool followCamera;
 
 	static Vector2D camTranslation;
+	static Vector2D camScale;
 	static bool camIsDirty;
 };
 //------------------------------------------------------------------------------

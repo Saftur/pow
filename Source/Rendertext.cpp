@@ -33,6 +33,8 @@ Text::Text(bool manualCreation, const char* text, const char* font, Color color,
 
 		sprite = new Sprite();
 		sprite->SetMesh(mesh);
+		sprite->SetMeshHalfSize({ 0.5f, 0.5f });
+		sprite->SetMeshUV({ 0.0625f, 0.16666667f });
 		sprite->SetSpriteSource(spritesource);
 		sprite->SetModulateColor(color);
 	}

@@ -140,6 +140,7 @@ private:
 	//Vector2D cursor;
 	string cursorObjName;
 	Transform *cursor;
+	Vector2D *camera;
 
 	unsigned funds, startFunds;
 	vector<Vector2D> path_;

@@ -16,6 +16,7 @@
 //------------------------------------------------------------------------------
 
 #include "Component.h"
+#include "Vector2D.h"
 
 //------------------------------------------------------------------------------
 
@@ -83,6 +84,9 @@ public:
 	//   mesh = Pointer to a mesh created using the Alpha Engine.
 	void SetMesh(AEGfxVertexList* mesh);
 
+	void SetMeshHalfSize(Vector2D halfSize);
+	void SetMeshUV(Vector2D UV);
+
 	// Set a new SpriteSource for the specified sprite.
 	// Params:
 	//	 spriteSource = A new sprite source for the sprite.
@@ -94,6 +98,9 @@ public:
 	void SetModulateColor(Color color);
 
 	void Load(rapidjson::Value& obj);
+
+
+	static void SetBounds(Vector2D topLeft, Vector2D bottomRight);
 
 private:
 	// The frame currently being displayed (for sprite sheets).
@@ -107,8 +114,15 @@ private:
 
 	// The mesh used to draw the sprite.
 	AEGfxVertexList * mesh;
+	Vector2D meshHalfSize;
+	Vector2D meshUV;
 
 	// Color used for blending/tint
 	Color color;
+
+	AEGfxVertexList* CutMesh(Transform &transform) const;
+
+	static Vector2D topLeftBound;
+	static Vector2D bottomRightBound;
 };
 /*----------------------------------------------------------------------------*/
