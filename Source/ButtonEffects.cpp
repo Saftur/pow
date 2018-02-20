@@ -18,7 +18,7 @@ void ButtonEffects::List()
 
 void ButtonEffects::KillAllUnits(Button &button, float dt)
 {
-	vector<GameObject*> units = GameObjectManager::GetInstance().GetObjectsByName("Unit");
+	vector<GameObject*> units = button.GetParent()->GetObjectManager()->GetObjectsByName("Unit");
 	for (GameObject* go : units)
 		go->Destroy();
 }

@@ -169,6 +169,7 @@ void GameObjectManager::DeleteLayer()
 
 void GameObjectManager::ShutdownInstances()
 {
+	instance->Shutdown();
 	delete instance;
 	for (GOMLayeredInstance i : instances) {
 		i.instance->Shutdown();

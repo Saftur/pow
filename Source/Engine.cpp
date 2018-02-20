@@ -90,7 +90,8 @@ void Engine::Update(float dt)
 	System::GetInstance().Update(dt);
 
 	// Update the game state manager.
-	LevelManager::GetInstance().Update(dt);
+	//LevelManager::GetInstance().Update(dt);
+	LevelManager::UpdateAll(dt);
 
 	// Update the game object manager.
 	//if(!paused) GameObjectManager::GetInstance().Update(dt);
@@ -123,13 +124,13 @@ void Engine::Shutdown()
 	//--------------------------------------------------------------------------
 
 	// Shutdown the game object manager.
-	GameObjectManager::GetInstance().Shutdown();
+	//GameObjectManager::GetInstance().Shutdown();
 	GameObjectManager::ShutdownInstances();
 
 	//PauseMenu::GetInstance().Shutdown(true);
 
 	// Shutdown the game state manager.
-	LevelManager::GetInstance().Shutdown();
+	//LevelManager::GetInstance().Shutdown();
 	LevelManager::ShutdownInstances();
 
 	//--------------------------------------------------------------------------

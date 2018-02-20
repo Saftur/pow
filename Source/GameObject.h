@@ -26,6 +26,8 @@ using std::string;
 // Forward References:
 //------------------------------------------------------------------------------
 
+typedef class GameObjectManager GameObjectManager;
+typedef class LevelManager LevelManager;
 typedef class Component Component;
 
 //------------------------------------------------------------------------------
@@ -100,6 +102,10 @@ public:
 	// Mark an object for destruction.
 	void Destroy();
 
+	GameObjectManager *GetObjectManager() const;
+	LevelManager *GetLevelManager() const;
+	void SetLevelManager(LevelManager *lm);
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Variables:
@@ -121,6 +127,8 @@ private:
 	bool isDestroyed;
 
 	bool destroyNext;
+
+	LevelManager *levelManager;
 };
 
 //------------------------------------------------------------------------------

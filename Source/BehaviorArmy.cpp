@@ -58,8 +58,8 @@ BehaviorArmy::BehaviorArmy() :
 
 void BehaviorArmy::PushFrontLine(Vector2D pos)
 {
-	vector<GameObject*> unitGOs = GameObjectManager::GetInstance().GetObjectsByName("Unit");
-	vector<GameObject*> armyGOs = GameObjectManager::GetInstance().GetObjectsByName("Army");
+	vector<GameObject*> unitGOs = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
+	vector<GameObject*> armyGOs = GetParent()->GetObjectManager()->GetObjectsByName("Army");
 	switch (side) {
 	case sLeft:
 		if (pos.x > frontLine) {
@@ -184,11 +184,11 @@ void BehaviorArmy::OnEnter()
 	switch (GetCurrentState())
 	{
 	case cArmyNormal:
-		tilemap = (Tilemap*)GameObjectManager::GetInstance().GetObjectByName("Tilemap")->GetComponent("Tilemap");
-		GameObject *fl = GameObjectManager::GetInstance().GetObjectByName(flObjName.c_str());
+		tilemap = (Tilemap*)GetParent()->GetObjectManager()->GetObjectByName("Tilemap")->GetComponent("Tilemap");
+		GameObject *fl = GetParent()->GetObjectManager()->GetObjectByName(flObjName.c_str());
 		if (fl) flTransform = (Transform*)fl->GetComponent("Transform");
 		else flTransform = nullptr;
-		GameObject *fd = GameObjectManager::GetInstance().GetObjectByName(fundsObjName.c_str());
+		GameObject *fd = GetParent()->GetObjectManager()->GetObjectByName(fundsObjName.c_str());
 		if (fd) fundsText = (Text*)fd->GetComponent("Text");
 		else fundsText = nullptr;
 		//f32 winWidth = AEGfxGetWinMaxX() - AEGfxGetWinMinX();
@@ -216,7 +216,7 @@ void BehaviorArmy::OnEnter()
 		funds = startFunds;
 		UpdateFundsText();
 		//cursor = Vector2D(0, 0);
-		cursor = (Transform*)GameObjectManager::GetInstance().GetObjectByName(cursorObjName.c_str())->GetComponent("Transform");
+		cursor = (Transform*)GetParent()->GetObjectManager()->GetObjectByName(cursorObjName.c_str())->GetComponent("Transform");
 		break;
 	}
 }
@@ -385,7 +385,7 @@ void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos, vector<Ve
 	if (!LegalSpawn(startPos)) return;
 	funds -= unitData.GetCost();
 	UpdateFundsText();
-	GameObject *go = GameObjectManager::GetInstance().GetArchetype("UnitArchetype");
+	GameObject *go = GetParent()->GetObjectManager()->GetArchetype("UnitArchetype");
 	if (!go) {
 		Trace::GetInstance().GetStream() << "No Unit archetype found" << std::endl;
 		return;
@@ -409,12 +409,12 @@ void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos, vector<Ve
 	}
 	bh->Init(unitData, path, tilemap);
 
-	GameObjectManager::GetInstance().Add(*go);
+	GetParent()->GetObjectManager()->Add(*go);
 }
 
 bool BehaviorArmy::LegalSpawn(Vector2D pos)
 {
-	vector<GameObject*> unitGOs = GameObjectManager::GetInstance().GetObjectsByName("Unit");
+	vector<GameObject*> unitGOs = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
 	for (GameObject *unit : unitGOs) {
 		BehaviorUnit *bu = (BehaviorUnit*)(unit->GetComponent("BehaviorUnit"));
 		Transform *t = (Transform*)unit->GetComponent("Transform");

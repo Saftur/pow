@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameObject.h"
 #include "Component.h"
+#include "LevelManager.h"
 #include <string>
 #include "Trace.h"
 
@@ -10,7 +11,7 @@ GameObject::GameObject(const char * name) :
 }
 
 GameObject::GameObject(const GameObject & other) :
-		name(other.name), isDestroyed(false), destroyNext(false), numComponents(0)
+		name(other.name), isDestroyed(false), destroyNext(false), numComponents(0), levelManager(other.levelManager)
 {
 	for (unsigned i = 0; i < other.numComponents; i++) {
 		AddComponent(other.components[i]->Clone());
@@ -119,4 +120,19 @@ void GameObject::Destroy()
 	for (unsigned i = 0; i < numComponents; i++) {
 		components[i]->OnDestroy();
 	}
+}
+
+GameObjectManager * GameObject::GetObjectManager() const
+{
+	return levelManager->GetObjectManager();
+}
+
+LevelManager * GameObject::GetLevelManager() const
+{
+	return levelManager;
+}
+
+void GameObject::SetLevelManager(LevelManager * lm)
+{
+	levelManager = lm;
 }

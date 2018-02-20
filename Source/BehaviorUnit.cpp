@@ -168,7 +168,7 @@ void BehaviorUnit::OnEnter()
 			break;
 		}
 		SetCurrentState(cUnitCheckMove); // Prevent  self detection
-		vector<GameObject*> units = GameObjectManager::GetInstance().GetObjectsByName("Unit");
+		vector<GameObject*> units = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
 		for (GameObject* obj : units) {
 			BehaviorUnit *bu = (BehaviorUnit*)(obj->GetComponent("BehaviorUnit"));
 			Transform *t = (Transform*)(obj->GetComponent("Transform"));
@@ -252,7 +252,7 @@ void BehaviorUnit::OnUpdate(float dt)
 		break;
 	case cUnitWaiting:
 		if (!target) {
-			vector<GameObject*> units = GameObjectManager::GetInstance().GetObjectsByName("Unit");
+			vector<GameObject*> units = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
 			for (GameObject* obj : units) {
 				BehaviorUnit *bu = (BehaviorUnit*)(obj->GetComponent("BehaviorUnit"));
 				Transform *t = (Transform*)(obj->GetComponent("Transform"));

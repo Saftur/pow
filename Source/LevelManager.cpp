@@ -45,6 +45,7 @@ void LevelManager::Init(const char *name)
 	AddComponentType("Tilemap", new Tilemap());
 	AddComponentType("Text", new Text());
 	AddComponentType("Button", new Button());
+	objectManager = &GameObjectManager::GetInstance();
 	CompList::List();
 }
 
@@ -84,7 +85,7 @@ void LevelManager::OnExit()
 		delete p.second;
 	}
 	spriteSources.clear();
-	GameObjectManager::GetInstance().Shutdown();
+	objectManager->Shutdown();
 }
 
 void LevelManager::Shutdown() {
@@ -216,6 +217,7 @@ void LevelManager::loadObject(Document& levelDoc)
 
 	// Create the game object.
 	GameObject* go = new GameObject(v["Name"].GetString());
+	go->SetLevelManager(this);
 
 	bool archetype = v.HasMember("Archetype") && v["Archetype"].GetType() == rapidjson::Type::kTrueType;
 
@@ -242,8 +244,8 @@ void LevelManager::loadObject(Document& levelDoc)
 	}
 
 	if (archetype)
-		GameObjectManager::GetInstance().AddArchetype(*go);
-	else GameObjectManager::GetInstance().Add(*go);
+		objectManager->AddArchetype(*go);
+	else objectManager->Add(*go);
 
 	id++;
 }
@@ -286,6 +288,11 @@ AEGfxTexture* LevelManager::GetTexture(const char* name)
 SpriteSource* LevelManager::GetSpriteSource(const char* name)
 {
 	return spriteSources.count(name) > 0 ? spriteSources.at(name) : nullptr;
+}
+
+GameObjectManager * LevelManager::GetObjectManager()
+{
+	return objectManager;
 }
 
 LevelManager::LevelManager()
