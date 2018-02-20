@@ -99,8 +99,10 @@ void GameObjectManager::Shutdown(void)
 	for (GameObject *gameObject : archetypes)
 		delete gameObject;
 
-	activeList.clear();
-	archetypes.clear();
+	if (!activeList.empty())
+		activeList.clear();
+	if (!archetypes.empty())
+		archetypes.clear();
 	Button::Shutdown();
 }
 
