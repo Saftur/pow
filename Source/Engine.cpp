@@ -122,11 +122,13 @@ void Engine::Shutdown()
 
 	// Shutdown the game object manager.
 	GameObjectManager::GetInstance().Shutdown();
+	GameObjectManager::ShutdownInstances();
 
-	PauseMenu::GetInstance().Shutdown(true);
+	//PauseMenu::GetInstance().Shutdown(true);
 
 	// Shutdown the game state manager.
 	LevelManager::GetInstance().Shutdown();
+	LevelManager::ShutdownInstances();
 
 	//--------------------------------------------------------------------------
 	// NOTE: Certain modules need to be shutdown last and in reverse order.
