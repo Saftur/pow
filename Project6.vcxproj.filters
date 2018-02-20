@@ -398,6 +398,9 @@
     <None Include="Levels\DemoLevel.json">
       <Filter>Game\Levels</Filter>
     </None>
+    <None Include="Levels\PauseLevel.json">
+      <Filter>Game\Levels</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Library Include="fmodAPI\lib\fmod_vc.lib">

@@ -30,6 +30,9 @@ using namespace rapidjson;
 LM_STATE LevelManager::stateCurr = IDLE;
 LM_STATE LevelManager::stateNext = IDLE;
 
+LevelManager *LevelManager::instance = nullptr;
+vector<LevelManager*> LevelManager::instances;
+
 void LevelManager::Init(const char *name)
 {
 	SetNextLevel(name);
@@ -58,6 +61,13 @@ void LevelManager::Update(float dt)
 			levelStatus = cLevelUpdate;
 		}
 	}
+}
+
+void LevelManager::UpdateAll(float dt)
+{
+	for (LevelManager *i : instances)
+		i->Update(dt);
+	instance->Update(dt);
 }
 
 void LevelManager::OnExit()
@@ -108,8 +118,23 @@ bool LevelManager::IsRunning()
 
 LevelManager & LevelManager::GetInstance()
 {
-	static LevelManager instance;
-	return instance;
+	//static LevelManager instance;
+	if (!instance)
+		instance = new LevelManager();
+	return *instance;
+}
+
+LevelManager * LevelManager::GetLowerInstance(unsigned level)
+{
+	if (level > instances.size()) return nullptr;
+	return instances[instances.size() - level];
+}
+
+void LevelManager::ShutdownInstances()
+{
+	delete instance;
+	for (LevelManager *i : instances)
+		delete i;
 }
 
 void LevelManager::Load(const char* fileName)
@@ -143,6 +168,25 @@ void LevelManager::Load(const char* fileName)
 	id = 0;
 	while (stateNext != IDLE)
 		loadObject(levelDoc);
+}
+
+void LevelManager::LoadAbove(const char * fileName, bool updateLower, bool drawLower)
+{
+	instances.push_back(instance);
+	instance = new LevelManager();
+	GameObjectManager::NewLayer(updateLower, drawLower);
+	instance->Init(fileName);
+	//instance->Load(fileName);
+}
+
+void LevelManager::UnloadAbove()
+{
+	if (instances.size() == 0) return;
+	instance->Shutdown();
+	delete instance;
+	instance = instances[instances.size()-1];
+	instances.pop_back();
+	GameObjectManager::DeleteLayer();
 }
 
 void LevelManager::loadObject(Document& levelDoc)

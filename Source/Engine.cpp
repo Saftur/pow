@@ -65,7 +65,9 @@ void Engine::Init()
 	LevelManager::GetInstance().Init("DemoLevel");
 
 	//Initialize the pause menu.
-	PauseMenu::GetInstance().Init();
+	//PauseMenu::GetInstance().Init();
+
+	AddCamera({ 0, 0 }, { AEGfxGetWinMinX(), AEGfxGetWinMaxY() }, { AEGfxGetWinMaxX(), AEGfxGetWinMinY() }, { 0, 0 });
 }
 
 // Update the game engine.
@@ -75,6 +77,12 @@ void Engine::Update(float dt)
 {
 	Trace::GetInstance().GetStream() << "Engine: Update" << std::endl;
 	if (AEInputCheckTriggered(VK_ESCAPE)) TogglePaused();
+	if (switchLevel) {
+		if (paused)
+			LevelManager::LoadAbove("PauseLevel", false, true);
+		else LevelManager::UnloadAbove();
+		switchLevel = false;
+	}
 
 	// Update the System (Windows, Event Handlers).
 	System::GetInstance().Update(dt);
@@ -83,19 +91,21 @@ void Engine::Update(float dt)
 	LevelManager::GetInstance().Update(dt);
 
 	// Update the game object manager.
-	if(!paused) GameObjectManager::GetInstance().Update(dt);
+	//if(!paused) GameObjectManager::GetInstance().Update(dt);
+	GameObjectManager::UpdateAll(dt);
 
 	// Check for collisions.
-	GameObjectManager::GetInstance().CheckCollisions();
+	//GameObjectManager::GetInstance().CheckCollisions();
 
 	// Draw objects.
 	for (Camera c : cameras) {
 		Transform::SetCamTranslation(c.worldPos);
 		Sprite::SetBounds(c.topLeft, c.bottomRight);
-		GameObjectManager::GetInstance().Draw();
+		//GameObjectManager::GetInstance().Draw();
+		GameObjectManager::DrawAll();
 	}
 
-	PauseMenu::GetInstance().Update(dt);
+	//PauseMenu::GetInstance().Update(dt);
 
 	// Complete the draw process for the current game loop.
 	System::GetInstance().Draw();
@@ -142,6 +152,7 @@ bool Engine::IsPaused() {
 
 void Engine::TogglePaused() {
 	paused = !paused;
+	switchLevel = true;
 }
 
 Vector2D* Engine::AddCamera(Vector2D screenPos, Vector2D topLeft, Vector2D bottomRight, Vector2D worldPos)

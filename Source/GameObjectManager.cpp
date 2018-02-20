@@ -6,6 +6,9 @@
 #include "Button.h"
 #include "Trace.h"
 
+GameObjectManager *GameObjectManager::instance = nullptr;
+vector<GameObjectManager::GOMLayeredInstance> GameObjectManager::instances;
+
 void GameObjectManager::Init(void)
 {
 }
@@ -29,6 +32,22 @@ void GameObjectManager::Update(float dt)
 			} else gameObject->SetDestroyNext();
 		}
 	}
+}
+
+void GameObjectManager::UpdateAll(float dt)
+{
+	unsigned first = 0;
+	for (int i = (int)instances.size() - 1; i >= 0; i--) {
+		if (!instances[i].update) {
+			first = i + 1;
+		}
+	}
+	for (unsigned i = first; i < instances.size(); i++) {
+		instances[i].instance->Update(dt);
+		instances[i].instance->CheckCollisions();
+	}
+	instance->Update(dt);
+	instance->CheckCollisions();
 }
 
 void GameObjectManager::CheckCollisions()
@@ -57,6 +76,20 @@ void GameObjectManager::Draw(void)
 		gameObject->Draw();
 	
 	Transform::SetCamIsDirty(false);
+}
+
+void GameObjectManager::DrawAll()
+{
+	unsigned first = 0;
+	for (int i = (int)instances.size() - 1; i >= 0; i--) {
+		if (!instances[i].draw) {
+			first = i + 1;
+		}
+	}
+	for (unsigned i = first; i < instances.size(); i++) {
+		instances[i].instance->Draw();
+	}
+	instance->Draw();
 }
 
 void GameObjectManager::Shutdown(void)
@@ -110,10 +143,42 @@ GameObject * GameObjectManager::GetArchetype(const char * name) const
 
 GameObjectManager & GameObjectManager::GetInstance()
 {
-	static GameObjectManager instance;
-	return instance;
+	//static GameObjectManager instance;
+	if (!instance)
+		instance = new GameObjectManager();
+	return *instance;
+}
+
+void GameObjectManager::NewLayer(bool updateLower, bool drawLower)
+{
+	instances.push_back({updateLower, drawLower, instance});
+	instance = new GameObjectManager();
+	instance->Init();
+}
+
+void GameObjectManager::DeleteLayer()
+{
+	if (instances.size() == 0) return;
+	instance->Shutdown();
+	delete instance;
+	instance = instances[instances.size()-1].instance;
+	instances.pop_back();
+}
+
+void GameObjectManager::ShutdownInstances()
+{
+	delete instance;
+	for (GOMLayeredInstance i : instances) {
+		i.instance->Shutdown();
+		delete i.instance;
+	}
+	instances.clear();
 }
 
 GameObjectManager::GameObjectManager()
+{
+}
+
+GameObjectManager::~GameObjectManager()
 {
 }

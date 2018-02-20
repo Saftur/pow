@@ -191,15 +191,15 @@ void BehaviorArmy::OnEnter()
 		GameObject *fd = GameObjectManager::GetInstance().GetObjectByName(fundsObjName.c_str());
 		if (fd) fundsText = (Text*)fd->GetComponent("Text");
 		else fundsText = nullptr;
-		f32 winWidth = AEGfxGetWinMaxX() - AEGfxGetWinMinX();
-		f32 winHeight = AEGfxGetWinMaxY() - AEGfxGetWinMinY();
+		//f32 winWidth = AEGfxGetWinMaxX() - AEGfxGetWinMinX();
+		//f32 winHeight = AEGfxGetWinMaxY() - AEGfxGetWinMinY();
 		switch (side) {
 		case sLeft:
 			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ 1, 0 });
 			flStart = flStart < 0 ? 0 : flStart;
-			camera = Engine::GetInstance().AddCamera({AEGfxGetWinMinX() + winWidth/4, AEGfxGetWinMinY() + winHeight/2}, 
+			/*camera = Engine::GetInstance().AddCamera({AEGfxGetWinMinX() + winWidth/4, AEGfxGetWinMinY() + winHeight/2}, 
 													 {AEGfxGetWinMinX(), AEGfxGetWinMaxY()}, {AEGfxGetWinMaxX(), AEGfxGetWinMinY()}, 
-													 {0, 0});
+													 {0, 0});*/
 			break;
 		case sRight:
 			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ -1, 0 });

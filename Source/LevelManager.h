@@ -3,6 +3,8 @@
 #include <map>
 using std::map;
 using std::pair;
+#include <vector>
+using std::vector;
 #include <string>
 using std::string;
 #include "rapidjson.h"
@@ -18,6 +20,7 @@ class LevelManager {
 public:
 	void Init(const char *name);
 	void Update(float dt);
+	static void UpdateAll(float dt);
 	void OnExit();
 	void Shutdown();
 
@@ -26,10 +29,14 @@ public:
 	void Quit();
 
 	void Load(const char* fileName);
+	static void LoadAbove(const char* fileName, bool updateLower=false, bool drawLower=true);
+	static void UnloadAbove();
 
 	bool IsRunning();
 
 	static LevelManager& GetInstance();
+	static LevelManager* GetLowerInstance(unsigned level);
+	static void ShutdownInstances();
 
 	void AddComponentType(const char* name, Component* component);
 
@@ -67,4 +74,7 @@ private:
 	map<string, AEGfxTexture*> textures;
 	map<string, AEGfxVertexList*> meshes;
 	map<string, SpriteSource*> spriteSources;
+
+	static LevelManager *instance;
+	static vector<LevelManager*> instances;
 };

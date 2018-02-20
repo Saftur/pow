@@ -29,8 +29,6 @@ using std::vector;
 // Public Consts:
 //------------------------------------------------------------------------------
 
-const int objectListSize = 100;
-
 //------------------------------------------------------------------------------
 // Public Structures:
 //------------------------------------------------------------------------------
@@ -56,12 +54,17 @@ public:
 	// Params:
 	//	 dt = Change in time (in seconds) since the last game loop.
 	void Update(float dt);
+	// Update all current instances, if to be updated
+	// Also calls CheckCollisions for all of them
+	static void UpdateAll(float dt);
 
 	// Check collisions between pairs of objects.
 	void CheckCollisions();
 
 	// Draw all game objects in the active game object list.
 	void Draw(void);
+	// Draw all current instances, if to be drawn
+	static void DrawAll();
 
 	// Shutdown the game object manager.
 	// (NOTE: This means removing all game objects from both the active and
@@ -113,6 +116,9 @@ public:
 
 	// Returns a reference to the singleton instance of the GameObjectManager.
 	static GameObjectManager& GetInstance();
+	static void NewLayer(bool updateLower, bool drawLower);
+	static void DeleteLayer();
+	static void ShutdownInstances();
 
 private:
 	//------------------------------------------------------------------------------
@@ -121,6 +127,7 @@ private:
 
 	// Constructor is private to prevent accidental instantiations.
 	GameObjectManager();
+	~GameObjectManager();
 
 	// Disable copy constructor and assignment operator
 	GameObjectManager(const GameObjectManager&) = delete;
@@ -129,11 +136,19 @@ private:
 	//------------------------------------------------------------------------------
 	// Private Structures:
 	//------------------------------------------------------------------------------
+	struct GOMLayeredInstance {
+		bool update;
+		bool draw;
+		GameObjectManager *instance;
+	};
 
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
 	vector<GameObject*> activeList;
 	vector<GameObject*> archetypes;
+
+	static GameObjectManager *instance;
+	static vector<GOMLayeredInstance> instances;
 };
 //------------------------------------------------------------------------------
