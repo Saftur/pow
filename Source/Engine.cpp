@@ -18,7 +18,7 @@
 #include "Random.h"
 #include "LevelManager.h"
 #include "AEEngine.h"
-#include "PauseMenu.h"
+//#include "PauseMenu.h"
 #include "Transform.h"
 #include "Sprite.h"
 #include "Button.h"
@@ -63,6 +63,8 @@ void Engine::Init()
 
 	// Initialize the game state manager.
 	LevelManager::GetInstance().Init("DemoLevel");
+
+	hasPauseMenu = LevelManager::LevelExists("PauseLevel");
 
 	//Initialize the pause menu.
 	//PauseMenu::GetInstance().Init();
@@ -153,6 +155,7 @@ bool Engine::IsPaused() {
 }
 
 void Engine::TogglePaused() {
+	if (!hasPauseMenu) return;
 	paused = !paused;
 	switchLevel = true;
 }

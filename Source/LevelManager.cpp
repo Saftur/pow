@@ -22,7 +22,7 @@
 #include "Button.h"
 #include "CompList.h"
 
-#include "PauseMenu.h"
+//#include "PauseMenu.h"
 
 using namespace std;
 using namespace rapidjson;
@@ -137,11 +137,22 @@ void LevelManager::ShutdownInstances()
 		delete i;
 }
 
-void LevelManager::Load(const char* fileName)
+bool LevelManager::LevelExists(const char * name)
+{
+	string path = "Levels\\";
+	path.append(name);
+	path.append(".json");
+	if (FILE *file = fopen(path.c_str(), "r")) {
+		fclose(file);
+		return true;
+	} else return false;
+}
+
+void LevelManager::Load(const char* name)
 {
 	// Create the path string.
 	string path = "Levels\\";
-	path.append(fileName);
+	path.append(name);
 	path.append(".json");
 
 	ifstream file(path);
@@ -170,12 +181,12 @@ void LevelManager::Load(const char* fileName)
 		loadObject(levelDoc);
 }
 
-void LevelManager::LoadAbove(const char * fileName, bool updateLower, bool drawLower)
+void LevelManager::LoadAbove(const char * name, bool updateLower, bool drawLower)
 {
 	instances.push_back(instance);
 	instance = new LevelManager();
 	GameObjectManager::NewLayer(updateLower, drawLower);
-	instance->Init(fileName);
+	instance->Init(name);
 	//instance->Load(fileName);
 }
 

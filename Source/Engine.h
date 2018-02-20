@@ -85,6 +85,7 @@ private:
 	Engine(const Engine&) = delete;
 	Engine& operator=(const Engine&) = delete;
 
+	bool hasPauseMenu = false;
 	bool paused = false; //Is the game paused?
 	bool switchLevel = false;
 

@@ -28,8 +28,9 @@ public:
 	void Restart();
 	void Quit();
 
-	void Load(const char* fileName);
-	static void LoadAbove(const char* fileName, bool updateLower=false, bool drawLower=true);
+	static bool LevelExists(const char *name);
+	void Load(const char* name);
+	static void LoadAbove(const char* name, bool updateLower=false, bool drawLower=true);
 	static void UnloadAbove();
 
 	bool IsRunning();

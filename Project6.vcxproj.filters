@@ -148,9 +148,6 @@
     <ClCompile Include="Source\LevelButton.cpp">
       <Filter>Engine\Buttons</Filter>
     </ClCompile>
-    <ClCompile Include="Source\PauseMenu.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="source\Serializable.cpp">
       <Filter>Engine\GameObjects</Filter>
     </ClCompile>
@@ -355,9 +352,6 @@
     </ClInclude>
     <ClInclude Include="rapidjson\writer.h">
       <Filter>RapidJSON</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\PauseMenu.h">
-      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="source\Serializable.h">
       <Filter>Engine\GameObjects</Filter>
