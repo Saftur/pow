@@ -133,9 +133,12 @@ LevelManager * LevelManager::GetLowerInstance(unsigned level)
 
 void LevelManager::ShutdownInstances()
 {
+	instance->OnExit();
 	delete instance;
-	for (LevelManager *i : instances)
+	for (LevelManager *i : instances) {
+		i->OnExit();
 		delete i;
+	}
 }
 
 bool LevelManager::LevelExists(const char * name)
