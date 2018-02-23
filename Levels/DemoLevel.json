@@ -2,13 +2,49 @@
   {
     "Name": "Tilemap",
     "Tilemap": {
-      "SpritesheetFilename": "Assets\\Hexidecimal.png",
+      "SpritesheetFilename": "Assets\\tilemap.png",
       "TilemapFilename": "Data\\Tilemap1.txt",
       "OnScreenOffsetY": 28,
       "OnScreenWidth": 768,
       "OnScreenHeight": 512,
-      "SpritesheetWidth": 4,
-      "SpritesheetHeight": 4
+      "SpritesheetWidth": 1,
+      "SpritesheetHeight": 1
+    }
+  },
+  {
+    "Name": "KillAllButton",
+    "Transform": {
+      "Translation": [ 0, 260 ],
+      "Scale": [ 100, 50 ],
+      "Rotation": 0
+    },
+    "Button": {
+      "ClickEffect": "KillAllUnits"
+    },
+    "Sprite": {
+      "Mesh": {
+        "Name": "ButtonMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "ModulateColor": [ 0, 1, 0, 1 ]
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Assets\\Comic Sans.png",
+        "Cols": 16,
+        "Rows": 6
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.0625, 0.1666666666667 ]
+      },
+      "ModulateColor": [ 1, 0, 0, 1 ],
+      "Text": "Kill All",
+      "Scale": [ 20, 30 ]
     }
   },
   {
@@ -22,7 +58,7 @@
     "Sprite": {
       "SpriteSource": {
         "Name": "TestSpriteSource",
-        "Texture": "Assets\\baseunit.png",
+        "Texture": "Assets\\baseunit2.png",
         "Cols": 1,
         "Rows": 1
       },
@@ -51,7 +87,7 @@
         "CompType": "Sprite",
         "SpriteSource": {
           "Name": "AbilitySpriteSource",
-          "Texture": "Assets\\abilities.png",
+          "Texture": "Assets\\abilities2.png",
           "Cols": 4,
           "Rows": 2
         },
@@ -67,17 +103,6 @@
     ]
   },
   {
-    "Name": "PathLineArchetype",
-    "Archetype": true,
-    "Transform": {
-      "Scale": [ 128, 16 ]
-    },
-    "Sprite": {
-      "Alpha": 0.5,
-      "ModulateColor": [ 1, 0, 0, 1 ]
-    }
-  },
-  {
     "Name": "Army1",
     "BehaviorArmy": {
       "Name": "Army1",
@@ -86,6 +111,7 @@
       "FrontLineStart": 0,
       "FundsDisplayName": "FundsDisplay1",
       "StartFunds": 1000,
+      "PathLineName": "PathLine1",
       "GamepadNum": 0,
       "CursorName": "Cursor1"
     }
@@ -99,6 +125,7 @@
       "FrontLineStart": 5,
       "FundsDisplayName": "FundsDisplay2",
       "StartFunds": 1000,
+      "PathLineName": "PathLine2",
       "GamepadNum": 1,
       "CursorName": "Cursor2"
     }
@@ -141,17 +168,8 @@
       "Rotation": 0
     },
     "Text": {
-      "SpriteSource": {
-        "Name": "Font",
-        "Texture": "Assets\\Comic Sans.png",
-        "Cols": 16,
-        "Rows": 6
-      },
-      "Mesh": {
-        "Name": "TextMesh",
-        "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 0.0625, 0.1666666666667 ]
-      },
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
       "ModulateColor": [ 1, 0, 0, 1 ],
       "Text": "",
       "Scale": [ 30, 30 ]
@@ -173,30 +191,25 @@
     }
   },
   {
-    "Name": "KillAllButton",
+    "Name": "PathLine1",
+    "Archetype": true,
     "Transform": {
-      "Translation": [ 0, 260 ],
-      "Scale": [ 100, 50 ],
-      "Rotation": 0
-    },
-    "Button": {
-      "ClickEffect": "KillAllUnits"
+      "Scale": [ 128, 16 ]
     },
     "Sprite": {
-      "Mesh": {
-        "Name": "ButtonMesh",
-        "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 1, 1 ]
-      },
-      "Alpha": 1,
-      "ModulateColor": [ 0, 1, 0, 1 ]
+      "Alpha": 0.5,
+      "ModulateColor": [ 1, 0, 0, 1 ]
+    }
+  },
+  {
+    "Name": "PathLine2",
+    "Archetype": true,
+    "Transform": {
+      "Scale": [ 128, 16 ]
     },
-    "Text": {
-      "SpriteSource": "Font",
-      "Mesh": "TextMesh",
-      "ModulateColor": [ 1, 0, 0, 1 ],
-      "Text": "Kill All",
-      "Scale": [ 20, 30 ]
+    "Sprite": {
+      "Alpha": 0.5,
+      "ModulateColor": [ 0, 0, 1, 1 ]
     }
   },
   {

@@ -156,6 +156,7 @@ private:
 	BehaviorUnit *editUnit;
 	Vector2D editStartPos;
 	vector<Vector2D> editPath;
+	string pathLineName;
 	Sprite *pathSprite;
 	Transform *pathTransform;
 	Transform diamondTransform;

@@ -41,7 +41,7 @@ public:
 	//------------------------------------------------------------------------------
 
 	// Initialize the game engine.
-	void Init();
+	void Init(const char *startLevel);
 
 	// Update the game engine.
 	// Params:

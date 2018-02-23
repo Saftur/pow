@@ -36,7 +36,7 @@
 //------------------------------------------------------------------------------
 
 // Initialize the game engine.
-void Engine::Init()
+void Engine::Init(const char *startLevel)
 {
 	//--------------------------------------------------------------------------
 	// NOTE: Certain modules need to be initialized first.
@@ -62,7 +62,7 @@ void Engine::Init()
 	Button::ListEffects();
 
 	// Initialize the game state manager.
-	LevelManager::GetInstance().Init("DemoLevel2");
+	LevelManager::GetInstance().Init(startLevel);
 
 	hasPauseMenu = LevelManager::LevelExists("PauseLevel");
 

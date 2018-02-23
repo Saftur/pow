@@ -35,7 +35,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 	System::GetInstance().StoreWindowSettings(instanceH, show);
 
 	// Initialize the game engine.
-	Engine::GetInstance().Init();
+	Engine::GetInstance().Init("DemoLevel");
 
 	// MAIN LOOP: Do not exit until instructed to do so by the game state manager (GSM).
 	while (LevelManager::GetInstance().IsRunning())

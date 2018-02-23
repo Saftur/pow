@@ -218,7 +218,7 @@ void BehaviorArmy::OnEnter()
 		UpdateFundsText();
 		//cursor = Vector2D(0, 0);
 		cursor = (Transform*)GetParent()->GetObjectManager()->GetObjectByName(cursorObjName.c_str())->GetComponent("Transform");
-		GameObject *pathArchetype = GetParent()->GetObjectManager()->GetArchetype("PathLineArchetype");
+		GameObject *pathArchetype = GetParent()->GetObjectManager()->GetArchetype(pathLineName.c_str());
 		if (pathArchetype) {
 			pathSprite = (Sprite*)pathArchetype->GetComponent("Sprite");
 			pathTransform = (Transform*)pathArchetype->GetComponent("Transform");
@@ -245,8 +245,8 @@ void BehaviorArmy::OnUpdate(float dt)
 	case cArmyNormal:
 		gamepad.Update();
 		Vector2D curspos = cursor->GetScreenTranslation();
-		curspos.x += gamepad.GetAxis(Gamepad::aLStickX) * 1000 * dt;
-		curspos.y += gamepad.GetAxis(Gamepad::aLStickY) * 1000 * dt;
+		curspos.x += gamepad.GetAxis(Gamepad::aLStickX) * 2000 * dt;
+		curspos.y += gamepad.GetAxis(Gamepad::aLStickY) * 2000 * dt;
 		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(Gamepad::aLStickX) << std::endl;
 		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(Gamepad::aLStickY) << std::endl;
 		Vector2D tmTopLeft = tilemap->GetTilemapScreenTopLeft();
@@ -358,9 +358,10 @@ void BehaviorArmy::OnUpdate(float dt)
 				if (!editPath.empty())
 					editPath.clear();
 				editLastPos = { -1, -1 };
+				curspos = tilemap->GetPosOnScreen(editStartPos);
 			}
 
-			vector<Vector2D> path = gamepad.GetButton(Gamepad::bRShoulder) ? path_ : vector<Vector2D>();
+			vector<Vector2D> path;// = gamepad.GetButton(Gamepad::bRShoulder) ? path_ : vector<Vector2D>();
 
 			if (gamepad.GetButtonTriggered(Gamepad::bA))
 				CreateUnit("Unit1", tilemap->GetPosOnMap(curspos), path);
@@ -370,17 +371,16 @@ void BehaviorArmy::OnUpdate(float dt)
 				CreateUnit("Unit3", tilemap->GetPosOnMap(curspos), path);
 			else if (gamepad.GetButtonTriggered(Gamepad::bB))
 				CreateUnit("Unit4", tilemap->GetPosOnMap(curspos), path);
-
 		}
 		Vector2D cursscl = cursor->GetScreenScale();
-		/*if (curspos.x + cursscl.x / 2 > AEGfxGetWinMaxX())
+		if (curspos.x + cursscl.x / 2 > AEGfxGetWinMaxX())
 			curspos.x = AEGfxGetWinMaxX() - cursscl.x / 2;
 		if (curspos.x - cursscl.x / 2 < AEGfxGetWinMinX())
 			curspos.x = AEGfxGetWinMinX() + cursscl.x / 2;
 		if (curspos.y + cursscl.y / 2 > AEGfxGetWinMaxY())
 			curspos.y = AEGfxGetWinMaxY() - cursscl.y / 2;
 		if (curspos.y - cursscl.y / 2 < AEGfxGetWinMinY())
-			curspos.y = AEGfxGetWinMinY() + cursscl.y / 2;*/
+			curspos.y = AEGfxGetWinMinY() + cursscl.y / 2;
 		cursor->SetScreenTranslation(curspos);
 		//if (camera)
 		//	*camera = -curspos;
@@ -483,6 +483,9 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 	}
 	funds = 0;
 	numUnits = 0;
+	if (obj.HasMember("PathLineName") && obj["PathLineName"].IsString()) {
+		pathLineName = obj["PathLineName"].GetString();
+	}
 	if (obj.HasMember("GamepadNum") && obj["GamepadNum"].IsInt()) {
 		gamepad = Gamepad(obj["GamepadNum"].GetInt());
 	}
