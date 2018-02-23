@@ -194,26 +194,6 @@ void BehaviorArmy::OnEnter()
 		else fundsText = nullptr;
 		//f32 winWidth = AEGfxGetWinMaxX() - AEGfxGetWinMinX();
 		//f32 winHeight = AEGfxGetWinMaxY() - AEGfxGetWinMinY();
-		switch (side) {
-		case sLeft:
-			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ 1, 0 });
-			flStart = flStart < 0 ? 0 : flStart;
-			/*camera = Engine::GetInstance().AddCamera({AEGfxGetWinMinX() + winWidth/4, AEGfxGetWinMinY() + winHeight/2}, 
-													 {AEGfxGetWinMinX(), AEGfxGetWinMaxY()}, {AEGfxGetWinMaxX(), AEGfxGetWinMinY()}, 
-													 {0, 0});*/
-			break;
-		case sRight:
-			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ -1, 0 });
-			flStart = flStart < 0 ? tilemap->GetTilemapWidth() - 1 : flStart;
-			/*camera = Engine::GetInstance().AddCamera({AEGfxGetWinMaxX() - winWidth/4, AEGfxGetWinMinY() + winHeight/2}, 
-													 {AEGfxGetWinMinX(), AEGfxGetWinMaxY()}, {AEGfxGetWinMaxX(), AEGfxGetWinMinY()}, 
-													 {0, 0});*/
-			break;
-		}
-		frontLine = flStart;
-		if (flTransform) {
-			PushFrontLine({ (float)frontLine, 0 });
-		}
 		funds = startFunds;
 		UpdateFundsText();
 		//cursor = Vector2D(0, 0);
@@ -226,6 +206,28 @@ void BehaviorArmy::OnEnter()
 				Vector2D pathScl = pathTransform->GetScale();
 				diamondTransform.SetScale({pathScl.y, pathScl.y});
 			}
+		}
+		switch (side) {
+		case sLeft:
+			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ 1, 0 });
+			flStart = flStart < 0 ? 0 : flStart;
+			cursor->SetTranslation(tilemap->GetPosOnScreen({ 0, 0 }));
+			/*camera = Engine::GetInstance().AddCamera({AEGfxGetWinMinX() + winWidth/4, AEGfxGetWinMinY() + winHeight/2}, 
+													 {AEGfxGetWinMinX(), AEGfxGetWinMaxY()}, {AEGfxGetWinMaxX(), AEGfxGetWinMinY()}, 
+													 {0, 0});*/
+			break;
+		case sRight:
+			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ -1, 0 });
+			flStart = flStart < 0 ? tilemap->GetTilemapWidth() - 1 : flStart;
+			cursor->SetTranslation(tilemap->GetPosOnScreen({ (float)tilemap->GetTilemapWidth() - 1, 0 }));
+			/*camera = Engine::GetInstance().AddCamera({AEGfxGetWinMaxX() - winWidth/4, AEGfxGetWinMinY() + winHeight/2}, 
+													 {AEGfxGetWinMinX(), AEGfxGetWinMaxY()}, {AEGfxGetWinMaxX(), AEGfxGetWinMinY()}, 
+													 {0, 0});*/
+			break;
+		}
+		frontLine = flStart;
+		if (flTransform) {
+			PushFrontLine({ (float)frontLine, 0 });
 		}
 		break;
 	}
@@ -274,11 +276,45 @@ void BehaviorArmy::OnUpdate(float dt)
 		}
 		if (gamepad.GetAxis(Gamepad::aRTrigger) >= 0.8) {
 			if (gamepad.GetAxis(Gamepad::aLTrigger) >= 0.8) {
-				if (gamepad.GetAxisLastFrame(Gamepad::aLTrigger) < 0.8)
-					curspos = tilemap->GetPosOnScreen(editStartPos);
-				if (gamepad.GetButton(Gamepad::bB))
+				if (gamepad.GetAxisLastFrame(Gamepad::aLTrigger) < 0.8) {
+					if (tilemap->GetPosOnMap(curspos) != editStartPos)
+						curspos = tilemap->GetPosOnScreen(editStartPos);
+					//editSelectMode = smSelect;
+					editSelectMode = smAuto;
+				}
+				/*if (gamepad.GetButton(Gamepad::bB))
 					SelectUnits(curspos, true);
-				else SelectUnits(curspos);
+				else SelectUnits(curspos);*/
+				/*if (gamepad.GetButtonTriggered(Gamepad::bA)) {
+					editSelectMode = smSelect;
+					editExtraLastPos = { -1, -1 };
+				}
+				if (gamepad.GetButtonTriggered(Gamepad::bB)) {
+					editSelectMode = smDeselect;
+					editExtraLastPos = { -1, -1 };
+				}
+				if (editSelectMode == smSelect)
+					SelectUnits(curspos);
+				else if (editSelectMode == smDeselect)
+					SelectUnits(curspos, true);*/
+				if (gamepad.GetButtonTriggered(Gamepad::bX)) {
+					editSelectMode = smManual;
+				}
+				if (gamepad.GetButtonTriggered(Gamepad::bY)) {
+					editSelectMode = smAuto;
+					editExtraLastPos = { -1, -1 };
+				}
+				if (editSelectMode == smAuto) {
+					if (tilemap->GetPosOnMap(curspos) != editExtraLastPos)
+						editExtraLastPos = { -1, -1 };
+					SelectUnits(curspos);
+				} else if (editSelectMode == smManual) {
+					editExtraLastPos = { -1, -1 };
+					if (gamepad.GetButtonTriggered(Gamepad::bA))
+						SelectUnits(curspos);
+					if (gamepad.GetButtonTriggered(Gamepad::bB))
+						SelectUnits(curspos, true);
+				}
 			} else {
 				if (gamepad.GetAxisLastFrame(Gamepad::aLTrigger) >= 0.8) {
 					if (tilemap->GetPosOnMap(curspos) != editLastPos)
@@ -581,11 +617,13 @@ void BehaviorArmy::SelectUnits(Vector2D &curspos, bool deselect)
 					editLastPos += d;
 				editExtraUnits.erase(editExtraUnits.begin());
 				editExtraStartPos.erase(editExtraStartPos.begin());
+				editExtraLastPos = tilemap->GetPosOnMap(curspos);
 			} else {
 				for (unsigned i = 0; i < editExtraUnits.size(); i++) {
 					if (unit == editExtraUnits[i]) {
 						editExtraUnits.erase(editExtraUnits.begin() + i);
 						editExtraStartPos.erase(editExtraStartPos.begin() + i);
+						editExtraLastPos = tilemap->GetPosOnMap(curspos);
 						break;
 					}
 				}
@@ -610,13 +648,14 @@ void BehaviorArmy::SelectUnits(Vector2D &curspos, bool deselect)
 					curspos = tilemap->GetPosOnScreen(editLastPos);
 			} else {
 				BehaviorUnit *unit = (BehaviorUnit*)found[0]->GetComponent("BehaviorUnit");
-				if (unit != editUnit) {
-					Vector2D startPos = editUnit->IsMoving() ? unit->GetNextPos() : unit->GetMapPos();
-					editExtraUnits.push_back(unit);
-					unit->ClearPath();
-					editExtraStartPos.push_back(startPos);
-					editExtraLastPos = tilemap->GetPosOnMap(curspos);
-				}
+				if (unit == editUnit) return;
+				for (BehaviorUnit *u : editExtraUnits)
+					if (unit == u) return;
+				Vector2D startPos = editUnit->IsMoving() ? unit->GetNextPos() : unit->GetMapPos();
+				editExtraUnits.push_back(unit);
+				unit->ClearPath();
+				editExtraStartPos.push_back(startPos);
+				editExtraLastPos = tilemap->GetPosOnMap(curspos);
 			}
 		}
 	}

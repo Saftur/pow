@@ -159,6 +159,8 @@ private:
 	vector<BehaviorUnit*> editExtraUnits;
 	Vector2D editStartPos;
 	vector<Vector2D> editExtraStartPos;
+	enum SelectMode {smAuto, smManual/*, smSelect, smDeselect*/};
+	SelectMode editSelectMode;
 	vector<Vector2D> editPath;
 	string pathLineName;
 	Sprite *pathSprite;
