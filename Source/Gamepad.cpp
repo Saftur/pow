@@ -57,6 +57,27 @@ float Gamepad::GetAxis(Axis axis)
 	}
 }
 
+float Gamepad::GetAxisLastFrame(Axis axis)
+{
+	if (error) return 0;
+	switch (axis) {
+	case aLTrigger:
+		return TriggerToFloat(oldState.Gamepad.bLeftTrigger);
+	case aRTrigger:
+		return TriggerToFloat(oldState.Gamepad.bRightTrigger);
+	case aLStickX:
+		return StickToFloat(oldState.Gamepad.sThumbLX);
+	case aLStickY:
+		return StickToFloat(oldState.Gamepad.sThumbLY);
+	case aRStickX:
+		return StickToFloat(oldState.Gamepad.sThumbRX);
+	case aRStickY:
+		return StickToFloat(oldState.Gamepad.sThumbRY);
+	default:
+		return 0;
+	}
+}
+
 int Gamepad::GetAxisNoDeadzone(Axis axis)
 {
 	if (error) return 0;

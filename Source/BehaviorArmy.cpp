@@ -273,88 +273,83 @@ void BehaviorArmy::OnUpdate(float dt)
 			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
 		}
 		if (gamepad.GetAxis(Gamepad::aRTrigger) >= 0.8) {
-			if (!editUnit) {
-				if (editLastPos != tilemap->GetPosOnMap(curspos)) {
-					vector<GameObject*> found = GetParent()->GetObjectManager()->GetObjectsWithFilter([&](GameObject *obj) {
-						BehaviorUnit *bu = (BehaviorUnit*)obj->GetComponent("BehaviorUnit");
-						if (bu && bu->GetMapPos() == tilemap->GetPosOnMap(curspos))
-							return true;
-						else return false;
-					});
-					if (found.size() > 0) {
-						editUnit = (BehaviorUnit*)found[0]->GetComponent("BehaviorUnit");
-						editStartPos = tilemap->GetPosOnMap(((Transform*)found[0]->GetComponent("Transform"))->GetTranslation());
-						if (pathTransform)
-							pathTransform->SetTranslation(tilemap->GetPosOnScreen(editStartPos));
-						editPath = editUnit->GetPath();
-						editLastPos = tilemap->GetPosOnMap(curspos);
-						if (editUnit->IsMoving()) {
-							editStartPos = editUnit->GetNextPos();
-							if (editUnit->GetNextPos() != editLastPos)
-								editLastPos += editPath[0];
-							editPath.erase(editPath.begin());
+			if (gamepad.GetAxis(Gamepad::aLTrigger) >= 0.8) {
+				if (gamepad.GetAxisLastFrame(Gamepad::aLTrigger) < 0.8)
+					curspos = tilemap->GetPosOnScreen(editStartPos);
+				if (gamepad.GetButton(Gamepad::bB))
+					SelectUnits(curspos, true);
+				else SelectUnits(curspos);
+			} else {
+				if (gamepad.GetAxisLastFrame(Gamepad::aLTrigger) >= 0.8) {
+					if (tilemap->GetPosOnMap(curspos) != editLastPos)
+						curspos = tilemap->GetPosOnScreen(editLastPos);
+					editExtraLastPos = { -1, -1 };
+				}
+				if (!editUnit) {
+					SelectUnits(curspos);
+				} else if (editUnit->GetParent()->IsDestroyed()) {
+					editUnit = nullptr;
+				} else {
+					if (curspos.x <= tmTopLeft.x)
+						curspos.x = tmTopLeft.x;
+					if (curspos.x >= tmBottomRight.x)
+						curspos.x = tmBottomRight.x - 1;
+					if (curspos.y >= tmTopLeft.y)
+						curspos.y = tmTopLeft.y;
+					if (curspos.y <= tmBottomRight.y)
+						curspos.y = tmBottomRight.y - 1;
+					if (tilemap->GetPosOnMap(curspos) != editLastPos) {
+						Vector2D delta;
+						while (tilemap->GetPosOnMap(curspos) != editLastPos) {
+							delta = (tilemap->GetPosOnMap(curspos) - editLastPos).Normalized();
+							if (AddToEditPath(delta))
+								editLastPos += delta;
+							else curspos = tilemap->GetPosOnScreen(editLastPos);
 						}
-						for (Vector2D d : editPath)
-							editLastPos += d;
-						editUnit->ClearPath();
-						if (tilemap->GetPosOnMap(curspos) != editLastPos)
-							curspos = tilemap->GetPosOnScreen(editLastPos);
+						//AddToEditPath(tilemap->GetPosOnMap(curspos) - editLastPos);
+						//editLastPos = tilemap->GetPosOnMap(curspos);
 					}
-				}
-			} else if (editUnit->GetParent()->IsDestroyed()) {
-				editUnit = nullptr;
-			}  else {
-				if (curspos.x <= tmTopLeft.x)
-					curspos.x = tmTopLeft.x;
-				if (curspos.x >= tmBottomRight.x)
-					curspos.x = tmBottomRight.x - 1;
-				if (curspos.y >= tmTopLeft.y)
-					curspos.y = tmTopLeft.y;
-				if (curspos.y <= tmBottomRight.y)
-					curspos.y = tmBottomRight.y - 1;
-				if (!tilemap->IsScreenPosOnMap(curspos) || tilemap->GetPosOnMap(curspos) != editLastPos) {
-					Vector2D delta;
-					while (tilemap->GetPosOnMap(curspos) != editLastPos) {
-						delta = (tilemap->GetPosOnMap(curspos) - editLastPos).Normalized();
-						AddToEditPath(delta);
-						editLastPos += delta;
-					}
-					//AddToEditPath(tilemap->GetPosOnMap(curspos) - editLastPos);
-					//editLastPos = tilemap->GetPosOnMap(curspos);
-				}
-				if (gamepad.GetButtonTriggered(Gamepad::bX)) {
-					if (!editPath.empty()) {
-						editPath.clear();
-						curspos = tilemap->GetPosOnScreen(editStartPos);
-						editLastPos = editStartPos;
-					}
-				}
-				if (!editPath.empty() && gamepad.GetButtonTriggered(Gamepad::bB)) {
-					Vector2D d = editPath[editPath.size()-1];
-					editPath.pop_back();
-					editLastPos = tilemap->GetPosOnMap(curspos) - d;
-					curspos = tilemap->GetPosOnScreen(editLastPos);
-				}
-				if (gamepad.GetButtonTriggered(Gamepad::bY))
-					for (Vector2D d : path_) {
-						if (AddToEditPath(d)) {
-							editLastPos = tilemap->GetPosOnMap(curspos) + d;
-							curspos = tilemap->GetPosOnScreen(editLastPos);
+					if (gamepad.GetButtonTriggered(Gamepad::bX)) {
+						if (!editPath.empty()) {
+							editPath.clear();
+							curspos = tilemap->GetPosOnScreen(editStartPos);
+							editLastPos = editStartPos;
 						}
 					}
-				/*if (gamepad.GetButtonTriggered(Gamepad::bDpadUp))
-					AddToEditPath({ 0, -1 });
-				if (gamepad.GetButtonTriggered(Gamepad::bDpadDown))
-					AddToEditPath({ 0, 1 });
-				if (gamepad.GetButtonTriggered(Gamepad::bDpadLeft))
-					AddToEditPath({ -1, 0 });
-				if (gamepad.GetButtonTriggered(Gamepad::bDpadRight))
-					AddToEditPath({ 1, 0 });*/
+					if (!editPath.empty() && gamepad.GetButtonTriggered(Gamepad::bB)) {
+						Vector2D d = editPath[editPath.size() - 1];
+						editPath.pop_back();
+						editLastPos = tilemap->GetPosOnMap(curspos) - d;
+						curspos = tilemap->GetPosOnScreen(editLastPos);
+					}
+					if (gamepad.GetButtonTriggered(Gamepad::bY)) {
+						for (Vector2D d : path_) {
+							if (AddToEditPath(d)) {
+								editLastPos = tilemap->GetPosOnMap(curspos) + d;
+								curspos = tilemap->GetPosOnScreen(editLastPos);
+							}
+						}
+					}
+					/*if (gamepad.GetButtonTriggered(Gamepad::bDpadUp))
+						AddToEditPath({ 0, -1 });
+					if (gamepad.GetButtonTriggered(Gamepad::bDpadDown))
+						AddToEditPath({ 0, 1 });
+					if (gamepad.GetButtonTriggered(Gamepad::bDpadLeft))
+						AddToEditPath({ -1, 0 });
+					if (gamepad.GetButtonTriggered(Gamepad::bDpadRight))
+						AddToEditPath({ 1, 0 });*/
+				}
 			}
 		} else {
 			if (editUnit) {
 				editUnit->AddToPath(editPath);
 				editUnit = nullptr;
+				for (BehaviorUnit *extraUnit : editExtraUnits)
+					extraUnit->AddToPath(editPath);
+				if (!editExtraUnits.empty())
+					editExtraUnits.clear();
+				if (!editExtraStartPos.empty())
+					editExtraStartPos.clear();
 				if (!editPath.empty())
 					editPath.clear();
 				editLastPos = { -1, -1 };
@@ -560,39 +555,118 @@ bool BehaviorArmy::BehindFrontLine(Vector2D pos)
 	}
 }
 
+void BehaviorArmy::SelectUnits(Vector2D &curspos, bool deselect)
+{
+	if (editUnit) {
+		if (!deselect && tilemap->GetPosOnMap(curspos) == editExtraLastPos)
+			return;
+	} else {
+		if (tilemap->GetPosOnMap(curspos) == editLastPos)
+			return;
+	}
+	vector<GameObject*> found = GetParent()->GetObjectManager()->GetObjectsWithFilter([&](GameObject *obj) {
+		BehaviorUnit *bu = (BehaviorUnit*)obj->GetComponent("BehaviorUnit");
+		if (bu && bu->GetMapPos() == tilemap->GetPosOnMap(curspos))
+			return true;
+		else return false;
+	});
+	if (found.size() > 0) {
+		if (deselect) {
+			BehaviorUnit *unit = (BehaviorUnit*)found[0]->GetComponent("BehaviorUnit");
+			if (unit == editUnit && editExtraUnits.size() > 0) {
+				editUnit = editExtraUnits[0];
+				editStartPos = editExtraStartPos[0];
+				editLastPos = editStartPos;
+				for (Vector2D d : editPath)
+					editLastPos += d;
+				editExtraUnits.erase(editExtraUnits.begin());
+				editExtraStartPos.erase(editExtraStartPos.begin());
+			} else {
+				for (unsigned i = 0; i < editExtraUnits.size(); i++) {
+					if (unit == editExtraUnits[i]) {
+						editExtraUnits.erase(editExtraUnits.begin() + i);
+						editExtraStartPos.erase(editExtraStartPos.begin() + i);
+						break;
+					}
+				}
+			}
+		} else {
+			if (!editUnit) {
+				editUnit = (BehaviorUnit*)found[0]->GetComponent("BehaviorUnit");
+				editStartPos = editUnit->GetMapPos();//tilemap->GetPosOnMap(((Transform*)found[0]->GetComponent("Transform"))->GetTranslation());
+				editPath = editUnit->GetPath();
+				editLastPos = tilemap->GetPosOnMap(curspos);
+				editExtraLastPos = editLastPos;
+				if (editUnit->IsMoving()) {
+					editStartPos = editUnit->GetNextPos();
+					if (editUnit->GetNextPos() != editLastPos)
+						editLastPos += editPath[0];
+					editPath.erase(editPath.begin());
+				}
+				for (Vector2D d : editPath)
+					editLastPos += d;
+				editUnit->ClearPath();
+				if (tilemap->GetPosOnMap(curspos) != editLastPos)
+					curspos = tilemap->GetPosOnScreen(editLastPos);
+			} else {
+				BehaviorUnit *unit = (BehaviorUnit*)found[0]->GetComponent("BehaviorUnit");
+				if (unit != editUnit) {
+					Vector2D startPos = editUnit->IsMoving() ? unit->GetNextPos() : unit->GetMapPos();
+					editExtraUnits.push_back(unit);
+					unit->ClearPath();
+					editExtraStartPos.push_back(startPos);
+					editExtraLastPos = tilemap->GetPosOnMap(curspos);
+				}
+			}
+		}
+	}
+}
+
 bool BehaviorArmy::AddToEditPath(Vector2D dir)
 {
 	if (!editUnit) return false;
 	Vector2D pos = editStartPos;
-	for (Vector2D d : editPath)
-		pos += d;
-	pos += dir;
-	if (tilemap->IsMapPosOnMap(pos))
+	for (unsigned i = 0; i <= editExtraStartPos.size(); i++) {
+		for (Vector2D d : editPath)
+			pos += d;
+		pos += dir;
+		if (!tilemap->IsMapPosOnMap(pos))
+			return false;
+		if (i < editExtraStartPos.size())
+			pos = editExtraStartPos[i];
+	}
+	/*if (tilemap->IsMapPosOnMap(pos))
 		editPath.push_back(dir);
-	else return false;
+	else return false;*/
+	editPath.push_back(dir);
 	return true;
 }
 
 void BehaviorArmy::DrawPath() const
 {
 	if (!pathTransform || !pathSprite) return;
-	Vector2D pos = tilemap->GetPosOnScreen(editStartPos);
-	Vector2D invY = { 1, -1 };
-	Transform diamondT = diamondTransform;
-	diamondT.SetTranslation(pos);
-	pathSprite->SetAlpha(1.0f);
-	pathSprite->Draw(diamondT);
-	for (Vector2D dir : editPath) {
-		dir *= invY;
-		pos += tilemap->GetTileSize() * dir / 2;
-		pathTransform->SetTranslation(pos);
-		pathTransform->SetRotation(dir.GetAngleRadians());
-		pathSprite->SetAlpha(0.5f);
-		pathSprite->Draw();
-		pos += tilemap->GetTileSize() * dir / 2;
+	Vector2D startPos = editStartPos;
+	for (unsigned i = 0; i <= editExtraStartPos.size(); i++) {
+		Vector2D pos = tilemap->GetPosOnScreen(startPos);
+		Vector2D invY = { 1, -1 };
+		Transform diamondT = diamondTransform;
 		diamondT.SetTranslation(pos);
 		pathSprite->SetAlpha(1.0f);
 		pathSprite->Draw(diamondT);
+		for (Vector2D dir : editPath) {
+			dir *= invY;
+			pos += tilemap->GetTileSize() * dir / 2;
+			pathTransform->SetTranslation(pos);
+			pathTransform->SetRotation(dir.GetAngleRadians());
+			pathSprite->SetAlpha(0.5f);
+			pathSprite->Draw();
+			pos += tilemap->GetTileSize() * dir / 2;
+			diamondT.SetTranslation(pos);
+			pathSprite->SetAlpha(1.0f);
+			pathSprite->Draw(diamondT);
+		}
+		if (i < editExtraStartPos.size())
+			startPos = editExtraStartPos[i];
 	}
 }
 

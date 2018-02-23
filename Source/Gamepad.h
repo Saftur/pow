@@ -24,6 +24,7 @@ public:
 	bool GetButton(WORD button);
 	bool GetButtonTriggered(WORD button);
 	float GetAxis(Axis axis);
+	float GetAxisLastFrame(Axis axis);
 	int GetAxisNoDeadzone(Axis axis);
 
 	void SetStickDeadzone(int deadzone);

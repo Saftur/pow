@@ -123,6 +123,7 @@ private:
 	void CreateUnit(const char *unitName, Vector2D startPos, vector<Vector2D> path);
 	bool LegalSpawn(Vector2D pos);
 	bool BehindFrontLine(Vector2D pos);
+	void SelectUnits(Vector2D &curspos, bool deselect=false);
 	bool AddToEditPath(Vector2D dir);
 	void DrawPath() const;
 
@@ -153,8 +154,11 @@ private:
 	unsigned numUnits;
 
 	Vector2D editLastPos = { -1, -1 };
+	Vector2D editExtraLastPos = { -1, -1 };
 	BehaviorUnit *editUnit;
+	vector<BehaviorUnit*> editExtraUnits;
 	Vector2D editStartPos;
+	vector<Vector2D> editExtraStartPos;
 	vector<Vector2D> editPath;
 	string pathLineName;
 	Sprite *pathSprite;
