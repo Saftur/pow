@@ -27,7 +27,7 @@ public:
 	int GetAxisNoDeadzone(Axis axis);
 
 	void SetStickDeadzone(int deadzone);
-	void SetTriggerDeadzon(int deadzone);
+	void SetTriggerDeadzone(int deadzone);
 
 private:
 	float StickToFloat(int s);
@@ -39,5 +39,5 @@ private:
 	XINPUT_STATE state;
 
 	int triggerDeadzone = 5;
-	int stickDeadzone = 2000;
+	int stickDeadzone = 3500;
 };

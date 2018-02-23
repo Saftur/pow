@@ -21,6 +21,10 @@ void Behavior::Update(float dt)
 	OnUpdate(dt);
 }
 
+void Behavior::Draw() const
+{
+}
+
 void Behavior::OnEnter()
 {
 }

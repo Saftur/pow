@@ -24,9 +24,11 @@ using std::string;
 #include "Vector2D.h"
 #include "Gamepad.h"
 #include "Rendertext.h"
+#include "Transform.h"
 
 
 typedef class Sprite Sprite;
+typedef class BehaviorUnit BehaviorUnit;
 
 //------------------------------------------------------------------------------
 
@@ -114,11 +116,15 @@ private:
 
 	void OnExit();
 
+	void Draw() const;
+
 	void Load(rapidjson::Value& obj);
 
 	void CreateUnit(const char *unitName, Vector2D startPos, vector<Vector2D> path);
 	bool LegalSpawn(Vector2D pos);
 	bool BehindFrontLine(Vector2D pos);
+	bool AddToEditPath(Vector2D dir);
+	void DrawPath() const;
 
 	UnitData GetUnitData(const char *name) const;
 	void UpdateFundsText();
@@ -145,6 +151,14 @@ private:
 	unsigned funds, startFunds;
 	vector<Vector2D> path_;
 	unsigned numUnits;
+
+	Vector2D editLastPos = { -1, -1 };
+	BehaviorUnit *editUnit;
+	Vector2D editStartPos;
+	vector<Vector2D> editPath;
+	Sprite *pathSprite;
+	Transform *pathTransform;
+	Transform diamondTransform;
 };
 
 //------------------------------------------------------------------------------

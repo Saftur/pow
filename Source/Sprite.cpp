@@ -58,6 +58,11 @@ void Sprite::AdjustAlpha(float alphaAdjust)
 	alpha += alphaAdjust;
 }
 
+void Sprite::SetAlpha(float alpha_)
+{
+	alpha = alpha_;
+}
+
 void Sprite::SetFrame(unsigned int frameIndex_)
 {
 	this->frameIndex = frameIndex_;
@@ -127,6 +132,11 @@ void Sprite::Load(rapidjson::Value& obj)
 
 		// Add the mesh to the map.
 		LevelManager::GetInstance().AddMesh(tmp["Name"].GetString(), mesh);
+	} else {
+		mesh = MeshCreateQuad(0.5f, 0.5f, 1.0f, 1.0f);
+		meshHalfSize = { 0.5f, 0.5f };
+		meshUV = { 1.0f, 1.0f };
+		LevelManager::GetInstance().AddMesh("", mesh);
 	}
 
 	if (obj.HasMember("Alpha") && obj["Alpha"].IsFloat())

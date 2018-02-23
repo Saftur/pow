@@ -101,6 +101,15 @@ public:
 	GameObject* GetObjectByName(const char* name) const;
 	
 	vector<GameObject*> GetObjectsByName(const char* name);
+
+	template<typename Func>
+	vector<GameObject*> GetObjectsWithFilter(Func filter) {
+		vector<GameObject*> objects;
+		for (GameObject *gameObject : activeList)
+			if (filter(gameObject))
+				objects.push_back(gameObject);
+		return objects;
+	}
 	
 	// Returns a pointer to the first game object archetype matching the specified name.
 	// (Hint: This function and the GameObjectManagerGetObjectByName functions require

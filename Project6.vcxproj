@@ -125,6 +125,7 @@
     <None Include="fmodAPI\lib\fmod.dll" />
     <None Include="fmodAPI\lib\fmodL.dll" />
     <None Include="Levels\DemoLevel.json" />
+    <None Include="Levels\DemoLevel2.json" />
     <None Include="Levels\PauseLevel.json" />
     <None Include="Levels\StartLevel.json" />
   </ItemGroup>

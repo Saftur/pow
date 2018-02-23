@@ -97,6 +97,16 @@ Vector2D Vector2D::Normalized() const
 	return Vector2D(((1 / mag) * x), ((1 / mag) * y));
 }
 
+float Vector2D::GetAngleDegrees() const
+{
+	return GetAngleRadians() / (float)M_PI * 180.0f;
+}
+
+float Vector2D::GetAngleRadians() const
+{
+	return (x == 0 ? (float)M_PI / 2 : atanf(y/x)) + (y < 0 ? (float)M_PI : 0);
+}
+
 // Calculates the distance between two vectors.
 // Params:
 //  other - the other Vector2D.
@@ -169,6 +179,16 @@ Vector2D Vector2D::operator- (const Vector2D &other) const
 	return Vector2D(x - other.x, y - other.y);
 }
 
+Vector2D Vector2D::operator*(const Vector2D & other) const
+{
+	return Vector2D(x * other.x, y * other.y);
+}
+
+Vector2D Vector2D::operator/(const Vector2D & other) const
+{
+	return Vector2D(x / other.x, y / other.y);
+}
+
 // Overload for scaling vectors.
 // Params:
 //  floaty - the scalar.
@@ -211,6 +231,22 @@ Vector2D& Vector2D::operator-= (const Vector2D &other)
 {
 	x -= other.x;
 	y -= other.y;
+
+	return *this;
+}
+
+Vector2D& Vector2D::operator*=(const Vector2D & other)
+{
+	x *= other.x;
+	y *= other.y;
+
+	return *this;
+}
+
+Vector2D& Vector2D::operator/=(const Vector2D & other)
+{
+	x /= other.x;
+	y /= other.y;
 
 	return *this;
 }

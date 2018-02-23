@@ -20,13 +20,17 @@ public:
 	void Draw() const;
 	Vector2D GetPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile = nullptr) const;
 	Vector2D GetPosOnScreen(Vector2D tilePos) const;
+	bool IsMapPosOnMap(Vector2D mapPos) const;
+	bool IsScreenPosOnMap(Vector2D screenPos) const;
 	bool IsObjectCollidingWithMap(Vector2D objectPosition, Vector2D objectScale) const;
 	void SetOffset(int onScreenOffsetX, int onScreenOffsetY);
 
 	int GetTileWidth() const;
 	int GetTileHeight() const;
+	Vector2D GetTileSize() const;
 	int GetTilemapWidth() const;
 	int GetTilemapHeight() const;
+	Vector2D GetTilemapSize() const;
 	Vector2D GetTilemapScreenTopLeft() const;
 	Vector2D GetTilemapScreenBottomRight() const;
 

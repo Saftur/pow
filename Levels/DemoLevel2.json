@@ -2,13 +2,13 @@
   {
     "Name": "Tilemap",
     "Tilemap": {
-      "SpritesheetFilename": "Assets\\Hexidecimal.png",
+      "SpritesheetFilename": "Assets\\tilemap.png",
       "TilemapFilename": "Data\\Tilemap1.txt",
       "OnScreenOffsetY": 28,
       "OnScreenWidth": 768,
       "OnScreenHeight": 512,
-      "SpritesheetWidth": 4,
-      "SpritesheetHeight": 4
+      "SpritesheetWidth": 1,
+      "SpritesheetHeight": 1
     }
   },
   {
@@ -22,7 +22,7 @@
     "Sprite": {
       "SpriteSource": {
         "Name": "TestSpriteSource",
-        "Texture": "Assets\\baseunit.png",
+        "Texture": "Assets\\baseunit2.png",
         "Cols": 1,
         "Rows": 1
       },
@@ -51,7 +51,7 @@
         "CompType": "Sprite",
         "SpriteSource": {
           "Name": "AbilitySpriteSource",
-          "Texture": "Assets\\abilities.png",
+          "Texture": "Assets\\abilities2.png",
           "Cols": 4,
           "Rows": 2
         },

@@ -62,7 +62,7 @@ void Engine::Init()
 	Button::ListEffects();
 
 	// Initialize the game state manager.
-	LevelManager::GetInstance().Init("DemoLevel");
+	LevelManager::GetInstance().Init("DemoLevel2");
 
 	hasPauseMenu = LevelManager::LevelExists("PauseLevel");
 

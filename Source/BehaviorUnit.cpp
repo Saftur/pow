@@ -62,6 +62,7 @@ void BehaviorUnit::Init(BehaviorArmy::UnitData unitData_, vector<Vector2D> path_
 	attackTimer = 0;
 	payTimer = 0;
 	abilitySprite = (Sprite*)GetParent()->GetComponent("Sprite", 1);
+	abilitySprite->SetFrame(unitData.ability);
 	abilityAnimation = (Animation*)GetParent()->GetComponent("Animation");
 	vector<AnimationFrame> seq;
 	seq.push_back({ unitData.ability + BehaviorArmy::UnitData::NUMABILITIES, 0.333f });
@@ -100,6 +101,31 @@ Vector2D BehaviorUnit::GetNextScrPos()
 Vector2D BehaviorUnit::GetNextPos()
 {
 	return startPos+GetNextDir();
+}
+
+vector<Vector2D> BehaviorUnit::GetPath()
+{
+	return path;
+}
+
+void BehaviorUnit::ClearPath()
+{
+	Vector2D d = path.empty() ? Vector2D(0, 0) : path[0];
+	if (!path.empty())
+		path.clear();
+	if (IsMoving())
+		path.push_back(d);
+}
+
+void BehaviorUnit::AddToPath(Vector2D pos)
+{
+	path.push_back(pos);
+}
+
+void BehaviorUnit::AddToPath(vector<Vector2D> path_)
+{
+	for (Vector2D d : path_)
+		path.push_back(d);
 }
 
 bool BehaviorUnit::IsMoving()
@@ -187,7 +213,7 @@ void BehaviorUnit::OnEnter()
 				}
 			}
 		}
-		if (unitData.army->costType == 0) {
+		if (BehaviorArmy::costType == 0) {
 			if (!(unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 15 + 0.5f)))) {
 				SetCurrentState(cUnitWaiting);
 				SetNextState(cUnitWaiting);
@@ -236,6 +262,7 @@ void BehaviorUnit::OnUpdate(float dt)
 			path.erase(path.begin());
 			SetCurrentState(cUnitWaiting);//cUnitDoneMove;
 			startPos = GetMapPos();
+			((Transform*)GetParent()->GetComponent("Transform"))->SetTranslation(tilemap->GetPosOnScreen(GetMapPos()));
 			//Init(behavior);
 		}
 		/*if (dir.X() != 0) {
@@ -282,7 +309,7 @@ void BehaviorUnit::OnUpdate(float dt)
 				break;
 			} else target = nullptr;
 		} else {
-			if (unitData.army->costType == 0) {
+			if (BehaviorArmy::costType == 0) {
 				if (payTimer <= 0) {
 					if (!(unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 20 + 0.5f))))
 						GetParent()->Destroy();

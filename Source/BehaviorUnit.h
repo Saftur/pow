@@ -60,6 +60,11 @@ public:
 	Vector2D GetNextScrPos();
 	Vector2D GetNextPos();
 
+	vector<Vector2D> GetPath();
+	void ClearPath();
+	void AddToPath(Vector2D pos);
+	void AddToPath(vector<Vector2D> path);
+
 	bool IsMoving();
 
 	bool IsAdjacent(BehaviorUnit *other);

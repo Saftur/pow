@@ -130,6 +130,19 @@ Vector2D Tilemap::GetPosOnScreen(Vector2D tilePos) const
 	return pos;
 }
 
+bool Tilemap::IsMapPosOnMap(Vector2D mapPos) const
+{
+	return mapPos.x >= 0 && mapPos.x < tilemapWidth && mapPos.y >= 0 && mapPos.y < tilemapHeight;
+}
+
+bool Tilemap::IsScreenPosOnMap(Vector2D screenPos) const
+{
+	Vector2D topLeft = GetTilemapScreenTopLeft();
+	Vector2D bottomRight = GetTilemapScreenBottomRight();
+	return screenPos.x >= topLeft.x && screenPos.x <= bottomRight.x && screenPos.y >= bottomRight.y && screenPos.y <= topLeft.y;
+	//return IsMapPosOnMap(GetPosOnMap(screenPos));
+}
+
 bool Tilemap::IsObjectCollidingWithMap(Vector2D objectPosition, Vector2D objectScale) const
 {
 	UNREFERENCED_PARAMETER(objectPosition);
@@ -208,6 +221,11 @@ int Tilemap::GetTileHeight() const
 	return tileHeight;
 }
 
+Vector2D Tilemap::GetTileSize() const
+{
+	return Vector2D((float)tileWidth, (float)tileHeight);
+}
+
 int Tilemap::GetTilemapWidth() const
 {
 	return tilemapWidth;
@@ -216,6 +234,11 @@ int Tilemap::GetTilemapWidth() const
 int Tilemap::GetTilemapHeight() const
 {
 	return tilemapHeight;
+}
+
+Vector2D Tilemap::GetTilemapSize() const
+{
+	return Vector2D((float)tilemapWidth, (float)tilemapHeight);
 }
 
 Vector2D Tilemap::GetTilemapScreenTopLeft() const

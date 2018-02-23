@@ -84,7 +84,7 @@ void Gamepad::SetStickDeadzone(int deadzone)
 		triggerDeadzone = deadzone;
 }
 
-void Gamepad::SetTriggerDeadzon(int deadzone)
+void Gamepad::SetTriggerDeadzone(int deadzone)
 {
 	if (deadzone >= 0 && deadzone < 255)
 		stickDeadzone = deadzone;

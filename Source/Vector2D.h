@@ -53,6 +53,8 @@ public:
 	float MagnitudeSquared() const;
 	float Magnitude() const;
 	Vector2D Normalized() const;
+	float GetAngleDegrees() const;
+	float GetAngleRadians() const;
 	float DistanceSquared(const Vector2D& other) const;
 	float Distance(const Vector2D& other) const;
 	Vector2D Midpoint(const Vector2D& other) const;
@@ -65,11 +67,15 @@ public:
 	// Overloaded operators (7 member functions)
 	Vector2D operator+(const Vector2D& other) const;
 	Vector2D operator-(const Vector2D& other) const;
+	Vector2D operator*(const Vector2D& other) const;
+	Vector2D operator/(const Vector2D& other) const;
 	Vector2D operator*(float scalar) const;
 	Vector2D operator/(float scalar) const;
 	Vector2D operator-() const;
 	Vector2D& operator+=(const Vector2D& other);
 	Vector2D& operator-=(const Vector2D& other);
+	Vector2D& operator*=(const Vector2D& other);
+	Vector2D& operator/=(const Vector2D& other);
 	Vector2D& operator*=(float scalar);
 	Vector2D& operator/=(float scalar);
 
