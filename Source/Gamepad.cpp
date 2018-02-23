@@ -24,19 +24,43 @@ void Gamepad::Update()
 	error = (XInputGetState(gpNum, &state) != ERROR_SUCCESS);
 }
 
-bool Gamepad::GetButton(WORD button)
+bool Gamepad::GetButton(int button)
 {
 	if (error) return false;
+	if (button == bUnbound)
+		return false;
+	if (button == bLTrigger)
+		return GetAxis(aLTrigger) >= triggerButtonPress;
+	else if (button == bRTrigger)
+		return GetAxis(aRTrigger) >= triggerButtonPress;
 	return state.Gamepad.wButtons & button;
 }
 
-bool Gamepad::GetButtonTriggered(WORD button)
+bool Gamepad::GetButtonTriggered(int button)
 {
 	if (error) return false;
+	if (button == bUnbound)
+		return false;
+	if (button == bLTrigger)
+		return (GetAxis(aLTrigger) >= triggerButtonPress) && (GetAxisLastFrame(aLTrigger) < triggerButtonPress);
+	else if (button == bRTrigger)
+		return (GetAxis(aRTrigger) >= triggerButtonPress) && (GetAxisLastFrame(aRTrigger) < triggerButtonPress);
 	return (state.Gamepad.wButtons & button) && !(oldState.Gamepad.wButtons & button);
 }
 
-float Gamepad::GetAxis(Axis axis)
+bool Gamepad::GetButtonReleased(int button)
+{
+	if (error) return false;
+	if (button == bUnbound)
+		return false;
+	if (button == bLTrigger)
+		return (GetAxis(aLTrigger) < triggerButtonPress) && (GetAxisLastFrame(aLTrigger) >= triggerButtonPress);
+	else if (button == bRTrigger)
+		return (GetAxis(aRTrigger) < triggerButtonPress) && (GetAxisLastFrame(aRTrigger) >= triggerButtonPress);
+	return !(state.Gamepad.wButtons & button) && (oldState.Gamepad.wButtons & button);
+}
+
+float Gamepad::GetAxis(int axis)
 {
 	if (error) return 0;
 	switch (axis) {
@@ -57,7 +81,7 @@ float Gamepad::GetAxis(Axis axis)
 	}
 }
 
-float Gamepad::GetAxisLastFrame(Axis axis)
+float Gamepad::GetAxisLastFrame(int axis)
 {
 	if (error) return 0;
 	switch (axis) {
@@ -78,7 +102,7 @@ float Gamepad::GetAxisLastFrame(Axis axis)
 	}
 }
 
-int Gamepad::GetAxisNoDeadzone(Axis axis)
+int Gamepad::GetAxisNoDeadzone(int axis)
 {
 	if (error) return 0;
 	switch (axis) {

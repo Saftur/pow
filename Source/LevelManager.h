@@ -56,10 +56,15 @@ public:
 
 private:
 	enum LevelStatus {
-		cLevelUpdate,
-		cLevelChange,
-		cLevelRestart,
-		cLevelQuit,
+		lsLevelUpdate,
+		lsLevelChange,
+		lsLevelRestart,
+		lsLevelQuit,
+	};
+	enum ObjType {
+		otGameObject,
+		otSpriteSource,
+		otMesh
 	};
 
 	LevelManager();
@@ -69,7 +74,7 @@ private:
 	static LM_STATE stateCurr, stateNext;
 	unsigned int id = 0;
 
-	LevelStatus levelStatus = cLevelUpdate;
+	LevelStatus levelStatus = lsLevelUpdate;
 	const char *currLevel = "";
 	const char *nextLevel = "";
 

@@ -25,6 +25,7 @@ using std::string;
 #include "Gamepad.h"
 #include "Rendertext.h"
 #include "Transform.h"
+#include "ControlList.h"
 
 
 typedef class Sprite Sprite;
@@ -133,6 +134,49 @@ private:
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
+	enum ControlType {ctKeyboard, ctGamepad};
+
+	/*struct ControlOptions : public Serializable {
+		ControlType type;
+		// Camera controls
+		struct {
+			int cameraAxisX;
+			int cameraAxisY;
+			int cameraUp;
+			int cameraDown;
+			int cameraLeft;
+			int cameraRight;
+		} Camera;
+		// Normal controls
+		struct {
+			int spawnUnit1;
+			int spawnUnit2;
+			int spawnUnit3;
+			int spawnUnit4;
+			int commandMode;
+		} Normal;
+		// Command controls
+		struct {
+			int clearPath;
+			int backPath;
+			int pathToEnd;
+			int selectMode;
+		} Command;
+		// Select controls
+		struct {
+			int manualMode;
+			int autoMode;
+		} Select;
+		// Manual mode
+		struct {
+			int select;
+			int deselect;
+		} SelectManual;
+
+		void Load(rapidjson::Value& obj);
+		static int GetAxis(const char *name);
+		static int GetButton(const char *name);
+	};*/
 
 
 	Tilemap *tilemap;
@@ -143,17 +187,20 @@ private:
 	Transform *flTransform;
 	string fundsObjName;
 	Text *fundsText;
+	//ControlType controlType;
+	ControlList controlList;
 	Gamepad gamepad;
 	//Vector2D cursor;
 	string cursorObjName;
 	Transform *cursor;
+	Sprite *cursorSprite;
 	Vector2D *camera;
 
 	unsigned funds, startFunds;
 	vector<Vector2D> path_;
 	unsigned numUnits;
 
-	Vector2D editLastPos = { -1, -1 };
+	Vector2D editPos = { -1, -1 };
 	Vector2D editExtraLastPos = { -1, -1 };
 	BehaviorUnit *editUnit;
 	vector<BehaviorUnit*> editExtraUnits;
@@ -166,6 +213,7 @@ private:
 	Sprite *pathSprite;
 	Transform *pathTransform;
 	Transform diamondTransform;
+	Transform targetTransform;
 };
 
 //------------------------------------------------------------------------------

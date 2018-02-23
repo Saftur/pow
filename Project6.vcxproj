@@ -53,6 +53,7 @@
     <ClInclude Include="Source\ColliderBox.h" />
     <ClInclude Include="Source\ColliderCircle.h" />
     <ClInclude Include="Source\Component.h" />
+    <ClInclude Include="Source\ControlList.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\GameObjectManager.h" />
@@ -93,6 +94,7 @@
     <ClCompile Include="Source\ColliderBox.cpp" />
     <ClCompile Include="Source\ColliderCircle.cpp" />
     <ClCompile Include="Source\Component.cpp" />
+    <ClCompile Include="Source\ControlList.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\GameObjectManager.cpp" />
@@ -122,11 +124,14 @@
     <ClCompile Include="Source\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\Army1.ini" />
+    <None Include="Data\Army1Controls.json" />
+    <None Include="Data\Army2.ini" />
+    <None Include="Data\Levels\DemoLevel.json" />
+    <None Include="Data\Levels\PauseLevel.json" />
+    <None Include="Data\Levels\StartLevel.json" />
     <None Include="fmodAPI\lib\fmod.dll" />
     <None Include="fmodAPI\lib\fmodL.dll" />
-    <None Include="Levels\DemoLevel.json" />
-    <None Include="Levels\PauseLevel.json" />
-    <None Include="Levels\StartLevel.json" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="fmodAPI\lib\fmodL_vc.lib" />
@@ -184,7 +189,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(SolutionDir)rapidjson/include/</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4127;4100</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4100;4706</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -210,7 +215,7 @@ xcopy .\fmodAPI\lib\fmodL.dll "$(OutDir)" /Y</Command>
       <CompileAs>CompileAsCpp</CompileAs>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(SolutionDir)rapidjson/include/</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4127;4100</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4100;4706</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

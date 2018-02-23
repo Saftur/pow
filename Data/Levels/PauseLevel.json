@@ -38,7 +38,7 @@
     "Text": {
       "SpriteSource": {
         "Name": "Font",
-        "Texture": "Assets\\Comic Sans.png",
+        "Texture": "Data\\Assets\\Comic Sans.png",
         "Cols": 16,
         "Rows": 6
       },

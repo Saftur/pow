@@ -21,6 +21,7 @@
 #include "Rendertext.h"
 #include "Button.h"
 #include "CompList.h"
+#include "Mesh.h"
 
 //#include "PauseMenu.h"
 
@@ -55,11 +56,11 @@ void LevelManager::Update(float dt)
 	if (levelStatus) {
 		OnExit();
 
-		if (levelStatus != cLevelQuit) {
+		if (levelStatus != lsLevelQuit) {
 			Load(nextLevel);
 
 			currLevel = nextLevel;
-			levelStatus = cLevelUpdate;
+			levelStatus = lsLevelUpdate;
 		}
 	}
 }
@@ -99,22 +100,22 @@ void LevelManager::Shutdown() {
 void LevelManager::SetNextLevel(const char *name) {
 	if (!name) return;
 	nextLevel = name;
-	levelStatus = cLevelChange;
+	levelStatus = lsLevelChange;
 }
 
 void LevelManager::Restart()
 {
-	levelStatus = cLevelRestart;
+	levelStatus = lsLevelRestart;
 }
 
 void LevelManager::Quit()
 {
-	levelStatus = cLevelQuit;
+	levelStatus = lsLevelQuit;
 }
 
 bool LevelManager::IsRunning()
 {
-	return levelStatus != cLevelQuit;
+	return levelStatus != lsLevelQuit;
 }
 
 LevelManager & LevelManager::GetInstance()
@@ -143,7 +144,7 @@ void LevelManager::ShutdownInstances()
 
 bool LevelManager::LevelExists(const char * name)
 {
-	string path = "Levels\\";
+	string path = "Data\\Levels\\";
 	path.append(name);
 	path.append(".json");
 	if (FILE *file = fopen(path.c_str(), "r")) {
@@ -155,7 +156,7 @@ bool LevelManager::LevelExists(const char * name)
 void LevelManager::Load(const char* name)
 {
 	// Create the path string.
-	string path = "Levels\\";
+	string path = "Data\\Levels\\";
 	path.append(name);
 	path.append(".json");
 
@@ -219,36 +220,69 @@ void LevelManager::loadObject(Document& levelDoc)
 	assert(v.IsObject());
 
 	// Create the game object.
-	GameObject* go = new GameObject(v["Name"].GetString());
-	go->SetLevelManager(this);
-
-	bool archetype = v.HasMember("Archetype") && v["Archetype"].GetType() == rapidjson::Type::kTrueType;
-
-	for (Value::MemberIterator itr = v.MemberBegin(); itr != v.MemberEnd(); itr++) {
-		Component *c = GetComponentType(itr->name.GetString());
-		if (c) {
-			c = c->Clone();
-			go->AddComponent(c);
-			c->Load(itr->value);
-		}
+	ObjType type = otGameObject;
+	if (v.HasMember("Type") && v["Type"].IsString()) {
+		if (strcmp(v["Type"].GetString(), "SpriteSource") == 0)
+			type = otSpriteSource;
+		else if (strcmp(v["Type"].GetString(), "Mesh") == 0)
+			type = otMesh;
 	}
+	switch (type) {
+	case otGameObject: {
+		GameObject* go = new GameObject(v["Name"].GetString());
+		go->SetLevelManager(this);
 
-	if (v.HasMember("Extras") && v["Extras"].IsArray()) {
-		for (Value::ValueIterator itr = v["Extras"].Begin(); itr != v["Extras"].End(); itr++) {
-			if (itr->IsObject() && itr->HasMember("CompType") && (*itr)["CompType"].IsString()) {
-				Component *c = GetComponentType((*itr)["CompType"].GetString());
-				if (c) {
-					c = c->Clone();
-					go->AddComponent(c);
-					c->Load(*itr);
+		bool archetype = v.HasMember("Archetype") && v["Archetype"].GetType() == rapidjson::Type::kTrueType;
+
+		for (Value::MemberIterator itr = v.MemberBegin(); itr != v.MemberEnd(); itr++) {
+			Component *c = GetComponentType(itr->name.GetString());
+			if (c) {
+				c = c->Clone();
+				go->AddComponent(c);
+				c->Load(itr->value);
+			}
+		}
+
+		if (v.HasMember("Extras") && v["Extras"].IsArray()) {
+			for (Value::ValueIterator itr = v["Extras"].Begin(); itr != v["Extras"].End(); itr++) {
+				if (itr->IsObject() && itr->HasMember("CompType") && (*itr)["CompType"].IsString()) {
+					Component *c = GetComponentType((*itr)["CompType"].GetString());
+					if (c) {
+						c = c->Clone();
+						go->AddComponent(c);
+						c->Load(*itr);
+					}
 				}
 			}
 		}
-	}
 
-	if (archetype)
-		objectManager->AddArchetype(*go);
-	else objectManager->Add(*go);
+		if (archetype)
+			objectManager->AddArchetype(*go);
+		else objectManager->Add(*go);
+	}
+		break;
+	case otSpriteSource: {
+		// Create and add a sprite source.
+		SpriteSource* ss = new SpriteSource(0, 0, nullptr);
+
+		ss->Load(v);
+
+		// Add the sprite source to the map.
+		AddSpriteSource(v["Name"].GetString(), ss);
+	}
+		break;
+	case otMesh: {
+		// Create and add a mesh.
+		rapidjson::Value& tmp1 = v["HalfSize"];
+		rapidjson::Value& tmp2 = v["UV"];
+
+		AEGfxVertexList *mesh = MeshCreateQuad(tmp1[0].GetFloat(), tmp1[1].GetFloat(), tmp2[0].GetFloat(), tmp2[1].GetFloat());
+
+		// Add the mesh to the map.
+		AddMesh(v["Name"].GetString(), mesh);
+	}
+		break;
+	}
 
 	id++;
 }

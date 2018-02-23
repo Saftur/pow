@@ -86,8 +86,8 @@ public:
 	//   mesh = Pointer to a mesh created using the Alpha Engine.
 	void SetMesh(AEGfxVertexList* mesh);
 
-	void SetMeshHalfSize(Vector2D halfSize);
-	void SetMeshUV(Vector2D UV);
+	//void SetMeshHalfSize(Vector2D halfSize);
+	//void SetMeshUV(Vector2D UV);
 
 	// Set a new SpriteSource for the specified sprite.
 	// Params:
@@ -116,13 +116,13 @@ private:
 
 	// The mesh used to draw the sprite.
 	AEGfxVertexList * mesh;
-	Vector2D meshHalfSize;
-	Vector2D meshUV;
+	//Vector2D meshHalfSize;
+	//Vector2D meshUV;
 
 	// Color used for blending/tint
 	Color color;
 
-	AEGfxVertexList* CutMesh(Transform &transform) const;
+	//AEGfxVertexList* CutMesh(Transform &transform) const;
 
 	static Vector2D topLeftBound;
 	static Vector2D bottomRightBound;

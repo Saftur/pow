@@ -70,8 +70,8 @@ GameObject * Button::CreateButton(const char * objName, const char * effectName,
 	button->AddComponent(transform);
 	Sprite* sprite = new Sprite();
 	sprite->SetMesh(mesh);
-	sprite->SetMeshHalfSize({ 0.5f, 0.5f });
-	sprite->SetMeshUV({ 1.0f, 1.0f });
+	//sprite->SetMeshHalfSize({ 0.5f, 0.5f });
+	//sprite->SetMeshUV({ 1.0f, 1.0f });
 	button->AddComponent(sprite);
 	if(text) {
 		Text* textObj = new Text(true, text, font, color, textScale);

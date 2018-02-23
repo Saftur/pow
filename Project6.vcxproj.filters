@@ -58,6 +58,9 @@
     <Filter Include="Engine\GameObjects\Button">
       <UniqueIdentifier>{ed05ba28-4811-4472-a13d-55c96845190d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Armies">
+      <UniqueIdentifier>{41f3a029-25d6-4467-a574-2b89e9253d1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -173,6 +176,9 @@
       <Filter>Engine\GameObjects\Button</Filter>
     </ClCompile>
     <ClCompile Include="Source\Button.cpp" />
+    <ClCompile Include="Source\ControlList.cpp">
+      <Filter>Engine\Control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h">
@@ -378,6 +384,9 @@
       <Filter>Engine\GameObjects\Button</Filter>
     </ClInclude>
     <ClInclude Include="Source\Button.h" />
+    <ClInclude Include="Source\ControlList.h">
+      <Filter>Engine\Control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fmodAPI\lib\fmod.dll">
@@ -386,14 +395,23 @@
     <None Include="fmodAPI\lib\fmodL.dll">
       <Filter>fmod</Filter>
     </None>
-    <None Include="Levels\StartLevel.json">
+    <None Include="Data\Levels\DemoLevel.json">
       <Filter>Game\Levels</Filter>
     </None>
-    <None Include="Levels\DemoLevel.json">
+    <None Include="Data\Levels\PauseLevel.json">
       <Filter>Game\Levels</Filter>
     </None>
-    <None Include="Levels\PauseLevel.json">
+    <None Include="Data\Levels\StartLevel.json">
       <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Army1.ini">
+      <Filter>Game\Armies</Filter>
+    </None>
+    <None Include="Data\Army1Controls.json">
+      <Filter>Game\Armies</Filter>
+    </None>
+    <None Include="Data\Army2.ini">
+      <Filter>Game\Armies</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

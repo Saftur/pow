@@ -35,8 +35,8 @@ Tilemap::Tilemap(const char* spritesheetFilename, const char* tilemapFilename, c
 	meshQuad = MeshCreateQuad((float)tileWidth / 2.0f, (float)tileHeight / 2.0f, 1.0f / spritesheetWidth, 1.0f / spritesheetHeight);
 	spriteSource = new SpriteSource(spritesheetWidth, spritesheetHeight, texture);
 	sprite->SetMesh(meshQuad);
-	sprite->SetMeshHalfSize({ (float)tileWidth / 2.0f, (float)tileHeight / 2.0f });
-	sprite->SetMeshUV({ 1.0f / spritesheetWidth, 1.0f / spritesheetHeight });
+	//sprite->SetMeshHalfSize({ (float)tileWidth / 2.0f, (float)tileHeight / 2.0f });
+	//sprite->SetMeshUV({ 1.0f / spritesheetWidth, 1.0f / spritesheetHeight });
 	sprite->SetSpriteSource(spriteSource);
 }
 
@@ -363,8 +363,8 @@ void Tilemap::Load(rapidjson::Value & obj)
 		meshQuad = MeshCreateQuad((float)tileWidth / 2.0f, (float)tileHeight / 2.0f, 1.0f / obj["SpritesheetWidth"].GetInt(), 1.0f / obj["SpritesheetHeight"].GetInt());
 		spriteSource = new SpriteSource(obj["SpritesheetWidth"].GetInt(), obj["SpritesheetHeight"].GetInt(), texture);
 		sprite->SetMesh(meshQuad);
-		sprite->SetMeshHalfSize({ (float)tileWidth / 2.0f, (float)tileHeight / 2.0f });
-		sprite->SetMeshUV({ 1.0f / obj["SpritesheetWidth"].GetInt(), 1.0f / obj["SpritesheetHeight"].GetInt() });
+		//sprite->SetMeshHalfSize({ (float)tileWidth / 2.0f, (float)tileHeight / 2.0f });
+		//sprite->SetMeshUV({ 1.0f / obj["SpritesheetWidth"].GetInt(), 1.0f / obj["SpritesheetHeight"].GetInt() });
 		sprite->SetSpriteSource(spriteSource);
 	}
 }

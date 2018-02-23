@@ -73,7 +73,7 @@ void Sprite::SetMesh(AEGfxVertexList * mesh_)
 	this->mesh = mesh_;
 }
 
-void Sprite::SetMeshHalfSize(Vector2D halfSize)
+/*void Sprite::SetMeshHalfSize(Vector2D halfSize)
 {
 	meshHalfSize = halfSize;
 }
@@ -81,7 +81,7 @@ void Sprite::SetMeshHalfSize(Vector2D halfSize)
 void Sprite::SetMeshUV(Vector2D UV)
 {
 	meshUV = UV;
-}
+}*/
 
 void Sprite::SetSpriteSource(SpriteSource * spriteSource_)
 {
@@ -105,10 +105,10 @@ void Sprite::Load(rapidjson::Value& obj)
 		// Create and add a sprite source.
 		SpriteSource* ss = new SpriteSource(0, 0, nullptr);
 
-		ss->Load(obj["SpriteSource"]);
-		spriteSource = ss;
-
 		rapidjson::Value& tmp = obj["SpriteSource"];
+
+		ss->Load(tmp);
+		spriteSource = ss;
 
 		// Add the sprite source to the map.
 		LevelManager::GetInstance().AddSpriteSource(tmp["Name"].GetString(), ss);
@@ -127,15 +127,15 @@ void Sprite::Load(rapidjson::Value& obj)
 		rapidjson::Value& tmp2 = tmp["UV"];
 
 		mesh = MeshCreateQuad(tmp1[0].GetFloat(), tmp1[1].GetFloat(), tmp2[0].GetFloat(), tmp2[1].GetFloat());
-		meshHalfSize = {tmp1[0].GetFloat(), tmp1[1].GetFloat()};
-		meshUV = {tmp2[0].GetFloat(), tmp2[1].GetFloat()};
+		//meshHalfSize = {tmp1[0].GetFloat(), tmp1[1].GetFloat()};
+		//meshUV = {tmp2[0].GetFloat(), tmp2[1].GetFloat()};
 
 		// Add the mesh to the map.
 		LevelManager::GetInstance().AddMesh(tmp["Name"].GetString(), mesh);
 	} else {
 		mesh = MeshCreateQuad(0.5f, 0.5f, 1.0f, 1.0f);
-		meshHalfSize = { 0.5f, 0.5f };
-		meshUV = { 1.0f, 1.0f };
+		//meshHalfSize = { 0.5f, 0.5f };
+		//meshUV = { 1.0f, 1.0f };
 		LevelManager::GetInstance().AddMesh("", mesh);
 	}
 
@@ -161,7 +161,7 @@ void Sprite::SetBounds(Vector2D topLeft, Vector2D bottomRight)
 	bottomRightBound = bottomRight;
 }
 
-AEGfxVertexList * Sprite::CutMesh(Transform &transform) const
+/*AEGfxVertexList * Sprite::CutMesh(Transform &transform) const
 {
 	Vector2D pos = transform.GetScreenTranslation();
 	Vector2D scl = transform.GetScreenScale();
@@ -199,4 +199,4 @@ AEGfxVertexList * Sprite::CutMesh(Transform &transform) const
 
 		return AEGfxMeshEnd();
 	} else return nullptr;
-}
+}*/

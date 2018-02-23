@@ -1,8 +1,27 @@
 [
   {
+    "Type": "Mesh",
+    "Name": "ButtonMesh",
+    "HalfSize": [ 0.5, 0.5 ],
+    "UV": [ 1, 1 ]
+  },
+  {
+    "Type": "SpriteSource",
+    "Name": "Font",
+    "Texture": "Data\\Assets\\Comic Sans.png",
+    "Cols": 16,
+    "Rows": 6
+  },
+  {
+    "Type": "Mesh",
+    "Name": "TextMesh",
+    "HalfSize": [ 0.5, 0.5 ],
+    "UV": [ 0.0625, 0.1666666666667 ]
+  },
+  {
     "Name": "Tilemap",
     "Tilemap": {
-      "SpritesheetFilename": "Assets\\tilemap.png",
+      "SpritesheetFilename": "Data\\Assets\\tilemap.png",
       "TilemapFilename": "Data\\Tilemap1.txt",
       "OnScreenOffsetY": 28,
       "OnScreenWidth": 768,
@@ -22,26 +41,13 @@
       "ClickEffect": "KillAllUnits"
     },
     "Sprite": {
-      "Mesh": {
-        "Name": "ButtonMesh",
-        "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 1, 1 ]
-      },
+      "Mesh": "ButtonMesh",
       "Alpha": 1,
       "ModulateColor": [ 0, 1, 0, 1 ]
     },
     "Text": {
-      "SpriteSource": {
-        "Name": "Font",
-        "Texture": "Assets\\Comic Sans.png",
-        "Cols": 16,
-        "Rows": 6
-      },
-      "Mesh": {
-        "Name": "TextMesh",
-        "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 0.0625, 0.1666666666667 ]
-      },
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
       "ModulateColor": [ 1, 0, 0, 1 ],
       "Text": "Kill All",
       "Scale": [ 20, 30 ]
@@ -57,8 +63,8 @@
     },
     "Sprite": {
       "SpriteSource": {
-        "Name": "TestSpriteSource",
-        "Texture": "Assets\\baseunit2.png",
+        "Name": "UnitSpriteSource",
+        "Texture": "Data\\Assets\\baseunit2.png",
         "Cols": 1,
         "Rows": 1
       },
@@ -87,7 +93,7 @@
         "CompType": "Sprite",
         "SpriteSource": {
           "Name": "AbilitySpriteSource",
-          "Texture": "Assets\\abilities2.png",
+          "Texture": "Data\\Assets\\abilities2.png",
           "Cols": 4,
           "Rows": 2
         },
@@ -113,6 +119,7 @@
       "StartFunds": 1000,
       "PathLineName": "PathLine1",
       "GamepadNum": 0,
+      "Controls": "Army1Controls",
       "CursorName": "Cursor1"
     }
   },
@@ -131,6 +138,12 @@
     }
   },
   {
+    "Type": "Mesh",
+    "Name": "FrontLineMesh",
+    "HalfSize": [ 0.5, 0.5 ],
+    "UV": [ 1, 1 ]
+  },
+  {
     "Name": "FrontLine1",
     "Transform": {
       "Translation": [ 0, 0 ],
@@ -138,11 +151,7 @@
       "Rotation": 0
     },
     "Sprite": {
-      "Mesh": {
-        "Name": "FrontLineMesh",
-        "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 1, 1 ]
-      },
+      "Mesh": "FrontLineMesh",
       "Alpha": 0.5,
       "ModulateColor": [ 1, 0, 0, 1 ]
     }
@@ -213,6 +222,19 @@
     }
   },
   {
+    "Type": "SpriteSource",
+    "Name": "CursorSpriteSource",
+    "Texture": "Data\\Assets\\cursor.png",
+    "Cols": 1,
+    "Rows": 1
+  },
+  {
+    "Type": "Mesh",
+    "Name": "CursorMesh",
+    "HalfSize": [ 0.5, 0.5 ],
+    "UV": [ 1, 1 ]
+  },
+  {
     "Name": "Cursor1",
     "Transform": {
       "Translation": [ 0, 0 ],
@@ -220,17 +242,8 @@
       "Rotation": 0
     },
     "Sprite": {
-      "SpriteSource": {
-        "Name": "CursorTexture",
-        "Texture": "Assets\\cursor.png",
-        "Cols": 1,
-        "Rows": 1
-      },
-      "Mesh": {
-        "Name": "CursorMesh",
-        "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 1, 1 ]
-      },
+      "SpriteSource": "CursorSpriteSource",
+      "Mesh": "CursorMesh",
       "Alpha": 0.5,
       "ModulateColor": [ 1, 0, 0, 1 ]
     }
@@ -243,7 +256,7 @@
       "Rotation": 0
     },
     "Sprite": {
-      "SpriteSource": "CursorTexture",
+      "SpriteSource": "CursorSpriteSource",
       "Mesh": "CursorMesh",
       "Alpha": 0.5,
       "ModulateColor": [ 0, 0, 1, 1 ]

@@ -50,7 +50,7 @@ enum states { cArmyNormal };
 // Params:
 //  parent = The object that owns this behavior.
 BehaviorArmy::BehaviorArmy() :
-		Behavior("BehaviorArmy"), diamondTransform(0, 0)
+		Behavior("BehaviorArmy"), diamondTransform(0, 0), targetTransform(0, 0)
 {
 	diamondTransform.SetRotation((float)M_PI / 4);
 	SetCurrentState(cBehaviorInvalid);
@@ -197,7 +197,9 @@ void BehaviorArmy::OnEnter()
 		funds = startFunds;
 		UpdateFundsText();
 		//cursor = Vector2D(0, 0);
-		cursor = (Transform*)GetParent()->GetObjectManager()->GetObjectByName(cursorObjName.c_str())->GetComponent("Transform");
+		GameObject *cursorObj = GetParent()->GetObjectManager()->GetObjectByName(cursorObjName.c_str());
+		cursor = (Transform*)cursorObj->GetComponent("Transform");
+		cursorSprite = (Sprite*)cursorObj->GetComponent("Sprite");
 		GameObject *pathArchetype = GetParent()->GetObjectManager()->GetArchetype(pathLineName.c_str());
 		if (pathArchetype) {
 			pathSprite = (Sprite*)pathArchetype->GetComponent("Sprite");
@@ -205,6 +207,7 @@ void BehaviorArmy::OnEnter()
 			if (pathTransform) {
 				Vector2D pathScl = pathTransform->GetScale();
 				diamondTransform.SetScale({pathScl.y, pathScl.y});
+				targetTransform.SetScale(cursor->GetScale() * 0.75);
 			}
 		}
 		switch (side) {
@@ -247,60 +250,62 @@ void BehaviorArmy::OnUpdate(float dt)
 	case cArmyNormal:
 		gamepad.Update();
 		Vector2D curspos = cursor->GetScreenTranslation();
-		curspos.x += gamepad.GetAxis(Gamepad::aLStickX) * 2000 * dt;
-		curspos.y += gamepad.GetAxis(Gamepad::aLStickY) * 2000 * dt;
-		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(Gamepad::aLStickX) << std::endl;
-		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(Gamepad::aLStickY) << std::endl;
+		curspos.x += gamepad.GetAxis(/*Gamepad::aLStickX*/controlList["CamAxisX"]) * 1600 * dt;
+		curspos.y += gamepad.GetAxis(/*Gamepad::aLStickY*/controlList["CamAxisY"]) * 1600 * dt;
+		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(/*Gamepad::aLStickX*/controlList["CamAxisX"]) << std::endl;
+		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(/*Gamepad::aLStickY*/controlList["CamAxisY"]) << std::endl;
 		Vector2D tmTopLeft = tilemap->GetTilemapScreenTopLeft();
 		Vector2D tmBottomRight = tilemap->GetTilemapScreenBottomRight();
-		if (gamepad.GetButtonTriggered(Gamepad::bDpadUp)) {
+		bool inEditMode = gamepad.GetButton(/*Gamepad::bRTrigger*/controlList["Normal.SwitchCommand"]);
+		bool inSelectMode = gamepad.GetButton(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"]);
+		if (gamepad.GetButtonTriggered(/*Gamepad::bDpadUp*/controlList["CamUp"])) {
 			curspos.y += tilemap->GetTileHeight();
-			if (curspos.y > tmTopLeft.y)
+			if ((!inEditMode || inSelectMode) && curspos.y > tmTopLeft.y)
 				curspos.y -= tilemap->GetTileHeight() * tilemap->GetTilemapHeight();
 			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
-		} else if (gamepad.GetButtonTriggered(Gamepad::bDpadDown)) {
+		} else if (gamepad.GetButtonTriggered(/*Gamepad::bDpadDown*/controlList["CamDown"])) {
 			curspos.y -= tilemap->GetTileHeight();
-			if (curspos.y < tmBottomRight.y)
+			if ((!inEditMode || inSelectMode) && curspos.y < tmBottomRight.y)
 				curspos.y += tilemap->GetTileHeight() * tilemap->GetTilemapHeight();
 			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
-		} else if (gamepad.GetButtonTriggered(Gamepad::bDpadLeft)) {
+		} else if (gamepad.GetButtonTriggered(/*Gamepad::bDpadLeft*/controlList["CamLeft"])) {
 			curspos.x -= tilemap->GetTileHeight();
-			if (curspos.x < tmTopLeft.x)
+			if ((!inEditMode || inSelectMode) && curspos.x < tmTopLeft.x)
 				curspos.x += tilemap->GetTileWidth() * tilemap->GetTilemapWidth();
 			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
-		} else if (gamepad.GetButtonTriggered(Gamepad::bDpadRight)) {
+		} else if (gamepad.GetButtonTriggered(/*Gamepad::bDpadRight*/controlList["CamRight"])) {
 			curspos.x += tilemap->GetTileHeight();
-			if (curspos.x > tmBottomRight.x)
+			if ((!inEditMode || inSelectMode) && curspos.x > tmBottomRight.x)
 				curspos.x -= tilemap->GetTileWidth() * tilemap->GetTilemapWidth();
 			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
 		}
-		if (gamepad.GetAxis(Gamepad::aRTrigger) >= 0.8) {
-			if (gamepad.GetAxis(Gamepad::aLTrigger) >= 0.8) {
-				if (gamepad.GetAxisLastFrame(Gamepad::aLTrigger) < 0.8) {
+		if (inEditMode) {
+			if (inSelectMode) {
+				if (gamepad.GetButtonTriggered(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"])) {
 					if (tilemap->GetPosOnMap(curspos) != editStartPos)
 						curspos = tilemap->GetPosOnScreen(editStartPos);
 					//editSelectMode = smSelect;
 					editSelectMode = smAuto;
 				}
-				/*if (gamepad.GetButton(Gamepad::bB))
-					SelectUnits(curspos, true);
-				else SelectUnits(curspos);*/
-				/*if (gamepad.GetButtonTriggered(Gamepad::bA)) {
-					editSelectMode = smSelect;
-					editExtraLastPos = { -1, -1 };
-				}
-				if (gamepad.GetButtonTriggered(Gamepad::bB)) {
-					editSelectMode = smDeselect;
-					editExtraLastPos = { -1, -1 };
-				}
-				if (editSelectMode == smSelect)
-					SelectUnits(curspos);
-				else if (editSelectMode == smDeselect)
-					SelectUnits(curspos, true);*/
-				if (gamepad.GetButtonTriggered(Gamepad::bX)) {
+				//if (gamepad.GetButton(Gamepad::bB))
+					//SelectUnits(curspos, true);
+				//else SelectUnits(curspos);
+				//if (gamepad.GetButtonTriggered(Gamepad::bA)) {
+					//editSelectMode = smSelect;
+					//editExtraLastPos = { -1, -1 };
+				//}
+				//if (gamepad.GetButtonTriggered(Gamepad::bB)) {
+					//editSelectMode = smDeselect;
+					//editExtraLastPos = { -1, -1 };
+				//}
+				//if (editSelectMode == smSelect)
+					//SelectUnits(curspos);
+				//else if (editSelectMode == smDeselect)
+					//SelectUnits(curspos, true);
+				if (gamepad.GetButtonTriggered(/*Gamepad::bX*/controlList["Select.SwitchManual"])) {
 					editSelectMode = smManual;
 				}
-				if (gamepad.GetButtonTriggered(Gamepad::bY)) {
+				if (gamepad.GetButtonTriggered(/*Gamepad::bY*/controlList["Select.SwitchAuto"])) {
 					editSelectMode = smAuto;
 					editExtraLastPos = { -1, -1 };
 				}
@@ -310,15 +315,15 @@ void BehaviorArmy::OnUpdate(float dt)
 					SelectUnits(curspos);
 				} else if (editSelectMode == smManual) {
 					editExtraLastPos = { -1, -1 };
-					if (gamepad.GetButtonTriggered(Gamepad::bA))
+					if (gamepad.GetButtonTriggered(/*Gamepad::bA*/controlList["Select.Manual.Select"]))
 						SelectUnits(curspos);
-					if (gamepad.GetButtonTriggered(Gamepad::bB))
+					if (gamepad.GetButtonTriggered(/*Gamepad::bB*/controlList["Select.Manual.Deselect"]))
 						SelectUnits(curspos, true);
 				}
 			} else {
-				if (gamepad.GetAxisLastFrame(Gamepad::aLTrigger) >= 0.8) {
-					if (tilemap->GetPosOnMap(curspos) != editLastPos)
-						curspos = tilemap->GetPosOnScreen(editLastPos);
+				if (gamepad.GetButtonReleased(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"])) {
+					if (tilemap->GetPosOnMap(curspos) != editPos)
+						curspos = tilemap->GetPosOnScreen(editPos);
 					editExtraLastPos = { -1, -1 };
 				}
 				if (!editUnit) {
@@ -334,46 +339,40 @@ void BehaviorArmy::OnUpdate(float dt)
 						curspos.y = tmTopLeft.y;
 					if (curspos.y <= tmBottomRight.y)
 						curspos.y = tmBottomRight.y - 1;
-					if (tilemap->GetPosOnMap(curspos) != editLastPos) {
+					if (tilemap->GetPosOnMap(curspos) != editPos) {
 						Vector2D delta;
-						while (tilemap->GetPosOnMap(curspos) != editLastPos) {
-							delta = (tilemap->GetPosOnMap(curspos) - editLastPos).Normalized();
+						while (tilemap->GetPosOnMap(curspos) != editPos) {
+							delta = (tilemap->GetPosOnMap(curspos) - editPos).Normalized();
+							if (delta.x && delta.y) {
+								delta.y = 0;
+								delta = delta.Normalized();
+							}
 							if (AddToEditPath(delta))
-								editLastPos += delta;
-							else curspos = tilemap->GetPosOnScreen(editLastPos);
+								editPos += delta;
+							else curspos = tilemap->GetPosOnScreen(editPos);
 						}
-						//AddToEditPath(tilemap->GetPosOnMap(curspos) - editLastPos);
-						//editLastPos = tilemap->GetPosOnMap(curspos);
 					}
-					if (gamepad.GetButtonTriggered(Gamepad::bX)) {
+					if (gamepad.GetButtonTriggered(/*Gamepad::bX*/controlList["Command.ClearPath"])) {
 						if (!editPath.empty()) {
 							editPath.clear();
 							curspos = tilemap->GetPosOnScreen(editStartPos);
-							editLastPos = editStartPos;
+							editPos = editStartPos;
 						}
 					}
-					if (!editPath.empty() && gamepad.GetButtonTriggered(Gamepad::bB)) {
+					if (!editPath.empty() && gamepad.GetButtonTriggered(/*Gamepad::bB*/controlList["Command.BackPath"])) {
 						Vector2D d = editPath[editPath.size() - 1];
 						editPath.pop_back();
-						editLastPos = tilemap->GetPosOnMap(curspos) - d;
-						curspos = tilemap->GetPosOnScreen(editLastPos);
+						editPos = tilemap->GetPosOnMap(curspos) - d;
+						curspos = tilemap->GetPosOnScreen(editPos);
 					}
-					if (gamepad.GetButtonTriggered(Gamepad::bY)) {
+					if (gamepad.GetButtonTriggered(/*Gamepad::bY*/controlList["Command.PathToEnd"])) {
 						for (Vector2D d : path_) {
 							if (AddToEditPath(d)) {
-								editLastPos = tilemap->GetPosOnMap(curspos) + d;
-								curspos = tilemap->GetPosOnScreen(editLastPos);
+								editPos = tilemap->GetPosOnMap(curspos) + d;
+								curspos = tilemap->GetPosOnScreen(editPos);
 							}
 						}
 					}
-					/*if (gamepad.GetButtonTriggered(Gamepad::bDpadUp))
-						AddToEditPath({ 0, -1 });
-					if (gamepad.GetButtonTriggered(Gamepad::bDpadDown))
-						AddToEditPath({ 0, 1 });
-					if (gamepad.GetButtonTriggered(Gamepad::bDpadLeft))
-						AddToEditPath({ -1, 0 });
-					if (gamepad.GetButtonTriggered(Gamepad::bDpadRight))
-						AddToEditPath({ 1, 0 });*/
 				}
 			}
 		} else {
@@ -388,7 +387,7 @@ void BehaviorArmy::OnUpdate(float dt)
 					editExtraStartPos.clear();
 				if (!editPath.empty())
 					editPath.clear();
-				editLastPos = { -1, -1 };
+				editPos = { -1, -1 };
 				curspos = tilemap->GetPosOnScreen(editStartPos);
 			}
 
@@ -517,8 +516,37 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 	if (obj.HasMember("PathLineName") && obj["PathLineName"].IsString()) {
 		pathLineName = obj["PathLineName"].GetString();
 	}
-	if (obj.HasMember("GamepadNum") && obj["GamepadNum"].IsInt()) {
+	if (obj.HasMember("GamepadNum") && obj["GamepadNum"].IsInt() && obj["GamepadNum"].GetInt() >= 0) {
+		//controlType = ctGamepad;
 		gamepad = Gamepad(obj["GamepadNum"].GetInt());
+	} else {
+		//controlType = ctKeyboard;
+	}
+	if (obj.HasMember("Controls") && obj["Controls"].IsString()) {
+		string path = "Data\\";
+		path.append(obj["Controls"].GetString());
+		path.append(".json");
+
+		ifstream file(path);
+		string line, contents;
+
+		rapidjson::Document levelDoc;
+
+		// Load the file into contents.
+		while (getline(file, line))
+		{
+			contents.append(line);
+		}
+
+		levelDoc.Parse(contents.c_str());
+		assert(levelDoc.IsObject());
+		controlList.Load(levelDoc);
+		int switchSelect = controlList["Command.SwitchSelect"];
+		switchSelect;
+		/*int camAxisX = controlList["CamAxisX"];
+		Trace::GetInstance().GetStream() << camAxisX << std::endl;
+		controlList.SetControl("Normal.Thing", Gamepad::aLStickX);
+		controlList.SetControl("Thing", Gamepad::aLStickY);*/
 	}
 	if (obj.HasMember("CursorName") && obj["CursorName"].IsString()) {
 		cursorObjName = obj["CursorName"].GetString();
@@ -597,7 +625,7 @@ void BehaviorArmy::SelectUnits(Vector2D &curspos, bool deselect)
 		if (!deselect && tilemap->GetPosOnMap(curspos) == editExtraLastPos)
 			return;
 	} else {
-		if (tilemap->GetPosOnMap(curspos) == editLastPos)
+		if (tilemap->GetPosOnMap(curspos) == editPos)
 			return;
 	}
 	vector<GameObject*> found = GetParent()->GetObjectManager()->GetObjectsWithFilter([&](GameObject *obj) {
@@ -612,9 +640,9 @@ void BehaviorArmy::SelectUnits(Vector2D &curspos, bool deselect)
 			if (unit == editUnit && editExtraUnits.size() > 0) {
 				editUnit = editExtraUnits[0];
 				editStartPos = editExtraStartPos[0];
-				editLastPos = editStartPos;
+				editPos = editStartPos;
 				for (Vector2D d : editPath)
-					editLastPos += d;
+					editPos += d;
 				editExtraUnits.erase(editExtraUnits.begin());
 				editExtraStartPos.erase(editExtraStartPos.begin());
 				editExtraLastPos = tilemap->GetPosOnMap(curspos);
@@ -633,25 +661,34 @@ void BehaviorArmy::SelectUnits(Vector2D &curspos, bool deselect)
 				editUnit = (BehaviorUnit*)found[0]->GetComponent("BehaviorUnit");
 				editStartPos = editUnit->GetMapPos();//tilemap->GetPosOnMap(((Transform*)found[0]->GetComponent("Transform"))->GetTranslation());
 				editPath = editUnit->GetPath();
-				editLastPos = tilemap->GetPosOnMap(curspos);
-				editExtraLastPos = editLastPos;
+				editPos = tilemap->GetPosOnMap(curspos);
+				editExtraLastPos = editPos;
 				if (editUnit->IsMoving()) {
 					editStartPos = editUnit->GetNextPos();
-					if (editUnit->GetNextPos() != editLastPos)
-						editLastPos += editPath[0];
+					if (editUnit->GetNextPos() != editPos)
+						editPos += editPath[0];
 					editPath.erase(editPath.begin());
 				}
 				for (Vector2D d : editPath)
-					editLastPos += d;
+					editPos += d;
 				editUnit->ClearPath();
-				if (tilemap->GetPosOnMap(curspos) != editLastPos)
-					curspos = tilemap->GetPosOnScreen(editLastPos);
+				if (tilemap->GetPosOnMap(curspos) != editPos)
+					curspos = tilemap->GetPosOnScreen(editPos);
 			} else {
 				BehaviorUnit *unit = (BehaviorUnit*)found[0]->GetComponent("BehaviorUnit");
 				if (unit == editUnit) return;
 				for (BehaviorUnit *u : editExtraUnits)
 					if (unit == u) return;
 				Vector2D startPos = editUnit->IsMoving() ? unit->GetNextPos() : unit->GetMapPos();
+				Vector2D pos = startPos;
+				for (unsigned i = 0; i < editPath.size(); i++) {
+					pos += editPath[i];
+					if (!tilemap->IsMapPosOnMap(pos))
+						while (i < editPath.size()) {
+							editPos -= editPath[editPath.size() - 1];
+							editPath.pop_back();
+						}
+				}
 				editExtraUnits.push_back(unit);
 				unit->ClearPath();
 				editExtraStartPos.push_back(startPos);
@@ -689,6 +726,9 @@ void BehaviorArmy::DrawPath() const
 		Vector2D pos = tilemap->GetPosOnScreen(startPos);
 		Vector2D invY = { 1, -1 };
 		Transform diamondT = diamondTransform;
+		Transform targetT = targetTransform;
+		targetT.SetTranslation(pos);
+		cursorSprite->Draw(targetT);
 		diamondT.SetTranslation(pos);
 		pathSprite->SetAlpha(1.0f);
 		pathSprite->Draw(diamondT);
@@ -743,3 +783,82 @@ unsigned BehaviorArmy::UnitData::GetCost()
 	if (BehaviorArmy::costType == 1) cost += (unsigned)(army->numUnits * 1.5);
 	return cost;
 }
+
+/*void BehaviorArmy::ControlOptions::Load(rapidjson::Value & obj)
+{
+	if (obj.HasMember("Camera")) {
+		rapidjson::Value &tmp = obj["Camera"];
+		if (obj.HasMember("CameraAxisX") && obj["CameraAxisX"].IsString()) {
+			Camera.cameraAxisX = GetAxis(obj["CameraAxisX"].GetString());
+		}
+		if (obj.HasMember("CameraAxisY") && obj["CameraAxisY"].IsString()) {
+			Camera.cameraAxisY = GetAxis(obj["CameraAxisY"].GetString());
+		}
+		if (obj.HasMember("CameraUp") && obj["CameraUp"].IsString()) {
+			Camera.cameraUp = GetButton(obj["CameraUp"].GetString());
+		}
+		if (obj.HasMember("CameraDown") && obj["CameraDown"].IsString()) {
+			Camera.cameraDown = GetButton(obj["CameraDown"].GetString());
+		}
+		if (obj.HasMember("CameraLeft") && obj["CameraLeft"].IsString()) {
+			Camera.cameraLeft = GetButton(obj["CameraLeft"].GetString());
+		}
+		if (obj.HasMember("CameraUp") && obj["CameraUp"].IsString()) {
+			Camera.cameraRight = GetButton(obj["CameraRight"].GetString());
+		}
+	}
+}
+
+int BehaviorArmy::ControlOptions::GetAxis(const char * name)
+{
+	if (strcmp(name, "LStickX") == 0)
+		return Gamepad::aLStickX;
+	if (strcmp(name, "LStickY") == 0)
+		return Gamepad::aLStickY;
+	if (strcmp(name, "RStickX") == 0)
+		return Gamepad::aRStickX;
+	if (strcmp(name, "RStickY") == 0)
+		return Gamepad::aRStickY;
+	if (strcmp(name, "LTrigger") == 0)
+		return Gamepad::aLTrigger;
+	if (strcmp(name, "RTrigger") == 0)
+		return Gamepad::aRTrigger;
+	return Gamepad::aUnbound;
+}
+
+int BehaviorArmy::ControlOptions::GetButton(const char * name)
+{
+	if (strcmp(name, "A") == 0)
+		return Gamepad::bA;
+	if (strcmp(name, "A") == 0)
+		return Gamepad::bA;
+	if (strcmp(name, "A") == 0)
+		return Gamepad::bA;
+	if (strcmp(name, "A") == 0)
+		return Gamepad::bA;
+	if (strcmp(name, "DpadUp") == 0)
+		return Gamepad::bDpadUp;
+	if (strcmp(name, "DpadDown") == 0)
+		return Gamepad::bDpadDown;
+	if (strcmp(name, "DpadLeft") == 0)
+		return Gamepad::bDpadLeft;
+	if (strcmp(name, "DpadRight") == 0)
+		return Gamepad::bDpadRight;
+	if (strcmp(name, "LShoulder") == 0)
+		return Gamepad::bLShoulder;
+	if (strcmp(name, "RShoulder") == 0)
+		return Gamepad::bRShoulder;
+	if (strcmp(name, "LThumb") == 0)
+		return Gamepad::bLThumb;
+	if (strcmp(name, "RThumb") == 0)
+		return Gamepad::bRThumb;
+	if (strcmp(name, "Back") == 0)
+		return Gamepad::bBack;
+	if (strcmp(name, "Start") == 0)
+		return Gamepad::bStart;
+	if (strcmp(name, "LTrigger") == 0)
+		return Gamepad::bLTrigger;
+	if (strcmp(name, "RTrigger") == 0)
+		return Gamepad::bRTrigger;
+	return Gamepad::bUnbound;
+}*/
