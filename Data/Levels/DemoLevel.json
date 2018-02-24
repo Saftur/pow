@@ -109,7 +109,7 @@
     ]
   },
   {
-    "Name": "Army1",
+    "Name": "Army",
     "BehaviorArmy": {
       "Name": "Army1",
       "Side": "Left",
@@ -124,7 +124,7 @@
     }
   },
   {
-    "Name": "Army2",
+    "Name": "Army",
     "BehaviorArmy": {
       "Name": "Army2",
       "Side": "Right",
@@ -134,6 +134,7 @@
       "StartFunds": 1000,
       "PathLineName": "PathLine2",
       "GamepadNum": 1,
+      "Controls": "Army1Controls",
       "CursorName": "Cursor2"
     }
   },

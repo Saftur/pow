@@ -20,6 +20,7 @@ public:
 	void Draw() const;
 	Vector2D GetPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile = nullptr) const;
 	Vector2D GetPosOnScreen(Vector2D tilePos) const;
+	Vector2D NormalizeMapPos(Vector2D tilePos) const;
 	bool IsMapPosOnMap(Vector2D mapPos) const;
 	bool IsScreenPosOnMap(Vector2D screenPos) const;
 	bool IsObjectCollidingWithMap(Vector2D objectPosition, Vector2D objectScale) const;

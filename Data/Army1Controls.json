@@ -16,6 +16,7 @@
     "ClearPath": "X",
     "BackPath": "B",
     "PathToEnd": "Y",
+    "Recycle": "LShoulder",
     "SwitchSelect": "LTrigger"
   },
   "Select": {

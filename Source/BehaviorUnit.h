@@ -60,6 +60,8 @@ public:
 	Vector2D GetNextScrPos();
 	Vector2D GetNextPos();
 
+	int GetRecycleReturns();
+	BehaviorArmy::UnitData GetUnitData();
 	vector<Vector2D> GetPath();
 	void ClearPath();
 	void AddToPath(Vector2D pos);

@@ -163,6 +163,7 @@ bool BehaviorArmy::TakeFromFunds(unsigned amount)
 void BehaviorArmy::AddToFunds(unsigned amount)
 {
 	funds += amount;
+	UpdateFundsText();
 }
 
 // Clone an advanced behavior and return a pointer to the cloned object.
@@ -279,6 +280,16 @@ void BehaviorArmy::OnUpdate(float dt)
 				curspos.x -= tilemap->GetTileWidth() * tilemap->GetTilemapWidth();
 			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
 		}
+		if (editUnit && editUnit->GetParent()->IsDestroyed()) {
+			editUnit = nullptr;
+		}
+		for (unsigned i = 0; i < editExtraUnits.size(); i++) {
+			if (editExtraUnits[i]->GetParent()->IsDestroyed()) {
+				editExtraUnits.erase(editExtraUnits.begin() + i);
+				editExtraStartPos.erase(editExtraStartPos.begin() + i);
+				i--;
+			}
+		}
 		if (inEditMode) {
 			if (inSelectMode) {
 				if (gamepad.GetButtonTriggered(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"])) {
@@ -322,15 +333,14 @@ void BehaviorArmy::OnUpdate(float dt)
 				}
 			} else {
 				if (gamepad.GetButtonReleased(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"])) {
-					if (tilemap->GetPosOnMap(curspos) != editPos)
+					if (tilemap->GetPosOnMap(curspos) != tilemap->NormalizeMapPos(editPos))
 						curspos = tilemap->GetPosOnScreen(editPos);
 					editExtraLastPos = { -1, -1 };
 				}
 				if (!editUnit) {
 					SelectUnits(curspos);
-				} else if (editUnit->GetParent()->IsDestroyed()) {
-					editUnit = nullptr;
-				} else {
+				}
+				if (editUnit) {
 					if (curspos.x <= tmTopLeft.x)
 						curspos.x = tmTopLeft.x;
 					if (curspos.x >= tmBottomRight.x)
@@ -339,9 +349,9 @@ void BehaviorArmy::OnUpdate(float dt)
 						curspos.y = tmTopLeft.y;
 					if (curspos.y <= tmBottomRight.y)
 						curspos.y = tmBottomRight.y - 1;
-					if (tilemap->GetPosOnMap(curspos) != editPos) {
+					if (tilemap->GetPosOnMap(curspos) != tilemap->NormalizeMapPos(editPos)) {
 						Vector2D delta;
-						while (tilemap->GetPosOnMap(curspos) != editPos) {
+						while (tilemap->GetPosOnMap(curspos) != tilemap->NormalizeMapPos(editPos)) {
 							delta = (tilemap->GetPosOnMap(curspos) - editPos).Normalized();
 							if (delta.x && delta.y) {
 								delta.y = 0;
@@ -373,6 +383,19 @@ void BehaviorArmy::OnUpdate(float dt)
 							}
 						}
 					}
+					if (gamepad.GetButtonTriggered(controlList["Command.Recycle"])) {
+						AddToFunds(editUnit->GetRecycleReturns());
+						editUnit->GetParent()->Destroy();
+						for (BehaviorUnit *bu : editExtraUnits) {
+							AddToFunds(bu->GetRecycleReturns());
+							bu->GetParent()->Destroy();
+						}
+						/*if (!editExtraUnits.empty())
+							editExtraUnits.clear();
+						if (!editExtraStartPos.empty())
+							editExtraStartPos.clear();*/
+						editPos = { -1, -1 };
+					}
 				}
 			}
 		} else {
@@ -393,13 +416,13 @@ void BehaviorArmy::OnUpdate(float dt)
 
 			vector<Vector2D> path;// = gamepad.GetButton(Gamepad::bRShoulder) ? path_ : vector<Vector2D>();
 
-			if (gamepad.GetButtonTriggered(Gamepad::bA))
+			if (gamepad.GetButton(controlList["Normal.SpawnUnit1"]))
 				CreateUnit("Unit1", tilemap->GetPosOnMap(curspos), path);
-			else if (gamepad.GetButtonTriggered(Gamepad::bX))
+			else if (gamepad.GetButton(controlList["Normal.SpawnUnit2"]))
 				CreateUnit("Unit2", tilemap->GetPosOnMap(curspos), path);
-			else if (gamepad.GetButtonTriggered(Gamepad::bY))
+			else if (gamepad.GetButton(controlList["Normal.SpawnUnit3"]))
 				CreateUnit("Unit3", tilemap->GetPosOnMap(curspos), path);
-			else if (gamepad.GetButtonTriggered(Gamepad::bB))
+			else if (gamepad.GetButton(controlList["Normal.SpawnUnit4"]))
 				CreateUnit("Unit4", tilemap->GetPosOnMap(curspos), path);
 		}
 		Vector2D cursscl = cursor->GetScreenScale();
@@ -630,7 +653,7 @@ void BehaviorArmy::SelectUnits(Vector2D &curspos, bool deselect)
 	}
 	vector<GameObject*> found = GetParent()->GetObjectManager()->GetObjectsWithFilter([&](GameObject *obj) {
 		BehaviorUnit *bu = (BehaviorUnit*)obj->GetComponent("BehaviorUnit");
-		if (bu && bu->GetMapPos() == tilemap->GetPosOnMap(curspos))
+		if (!obj->IsDestroyed() && bu && bu->GetMapPos() == tilemap->GetPosOnMap(curspos) && bu->GetArmy() == this)
 			return true;
 		else return false;
 	});
@@ -679,7 +702,7 @@ void BehaviorArmy::SelectUnits(Vector2D &curspos, bool deselect)
 				if (unit == editUnit) return;
 				for (BehaviorUnit *u : editExtraUnits)
 					if (unit == u) return;
-				Vector2D startPos = editUnit->IsMoving() ? unit->GetNextPos() : unit->GetMapPos();
+				Vector2D startPos = unit->IsMoving() ? unit->GetNextPos() : unit->GetMapPos();
 				Vector2D pos = startPos;
 				for (unsigned i = 0; i < editPath.size(); i++) {
 					pos += editPath[i];
@@ -777,9 +800,9 @@ void BehaviorArmy::UpdateFundsText()
 
 unsigned BehaviorArmy::UnitData::GetCost()
 {
-	unsigned cost = (unsigned)((float)hp / 10 + 0.5f);
-	cost += (unsigned)((float)damage / 10 + 0.5f);
-	cost += (unsigned)((float)speed / 5 + 0.5f);
+	unsigned cost = (unsigned)(((float)hp / 100)*((float)hp / 100)*10 + 0.5f);
+	cost += (unsigned)(((float)damage / 100)*((float)damage / 100)*10 + 0.5f);
+	cost += (unsigned)(((float)speed / 50)*((float)speed / 50)*10 + 0.5f);
 	if (BehaviorArmy::costType == 1) cost += (unsigned)(army->numUnits * 1.5);
 	return cost;
 }

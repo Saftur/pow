@@ -103,6 +103,18 @@ Vector2D BehaviorUnit::GetNextPos()
 	return startPos+GetNextDir();
 }
 
+int BehaviorUnit::GetRecycleReturns()
+{
+	BehaviorArmy::UnitData ud = unitData;
+	ud.hp = (int)hp;
+	return ud.GetCost();
+}
+
+BehaviorArmy::UnitData BehaviorUnit::GetUnitData()
+{
+	return unitData;
+}
+
 vector<Vector2D> BehaviorUnit::GetPath()
 {
 	return path;

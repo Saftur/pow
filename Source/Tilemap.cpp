@@ -119,6 +119,8 @@ Vector2D Tilemap::GetPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile) cons
 		pos.X((float)(tilemapWidth - 1));
 	if (pos.Y() >= tilemapHeight)
 		pos.Y((float)(tilemapHeight - 1));
+	//pos.x += 0.5f;
+	//pos.y += 0.5f;
 	return pos;
 }
 
@@ -128,6 +130,11 @@ Vector2D Tilemap::GetPosOnScreen(Vector2D tilePos) const
 	pos.X(tileWidth * tilePos.X() + offsetX - width / 2 + tileWidth / 2);
 	pos.Y(-(tileHeight * tilePos.Y() + offsetY - height / 2 + tileHeight / 2));
 	return pos;
+}
+
+Vector2D Tilemap::NormalizeMapPos(Vector2D tilePos) const
+{
+	return GetPosOnMap(GetPosOnScreen(tilePos));
 }
 
 bool Tilemap::IsMapPosOnMap(Vector2D mapPos) const
