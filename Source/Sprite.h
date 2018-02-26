@@ -68,6 +68,7 @@ public:
 	//   alphaAdjust = Offset to apply to the sprite's 'alpha' value.
 	void AdjustAlpha(float alphaAdjust);
 
+	float GetAlpha() const;
 	void SetAlpha(float alpha);
 
 	// Set the sprite's current frame.

@@ -58,6 +58,11 @@ void Sprite::AdjustAlpha(float alphaAdjust)
 	alpha += alphaAdjust;
 }
 
+float Sprite::GetAlpha() const
+{
+	return alpha;
+}
+
 void Sprite::SetAlpha(float alpha_)
 {
 	alpha = alpha_;

@@ -465,6 +465,27 @@ void BehaviorArmy::OnExit()
 
 void BehaviorArmy::Draw() const
 {
+	Transform territoryTransform(0, 0);
+	Vector2D flTrs = flTransform->GetTranslation();
+	Vector2D flScl = flTransform->GetScale();
+	switch (side) {
+	case sLeft: {
+		Vector2D tmTopLeft = tilemap->GetTilemapScreenTopLeft();
+		territoryTransform.SetTranslation({ (flTrs.x - flScl.x / 2) / 2 + tmTopLeft.x / 2, flTrs.y });
+		territoryTransform.SetScale({ (flTrs.x - flScl.x / 2) - tmTopLeft.x, flScl.y });
+		break;
+	}
+	case sRight: {
+		Vector2D tmBottomRight = tilemap->GetTilemapScreenBottomRight();
+		territoryTransform.SetTranslation({ (flTrs.x + flScl.x / 2) / 2 + tmBottomRight.x / 2, flTrs.y });
+		territoryTransform.SetScale({ tmBottomRight.x - (flTrs.x + flScl.x / 2), flScl.y });
+		break;
+	}
+	}
+	float alpha = pathSprite->GetAlpha();
+	pathSprite->SetAlpha(0.25f);
+	pathSprite->Draw(territoryTransform);
+	pathSprite->SetAlpha(alpha);
 	if (editUnit)
 		DrawPath();
 }
