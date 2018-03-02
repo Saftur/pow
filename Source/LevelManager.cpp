@@ -31,12 +31,16 @@ using namespace rapidjson;
 LM_STATE LevelManager::stateCurr = IDLE;
 LM_STATE LevelManager::stateNext = IDLE;
 
-LevelManager *LevelManager::instance = nullptr;
-vector<LevelManager*> LevelManager::instances;
+LevelManager *LevelManager::loadingLevelManager = nullptr;
 
-void LevelManager::Init(const char *name)
+map<string, Component*> LevelManager::components;
+
+//LevelManager *LevelManager::instance = nullptr;
+//vector<LevelManager*> LevelManager::instances;
+LevelManager *LevelManager::layers[MAX_LAYERS] = {};
+
+void LevelManager::StaticInit()
 {
-	SetNextLevel(name);
 	AddComponentType("Transform", new Transform(0, 0));
 	AddComponentType("Sprite", new Sprite());
 	AddComponentType("Animation", new Animation());
@@ -46,15 +50,20 @@ void LevelManager::Init(const char *name)
 	AddComponentType("Tilemap", new Tilemap());
 	AddComponentType("Text", new Text());
 	AddComponentType("Button", new Button());
-	objectManager = &GameObjectManager::GetInstance();
 	CompList::List();
+}
+
+void LevelManager::Init(const char *name)
+{
+	SetNextLevel(name);
+	//objectManager = &GameObjectManager::GetInstance();
 }
 
 void LevelManager::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
 	if (levelStatus) {
-		OnExit();
+		Shutdown();
 
 		if (levelStatus != lsLevelQuit) {
 			Load(nextLevel);
@@ -67,12 +76,17 @@ void LevelManager::Update(float dt)
 
 void LevelManager::UpdateAll(float dt)
 {
-	for (LevelManager *i : instances)
-		i->Update(dt);
-	instance->Update(dt);
+	for (unsigned i = 0; i < MAX_LAYERS; i++) {
+		if (layers[i]) {
+			if (layers[i]->levelStatus == lsLevelQuit)
+				UnloadLayer(i);
+			else layers[i]->Update(dt);
+		}
+	}
+	//instance->Update(dt);
 }
 
-void LevelManager::OnExit()
+void LevelManager::Shutdown()
 {
 	for (pair<string, AEGfxTexture*> p : textures) {
 		AEGfxTextureUnload(p.second);
@@ -89,8 +103,8 @@ void LevelManager::OnExit()
 	objectManager->Shutdown();
 }
 
-void LevelManager::Shutdown() {
-	OnExit();
+void LevelManager::StaticShutdown() {
+	//Shutdown();
 	for (pair<string, Component*> p : components) {
 		delete p.second;
 	}
@@ -118,30 +132,6 @@ bool LevelManager::IsRunning()
 	return levelStatus != lsLevelQuit;
 }
 
-LevelManager & LevelManager::GetInstance()
-{
-	//static LevelManager instance;
-	if (!instance)
-		instance = new LevelManager();
-	return *instance;
-}
-
-LevelManager * LevelManager::GetLowerInstance(unsigned level)
-{
-	if (level > instances.size()) return nullptr;
-	return instances[instances.size() - level];
-}
-
-void LevelManager::ShutdownInstances()
-{
-	instance->OnExit();
-	delete instance;
-	for (LevelManager *i : instances) {
-		i->OnExit();
-		delete i;
-	}
-}
-
 bool LevelManager::LevelExists(const char * name)
 {
 	string path = "Data\\Levels\\";
@@ -151,6 +141,66 @@ bool LevelManager::LevelExists(const char * name)
 		fclose(file);
 		return true;
 	} else return false;
+}
+
+void LevelManager::LoadLayer(unsigned layer, const char * name, bool updateLower, bool drawLower)
+{
+	//instances.push_back(instance);
+	//instance = new LevelManager();
+	if (layer >= MAX_LAYERS) return;
+	if (layers[layer]) UnloadLayer(layer);
+	layers[layer] = new LevelManager();
+	layers[layer]->objectManager = GameObjectManager::InitLayer(layer, updateLower, drawLower);
+	//instance->Init(name);
+	//instance->Load(fileName);
+	layers[layer]->Init(name);
+}
+
+void LevelManager::UnloadLayer(unsigned layer)
+{
+	//if (layers.size() == 0) return;
+	if (layer >= MAX_LAYERS || !layers[layer]) return;
+	//instance->Shutdown();
+	layers[layer]->Shutdown();
+	//delete instance;
+	delete layers[layer];
+	//instance = layers[layers.size()-1];
+	//layers.pop_back();
+	layers[layer] = nullptr;
+	GameObjectManager::DeleteLayer(layer);
+}
+
+LevelManager * LevelManager::GetLoadingLevel()
+{
+	return loadingLevelManager;
+}
+
+/*LevelManager & LevelManager::GetInstance()
+{
+	//static LevelManager instance;
+	if (!instance)
+		instance = new LevelManager();
+	return *instance;
+}*/
+
+LevelManager * LevelManager::GetLayer(unsigned num)
+{
+	//if (level > instances.size()) return nullptr;
+	//return instances[instances.size() - level];
+	return layers[num];
+}
+
+void LevelManager::ShutdownLayers()
+{
+	//instance->OnExit();
+	//delete instance;
+	for (unsigned i = 0; i < MAX_LAYERS; i++) {
+		if (layers[i]) {
+			layers[i]->Shutdown();
+			delete layers[i];
+			layers[i] = nullptr;
+		}
+	}
 }
 
 void LevelManager::Load(const char* name)
@@ -181,28 +231,10 @@ void LevelManager::Load(const char* name)
 
 	stateNext = LOADING;
 
+	loadingLevelManager = this;
 	id = 0;
 	while (stateNext != IDLE)
 		loadObject(levelDoc);
-}
-
-void LevelManager::LoadAbove(const char * name, bool updateLower, bool drawLower)
-{
-	instances.push_back(instance);
-	instance = new LevelManager();
-	GameObjectManager::NewLayer(updateLower, drawLower);
-	instance->Init(name);
-	//instance->Load(fileName);
-}
-
-void LevelManager::UnloadAbove()
-{
-	if (instances.size() == 0) return;
-	instance->Shutdown();
-	delete instance;
-	instance = instances[instances.size()-1];
-	instances.pop_back();
-	GameObjectManager::DeleteLayer();
 }
 
 void LevelManager::loadObject(Document& levelDoc)
@@ -210,6 +242,7 @@ void LevelManager::loadObject(Document& levelDoc)
 	// Check if we're done loading.
 	if (id >= levelDoc.GetArray().Size()) {
 		stateNext = IDLE;
+		loadingLevelManager = nullptr;
 		return;
 	}
 
@@ -287,11 +320,6 @@ void LevelManager::loadObject(Document& levelDoc)
 	id++;
 }
 
-void LevelManager::AddComponentType(const char * name, Component * component)
-{
-	components[name] = component;
-}
-
 void LevelManager::AddMesh(const char* name, AEGfxVertexList* mesh)
 {
 	meshes[name] = mesh;
@@ -307,11 +335,6 @@ void LevelManager::AddSpriteSource(const char* name, SpriteSource* spriteSource)
 	spriteSources[name] = spriteSource;
 }
 
-Component * LevelManager::GetComponentType(const char * name)
-{
-	return components.count(name) > 0 ? components.at(name) : nullptr;
-}
-
 AEGfxVertexList* LevelManager::GetMesh(const char* name)
 {
 	return meshes.count(name) > 0 ? meshes.at(name) : nullptr;
@@ -325,6 +348,16 @@ AEGfxTexture* LevelManager::GetTexture(const char* name)
 SpriteSource* LevelManager::GetSpriteSource(const char* name)
 {
 	return spriteSources.count(name) > 0 ? spriteSources.at(name) : nullptr;
+}
+
+Component * LevelManager::GetComponentType(const char * name)
+{
+	return components.count(name) > 0 ? components.at(name) : nullptr;
+}
+
+void LevelManager::AddComponentType(const char * name, Component * component)
+{
+	components[name] = component;
 }
 
 GameObjectManager * LevelManager::GetObjectManager()

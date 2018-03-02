@@ -38,7 +38,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 	Engine::GetInstance().Init("DemoLevel");
 
 	// MAIN LOOP: Do not exit until instructed to do so by the game state manager (GSM).
-	while (LevelManager::GetInstance().IsRunning())
+	while (/*LevelManager::GetInstance().IsRunning()*/Engine::GetInstance().IsRunning())
 	{
 		currentTime = GetTickCount();
 		//if (lastTime > 0) dt = (float) (currentTime - lastTime)/1000;

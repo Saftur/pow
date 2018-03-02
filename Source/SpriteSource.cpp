@@ -104,7 +104,7 @@ void SpriteSource::GetUV(unsigned int frameIndex, float * u, float * v) const
 
 void SpriteSource::Load(rapidjson::Value& obj)
 {
-	AEGfxTexture* tex = LevelManager::GetInstance().GetTexture(obj["Texture"].GetString());
+	AEGfxTexture* tex = LevelManager::GetLoadingLevel()->GetTexture(obj["Texture"].GetString());
 
 	if (!tex)
 	{
@@ -114,7 +114,7 @@ void SpriteSource::Load(rapidjson::Value& obj)
 		numRows = obj["Rows"].GetInt();
 
 		// Add the texture to the map.
-		LevelManager::GetInstance().AddTexture(obj["Name"].GetString(), tex);
+		LevelManager::GetLoadingLevel()->AddTexture(obj["Name"].GetString(), tex);
 	}
 	pTexture = tex;
 }

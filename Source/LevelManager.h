@@ -10,6 +10,10 @@ using std::string;
 #include "rapidjson.h"
 #include "document.h"
 
+#ifndef MAX_LAYERS
+#define MAX_LAYERS 10
+#endif
+
 typedef struct AEGfxTexture AEGfxTexture;
 typedef struct AEGfxVertexList AEGfxVertexList;
 typedef class GameObjectManager GameObjectManager;
@@ -19,11 +23,12 @@ enum LM_STATE { IDLE, LOADING };
 
 class LevelManager {
 public:
+	static void StaticInit();
 	void Init(const char *name);
 	void Update(float dt);
 	static void UpdateAll(float dt);
-	void OnExit();
 	void Shutdown();
+	static void StaticShutdown();
 
 	void SetNextLevel(const char *name);
 	void Restart();
@@ -31,26 +36,28 @@ public:
 
 	static bool LevelExists(const char *name);
 	void Load(const char* name);
-	static void LoadAbove(const char* name, bool updateLower=false, bool drawLower=true);
-	static void UnloadAbove();
 
 	bool IsRunning();
 
-	static LevelManager& GetInstance();
-	static LevelManager* GetLowerInstance(unsigned level);
-	static void ShutdownInstances();
-
-	void AddComponentType(const char* name, Component* component);
+	//static LevelManager& GetInstance();
+	//static void LoadAbove(const char* name, bool updateLower=false, bool drawLower=true);
+	//static void UnloadAbove();
+	static void LoadLayer(unsigned layer, const char* name, bool updateLower=false, bool drawLower=true);
+	static void UnloadLayer(unsigned layer);
+	static LevelManager* GetLoadingLevel();
+	static LevelManager* GetLayer(unsigned num);
+	static void ShutdownLayers();
 
 	void AddMesh(const char* name, AEGfxVertexList* mesh);
 	void AddTexture(const char* name,  AEGfxTexture* texture);
 	void AddSpriteSource(const char* name,  SpriteSource* spriteSource);
 
-	Component *GetComponentType(const char* name);
-
 	AEGfxVertexList* GetMesh(const char* name);
 	AEGfxTexture* GetTexture(const char* name);
 	SpriteSource* GetSpriteSource(const char* name);
+
+	static Component *GetComponentType(const char* name);
+	static void AddComponentType(const char* name, Component* component);
 
 	GameObjectManager* GetObjectManager();
 
@@ -78,14 +85,17 @@ private:
 	const char *currLevel = "";
 	const char *nextLevel = "";
 
-	map<string, Component*> components;
-
 	map<string, AEGfxTexture*> textures;
 	map<string, AEGfxVertexList*> meshes;
 	map<string, SpriteSource*> spriteSources;
 
 	GameObjectManager *objectManager;
 
-	static LevelManager *instance;
-	static vector<LevelManager*> instances;
+	static LevelManager *loadingLevelManager;
+
+	static map<string, Component*> components;
+
+	//static LevelManager *instance;
+	//static vector<LevelManager*> instances;
+	static LevelManager *layers[MAX_LAYERS];
 };

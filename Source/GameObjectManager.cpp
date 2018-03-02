@@ -6,8 +6,9 @@
 #include "Button.h"
 #include "Trace.h"
 
-GameObjectManager *GameObjectManager::instance = nullptr;
-vector<GameObjectManager::GOMLayeredInstance> GameObjectManager::instances;
+//GameObjectManager *GameObjectManager::instance = nullptr;
+//vector<GameObjectManager::Layer> GameObjectManager::instances;
+GameObjectManager::Layer GameObjectManager::layers[MAX_LAYERS] = {};
 
 void GameObjectManager::Init(void)
 {
@@ -36,18 +37,24 @@ void GameObjectManager::Update(float dt)
 
 void GameObjectManager::UpdateAll(float dt)
 {
+	// TODO Possibly make var 'first' on class and set it in InitLayer()
 	unsigned first = 0;
-	for (int i = (int)instances.size() - 1; i >= 0; i--) {
-		if (!instances[i].update) {
+	for (int i = /*(int)instances.size()*/MAX_LAYERS - 1; i >= 0; i--) {
+		/*if (!instances[i].update) {
 			first = i + 1;
-		}
+		}*/
+		if (layers[i].instance && !layers[i].updateLower)
+			first = i;
 	}
-	for (unsigned i = first; i < instances.size(); i++) {
-		instances[i].instance->Update(dt);
-		instances[i].instance->CheckCollisions();
+	for (unsigned i = first; i < /*instances.size()*/MAX_LAYERS; i++) {
+		//instances[i].instance->Update(dt);
+		//instances[i].instance->CheckCollisions();
+		if (!layers[i].instance) continue;
+		layers[i].instance->Update(dt);
+		layers[i].instance->CheckCollisions();
 	}
-	instance->Update(dt);
-	instance->CheckCollisions();
+	//instance->Update(dt);
+	//instance->CheckCollisions();
 }
 
 void GameObjectManager::CheckCollisions()
@@ -81,15 +88,20 @@ void GameObjectManager::Draw(void)
 void GameObjectManager::DrawAll()
 {
 	unsigned first = 0;
-	for (int i = (int)instances.size() - 1; i >= 0; i--) {
-		if (!instances[i].draw) {
+	for (int i = /*(int)instances.size()*/MAX_LAYERS - 1; i >= 0; i--) {
+		/*if (!instances[i].draw) {
 			first = i + 1;
+		}*/
+		if (layers[i].instance && !layers[i].drawLower) {
+			first = i;
 		}
 	}
-	for (unsigned i = first; i < instances.size(); i++) {
-		instances[i].instance->Draw();
+	for (unsigned i = first; i < /*instances.size()*/MAX_LAYERS; i++) {
+		//instances[i].instance->Draw();
+		if (!layers[i].instance) continue;
+		layers[i].instance->Draw();
 	}
-	instance->Draw();
+	//instance->Draw();
 }
 
 void GameObjectManager::Shutdown(void)
@@ -143,39 +155,50 @@ GameObject * GameObjectManager::GetArchetype(const char * name) const
 	return nullptr;
 }
 
-GameObjectManager & GameObjectManager::GetInstance()
+/*GameObjectManager & GameObjectManager::GetInstance()
 {
 	//static GameObjectManager instance;
 	if (!instance)
 		instance = new GameObjectManager();
 	return *instance;
+}*/
+
+GameObjectManager *GameObjectManager::InitLayer(unsigned layer, bool updateLower, bool drawLower)
+{
+	//instances.push_back({updateLower, drawLower, instance});
+	//instance = new GameObjectManager();
+	//instance->Init();
+	if (layer >= MAX_LAYERS) return nullptr;
+	layers[layer] = { updateLower, drawLower, new GameObjectManager() };
+	layers[layer].instance->Init();
+	return layers[layer].instance;
 }
 
-void GameObjectManager::NewLayer(bool updateLower, bool drawLower)
+void GameObjectManager::DeleteLayer(unsigned layer)
 {
-	instances.push_back({updateLower, drawLower, instance});
-	instance = new GameObjectManager();
-	instance->Init();
+	//if (instances.size() == 0) return;
+	if (layer >= MAX_LAYERS || !layers[layer].instance) return;
+	//instance->Shutdown();
+	layers[layer].instance->Shutdown();
+	//delete instance;
+	delete layers[layer].instance;
+	//instance = instances[instances.size()-1].instance;
+	//instances.pop_back();
+	layers[layer].instance = nullptr;
 }
 
-void GameObjectManager::DeleteLayer()
+void GameObjectManager::ShutdownLayers()
 {
-	if (instances.size() == 0) return;
-	instance->Shutdown();
-	delete instance;
-	instance = instances[instances.size()-1].instance;
-	instances.pop_back();
-}
-
-void GameObjectManager::ShutdownInstances()
-{
-	instance->Shutdown();
-	delete instance;
-	for (GOMLayeredInstance i : instances) {
-		i.instance->Shutdown();
-		delete i.instance;
+	//instance->Shutdown();
+	//delete instance;
+	for (unsigned i = 0; i < MAX_LAYERS; i++) {
+		if (layers[i].instance) {
+			layers[i].instance->Shutdown();
+			delete layers[i].instance;
+			layers[i].instance = nullptr;
+		}
 	}
-	instances.clear();
+	//instances.clear();
 }
 
 GameObjectManager::GameObjectManager()

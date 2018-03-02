@@ -142,9 +142,6 @@
     <ClCompile Include="Source\BehaviorStub.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LevelButton.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ColliderBox.cpp">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClCompile>
@@ -289,9 +286,6 @@
     </ClInclude>
     <ClInclude Include="Source\BehaviorStub.h">
       <Filter>Game\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\LevelButton.h">
-      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Source\ColliderBox.h">
       <Filter>Engine\GameObjects\Colliders</Filter>

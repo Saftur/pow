@@ -12,7 +12,8 @@
 #include "stdafx.h"
 #include "AEEngine.h"
 #include "System.h"
-#include "LevelManager.h"
+#include "Engine.h"
+//#include "LevelManager.h"
 
 //------------------------------------------------------------------------------
 // Libraries
@@ -77,7 +78,8 @@ void System::Update(float dt)
 	// check if the window doesn't exist.
 	if (!AESysDoesWindowExist())
 	{
-		LevelManager::GetInstance().Quit();
+		//LevelManager::GetInstance().Quit();
+		Engine::GetInstance().Quit();
 	}
 }
 

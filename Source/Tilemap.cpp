@@ -344,6 +344,7 @@ int Tilemap::GetCollides(int x, int y) const
 
 void Tilemap::Load(rapidjson::Value & obj)
 {
+	// TODO Rewrite this function
 	if (obj.HasMember("SpritesheetFilename") && obj["SpritesheetFilename"].IsString() &&
 		obj.HasMember("TilemapFilename") && obj["TilemapFilename"].IsString() &&
 		obj.HasMember("OnScreenWidth") && obj["OnScreenWidth"].IsInt() &&

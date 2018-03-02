@@ -59,6 +59,11 @@ public:
 
 	//Toggle paused.
 	void TogglePaused();
+	void SetPaused(bool pause);
+
+	bool IsRunning();
+
+	void Quit();
 
 private:
 	Vector2D* AddCamera(Vector2D screenPos, Vector2D topLeft, Vector2D bottomRight, Vector2D worldPos);
@@ -85,9 +90,11 @@ private:
 	Engine(const Engine&) = delete;
 	Engine& operator=(const Engine&) = delete;
 
+	bool running = true;
+
 	bool hasPauseMenu = false;
 	bool paused = false; //Is the game paused?
-	bool switchLevel = false;
+	bool switchPause = false;
 
 	vector<Camera> cameras;
 };

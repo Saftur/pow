@@ -58,11 +58,13 @@ void Engine::Init(const char *startLevel)
 	//--------------------------------------------------------------------------
 
 	// Initialize the game object manager.
-	GameObjectManager::GetInstance().Init();
+	//GameObjectManager::GetInstance().Init();
 	Button::ListEffects();
 
 	// Initialize the game state manager.
-	LevelManager::GetInstance().Init(startLevel);
+	//LevelManager::GetInstance().Init(startLevel);
+	LevelManager::StaticInit();
+	LevelManager::LoadLayer(0, startLevel, true, true);
 
 	hasPauseMenu = LevelManager::LevelExists("PauseLevel");
 
@@ -79,11 +81,13 @@ void Engine::Update(float dt)
 {
 	Trace::GetInstance().GetStream() << "Engine: Update" << std::endl;
 	if (AEInputCheckTriggered(VK_ESCAPE)) TogglePaused();
-	if (switchLevel) {
-		if (paused)
-			LevelManager::LoadAbove("PauseLevel", false, true);
-		else LevelManager::UnloadAbove();
-		switchLevel = false;
+	if (switchPause) {
+		if (hasPauseMenu) {
+			if (paused)
+				LevelManager::LoadLayer(3, "PauseLevel", false, true);
+			else LevelManager::UnloadLayer(3);
+		}
+		switchPause = false;
 	}
 
 	// Update the System (Windows, Event Handlers).
@@ -125,13 +129,13 @@ void Engine::Shutdown()
 
 	// Shutdown the game object manager.
 	//GameObjectManager::GetInstance().Shutdown();
-	GameObjectManager::ShutdownInstances();
+	GameObjectManager::ShutdownLayers();
 
 	//PauseMenu::GetInstance().Shutdown(true);
 
 	// Shutdown the game state manager.
 	//LevelManager::GetInstance().Shutdown();
-	LevelManager::ShutdownInstances();
+	LevelManager::ShutdownLayers();
 
 	//--------------------------------------------------------------------------
 	// NOTE: Certain modules need to be shutdown last and in reverse order.
@@ -156,9 +160,24 @@ bool Engine::IsPaused() {
 }
 
 void Engine::TogglePaused() {
-	if (!hasPauseMenu) return;
 	paused = !paused;
-	switchLevel = true;
+	switchPause = true;
+}
+
+void Engine::SetPaused(bool pause)
+{
+	paused = pause;
+	switchPause = true;
+}
+
+bool Engine::IsRunning()
+{
+	return running;
+}
+
+void Engine::Quit()
+{
+	running = false;
 }
 
 Vector2D* Engine::AddCamera(Vector2D screenPos, Vector2D topLeft, Vector2D bottomRight, Vector2D worldPos)

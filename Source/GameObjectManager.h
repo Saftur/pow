@@ -19,6 +19,10 @@
 #include <vector>
 using std::vector;
 
+#ifndef MAX_LAYERS
+#define MAX_LAYERS 10
+#endif
+
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -124,10 +128,10 @@ public:
 	GameObject* GetArchetype(const char* name) const;
 
 	// Returns a reference to the singleton instance of the GameObjectManager.
-	static GameObjectManager& GetInstance();
-	static void NewLayer(bool updateLower, bool drawLower);
-	static void DeleteLayer();
-	static void ShutdownInstances();
+	//static GameObjectManager& GetInstance();
+	static GameObjectManager *InitLayer(unsigned layer, bool updateLower, bool drawLower);
+	static void DeleteLayer(unsigned layer);
+	static void ShutdownLayers();
 
 private:
 	//------------------------------------------------------------------------------
@@ -145,9 +149,9 @@ private:
 	//------------------------------------------------------------------------------
 	// Private Structures:
 	//------------------------------------------------------------------------------
-	struct GOMLayeredInstance {
-		bool update;
-		bool draw;
+	struct Layer {
+		bool updateLower;
+		bool drawLower;
 		GameObjectManager *instance;
 	};
 
@@ -157,7 +161,8 @@ private:
 	vector<GameObject*> activeList;
 	vector<GameObject*> archetypes;
 
-	static GameObjectManager *instance;
-	static vector<GOMLayeredInstance> instances;
+	//static GameObjectManager *instance;
+	//static vector<Layer> instances;
+	static Layer layers[MAX_LAYERS];
 };
 //------------------------------------------------------------------------------

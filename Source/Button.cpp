@@ -130,13 +130,14 @@ void Button::Update(float dt) {
 
 void Button::RestartEffect(Button & button, float dt)
 {
-	Engine::GetInstance().TogglePaused();
-	LevelManager::GetLowerInstance(1)->Restart();
+	Engine::GetInstance().SetPaused(false);
+	LevelManager::GetLayer(0)->Restart();
 }
 
 void Button::QuitEffect(Button &button, float dt)
 {
-	LevelManager::GetInstance().Quit();
+	//LevelManager::GetInstance().Quit();
+	Engine::GetInstance().Quit();
 }
 
 void Button::ListEffects()

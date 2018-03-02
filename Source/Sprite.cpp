@@ -103,7 +103,7 @@ void Sprite::Load(rapidjson::Value& obj)
 	if (obj.HasMember("SpriteSource") && obj["SpriteSource"].IsString())
 	{
 		// Add a sprite source by name.
-		spriteSource = LevelManager::GetInstance().GetSpriteSource(obj["SpriteSource"].GetString());
+		spriteSource = LevelManager::GetLoadingLevel()->GetSpriteSource(obj["SpriteSource"].GetString());
 	}
 	else if (obj.HasMember("SpriteSource"))
 	{
@@ -116,13 +116,13 @@ void Sprite::Load(rapidjson::Value& obj)
 		spriteSource = ss;
 
 		// Add the sprite source to the map.
-		LevelManager::GetInstance().AddSpriteSource(tmp["Name"].GetString(), ss);
+		LevelManager::GetLoadingLevel()->AddSpriteSource(tmp["Name"].GetString(), ss);
 	}
 
 	if (obj.HasMember("Mesh") && obj["Mesh"].IsString())
 	{
 		// Add a mesh by name.
-		mesh = LevelManager::GetInstance().GetMesh(obj["Mesh"].GetString());
+		mesh = LevelManager::GetLoadingLevel()->GetMesh(obj["Mesh"].GetString());
 	}
 	else if (obj.HasMember("Mesh"))
 	{
@@ -136,12 +136,12 @@ void Sprite::Load(rapidjson::Value& obj)
 		//meshUV = {tmp2[0].GetFloat(), tmp2[1].GetFloat()};
 
 		// Add the mesh to the map.
-		LevelManager::GetInstance().AddMesh(tmp["Name"].GetString(), mesh);
+		LevelManager::GetLoadingLevel()->AddMesh(tmp["Name"].GetString(), mesh);
 	} else {
 		mesh = MeshCreateQuad(0.5f, 0.5f, 1.0f, 1.0f);
 		//meshHalfSize = { 0.5f, 0.5f };
 		//meshUV = { 1.0f, 1.0f };
-		LevelManager::GetInstance().AddMesh("", mesh);
+		LevelManager::GetLoadingLevel()->AddMesh("", mesh);
 	}
 
 	if (obj.HasMember("Alpha") && obj["Alpha"].IsFloat())

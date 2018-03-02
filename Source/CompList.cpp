@@ -9,6 +9,6 @@
 void CompList::List() {
 	// Use for every new Behavior:
 	//LevelManager::GetInstance().AddComponentType();
-	LevelManager::GetInstance().AddComponentType("BehaviorArmy", new BehaviorArmy());
-	LevelManager::GetInstance().AddComponentType("BehaviorUnit", new BehaviorUnit());
+	LevelManager::AddComponentType("BehaviorArmy", new BehaviorArmy());
+	LevelManager::AddComponentType("BehaviorUnit", new BehaviorUnit());
 }
