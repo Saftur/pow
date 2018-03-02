@@ -46,7 +46,7 @@ enum states { cUnitWaiting, cUnitMoving, cUnitCheckMove, cUnitAttacking };
 BehaviorUnit::BehaviorUnit() :
 		Behavior("BehaviorUnit")
 {
-	SetCurrentState(cBehaviorInvalid);
+	SetCurrentState(cUnitWaiting);
 	SetNextState(cUnitMoving);
 }
 

@@ -282,6 +282,7 @@ void BehaviorArmy::OnUpdate(float dt)
 		}
 		if (editUnit && editUnit->GetParent()->IsDestroyed()) {
 			editUnit = nullptr;
+			editPos = { -1, -1 };
 		}
 		for (unsigned i = 0; i < editExtraUnits.size(); i++) {
 			if (editExtraUnits[i]->GetParent()->IsDestroyed()) {
@@ -585,12 +586,6 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 		levelDoc.Parse(contents.c_str());
 		assert(levelDoc.IsObject());
 		controlList.Load(levelDoc);
-		int switchSelect = controlList["Command.SwitchSelect"];
-		switchSelect;
-		/*int camAxisX = controlList["CamAxisX"];
-		Trace::GetInstance().GetStream() << camAxisX << std::endl;
-		controlList.SetControl("Normal.Thing", Gamepad::aLStickX);
-		controlList.SetControl("Thing", Gamepad::aLStickY);*/
 	}
 	if (obj.HasMember("CursorName") && obj["CursorName"].IsString()) {
 		cursorObjName = obj["CursorName"].GetString();
@@ -642,8 +637,12 @@ bool BehaviorArmy::LegalSpawn(Vector2D pos)
 				return false;
 		}
 		if (bu) {
-			if (pos == bu->GetNextPos() && bu->IsMoving())
-				return false;
+			//if (pos == bu->GetNextPos() && bu->IsMoving())
+			//	return false;
+			if (pos == bu->GetNextPos()) {
+				if (bu->IsMoving())
+					return false;
+			}
 		}
 	}
 	if (pos.x < 0 || pos.x >= tilemap->GetTilemapWidth() || pos.y < 0 || pos.y >= tilemap->GetTilemapHeight())

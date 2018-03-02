@@ -98,7 +98,7 @@ Component * Button::Clone() const
 //	 dt = Change in time (in seconds) since the last game loop.
 void Button::Update(float dt) {
 	//OnUpdate(dt);
-	if (AEInputCheckCurr(VK_LBUTTON)) {
+	if (AEInputCheckTriggered(VK_LBUTTON)) {
 		//Get the mouse position on screen.
 		s32 mouseX;
 		s32 mouseY;
