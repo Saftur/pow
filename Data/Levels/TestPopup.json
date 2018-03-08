@@ -1,0 +1,78 @@
+[
+  {
+    "Name": "Background",
+    "Transform": {
+      "Translation": [ 0, -200 ],
+      "Scale": [ 500, 150 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "Mesh": {
+        "Name": "BackgroundMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 0.5,
+      "ModulateColor": [ 0.4, 0.4, 0.4, 1 ]
+    }
+  },
+  {
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ -125, -200 ],
+      "Scale": [ 200, 50 ],
+      "Rotation": 0
+    },
+    "Button": {
+      "ClickEffect": "Restart"
+    },
+    "Sprite": {
+      "Mesh": {
+        "Name": "ButtonMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Data\\Assets\\Comic Sans.png",
+        "Cols": 16,
+        "Rows": 6
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.0625, 0.1666666666667 ]
+      },
+      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "Text": "Restart Game!",
+      "Scale": [ 25, 30 ]
+    }
+  },
+  {
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ 125, -200 ],
+      "Scale": [ 200, 50 ],
+      "Rotation": 0
+    },
+    "Button": {
+      "ClickEffect": "Quit"
+    },
+    "Sprite": {
+      "Mesh": "ButtonMesh",
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
+      "ModulateColor": [ 0, 0, 0, 1 ],
+      "Text": "Quit Game!",
+      "Scale": [ 36, 40 ]
+    }
+  }
+]

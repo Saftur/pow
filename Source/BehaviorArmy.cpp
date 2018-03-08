@@ -23,6 +23,8 @@
 #include "Transform.h"
 #include "Trace.h"
 #include "Engine.h"
+#include "LevelManager.h"
+#include "Button.h"
 #include <iostream>
 #include <sstream>
 using std::ifstream;
@@ -257,199 +259,251 @@ void BehaviorArmy::OnUpdate(float dt)
 		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(/*Gamepad::aLStickY*/controlList["CamAxisY"]) << std::endl;
 		Vector2D tmTopLeft = tilemap->GetTilemapScreenTopLeft();
 		Vector2D tmBottomRight = tilemap->GetTilemapScreenBottomRight();
-		bool inEditMode = gamepad.GetButton(/*Gamepad::bRTrigger*/controlList["Normal.SwitchCommand"]);
-		bool inSelectMode = gamepad.GetButton(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"]);
-		if (gamepad.GetButtonTriggered(/*Gamepad::bDpadUp*/controlList["CamUp"])) {
-			curspos.y += tilemap->GetTileHeight();
-			if ((!inEditMode || inSelectMode) && curspos.y > tmTopLeft.y)
-				curspos.y -= tilemap->GetTileHeight() * tilemap->GetTilemapHeight();
-			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
-		} else if (gamepad.GetButtonTriggered(/*Gamepad::bDpadDown*/controlList["CamDown"])) {
-			curspos.y -= tilemap->GetTileHeight();
-			if ((!inEditMode || inSelectMode) && curspos.y < tmBottomRight.y)
-				curspos.y += tilemap->GetTileHeight() * tilemap->GetTilemapHeight();
-			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
-		} else if (gamepad.GetButtonTriggered(/*Gamepad::bDpadLeft*/controlList["CamLeft"])) {
-			curspos.x -= tilemap->GetTileHeight();
-			if ((!inEditMode || inSelectMode) && curspos.x < tmTopLeft.x)
-				curspos.x += tilemap->GetTileWidth() * tilemap->GetTilemapWidth();
-			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
-		} else if (gamepad.GetButtonTriggered(/*Gamepad::bDpadRight*/controlList["CamRight"])) {
-			curspos.x += tilemap->GetTileHeight();
-			if ((!inEditMode || inSelectMode) && curspos.x > tmBottomRight.x)
-				curspos.x -= tilemap->GetTileWidth() * tilemap->GetTilemapWidth();
-			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
-		}
-		if (editUnit && editUnit->GetParent()->IsDestroyed()) {
-			editUnit = nullptr;
-			editPos = { -1, -1 };
-		}
-		for (unsigned i = 0; i < editExtraUnits.size(); i++) {
-			if (editExtraUnits[i]->GetParent()->IsDestroyed()) {
-				editExtraUnits.erase(editExtraUnits.begin() + i);
-				editExtraStartPos.erase(editExtraStartPos.begin() + i);
-				i--;
+
+		bool popupMenu = gamepad.GetButton(controlList["Normal.BuildingMenu"]);
+		//popupMenu = AEInputCheckCurr('M'); //Testing purposes only, delete when a controller is available.
+		if (popupMenu) {
+			///TODO: Open/Close/Control a popup menu for creating buildings.
+			//Create menu if it does not exist
+			if (buildingMenuLayer == -1) {
+				LevelManager::LoadLayer(LevelManager::GetLayerCount(), "TestPopup", true);
+				buildingMenuLayer = LevelManager::GetLayerCount() - 1;
+				selectedButton = 0;
+				oldCursorScale = cursor->GetScale();
+			}
+			else {
+				//Get the selected button.
+				int buttons = LevelManager::GetLayer(buildingMenuLayer)->GetObjectManager()->GetObjectsByName("Button").size(); //Number of buttons in the menu.
+				if (gamepad.GetButtonTriggered(controlList["CamLeft"])) {
+					if (selectedButton <= 0) selectedButton = buttons - 1;
+					else selectedButton--;
+				}
+				else if (gamepad.GetButtonTriggered(controlList["CamRight"])) {
+					if (selectedButton >= buttons - 1) selectedButton = 0;
+					else selectedButton++;
+				}
+
+				cursor->SetScale(((Transform*)LevelManager::GetLayer(buildingMenuLayer)->GetObjectManager()->GetObjectsByName("Button")[selectedButton]->GetComponent("Transform"))->GetScale() * 1.1f);
+				curspos.x = ((Transform*)LevelManager::GetLayer(buildingMenuLayer)->GetObjectManager()->GetObjectsByName("Button")[selectedButton]->GetComponent("Transform"))->GetTranslation().x;
+				curspos.y = ((Transform*)LevelManager::GetLayer(buildingMenuLayer)->GetObjectManager()->GetObjectsByName("Button")[selectedButton]->GetComponent("Transform"))->GetTranslation().y;
+				cursor->SetScreenTranslation(curspos);
+
+				if (gamepad.GetButtonTriggered(controlList["Select.Manual.Select"])) {
+					Button::ForceClick(*(Button*)LevelManager::GetLayer(buildingMenuLayer)->GetObjectManager()->GetObjectsByName("Button")[selectedButton]->GetComponent("Button"), dt);
+					LevelManager::UnloadLayer(buildingMenuLayer);
+					buildingMenuLayer = -1;
+					cursor->SetScale(oldCursorScale);
+				}
 			}
 		}
-		if (inEditMode) {
-			if (inSelectMode) {
-				if (gamepad.GetButtonTriggered(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"])) {
-					if (tilemap->GetPosOnMap(curspos) != editStartPos)
-						curspos = tilemap->GetPosOnScreen(editStartPos);
-					//editSelectMode = smSelect;
-					editSelectMode = smAuto;
-				}
-				//if (gamepad.GetButton(Gamepad::bB))
-					//SelectUnits(curspos, true);
-				//else SelectUnits(curspos);
-				//if (gamepad.GetButtonTriggered(Gamepad::bA)) {
-					//editSelectMode = smSelect;
-					//editExtraLastPos = { -1, -1 };
-				//}
-				//if (gamepad.GetButtonTriggered(Gamepad::bB)) {
-					//editSelectMode = smDeselect;
-					//editExtraLastPos = { -1, -1 };
-				//}
-				//if (editSelectMode == smSelect)
-					//SelectUnits(curspos);
-				//else if (editSelectMode == smDeselect)
-					//SelectUnits(curspos, true);
-				if (gamepad.GetButtonTriggered(/*Gamepad::bX*/controlList["Select.SwitchManual"])) {
-					editSelectMode = smManual;
-				}
-				if (gamepad.GetButtonTriggered(/*Gamepad::bY*/controlList["Select.SwitchAuto"])) {
-					editSelectMode = smAuto;
-					editExtraLastPos = { -1, -1 };
-				}
-				if (editSelectMode == smAuto) {
-					if (tilemap->GetPosOnMap(curspos) != editExtraLastPos)
-						editExtraLastPos = { -1, -1 };
-					SelectUnits(curspos);
-				} else if (editSelectMode == smManual) {
-					editExtraLastPos = { -1, -1 };
-					if (gamepad.GetButtonTriggered(/*Gamepad::bA*/controlList["Select.Manual.Select"]))
-						SelectUnits(curspos);
-					if (gamepad.GetButtonTriggered(/*Gamepad::bB*/controlList["Select.Manual.Deselect"]))
-						SelectUnits(curspos, true);
-				}
-			} else {
-				if (gamepad.GetButtonReleased(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"])) {
-					if (tilemap->GetPosOnMap(curspos) != tilemap->NormalizeMapPos(editPos))
-						curspos = tilemap->GetPosOnScreen(editPos);
-					editExtraLastPos = { -1, -1 };
-				}
-				if (!editUnit) {
-					SelectUnits(curspos);
-				}
-				if (editUnit) {
-					if (curspos.x <= tmTopLeft.x)
-						curspos.x = tmTopLeft.x;
-					if (curspos.x >= tmBottomRight.x)
-						curspos.x = tmBottomRight.x - 1;
-					if (curspos.y >= tmTopLeft.y)
-						curspos.y = tmTopLeft.y;
-					if (curspos.y <= tmBottomRight.y)
-						curspos.y = tmBottomRight.y - 1;
-					if (tilemap->GetPosOnMap(curspos) != tilemap->NormalizeMapPos(editPos)) {
-						Vector2D delta;
-						while (tilemap->GetPosOnMap(curspos) != tilemap->NormalizeMapPos(editPos)) {
-							delta = (tilemap->GetPosOnMap(curspos) - editPos).Normalized();
-							if (delta.x && delta.y) {
-								delta.y = 0;
-								delta = delta.Normalized();
-							}
-							if (AddToEditPath(delta))
-								editPos += delta;
-							else curspos = tilemap->GetPosOnScreen(editPos);
-						}
-					}
-					if (gamepad.GetButtonTriggered(/*Gamepad::bX*/controlList["Command.ClearPath"])) {
-						if (!editPath.empty()) {
-							editPath.clear();
-							curspos = tilemap->GetPosOnScreen(editStartPos);
-							editPos = editStartPos;
-						}
-					}
-					if (!editPath.empty() && gamepad.GetButtonTriggered(/*Gamepad::bB*/controlList["Command.BackPath"])) {
-						Vector2D d = editPath[editPath.size() - 1];
-						editPath.pop_back();
-						editPos = tilemap->GetPosOnMap(curspos) - d;
-						curspos = tilemap->GetPosOnScreen(editPos);
-					}
-					if (gamepad.GetButtonTriggered(/*Gamepad::bY*/controlList["Command.PathToEnd"])) {
-						for (Vector2D d : path_) {
-							if (AddToEditPath(d)) {
-								editPos = tilemap->GetPosOnMap(curspos) + d;
-								curspos = tilemap->GetPosOnScreen(editPos);
-							}
-						}
-					}
-					if (gamepad.GetButtonTriggered(controlList["Command.Recycle"])) {
-						AddToFunds(editUnit->GetRecycleReturns());
-						editUnit->GetParent()->Destroy();
-						for (BehaviorUnit *bu : editExtraUnits) {
-							AddToFunds(bu->GetRecycleReturns());
-							bu->GetParent()->Destroy();
-						}
-						/*if (!editExtraUnits.empty())
-							editExtraUnits.clear();
-						if (!editExtraStartPos.empty())
-							editExtraStartPos.clear();*/
-						editPos = { -1, -1 };
-					}
-				}
+		else {
+			//Delete the menu if it exists still.
+			if (buildingMenuLayer != -1) {
+				LevelManager::UnloadLayer(buildingMenuLayer);
+				buildingMenuLayer = -1;
+				cursor->SetScale(oldCursorScale);
 			}
-		} else {
-			if (editUnit) {
-				editUnit->AddToPath(editPath);
+
+			bool inEditMode = gamepad.GetButton(/*Gamepad::bRTrigger*/controlList["Normal.SwitchCommand"]);
+			bool inSelectMode = gamepad.GetButton(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"]);
+			if (gamepad.GetButtonTriggered(/*Gamepad::bDpadUp*/controlList["CamUp"])) {
+				curspos.y += tilemap->GetTileHeight();
+				if ((!inEditMode || inSelectMode) && curspos.y > tmTopLeft.y)
+					curspos.y -= tilemap->GetTileHeight() * tilemap->GetTilemapHeight();
+				curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
+			}
+			else if (gamepad.GetButtonTriggered(/*Gamepad::bDpadDown*/controlList["CamDown"])) {
+				curspos.y -= tilemap->GetTileHeight();
+				if ((!inEditMode || inSelectMode) && curspos.y < tmBottomRight.y)
+					curspos.y += tilemap->GetTileHeight() * tilemap->GetTilemapHeight();
+				curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
+			}
+			else if (gamepad.GetButtonTriggered(/*Gamepad::bDpadLeft*/controlList["CamLeft"])) {
+				curspos.x -= tilemap->GetTileHeight();
+				if ((!inEditMode || inSelectMode) && curspos.x < tmTopLeft.x)
+					curspos.x += tilemap->GetTileWidth() * tilemap->GetTilemapWidth();
+				curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
+			}
+			else if (gamepad.GetButtonTriggered(/*Gamepad::bDpadRight*/controlList["CamRight"])) {
+				curspos.x += tilemap->GetTileHeight();
+				if ((!inEditMode || inSelectMode) && curspos.x > tmBottomRight.x)
+					curspos.x -= tilemap->GetTileWidth() * tilemap->GetTilemapWidth();
+				curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
+			}
+			if (editUnit && editUnit->GetParent()->IsDestroyed()) {
 				editUnit = nullptr;
-				for (BehaviorUnit *extraUnit : editExtraUnits)
-					extraUnit->AddToPath(editPath);
-				if (!editExtraUnits.empty())
-					editExtraUnits.clear();
-				if (!editExtraStartPos.empty())
-					editExtraStartPos.clear();
-				if (!editPath.empty())
-					editPath.clear();
 				editPos = { -1, -1 };
-				curspos = tilemap->GetPosOnScreen(editStartPos);
 			}
+			for (unsigned i = 0; i < editExtraUnits.size(); i++) {
+				if (editExtraUnits[i]->GetParent()->IsDestroyed()) {
+					editExtraUnits.erase(editExtraUnits.begin() + i);
+					editExtraStartPos.erase(editExtraStartPos.begin() + i);
+					i--;
+				}
+			}
+			if (inEditMode) {
+				if (inSelectMode) {
+					if (gamepad.GetButtonTriggered(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"])) {
+						if (tilemap->GetPosOnMap(curspos) != editStartPos)
+							curspos = tilemap->GetPosOnScreen(editStartPos);
+						//editSelectMode = smSelect;
+						editSelectMode = smAuto;
+					}
+					//if (gamepad.GetButton(Gamepad::bB))
+						//SelectUnits(curspos, true);
+					//else SelectUnits(curspos);
+					//if (gamepad.GetButtonTriggered(Gamepad::bA)) {
+						//editSelectMode = smSelect;
+						//editExtraLastPos = { -1, -1 };
+					//}
+					//if (gamepad.GetButtonTriggered(Gamepad::bB)) {
+						//editSelectMode = smDeselect;
+						//editExtraLastPos = { -1, -1 };
+					//}
+					//if (editSelectMode == smSelect)
+						//SelectUnits(curspos);
+					//else if (editSelectMode == smDeselect)
+						//SelectUnits(curspos, true);
+					if (gamepad.GetButtonTriggered(/*Gamepad::bX*/controlList["Select.SwitchManual"])) {
+						editSelectMode = smManual;
+					}
+					if (gamepad.GetButtonTriggered(/*Gamepad::bY*/controlList["Select.SwitchAuto"])) {
+						editSelectMode = smAuto;
+						editExtraLastPos = { -1, -1 };
+					}
+					if (editSelectMode == smAuto) {
+						if (tilemap->GetPosOnMap(curspos) != editExtraLastPos)
+							editExtraLastPos = { -1, -1 };
+						SelectUnits(curspos);
+					}
+					else if (editSelectMode == smManual) {
+						editExtraLastPos = { -1, -1 };
+						if (gamepad.GetButtonTriggered(/*Gamepad::bA*/controlList["Select.Manual.Select"]))
+							SelectUnits(curspos);
+						if (gamepad.GetButtonTriggered(/*Gamepad::bB*/controlList["Select.Manual.Deselect"]))
+							SelectUnits(curspos, true);
+					}
+				}
+				else {
+					if (gamepad.GetButtonReleased(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"])) {
+						if (tilemap->GetPosOnMap(curspos) != tilemap->NormalizeMapPos(editPos))
+							curspos = tilemap->GetPosOnScreen(editPos);
+						editExtraLastPos = { -1, -1 };
+					}
+					if (!editUnit) {
+						SelectUnits(curspos);
+					}
+					if (editUnit) {
+						if (curspos.x <= tmTopLeft.x)
+							curspos.x = tmTopLeft.x;
+						if (curspos.x >= tmBottomRight.x)
+							curspos.x = tmBottomRight.x - 1;
+						if (curspos.y >= tmTopLeft.y)
+							curspos.y = tmTopLeft.y;
+						if (curspos.y <= tmBottomRight.y)
+							curspos.y = tmBottomRight.y - 1;
+						if (tilemap->GetPosOnMap(curspos) != tilemap->NormalizeMapPos(editPos)) {
+							Vector2D delta;
+							while (tilemap->GetPosOnMap(curspos) != tilemap->NormalizeMapPos(editPos)) {
+								delta = (tilemap->GetPosOnMap(curspos) - editPos).Normalized();
+								if (delta.x && delta.y) {
+									delta.y = 0;
+									delta = delta.Normalized();
+								}
+								if (AddToEditPath(delta))
+									editPos += delta;
+								else curspos = tilemap->GetPosOnScreen(editPos);
+							}
+						}
+						if (gamepad.GetButtonTriggered(/*Gamepad::bX*/controlList["Command.ClearPath"])) {
+							if (!editPath.empty()) {
+								editPath.clear();
+								curspos = tilemap->GetPosOnScreen(editStartPos);
+								editPos = editStartPos;
+							}
+						}
+						if (!editPath.empty() && gamepad.GetButtonTriggered(/*Gamepad::bB*/controlList["Command.BackPath"])) {
+							Vector2D d = editPath[editPath.size() - 1];
+							editPath.pop_back();
+							editPos = tilemap->GetPosOnMap(curspos) - d;
+							curspos = tilemap->GetPosOnScreen(editPos);
+						}
+						if (gamepad.GetButtonTriggered(/*Gamepad::bY*/controlList["Command.PathToEnd"])) {
+							for (Vector2D d : path_) {
+								if (AddToEditPath(d)) {
+									editPos = tilemap->GetPosOnMap(curspos) + d;
+									curspos = tilemap->GetPosOnScreen(editPos);
+								}
+							}
+						}
+						if (gamepad.GetButtonTriggered(controlList["Command.Recycle"])) {
+							AddToFunds(editUnit->GetRecycleReturns());
+							editUnit->GetParent()->Destroy();
+							for (BehaviorUnit *bu : editExtraUnits) {
+								AddToFunds(bu->GetRecycleReturns());
+								bu->GetParent()->Destroy();
+							}
+							/*if (!editExtraUnits.empty())
+								editExtraUnits.clear();
+							if (!editExtraStartPos.empty())
+								editExtraStartPos.clear();*/
+							editPos = { -1, -1 };
+						}
+					}
+				}
+			}
+			else {
+				if (editUnit) {
+					editUnit->AddToPath(editPath);
+					editUnit = nullptr;
+					for (BehaviorUnit *extraUnit : editExtraUnits)
+						extraUnit->AddToPath(editPath);
+					if (!editExtraUnits.empty())
+						editExtraUnits.clear();
+					if (!editExtraStartPos.empty())
+						editExtraStartPos.clear();
+					if (!editPath.empty())
+						editPath.clear();
+					editPos = { -1, -1 };
+					curspos = tilemap->GetPosOnScreen(editStartPos);
+				}
 
-			vector<Vector2D> path;// = gamepad.GetButton(Gamepad::bRShoulder) ? path_ : vector<Vector2D>();
+				vector<Vector2D> path;// = gamepad.GetButton(Gamepad::bRShoulder) ? path_ : vector<Vector2D>();
 
-			if (gamepad.GetButton(controlList["Normal.SpawnUnit1"]))
-				CreateUnit("Unit1", tilemap->GetPosOnMap(curspos), path);
-			else if (gamepad.GetButton(controlList["Normal.SpawnUnit2"]))
-				CreateUnit("Unit2", tilemap->GetPosOnMap(curspos), path);
-			else if (gamepad.GetButton(controlList["Normal.SpawnUnit3"]))
-				CreateUnit("Unit3", tilemap->GetPosOnMap(curspos), path);
-			else if (gamepad.GetButton(controlList["Normal.SpawnUnit4"]))
-				CreateUnit("Unit4", tilemap->GetPosOnMap(curspos), path);
+				if (gamepad.GetButton(controlList["Normal.SpawnUnit1"]))
+					CreateUnit("Unit1", tilemap->GetPosOnMap(curspos), path);
+				else if (gamepad.GetButton(controlList["Normal.SpawnUnit2"]))
+					CreateUnit("Unit2", tilemap->GetPosOnMap(curspos), path);
+				else if (gamepad.GetButton(controlList["Normal.SpawnUnit3"]))
+					CreateUnit("Unit3", tilemap->GetPosOnMap(curspos), path);
+				else if (gamepad.GetButton(controlList["Normal.SpawnUnit4"]))
+					CreateUnit("Unit4", tilemap->GetPosOnMap(curspos), path);
+			}
+			Vector2D cursscl = cursor->GetScreenScale();
+			if (curspos.x + cursscl.x / 2 > AEGfxGetWinMaxX())
+				curspos.x = AEGfxGetWinMaxX() - cursscl.x / 2;
+			if (curspos.x - cursscl.x / 2 < AEGfxGetWinMinX())
+				curspos.x = AEGfxGetWinMinX() + cursscl.x / 2;
+			if (curspos.y + cursscl.y / 2 > AEGfxGetWinMaxY())
+				curspos.y = AEGfxGetWinMaxY() - cursscl.y / 2;
+			if (curspos.y - cursscl.y / 2 < AEGfxGetWinMinY())
+				curspos.y = AEGfxGetWinMinY() + cursscl.y / 2;
+			cursor->SetScreenTranslation(curspos);
+			//if (camera)
+			//	*camera = -curspos;
+			//for (unsigned i = 0; i < controls.size(); i++) {
+			//	if (controls[i].CheckTriggered()) {
+			//		switch (side) {
+			//		case sLeft:
+			//			CreateUnit("Unit1", { 0, (float)i }, path_);
+			//			break;
+			//		case sRight:
+			//			CreateUnit("Unit1", { (float)tilemap->GetTilemapWidth()-1, (float)i }, path_);
+			//			break;
+			//		}
+			//	}
+			//}
 		}
-		Vector2D cursscl = cursor->GetScreenScale();
-		if (curspos.x + cursscl.x / 2 > AEGfxGetWinMaxX())
-			curspos.x = AEGfxGetWinMaxX() - cursscl.x / 2;
-		if (curspos.x - cursscl.x / 2 < AEGfxGetWinMinX())
-			curspos.x = AEGfxGetWinMinX() + cursscl.x / 2;
-		if (curspos.y + cursscl.y / 2 > AEGfxGetWinMaxY())
-			curspos.y = AEGfxGetWinMaxY() - cursscl.y / 2;
-		if (curspos.y - cursscl.y / 2 < AEGfxGetWinMinY())
-			curspos.y = AEGfxGetWinMinY() + cursscl.y / 2;
-		cursor->SetScreenTranslation(curspos);
-		//if (camera)
-		//	*camera = -curspos;
-		//for (unsigned i = 0; i < controls.size(); i++) {
-		//	if (controls[i].CheckTriggered()) {
-		//		switch (side) {
-		//		case sLeft:
-		//			CreateUnit("Unit1", { 0, (float)i }, path_);
-		//			break;
-		//		case sRight:
-		//			CreateUnit("Unit1", { (float)tilemap->GetTilemapWidth()-1, (float)i }, path_);
-		//			break;
-		//		}
-		//	}
-		//}
 		break;
 	}
 }

@@ -38,6 +38,7 @@ map<string, Component*> LevelManager::components;
 //LevelManager *LevelManager::instance = nullptr;
 //vector<LevelManager*> LevelManager::instances;
 LevelManager *LevelManager::layers[MAX_LAYERS] = {};
+int LevelManager::numLayers = 0;
 
 void LevelManager::StaticInit()
 {
@@ -154,6 +155,7 @@ void LevelManager::LoadLayer(unsigned layer, const char * name, bool updateLower
 	//instance->Init(name);
 	//instance->Load(fileName);
 	layers[layer]->Init(name);
+	numLayers++;
 }
 
 void LevelManager::UnloadLayer(unsigned layer)
@@ -168,6 +170,7 @@ void LevelManager::UnloadLayer(unsigned layer)
 	//layers.pop_back();
 	layers[layer] = nullptr;
 	GameObjectManager::DeleteLayer(layer);
+	numLayers--;
 }
 
 LevelManager * LevelManager::GetLoadingLevel()
@@ -190,6 +193,11 @@ LevelManager * LevelManager::GetLayer(unsigned num)
 	return layers[num];
 }
 
+int LevelManager::GetLayerCount()
+{
+	return numLayers;
+}
+
 void LevelManager::ShutdownLayers()
 {
 	//instance->OnExit();
@@ -199,6 +207,7 @@ void LevelManager::ShutdownLayers()
 			layers[i]->Shutdown();
 			delete layers[i];
 			layers[i] = nullptr;
+			numLayers--;
 		}
 	}
 }

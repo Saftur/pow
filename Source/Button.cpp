@@ -122,6 +122,10 @@ void Button::Update(float dt) {
 	}
 }
 
+void Button::ForceClick(Button& button, float dt) {
+	if (button.ClickEffect) button.ClickEffect(button, dt);
+}
+
 //Extra update function called from OnUpdate() that each button can have
 //optionally if it needs something to happen every frame.
 /*void Button::OnUpdate(float dt) {

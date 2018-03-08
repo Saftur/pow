@@ -91,6 +91,8 @@ public:
 	static void AddClickEffect(const char *name, void(*effectFunc)(Button&,float));
 	static void (*GetClickEffect(const char *name))(Button&,float);
 
+	static void ForceClick(Button& button, float dt);
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Functions:
