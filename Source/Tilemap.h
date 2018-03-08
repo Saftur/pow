@@ -26,6 +26,9 @@ public:
 	bool IsObjectCollidingWithMap(Vector2D objectPosition, Vector2D objectScale) const;
 	void SetOffset(int onScreenOffsetX, int onScreenOffsetY);
 
+	int GetTile(int x, int y) const;
+	int GetCollides(int x, int y) const;
+
 	int GetTileWidth() const;
 	int GetTileHeight() const;
 	Vector2D GetTileSize() const;
@@ -35,13 +38,10 @@ public:
 	Vector2D GetTilemapScreenTopLeft() const;
 	Vector2D GetTilemapScreenBottomRight() const;
 
+	void Load(rapidjson::Value& obj);
+
 private:
 	void ReadFiles(const char* tilemapFilename, const char* collisionMapFilename);
-
-	int GetTilenum(int x, int y) const;
-	int GetCollides(int x, int y) const;
-
-	void Load(rapidjson::Value& obj);
 
 	int offsetX, offsetY; // on-screen offset from top-left
 	int width, height;    // on-screen width/height

@@ -60,6 +60,7 @@
     <ClInclude Include="Source\Gamepad.h" />
     <ClInclude Include="Source\Intersection2D.h" />
     <ClInclude Include="Source\LevelManager.h" />
+    <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\Matrix2D.h" />
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\Physics.h" />
@@ -101,6 +102,7 @@
     <ClCompile Include="Source\Intersection2D.cpp" />
     <ClCompile Include="Source\LevelManager.cpp" />
     <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\Map.cpp" />
     <ClCompile Include="Source\Matrix2D.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
@@ -127,7 +129,6 @@
     <None Include="Data\Army2.ini" />
     <None Include="Data\Levels\DemoLevel.json" />
     <None Include="Data\Levels\PauseLevel.json" />
-    <None Include="Data\Levels\StartLevel.json" />
     <None Include="fmodAPI\lib\fmod.dll" />
     <None Include="fmodAPI\lib\fmodL.dll" />
   </ItemGroup>
