@@ -26,7 +26,8 @@
 // Enums:
 //------------------------------------------------------------------------------
 
-enum states { cUnitWaiting, cUnitMoving, cUnitCheckMove, cUnitAttacking };
+enum states { cUnitIdle, cUnitMove, cUnitCheckMove, cUnitAttack, cUnitSoftChase,
+			  cUnitReturn, cUnitGuard, cUnitFollow, cUnitKill, cUnitBuild, cUnitEndbuild };
 
 //------------------------------------------------------------------------------
 // Public Consts:
@@ -46,19 +47,19 @@ enum states { cUnitWaiting, cUnitMoving, cUnitCheckMove, cUnitAttacking };
 BehaviorUnit::BehaviorUnit() :
 		Behavior("BehaviorUnit")
 {
-	SetCurrentState(cUnitWaiting);
-	SetNextState(cUnitMoving);
+	SetCurrentState(cUnitIdle);
+	SetNextState(cUnitMove);
 }
 
 void BehaviorUnit::Init(BehaviorArmy::UnitData unitData_, vector<Vector2D> path_, Tilemap *tilemap_)
 {
-	SetNextState(cUnitMoving);
+	SetNextState(cUnitMove);
 	tilemap = tilemap_;
 	unitData = unitData_;
 	hp = (float)(unitData.hp);
 	startPos = GetMapPos();
 	path = path_;
-	target = nullptr;
+	engagedUnit = nullptr;
 	attackTimer = 0;
 	payTimer = 0;
 	abilitySprite = (Sprite*)GetParent()->GetComponent("Sprite", 1);
@@ -70,6 +71,11 @@ void BehaviorUnit::Init(BehaviorArmy::UnitData unitData_, vector<Vector2D> path_
 	abilityAnimSequence = AnimationSequence(seq, false);
 
 	unitData.army->IncreaseUnits();
+}
+
+void BehaviorUnit::AddPos(Vector2D pos)
+{
+	
 }
 
 Vector2D BehaviorUnit::GetScrPos()
@@ -142,7 +148,7 @@ void BehaviorUnit::AddToPath(vector<Vector2D> path_)
 
 bool BehaviorUnit::IsMoving()
 {
-	return GetCurrentState() == cUnitMoving;
+	return GetCurrentState() == cUnitMove;
 }
 
 bool BehaviorUnit::IsAdjacent(BehaviorUnit * other)
@@ -186,11 +192,11 @@ void BehaviorUnit::OnEnter()
 {
 	switch (GetCurrentState())
 	{
-	case cUnitMoving:
+	case cUnitMove:
 		unitData.army->PushFrontLine(GetMapPos());
-		if (path.empty() || target) {
-			SetCurrentState(cUnitWaiting);
-			SetNextState(cUnitWaiting);
+		if (path.empty() || engagedUnit) {
+			SetCurrentState(cUnitIdle);
+			SetNextState(cUnitIdle);
 			break;
 		}
 		Vector2D nextPos = GetNextPos();
@@ -201,8 +207,8 @@ void BehaviorUnit::OnEnter()
 			nextPos = GetNextPos();
 		}
 		if (path.empty()) {
-			SetCurrentState(cUnitWaiting);
-			SetNextState(cUnitWaiting);
+			SetCurrentState(cUnitIdle);
+			SetNextState(cUnitIdle);
 			break;
 		}
 		SetCurrentState(cUnitCheckMove); // Prevent  self detection
@@ -211,28 +217,28 @@ void BehaviorUnit::OnEnter()
 			BehaviorUnit *bu = (BehaviorUnit*)(obj->GetComponent("BehaviorUnit"));
 			Transform *t = (Transform*)(obj->GetComponent("Transform"));
 			if (!bu || !t || bu == this) continue; // If missing behavior or transform, skip
-			if (bu->GetCurrentState() == cUnitMoving || bu->GetCurrentState() == cUnitWaiting/*cUnitDoneMove*/) { // If other already moving
-				if (unitData.army->GetSide() != bu->unitData.army->GetSide() && (IsAdjacent(bu) || (bu->GetCurrentState() == cUnitMoving && WillBeAdjacent(bu)))) {
-					target = bu;
-					SetCurrentState(cUnitWaiting);
-					SetNextState(cUnitWaiting);
+			if (bu->GetCurrentState() == cUnitMove || bu->GetCurrentState() == cUnitIdle/*cUnitDoneMove*/) { // If other already moving
+				if (unitData.army->GetSide() != bu->unitData.army->GetSide() && (IsAdjacent(bu) || (bu->GetCurrentState() == cUnitMove && WillBeAdjacent(bu)))) {
+					engagedUnit = bu;
+					SetCurrentState(cUnitIdle);
+					SetNextState(cUnitIdle);
 					break;
 				}
-				if ((GetNextPos() == bu->GetMapPos()/* && GetNextDir() != bu->GetNextDir()*/) || (GetNextPos() == bu->GetNextPos() && bu->GetCurrentState() == cUnitMoving)) {
-					SetCurrentState(cUnitWaiting); // Skip init
-					SetNextState(cUnitWaiting);
+				if ((GetNextPos() == bu->GetMapPos()/* && GetNextDir() != bu->GetNextDir()*/) || (GetNextPos() == bu->GetNextPos() && bu->GetCurrentState() == cUnitMove)) {
+					SetCurrentState(cUnitIdle); // Skip init
+					SetNextState(cUnitIdle);
 					break;
 				}
 			}
 		}
 		if (BehaviorArmy::costType == 0) {
 			if (!(unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 15 + 0.5f)))) {
-				SetCurrentState(cUnitWaiting);
-				SetNextState(cUnitWaiting);
+				SetCurrentState(cUnitIdle);
+				SetNextState(cUnitIdle);
 			}
 		}
 		if (GetCurrentState() == cUnitCheckMove) {
-			SetCurrentState(cUnitMoving);
+			SetCurrentState(cUnitMove);
 			Vector2D direction = GetNextDir();
 			direction.X(direction.X() * tilemap->GetTileWidth());
 			direction.Y(direction.Y() * tilemap->GetTileHeight());
@@ -264,7 +270,7 @@ void BehaviorUnit::OnUpdate(float dt)
 
 	switch (GetCurrentState())
 	{
-	case cUnitMoving: {
+	case cUnitMove: {
 		Vector2D dir = GetNextDir();
 		Vector2D scrPos = GetScrPos();
 		Vector2D nextScrPos = GetNextScrPos();
@@ -272,7 +278,7 @@ void BehaviorUnit::OnUpdate(float dt)
 		if (diff.X() * dir.X() >= 0 && diff.Y() * -dir.Y() >= 0) {
 			((Physics*)(GetParent()->GetComponent("Physics")))->SetVelocity({ 0, 0 });
 			path.erase(path.begin());
-			SetCurrentState(cUnitWaiting);//cUnitDoneMove;
+			SetCurrentState(cUnitIdle);//cUnitDoneMove;
 			startPos = GetMapPos();
 			((Transform*)GetParent()->GetComponent("Transform"))->SetTranslation(tilemap->GetPosOnScreen(GetMapPos()));
 			//Init(behavior);
@@ -287,39 +293,40 @@ void BehaviorUnit::OnUpdate(float dt)
 				scrPos.Y(nextScrPos.Y());
 			}
 		}*/
-	}
+		}
 		break;
-	case cUnitWaiting:
-		if (!target) {
+	case cUnitIdle:
+		if (!engagedUnit) {
 			vector<GameObject*> units = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
 			for (GameObject* obj : units) {
 				BehaviorUnit *bu = (BehaviorUnit*)(obj->GetComponent("BehaviorUnit"));
 				Transform *t = (Transform*)(obj->GetComponent("Transform"));
 				if (!bu || !t || bu == this) continue; // If missing behavior or transform, skip
-				if (bu->GetCurrentState() == cUnitMoving || bu->GetCurrentState() == cUnitWaiting/*cUnitDoneMove*/) { // If other already moving
-					if (unitData.army != bu->unitData.army && (IsAdjacent(bu) || (bu->GetCurrentState() == cUnitMoving && WillBeAdjacent(bu)))) {
-						target = bu;
+				if (bu->GetCurrentState() == cUnitMove || bu->GetCurrentState() == cUnitIdle/*cUnitDoneMove*/) { // If other already moving
+					if (unitData.army != bu->unitData.army && (IsAdjacent(bu) || (bu->GetCurrentState() == cUnitMove && WillBeAdjacent(bu)))) {
+						engagedUnit = bu;
 						break;
 					}
 				}
 			}
 		}
-		if (target) {
-			if (!(target->GetParent()->IsDestroyed()) && IsAdjacent(target)) {
+		if (engagedUnit) {
+			BehaviorUnit* engagedBehavior = (BehaviorUnit*)engagedUnit->GetComponent("BehaviorUnit");
+			if (!(engagedUnit->IsDestroyed()) && IsAdjacent(engagedBehavior)) {
 				if (attackTimer <= 0) {
 					if (unitData.army->costType != 0 || unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 10 + 0.5f))) {
 						//Trace::GetInstance().GetStream() << "Attack!" << std::endl;
 						abilityAnimation->PlaySequence(&abilityAnimSequence);
-						target->hp -= (float)(unitData.damage) / 4;
-						if (target->hp <= 0) {
-							target->GetParent()->Destroy();
-							target = nullptr;
+						engagedBehavior->hp -= (float)(unitData.damage) / 4;
+						if (engagedBehavior->hp <= 0) {
+							engagedUnit->Destroy();
+							engagedUnit = nullptr;
 						}
 						attackTimer = attackCooldown;
 					}
 				} else attackTimer -= dt;
 				break;
-			} else target = nullptr;
+			} else engagedUnit = nullptr;
 		} else {
 			if (BehaviorArmy::costType == 0) {
 				if (payTimer <= 0) {
@@ -329,8 +336,18 @@ void BehaviorUnit::OnUpdate(float dt)
 				} else payTimer -= dt;
 			}
 		}
-		SetNextState(cUnitMoving);
+		SetNextState(cUnitMove);
 		break;
+	}
+
+	// Engage or disengage an enemy unit.
+	if (engagedUnit == nullptr)
+	{
+		engagedUnit = GetUnitWithinRadius();
+	}
+	else if (engagedUnit->IsDestroyed())
+	{
+		engagedUnit = nullptr;
 	}
 }
 
@@ -341,6 +358,24 @@ void BehaviorUnit::OnExit()
 void BehaviorUnit::Load(rapidjson::Value & obj)
 {
 	UNREFERENCED_PARAMETER(obj);
+}
+
+GameObject* BehaviorUnit::GetUnitWithinRadius()
+{
+	vector<GameObject*> units = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
+
+	for (GameObject* unit : units)
+	{
+		if (GetScrPos().Distance(((Transform*)unit->GetComponent("Transform"))->GetTranslation()) < engageDistance)
+		{
+			if (((BehaviorUnit*)unit->GetComponent("BehaviorUnit"))->unitData.army != unitData.army)
+			{
+				return unit;
+			}
+		}
+	}
+
+	return nullptr;
 }
 
 // The collision handling function for Units.

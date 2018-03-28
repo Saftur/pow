@@ -64,8 +64,9 @@ public:
 	BehaviorArmy::UnitData GetUnitData();
 	vector<Vector2D> GetPath();
 	void ClearPath();
-	void AddToPath(Vector2D pos);
-	void AddToPath(vector<Vector2D> path);
+	
+	void AddPos(Vector2D pos);
+	void AddPos(vector<Vector2D> pos);
 
 	bool IsMoving();
 
@@ -100,6 +101,9 @@ private:
 
 	void OnExit();
 
+	void AddToPath(Vector2D pos);
+	void AddToPath(vector<Vector2D> path);
+
 	void Load(rapidjson::Value& obj);
 
 	// The collision handling function for Units.
@@ -107,6 +111,8 @@ private:
 	//	 stub = The stub object.
 	//	 other = The object the asteroid is colliding with.
 	static void CollisionHandler(GameObject& stub, GameObject& other);
+
+	GameObject* GetUnitWithinRadius();
 
 	//------------------------------------------------------------------------------
 	// Private Variables:
@@ -116,7 +122,7 @@ private:
 	float hp;
 	Vector2D startPos;
 	vector<Vector2D> path;
-	BehaviorUnit *target;
+	GameObject* engagedUnit;
 	//bool follow;
 	float attackTimer;
 	float payTimer;
@@ -127,6 +133,7 @@ private:
 
 	const float attackCooldown = 0.5;
 	const float payCooldown = 1;
+	const float engageDistance = 100;
 };
 
 //------------------------------------------------------------------------------

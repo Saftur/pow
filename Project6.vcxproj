@@ -44,6 +44,7 @@
     <ClInclude Include="Source\AnimationSequence.h" />
     <ClInclude Include="Source\Behavior.h" />
     <ClInclude Include="Source\BehaviorArmy.h" />
+    <ClInclude Include="Source\BehaviorProjectile.h" />
     <ClInclude Include="Source\ButtonEffects.h" />
     <ClInclude Include="Source\CompList.h" />
     <ClInclude Include="Source\BehaviorStub.h" />
@@ -58,11 +59,13 @@
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\GameObjectManager.h" />
     <ClInclude Include="Source\Gamepad.h" />
+    <ClInclude Include="source\Grid.h" />
     <ClInclude Include="Source\Intersection2D.h" />
     <ClInclude Include="Source\LevelManager.h" />
     <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\Matrix2D.h" />
     <ClInclude Include="Source\Mesh.h" />
+    <ClInclude Include="source\Pathfinding.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\Random.h" />
     <ClInclude Include="Source\Rendertext.h" />
@@ -85,6 +88,7 @@
     <ClCompile Include="Source\AnimationSequence.cpp" />
     <ClCompile Include="Source\Behavior.cpp" />
     <ClCompile Include="Source\BehaviorArmy.cpp" />
+    <ClCompile Include="Source\BehaviorProjectile.cpp" />
     <ClCompile Include="Source\ButtonEffects.cpp" />
     <ClCompile Include="Source\CompList.cpp" />
     <ClCompile Include="Source\BehaviorStub.cpp" />
@@ -99,12 +103,14 @@
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\GameObjectManager.cpp" />
     <ClCompile Include="Source\Gamepad.cpp" />
+    <ClCompile Include="source\Grid.cpp" />
     <ClCompile Include="Source\Intersection2D.cpp" />
     <ClCompile Include="Source\LevelManager.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Map.cpp" />
     <ClCompile Include="Source\Matrix2D.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
+    <ClCompile Include="source\Pathfinding.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\Random.cpp" />
     <ClCompile Include="Source\Rendertext.cpp" />

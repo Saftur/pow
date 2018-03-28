@@ -77,6 +77,8 @@ private:
 	//	 other = The object the asteroid is colliding with.
 	static void CollisionHandler(GameObject& stub, GameObject& other);
 
+	void Load(rapidjson::Value& obj);
+
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------

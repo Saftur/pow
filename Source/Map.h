@@ -6,10 +6,8 @@ using std::vector;
 #include "Vector2D.h"
 #include "Component.h"
 #include "Tilemap.h"
+#include "Grid.h"
 
-class Grid {
-
-};
 
 class Map : public Tilemap {
 public:
@@ -22,7 +20,7 @@ public:
 
 	Map();
 
-	Grid GetPathfinderGrid();
+	Grid InitGrid();
 
 	Component* Clone() const;
 

@@ -106,6 +106,11 @@ void BehaviorStub::CollisionHandler(GameObject& stub, GameObject& other)
 	UNREFERENCED_PARAMETER(other);
 }
 
+void BehaviorStub::Load(rapidjson::Value& obj)
+{
+	
+}
+
 //------------------------------------------------------------------------------
 // Private Variables:
 //------------------------------------------------------------------------------

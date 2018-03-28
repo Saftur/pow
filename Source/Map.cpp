@@ -12,18 +12,19 @@ Map::Map() {
 	return tiles[y * width + x];
 }*/
 
-Grid Map::GetPathfinderGrid() {
+Grid Map::InitGrid() {
+	Grid grid(GetTilemapWidth(), GetTilemapHeight());
 	for (int y = 0; y < GetTilemapHeight(); y++) {
 		for (int x = 0; x < GetTilemapWidth(); x++) {
 			int tile = GetTile(x, y);
 			if (tile == tPlains) {
-
+				grid.SetNode(x, y, true);
 			} else if (tile >= tCliffLR && tile <= tCliffRB) {
-
+				grid.SetNode(x, y, false);
 			}
 		}
 	}
-	return Grid();
+	return grid;
 }
 
 Component * Map::Clone() const {

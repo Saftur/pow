@@ -61,7 +61,8 @@
       "Scale": [ 64, 64 ],
       "Rotation": 0
     },
-    "Sprite": {
+    {
+      "CompType": "Sprite",
       "SpriteSource": {
         "Name": "UnitSpriteSource",
         "Texture": "Data\\Assets\\baseunit2.png",
