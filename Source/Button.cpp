@@ -24,6 +24,7 @@
 #include "Mesh.h"
 #include "ButtonEffects.h"
 #include "Engine.h"
+#include "PopupMenu.h"
 
 //------------------------------------------------------------------------------
 
@@ -136,6 +137,10 @@ void Button::RestartEffect(Button & button, float dt)
 {
 	Engine::GetInstance().SetPaused(false);
 	LevelManager::GetLayer(0)->Restart();
+	if (LevelManager::GetLayerCount() > 1) {
+		PopupMenu::Shutdown();
+		for (int i = 1; i < LevelManager::GetLayerCount(); i++) LevelManager::UnloadLayer(i);
+	}
 }
 
 void Button::QuitEffect(Button &button, float dt)

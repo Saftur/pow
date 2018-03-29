@@ -27,6 +27,7 @@
 #include "Button.h"
 #include <iostream>
 #include <sstream>
+#include "PopupMenu.h"
 using std::ifstream;
 using std::stringstream;
 
@@ -260,50 +261,13 @@ void BehaviorArmy::OnUpdate(float dt)
 		Vector2D tmTopLeft = tilemap->GetTilemapScreenTopLeft();
 		Vector2D tmBottomRight = tilemap->GetTilemapScreenBottomRight();
 
-		bool popupMenu = gamepad.GetButton(controlList["Normal.BuildingMenu"]);
-		//popupMenu = AEInputCheckCurr('M'); //Testing purposes only, delete when a controller is available.
-		if (popupMenu) {
-			///TODO: Open/Close/Control a popup menu for creating buildings.
-			//Create menu if it does not exist
-			if (buildingMenuLayer == -1) {
-				LevelManager::LoadLayer(LevelManager::GetLayerCount(), "TestPopup", true);
-				buildingMenuLayer = LevelManager::GetLayerCount() - 1;
-				selectedButton = 0;
-				oldCursorScale = cursor->GetScale();
-			}
-			else {
-				//Get the selected button.
-				int buttons = LevelManager::GetLayer(buildingMenuLayer)->GetObjectManager()->GetObjectsByName("Button").size(); //Number of buttons in the menu.
-				if (gamepad.GetButtonTriggered(controlList["CamLeft"])) {
-					if (selectedButton <= 0) selectedButton = buttons - 1;
-					else selectedButton--;
-				}
-				else if (gamepad.GetButtonTriggered(controlList["CamRight"])) {
-					if (selectedButton >= buttons - 1) selectedButton = 0;
-					else selectedButton++;
-				}
-
-				cursor->SetScale(((Transform*)LevelManager::GetLayer(buildingMenuLayer)->GetObjectManager()->GetObjectsByName("Button")[selectedButton]->GetComponent("Transform"))->GetScale() * 1.1f);
-				curspos.x = ((Transform*)LevelManager::GetLayer(buildingMenuLayer)->GetObjectManager()->GetObjectsByName("Button")[selectedButton]->GetComponent("Transform"))->GetTranslation().x;
-				curspos.y = ((Transform*)LevelManager::GetLayer(buildingMenuLayer)->GetObjectManager()->GetObjectsByName("Button")[selectedButton]->GetComponent("Transform"))->GetTranslation().y;
-				cursor->SetScreenTranslation(curspos);
-
-				if (gamepad.GetButtonTriggered(controlList["Select.Manual.Select"])) {
-					Button::ForceClick(*(Button*)LevelManager::GetLayer(buildingMenuLayer)->GetObjectManager()->GetObjectsByName("Button")[selectedButton]->GetComponent("Button"), dt);
-					LevelManager::UnloadLayer(buildingMenuLayer);
-					buildingMenuLayer = -1;
-					cursor->SetScale(oldCursorScale);
-				}
-			}
-		}
+		///TODO: Open/Close/Control a popup menu for creating buildings.
+		bool popupMenu = gamepad.GetButtonTriggered(controlList["Normal.BuildingMenu"]);
+		if(cursorObjName == "Cursor2") popupMenu = AEInputCheckTriggered('M'); //Testing purposes only, delete when a controller is available.
+		if (popupMenu && !PopupMenu::Exists(this)) PopupMenu::CreateMenu(this, MenuType::Building, cursorSprite);
+		else if (popupMenu && PopupMenu::Exists(this)) PopupMenu::DestroyMenu(this);
+		if (PopupMenu::Exists(this)) PopupMenu::Update(this, gamepad, controlList, dt);
 		else {
-			//Delete the menu if it exists still.
-			if (buildingMenuLayer != -1) {
-				LevelManager::UnloadLayer(buildingMenuLayer);
-				buildingMenuLayer = -1;
-				cursor->SetScale(oldCursorScale);
-			}
-
 			bool inEditMode = gamepad.GetButton(/*Gamepad::bRTrigger*/controlList["Normal.SwitchCommand"]);
 			bool inSelectMode = gamepad.GetButton(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"]);
 			if (gamepad.GetButtonTriggered(/*Gamepad::bDpadUp*/controlList["CamUp"])) {

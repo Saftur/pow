@@ -63,6 +63,7 @@
     <ClInclude Include="Source\Matrix2D.h" />
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\Physics.h" />
+    <ClInclude Include="Source\PopupMenu.h" />
     <ClInclude Include="Source\Random.h" />
     <ClInclude Include="Source\Rendertext.h" />
     <ClInclude Include="source\Serializable.h" />
@@ -104,6 +105,7 @@
     <ClCompile Include="Source\Matrix2D.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
+    <ClCompile Include="Source\PopupMenu.cpp" />
     <ClCompile Include="Source\Random.cpp" />
     <ClCompile Include="Source\Rendertext.cpp" />
     <ClCompile Include="source\Serializable.cpp" />

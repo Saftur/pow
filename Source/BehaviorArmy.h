@@ -214,10 +214,6 @@ private:
 	Transform *pathTransform;
 	Transform diamondTransform;
 	Transform targetTransform;
-
-	int buildingMenuLayer = -1;
-	int selectedButton = 0;
-	Vector2D oldCursorScale;
 };
 
 //------------------------------------------------------------------------------

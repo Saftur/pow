@@ -145,9 +145,6 @@
     <ClCompile Include="Source\ColliderBox.cpp">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LevelButton.cpp">
-      <Filter>Engine\Buttons</Filter>
-    </ClCompile>
     <ClCompile Include="source\Serializable.cpp">
       <Filter>Engine\GameObjects</Filter>
     </ClCompile>
@@ -175,6 +172,9 @@
     <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\ControlList.cpp">
       <Filter>Engine\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PopupMenu.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -290,9 +290,6 @@
     <ClInclude Include="Source\ColliderBox.h">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClInclude>
-    <ClInclude Include="Source\LevelButton.h">
-      <Filter>Engine\Buttons</Filter>
-    </ClInclude>
     <ClInclude Include="rapidjson\allocators.h">
       <Filter>RapidJSON</Filter>
     </ClInclude>
@@ -380,6 +377,9 @@
     <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\ControlList.h">
       <Filter>Engine\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PopupMenu.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

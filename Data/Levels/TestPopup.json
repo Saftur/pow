@@ -17,6 +17,14 @@
     }
   },
   {
+    "Name": "Cursor",
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 128, 128 ],
+      "Rotation": 0
+    }
+  },
+  {
     "Name": "Button",
     "Transform": {
       "Translation": [ -125, -200 ],
