@@ -3,7 +3,7 @@
     "Name": "Background",
     "Transform": {
       "Translation": [ 0, -200 ],
-      "Scale": [ 500, 150 ],
+      "Scale": [ 700, 150 ],
       "Rotation": 0
     },
     "Sprite": {
@@ -22,12 +22,22 @@
       "Translation": [ 0, 0 ],
       "Scale": [ 128, 128 ],
       "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": "CursorSpriteSource",
+      "Mesh": {
+		"Name": "CursorMesh",
+		"HalfSize": [ 0.5, 0.5 ],
+		"UV": [ 1, 1 ]
+	  },
+      "Alpha": 1.0,
+      "ModulateColor": [ 1, 0, 0, 1 ]
     }
   },
   {
     "Name": "Button",
     "Transform": {
-      "Translation": [ -125, -200 ],
+      "Translation": [ -325, -200 ],
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
@@ -63,7 +73,7 @@
   {
     "Name": "Button",
     "Transform": {
-      "Translation": [ 125, -200 ],
+      "Translation": [ -75, -200 ],
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
@@ -81,6 +91,29 @@
       "ModulateColor": [ 0, 0, 0, 1 ],
       "Text": "Quit Game!",
       "Scale": [ 36, 40 ]
+    }
+  },
+  {
+	"Name": "Button",
+	"Transform": {
+	  "Translation": [ 225, -200 ],
+	  "Scale": [200, 50 ],
+	  "Rotation": 0
+	},
+	"Button": {
+	  "ClickEffect": "JaxiumMine"
+	},
+    "Sprite": {
+      "Mesh": "ButtonMesh",
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
+      "ModulateColor": [ 0, 0, 0, 1 ],
+      "Text": "Create Mine",
+      "Scale": [ 30, 36 ]
     }
   }
 ]

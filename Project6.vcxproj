@@ -44,6 +44,8 @@
     <ClInclude Include="Source\AnimationSequence.h" />
     <ClInclude Include="Source\Behavior.h" />
     <ClInclude Include="Source\BehaviorArmy.h" />
+    <ClInclude Include="Source\Building.h" />
+    <ClInclude Include="Source\BuildingJaxiumMine.h" />
     <ClInclude Include="Source\ButtonEffects.h" />
     <ClInclude Include="Source\CompList.h" />
     <ClInclude Include="Source\BehaviorStub.h" />
@@ -85,6 +87,8 @@
     <ClCompile Include="Source\AnimationSequence.cpp" />
     <ClCompile Include="Source\Behavior.cpp" />
     <ClCompile Include="Source\BehaviorArmy.cpp" />
+    <ClCompile Include="Source\Building.cpp" />
+    <ClCompile Include="Source\BuildingJaxiumMine.cpp" />
     <ClCompile Include="Source\ButtonEffects.cpp" />
     <ClCompile Include="Source\CompList.cpp" />
     <ClCompile Include="Source\BehaviorStub.cpp" />

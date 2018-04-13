@@ -25,10 +25,14 @@
 #include "ButtonEffects.h"
 #include "Engine.h"
 #include "PopupMenu.h"
+#include "BuildingJaxiumMine.h"
+#include "SpriteSource.h"
 
 //------------------------------------------------------------------------------
 
-map<string, void(*)(Button&,float)> Button::clickEffects;
+map<string, void(*)(Button&,float, int, ...)> Button::clickEffects;
+
+map<string, Building::BuildingType> Button::buildingType;
 
 vector<AEGfxTexture*> Button::textures;
 
@@ -51,9 +55,10 @@ Button::Button(const char * effectName) :
 	SetEffect(effectName);
 }
 
-void Button::SetEffect(const char * effectName)
+void Button::SetEffect(const char * effectNameA)
 {
-	ClickEffect = GetClickEffect(effectName);
+	ClickEffect = GetClickEffect(effectNameA);
+	effectName = effectNameA;
 }
 
 void Button::Load(rapidjson::Value & obj)
@@ -98,33 +103,49 @@ Component * Button::Clone() const
 // Params:
 //	 dt = Change in time (in seconds) since the last game loop.
 void Button::Update(float dt) {
-	//OnUpdate(dt);
-	if (AEInputCheckTriggered(VK_LBUTTON)) {
-		//Get the mouse position on screen.
-		s32 mouseX;
-		s32 mouseY;
-		AEInputGetCursorPosition(&mouseX, &mouseY);
+	if (active) {
+		//OnUpdate(dt);
+		if (AEInputCheckTriggered(VK_LBUTTON)) {
+			//Get the mouse position on screen.
+			s32 mouseX;
+			s32 mouseY;
+			AEInputGetCursorPosition(&mouseX, &mouseY);
 
-		//Convert mouse screen position to world position.
-		float worldX;
-		float worldY;
-		AEGfxConvertScreenCoordinatesToWorld((float)mouseX, (float)mouseY, &worldX, &worldY);
-		Vector2D mousePos = Vector2D(worldX, worldY);
+			//Convert mouse screen position to world position.
+			float worldX;
+			float worldY;
+			AEGfxConvertScreenCoordinatesToWorld((float)mouseX, (float)mouseY, &worldX, &worldY);
+			Vector2D mousePos = Vector2D(worldX, worldY);
 
-		//Check if the mouse is within the bounds of this button.
-		Vector2D buttonScale = ((Transform*)GetParent()->GetComponent("Transform"))->GetScale();
-		Vector2D buttonPos = ((Transform*)GetParent()->GetComponent("Transform"))->GetTranslation();
+			//Check if the mouse is within the bounds of this button.
+			Vector2D buttonScale = ((Transform*)GetParent()->GetComponent("Transform"))->GetScale();
+			Vector2D buttonPos = ((Transform*)GetParent()->GetComponent("Transform"))->GetTranslation();
 
-		if (mousePos.X() > buttonPos.X() - (buttonScale.X() / 2) && mousePos.X() <= buttonPos.X() + (buttonScale.X() / 2)
-			&& mousePos.Y() > buttonPos.Y() - (buttonScale.Y() / 2) && mousePos.Y() <= buttonPos.Y() + (buttonScale.Y() / 2)) {
-			if (ClickEffect)
-				ClickEffect(*this, dt);
+			if (mousePos.X() > buttonPos.X() - (buttonScale.X() / 2) && mousePos.X() <= buttonPos.X() + (buttonScale.X() / 2)
+				&& mousePos.Y() > buttonPos.Y() - (buttonScale.Y() / 2) && mousePos.Y() <= buttonPos.Y() + (buttonScale.Y() / 2)) {
+				if (ClickEffect)
+					ClickEffect(*this, dt, 0);
+			}
 		}
+	}
+	else {
+		((Sprite*)GetParent()->GetComponent("Sprite"))->SetModulateColor({ 0.6f, 0.6f, 0.4f, 0.5f });
 	}
 }
 
-void Button::ForceClick(Button& button, float dt) {
-	if (button.ClickEffect) button.ClickEffect(button, dt);
+void Button::ForceClick(Button& button, float dt, unsigned count, ...) {
+	if (button.active) {
+		if (count > 0) {
+			va_list args;
+			va_start(args, count);
+			BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+			Vector2D mapPos = va_arg(args, Vector2D);
+			Vector2D screenPos = va_arg(args, Vector2D);
+			if (button.ClickEffect) button.ClickEffect(button, dt, count, side, mapPos, screenPos);
+			va_end(args);
+		}
+		else if (button.ClickEffect) button.ClickEffect(button, dt, 0);
+	}
 }
 
 //Extra update function called from OnUpdate() that each button can have
@@ -133,7 +154,7 @@ void Button::ForceClick(Button& button, float dt) {
 	UNREFERENCED_PARAMETER(dt);
 }*/
 
-void Button::RestartEffect(Button & button, float dt)
+void Button::RestartEffect(Button & button, float dt, int count, ...)
 {
 	Engine::GetInstance().SetPaused(false);
 	LevelManager::GetLayer(0)->Restart();
@@ -143,16 +164,54 @@ void Button::RestartEffect(Button & button, float dt)
 	}
 }
 
-void Button::QuitEffect(Button &button, float dt)
+void Button::QuitEffect(Button &button, float dt, int count, ...)
 {
 	//LevelManager::GetInstance().Quit();
 	Engine::GetInstance().Quit();
+}
+
+void Button::CreateMineEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	Vector2D mapPos = va_arg(args, Vector2D);
+	Vector2D screenPos = va_arg(args, Vector2D);
+	va_end(args);
+
+	BuildingJaxiumMine *mine;
+
+	try {
+		mine = new BuildingJaxiumMine(side, mapPos);
+	}
+	catch (int) {
+		return;
+	}
+
+	GameObject *mineObj = new GameObject("Mine");
+	Transform* transform = new Transform(screenPos.x, screenPos.y);
+	transform->SetScale({ 100, 100 });
+	mineObj->AddComponent(transform);
+
+	Sprite *sprite = new Sprite();
+	sprite->SetModulateColor({ 0, 1, 0, 1 });
+	//mine->texture = AEGfxTextureLoad("");
+	//SpriteSource* spriteSource = new SpriteSource(1, 1, mine->texture);
+	//sprite->SetSpriteSource(spriteSource);
+	mine->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
+	sprite->SetMesh(mine->mesh);
+
+	mineObj->AddComponent(sprite);
+	mineObj->AddComponent(mine);
+
+	LevelManager::GetLayer(0)->GetObjectManager()->Add(*mineObj);
 }
 
 void Button::ListEffects()
 {
 	AddClickEffect("Restart", RestartEffect);
 	AddClickEffect("Quit", QuitEffect);
+	AddClickEffect("JaxiumMine", CreateMineEffect, Building::BuildingType::JaxiumMine);
 	ButtonEffects::List();
 }
 
@@ -161,12 +220,13 @@ void Button::Shutdown() {
 	textures.clear();
 }
 
-void Button::AddClickEffect(const char * name, void(*effectFunc)(Button&,float))
+void Button::AddClickEffect(const char * name, void(*effectFunc)(Button&,float, int, ...), Building::BuildingType type)
 {
 	clickEffects[name] = effectFunc;
+	buildingType[name] = type;
 }
 
-void(*Button::GetClickEffect(const char * name))(Button&,float)
+void(*Button::GetClickEffect(const char * name))(Button&,float, int, ...)
 {
 	return clickEffects.count(name) > 0 ? clickEffects.at(name) : nullptr;
 }

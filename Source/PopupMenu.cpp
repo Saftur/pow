@@ -27,44 +27,46 @@
 #include "SpriteSource.h"
 #include "Button.h"
 #include "BehaviorArmy.h"
+#include "Building.h"
 
 vector<PopupMenu*> PopupMenu::menus;
 
-void PopupMenu::CreateMenu(BehaviorArmy * army, MenuType type, Sprite* cursor)
+void PopupMenu::CreateMenu(BehaviorArmy::Side side, MenuType type, Vector2D cursorMapPos, Vector2D cursorScreenPos)
 {
 	//Destroy the menu for a given army if it exists, then create a new menu.
-	if (Exists(army)) DestroyMenu(army);
+	if (Exists(side)) DestroyMenu(side);
 
-	PopupMenu* menu = new PopupMenu(army, type, cursor);
+	PopupMenu* menu = new PopupMenu(side, type);
+	menu->armyCursorMapPos = cursorMapPos;
+	menu->armyCursorScreenPos = cursorScreenPos;
 	menus.push_back(menu);
 }
 
-void PopupMenu::DestroyMenu(BehaviorArmy * army)
+void PopupMenu::DestroyMenu(BehaviorArmy::Side side)
 {
 	//Destroy the menu for a given army if it exists.
 	for (unsigned i = 0; i < menus.size(); i++) {
-		if (menus[i]->army == army) {
+		if (menus[i]->side == side) {
 			LevelManager::UnloadLayer(menus[i]->menuLevelLayer);
-			delete menus[i]->cursorSprite;
 			delete menus[i];
 			menus.erase(menus.begin() + i);
 		}
 	}
 }
 
-bool PopupMenu::Exists(BehaviorArmy * army)
+bool PopupMenu::Exists(BehaviorArmy::Side side)
 {
 	//Return true if a menu exists for the given army, else false.
 	for (unsigned i = 0; i < menus.size(); i++) {
-		if (menus[i]->army == army) return true;
+		if (menus[i]->side == side) return true;
 	}
 	return false;
 }
 
-void PopupMenu::Update(BehaviorArmy * army, Gamepad gamepad, ControlList controlList, float dt)
+void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, ControlList controlList, float dt)
 {
 	//Update which button is currently being selected on the menu belonging to the given army.
-	PopupMenu* menu = GetMenu(army);
+	PopupMenu* menu = GetMenu(side);
 	if (menu && LevelManager::GetLayer(menu->menuLevelLayer)) {
 		int buttons = LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectsByName("Button").size(); //Number of buttons in the menu.
 		if (gamepad.GetButtonTriggered(controlList["CamLeft"]) || AEInputCheckTriggered(VK_LEFT)) {
@@ -80,7 +82,7 @@ void PopupMenu::Update(BehaviorArmy * army, Gamepad gamepad, ControlList control
 		if (buttons > 0) {
 			//If the sprite isn't on the cursor yet, the menu needs to be configured for the correct team.
 			GameObject* cursor = LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectByName("Cursor");
-			if (!cursor->GetComponent("Sprite")) ConfigureMenu(army);
+			if (!GetMenu(side)->configured) ConfigureMenu(side);
 
 			//Find the button that we have selected and update the cursor.
 			GameObject* selectedButton = LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectsByName("Button")[menu->selectedButton];
@@ -91,8 +93,8 @@ void PopupMenu::Update(BehaviorArmy * army, Gamepad gamepad, ControlList control
 
 			//If we hit select, click the button and close the menu.	
 			if (gamepad.GetButtonTriggered(controlList["Select.Manual.Select"]) || AEInputCheckTriggered(VK_RETURN)) {
-				Button::ForceClick(*(Button*)selectedButton->GetComponent("Button"), dt);
-				PopupMenu::DestroyMenu(army);
+				Button::ForceClick(*(Button*)selectedButton->GetComponent("Button"), dt, 1, side, menu->armyCursorMapPos, menu->armyCursorScreenPos);
+				PopupMenu::DestroyMenu(side);
 				return;
 			}
 		}
@@ -104,24 +106,19 @@ void PopupMenu::Shutdown()
 	//Destroy the menus and everything on them.
 	for (unsigned i = 0; i < menus.size(); i++) {
 		LevelManager::UnloadLayer(menus[i]->menuLevelLayer);
-		delete menus[i]->cursorSprite;
 		delete menus[i];
 		menus.erase(menus.begin() + i);
 	}
 }
 
-PopupMenu* PopupMenu::GetMenu(BehaviorArmy* army) {
+PopupMenu* PopupMenu::GetMenu(BehaviorArmy::Side side) {
 	for (unsigned i = 0; i < menus.size(); i++) {
-		if (menus[i]->army == army) return menus[i];
+		if (menus[i]->side == side) return menus[i];
 	}
 	return nullptr;
 }
 
-bool Test(...) {
-	return true;
-}
-
-PopupMenu::PopupMenu(BehaviorArmy * army, MenuType type, Sprite* cursor) : army(army), type(type)
+PopupMenu::PopupMenu(BehaviorArmy::Side side, MenuType type) : side(side), type(type)
 {
 	//Load the level for the correct type of level.
 	switch (type) {
@@ -132,30 +129,36 @@ PopupMenu::PopupMenu(BehaviorArmy * army, MenuType type, Sprite* cursor) : army(
 		break;
 	}
 	menuLevelLayer = LevelManager::GetLayerCount() - 1;
-
-	//Put a sprite on our cursor that matches the sprite on the cursor for the army that is creating this menu.
-	cursorSprite = (Sprite*)cursor->Clone();
 }
 
-void PopupMenu::ConfigureMenu(BehaviorArmy* army, PopupMenu* menu) {
+void PopupMenu::ConfigureMenu(BehaviorArmy::Side side, PopupMenu* menu) {
 	if (!menu) {
-		menu = GetMenu(army);
+		menu = GetMenu(side);
 	}
 	if (menu) {
+		menu->configured = true;
 		GameObject* cursor = LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectByName("Cursor");
-		cursor->AddComponent(menu->cursorSprite->Clone());
-		((Sprite*)cursor->GetComponent("Sprite"))->SetAlpha(1.0f);
 
-		//Update the level to represent the correct team. (Cursor1 is Red team)
-		if (!strcmp(menu->cursorSprite->GetParent()->GetName(), "Cursor1")) {
-			int count = (LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectsWithFilter(Test)).size();
-			for (int i = 0; i < count; i++) {
-				Transform* t = (Transform*)((LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectsWithFilter(Test)[i])->GetComponent("Transform"));
+		(LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
+			//Update the level to represent the correct team. (sLeft is Red team)
+			if (side == BehaviorArmy::Side::sLeft) {
+				((Sprite*)cursor->GetComponent("Sprite"))->SetModulateColor({ 1, 0, 0, 1 });
+
+				Transform* t = (Transform*)obj->GetComponent("Transform");
 				t->SetTranslation(t->GetTranslation().operator+({ 0, 345 }));
 			}
-		}
-		else {
+			else if(side == BehaviorArmy::Side::sRight) {
+				((Sprite*)cursor->GetComponent("Sprite"))->SetModulateColor({ 0, 0, 1, 1 });
+			}
 
-		}
+			Button* button = (Button*)obj->GetComponent("Button");
+			if (button) {
+				//If this button creates a building, check if the building it creates is locked.
+				if (Button::buildingType[button->effectName] != Building::BuildingType::Null && !Building::IsUnlocked(side, Button::buildingType[button->effectName])) {
+					button->active = false;
+				}
+			}
+			return false;
+		}));
 	}
 }

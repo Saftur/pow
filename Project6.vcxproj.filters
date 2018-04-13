@@ -61,6 +61,9 @@
     <Filter Include="Game\Armies">
       <UniqueIdentifier>{41f3a029-25d6-4467-a574-2b89e9253d1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameObjects\Buildings">
+      <UniqueIdentifier>{a07c1ffc-9750-4c03-baba-0ba84c23acab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -175,6 +178,12 @@
     </ClCompile>
     <ClCompile Include="Source\PopupMenu.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Building.cpp">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BuildingJaxiumMine.cpp">
+      <Filter>Engine\GameObjects\Buildings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -380,6 +389,12 @@
     </ClInclude>
     <ClInclude Include="Source\PopupMenu.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Building.h">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingJaxiumMine.h">
+      <Filter>Engine\GameObjects\Buildings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
