@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 //
 // File Name:	BehaviorUnit.cpp
-// Author(s):	Arthur Bouvier
+// Author(s):	Mark Culp
 // Project:		MyGame
 // Course:		CS230S17
 //
@@ -20,22 +20,32 @@
 #include "BehaviorUnit.h"
 #include "GameObjectManager.h"
 #include "Transform.h"
+#include "Pathfinding.h"
 #include "Physics.h"
 
 //------------------------------------------------------------------------------
 // Enums:
 //------------------------------------------------------------------------------
 
-enum states { cUnitIdle, cUnitMove, cUnitCheckMove, cUnitAttack, cUnitSoftChase,
-			  cUnitReturn, cUnitGuard, cUnitFollow, cUnitKill, cUnitBuild, cUnitEndbuild };
-
 //------------------------------------------------------------------------------
 // Public Consts:
 //------------------------------------------------------------------------------
 
+std::vector<GameObject*> units;
+
 //------------------------------------------------------------------------------
 // Public Structures:
 //------------------------------------------------------------------------------
+
+BehaviorUnit::BaseStats BehaviorUnit::defaultStats = 
+{
+100,		// Max HP.
+0,			// Defense
+5,			// Detection range.
+8,			// Disengagement range.
+3,			// Inventory size.
+1.0f		// Movement speed.
+};
 
 //------------------------------------------------------------------------------
 // Public Functions:
@@ -44,128 +54,70 @@ enum states { cUnitIdle, cUnitMove, cUnitCheckMove, cUnitAttack, cUnitSoftChase,
 // Allocate a new (Unit) behavior component.
 // Params:
 //  parent = The object that owns this behavior.
-BehaviorUnit::BehaviorUnit() :
-		Behavior("BehaviorUnit")
+BehaviorUnit::BehaviorUnit(int strength, int agility, int defense, Ability ability, WeaponType weapon, EquipmentType item1, EquipmentType item2) :
+	Behavior("BehaviorUnit")
 {
-	SetCurrentState(cUnitIdle);
-	SetNextState(cUnitMove);
+	SetCurrentState(cBehaviorInvalid);
+	SetNextState(cUnitIdle);
+
+	// Build the static arrays if they haven't already been built.
+	BuildArrays();
+
+	// Initialize this unit's traits.
+	traits.ability = ability;
+	traits.strength = strength;
+	traits.agility = agility;
+	traits.defense = defense;
+	traits.weapon = Weapons[weapon];
+	traits.item1 = Equips[item1];
+	traits.item2 = Equips[item2];
 }
 
-void BehaviorUnit::Init(BehaviorArmy::UnitData unitData_, vector<Vector2D> path_, Tilemap *tilemap_)
+void BehaviorUnit::CalculateStats()
 {
-	SetNextState(cUnitMove);
-	tilemap = tilemap_;
-	unitData = unitData_;
-	hp = (float)(unitData.hp);
-	startPos = GetMapPos();
-	path = path_;
-	engagedUnit = nullptr;
-	attackTimer = 0;
-	payTimer = 0;
-	abilitySprite = (Sprite*)GetParent()->GetComponent("Sprite", 1);
-	abilitySprite->SetFrame(unitData.ability);
-	abilityAnimation = (Animation*)GetParent()->GetComponent("Animation");
-	vector<AnimationFrame> seq;
-	seq.push_back({ unitData.ability + BehaviorArmy::UnitData::NUMABILITIES, 0.333f });
-	seq.push_back({ unitData.ability, 0.0f });
-	abilityAnimSequence = AnimationSequence(seq, false);
+	stats.attackRange = traits.weapon.range;
+	stats.maxHP = defaultStats.maxHP + 0.05f * traits.strength + 0.15f * traits.defense;
+	stats.currHP = stats.maxHP;
+	stats.inventorySize = defaultStats.inventorySize + 0.5f * traits.strength + 0.5f * traits.agility;
+	stats.detectRange = defaultStats.detectRange;
+	stats.defense = defaultStats.defense + 0.05f * traits.defense;
 
-	unitData.army->IncreaseUnits();
+	// If there's armor, apply an HP boost. If there's an empty slot, give an inventory size boost.
+	if (traits.item1.name == Equips[cEquipArmor].name)
+	{
+		stats.currHP += 50;
+	}
+	else if (traits.item1.name == Equips[cEquipNone].name)
+	{
+		stats.inventorySize += 2;
+	}
+
+	if (traits.item2.name == Equips[cEquipArmor].name)
+	{
+		stats.currHP += 50;
+	}
+	else if (traits.item2.name == Equips[cEquipNone].name)
+	{
+		stats.inventorySize += 2;
+	}
 }
 
-void BehaviorUnit::AddPos(Vector2D pos)
+void BehaviorUnit::BuildArrays()
 {
-	
-}
+	// Prevent duplicate initialization.
+	if (Weapons[0].name == "Drillsaw")
+		return;
 
-Vector2D BehaviorUnit::GetScrPos()
-{
-	if (!(GetParent()->GetComponent("Transform")))
-		return { 0, 0 };
-	return ((Transform*)(GetParent()->GetComponent("Transform")))->GetTranslation();
-}
+	// Build weapon array.
+	Weapons[cWeaponDrillsaw] = { "Drillsaw", cGroupMelee, 0.05f, 1, 10, GetParent()->GetObjectManager()->GetArchetype("ProjectileInvisible") };
+	Weapons[cWeaponHandcannon] = { "Handcannon", cGroupRanged, 0.2f, 3, 20, GetParent()->GetObjectManager()->GetArchetype("ProjectileLaser") };
+	Weapons[cWeaponBeamRifle] = { "Beam Rifle", cGroupLongRanged, 0.5f, 5, 30, GetParent()->GetObjectManager()->GetArchetype("ProjectileLaser") };
 
-Vector2D BehaviorUnit::GetMapPos()
-{
-	if (!(GetParent()->GetComponent("Transform")))
-		return { 0, 0 };
-	return tilemap->GetPosOnMap(GetScrPos());
-}
-
-Vector2D BehaviorUnit::GetNextDir()
-{
-	if (path.empty())
-		return { 0, 0 };
-	return path[0];
-}
-
-Vector2D BehaviorUnit::GetNextScrPos()
-{
-	return tilemap->GetPosOnScreen(GetNextPos());
-}
-
-Vector2D BehaviorUnit::GetNextPos()
-{
-	return startPos+GetNextDir();
-}
-
-int BehaviorUnit::GetRecycleReturns()
-{
-	BehaviorArmy::UnitData ud = unitData;
-	ud.hp = (int)hp;
-	return ud.GetCost();
-}
-
-BehaviorArmy::UnitData BehaviorUnit::GetUnitData()
-{
-	return unitData;
-}
-
-vector<Vector2D> BehaviorUnit::GetPath()
-{
-	return path;
-}
-
-void BehaviorUnit::ClearPath()
-{
-	Vector2D d = path.empty() ? Vector2D(0, 0) : path[0];
-	if (!path.empty())
-		path.clear();
-	if (IsMoving())
-		path.push_back(d);
-}
-
-void BehaviorUnit::AddToPath(Vector2D pos)
-{
-	path.push_back(pos);
-}
-
-void BehaviorUnit::AddToPath(vector<Vector2D> path_)
-{
-	for (Vector2D d : path_)
-		path.push_back(d);
-}
-
-bool BehaviorUnit::IsMoving()
-{
-	return GetCurrentState() == cUnitMove;
-}
-
-bool BehaviorUnit::IsAdjacent(BehaviorUnit * other)
-{
-	Vector2D diff = GetMapPos() - other->GetMapPos();
-	return diff.Magnitude() <= 1;
-}
-
-bool BehaviorUnit::WillBeAdjacent(BehaviorUnit * other)
-{
-	Vector2D diff = GetMapPos() - other->GetNextPos();
-	return diff.Magnitude() <= 1;
-}
-
-BehaviorArmy *BehaviorUnit::GetArmy()
-{
-	return unitData.army;
+	// Build equipment array.
+	Equips[cEquipNone] = { "null", 0, UseNone, 0.0f, 0.0f };
+	Equips[cEquipArmor] = { "Diamondium Armor", -1, UseArmor, 0.0f, 0.0f };
+	Equips[cEquipStrobebang] = { "Strobebang", 5, UseStrobebang, 1.0f, 30.0f };
+	Equips[cEquipEMP] = { "EMP", 5, UseEMP, 1.0f, 30.0f };
 }
 
 // Clone an advanced behavior and return a pointer to the cloned object.
@@ -179,11 +131,6 @@ Component* BehaviorUnit::Clone() const
 	return new BehaviorUnit(*this);
 }
 
-void BehaviorUnit::OnDestroy()
-{
-	unitData.army->DescreaseUnits();
-}
-
 // Initialize the current state of the behavior component.
 // (Hint: Refer to the lecture notes on finite state machines (FSM).)
 // Params:
@@ -192,61 +139,24 @@ void BehaviorUnit::OnEnter()
 {
 	switch (GetCurrentState())
 	{
+	case cUnitIdle:
+		CalculateStats();
+		break;
 	case cUnitMove:
-		unitData.army->PushFrontLine(GetMapPos());
-		if (path.empty() || engagedUnit) {
-			SetCurrentState(cUnitIdle);
-			SetNextState(cUnitIdle);
-			break;
-		}
-		Vector2D nextPos = GetNextPos();
-		while (nextPos.X() < 0 || nextPos.Y() < 0 ||
-			nextPos.X() >= tilemap->GetTilemapWidth() ||
-			nextPos.Y() >= tilemap->GetTilemapHeight()) {
-			path.erase(path.begin());
-			nextPos = GetNextPos();
-		}
-		if (path.empty()) {
-			SetCurrentState(cUnitIdle);
-			SetNextState(cUnitIdle);
-			break;
-		}
-		SetCurrentState(cUnitCheckMove); // Prevent  self detection
-		vector<GameObject*> units = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
-		for (GameObject* obj : units) {
-			BehaviorUnit *bu = (BehaviorUnit*)(obj->GetComponent("BehaviorUnit"));
-			Transform *t = (Transform*)(obj->GetComponent("Transform"));
-			if (!bu || !t || bu == this) continue; // If missing behavior or transform, skip
-			if (bu->GetCurrentState() == cUnitMove || bu->GetCurrentState() == cUnitIdle/*cUnitDoneMove*/) { // If other already moving
-				if (unitData.army->GetSide() != bu->unitData.army->GetSide() && (IsAdjacent(bu) || (bu->GetCurrentState() == cUnitMove && WillBeAdjacent(bu)))) {
-					engagedUnit = bu;
-					SetCurrentState(cUnitIdle);
-					SetNextState(cUnitIdle);
-					break;
-				}
-				if ((GetNextPos() == bu->GetMapPos()/* && GetNextDir() != bu->GetNextDir()*/) || (GetNextPos() == bu->GetNextPos() && bu->GetCurrentState() == cUnitMove)) {
-					SetCurrentState(cUnitIdle); // Skip init
-					SetNextState(cUnitIdle);
-					break;
-				}
-			}
-		}
-		if (BehaviorArmy::costType == 0) {
-			if (!(unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 15 + 0.5f)))) {
-				SetCurrentState(cUnitIdle);
-				SetNextState(cUnitIdle);
-			}
-		}
-		if (GetCurrentState() == cUnitCheckMove) {
-			SetCurrentState(cUnitMove);
-			Vector2D direction = GetNextDir();
-			direction.X(direction.X() * tilemap->GetTileWidth());
-			direction.Y(direction.Y() * tilemap->GetTileHeight());
-			direction *= (float)(unitData.speed);
-			direction /= 100;
-			direction.Y(-direction.Y());
-			((Physics*)(GetParent()->GetComponent("Physics")))->SetVelocity(direction);
-		}
+		break;
+	case cUnitAttack:
+		break;
+	case cUnitSoftChase:
+		break;
+	case cUnitReturn:
+		break;
+	case cUnitGuard:
+		break;
+	case cUnitFollow:
+		break;
+	case cUnitBuild:
+		break;
+	case cUnitEndBuild:
 		break;
 	}
 }
@@ -260,122 +170,102 @@ void BehaviorUnit::OnUpdate(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
 
-	if (GetParent()->IsDestroyed())
-		return;
-	/*if (hp <= 0) {
-		GetParent()->Destroy();
-		abilityOverlay->Destroy();
-		return;
-	}*/
-
 	switch (GetCurrentState())
 	{
-	case cUnitMove: {
-		Vector2D dir = GetNextDir();
-		Vector2D scrPos = GetScrPos();
-		Vector2D nextScrPos = GetNextScrPos();
-		Vector2D diff = scrPos - nextScrPos;
-		if (diff.X() * dir.X() >= 0 && diff.Y() * -dir.Y() >= 0) {
-			((Physics*)(GetParent()->GetComponent("Physics")))->SetVelocity({ 0, 0 });
-			path.erase(path.begin());
-			SetCurrentState(cUnitIdle);//cUnitDoneMove;
-			startPos = GetMapPos();
-			((Transform*)GetParent()->GetComponent("Transform"))->SetTranslation(tilemap->GetPosOnScreen(GetMapPos()));
-			//Init(behavior);
-		}
-		/*if (dir.X() != 0) {
-			if (scrPos.X()*dir.X() >= nextScrPos.X()*dir.X()) {
-				scrPos.X(nextScrPos.X());
-			}
-		}
-		if (dir.Y() != 0) {
-			if (scrPos.Y()*dir.Y() >= nextScrPos.Y()*dir.Y()) {
-				scrPos.Y(nextScrPos.Y());
-			}
-		}*/
-		}
-		break;
 	case cUnitIdle:
-		if (!engagedUnit) {
-			vector<GameObject*> units = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
-			for (GameObject* obj : units) {
-				BehaviorUnit *bu = (BehaviorUnit*)(obj->GetComponent("BehaviorUnit"));
-				Transform *t = (Transform*)(obj->GetComponent("Transform"));
-				if (!bu || !t || bu == this) continue; // If missing behavior or transform, skip
-				if (bu->GetCurrentState() == cUnitMove || bu->GetCurrentState() == cUnitIdle/*cUnitDoneMove*/) { // If other already moving
-					if (unitData.army != bu->unitData.army && (IsAdjacent(bu) || (bu->GetCurrentState() == cUnitMove && WillBeAdjacent(bu)))) {
-						engagedUnit = bu;
-						break;
-					}
-				}
-			}
-		}
-		if (engagedUnit) {
-			BehaviorUnit* engagedBehavior = (BehaviorUnit*)engagedUnit->GetComponent("BehaviorUnit");
-			if (!(engagedUnit->IsDestroyed()) && IsAdjacent(engagedBehavior)) {
-				if (attackTimer <= 0) {
-					if (unitData.army->costType != 0 || unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 10 + 0.5f))) {
-						//Trace::GetInstance().GetStream() << "Attack!" << std::endl;
-						abilityAnimation->PlaySequence(&abilityAnimSequence);
-						engagedBehavior->hp -= (float)(unitData.damage) / 4;
-						if (engagedBehavior->hp <= 0) {
-							engagedUnit->Destroy();
-							engagedUnit = nullptr;
-						}
-						attackTimer = attackCooldown;
-					}
-				} else attackTimer -= dt;
-				break;
-			} else engagedUnit = nullptr;
-		} else {
-			if (BehaviorArmy::costType == 0) {
-				if (payTimer <= 0) {
-					if (!(unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 20 + 0.5f))))
-						GetParent()->Destroy();
-					payTimer = payCooldown;
-				} else payTimer -= dt;
-			}
-		}
-		SetNextState(cUnitMove);
+		// Check for enemies.
+		CheckAttack();
 		break;
-	}
+	case cUnitMove:
+		// If our target has changed, we need to calculate a new path.
+		if (lastFrameTarget != targetPos)
+		{
+			path.clear();
+		}
 
-	// Engage or disengage an enemy unit.
-	if (engagedUnit == nullptr)
-	{
-		engagedUnit = GetUnitWithinRadius();
-	}
-	else if (engagedUnit->IsDestroyed())
-	{
-		engagedUnit = nullptr;
+		// Do we need to do pathfinding?
+		if (path.empty())
+		{
+			Grid::Node* start = Grid::GetInstance().GetNode(((Transform*)GetParent()->GetComponent("Transform"))->GetWorldTranslation());
+			Grid::Node* end = Grid::GetInstance().GetNode(targetPos);
+
+			path = Pathfinding::FindPath(start, end);
+
+			// Set the first node.
+			moveTarget = path.back();
+			path.pop_back();
+		}
+
+		// Have we reached a node?
+		if (Grid::GetInstance().GetNode(((Transform*)GetParent()->GetComponent("Transform"))->GetWorldTranslation()) == moveTarget)
+		{
+			// Set the next node.
+			delete (((moveTarget)));
+			moveTarget = path.back();
+			path.pop_back();
+		}
+
+		// If pathfinding failed, set state to Idle.
+		if (path.empty())
+		{
+			SetNextState(cUnitIdle);
+			target = nullptr;
+			return;
+		}
+
+		// Update velocity
+		CalculateVelocity();
+		break;
+	case cUnitAttack:
+		// Can we attack our target?
+		if (CheckAttack())
+		{
+
+		}
+		else
+		{
+			// Return to the previous state.
+			SetNextState(prevState);
+		}
+		break;
+	case cUnitSoftChase:
+		break;
+	case cUnitReturn:
+		break;
+	case cUnitGuard:
+		break;
+	case cUnitFollow:
+		break;
+	case cUnitBuild:
+		break;
+	case cUnitEndBuild:
+		break;
 	}
 }
 
 void BehaviorUnit::OnExit()
 {
-}
-
-void BehaviorUnit::Load(rapidjson::Value & obj)
-{
-	UNREFERENCED_PARAMETER(obj);
-}
-
-GameObject* BehaviorUnit::GetUnitWithinRadius()
-{
-	vector<GameObject*> units = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
-
-	for (GameObject* unit : units)
+	switch (GetCurrentState()) 
 	{
-		if (GetScrPos().Distance(((Transform*)unit->GetComponent("Transform"))->GetTranslation()) < engageDistance)
-		{
-			if (((BehaviorUnit*)unit->GetComponent("BehaviorUnit"))->unitData.army != unitData.army)
-			{
-				return unit;
-			}
-		}
+	case cUnitIdle:
+		break;
+	case cUnitMove:
+		break;
+	case cUnitAttack:
+		break;
+	case cUnitSoftChase:
+		break;
+	case cUnitReturn:
+		break;
+	case cUnitGuard:
+		break;
+	case cUnitFollow:
+		break;
+	case cUnitBuild:
+		break;
+	case cUnitEndBuild:
+		break;
 	}
-
-	return nullptr;
 }
 
 // The collision handling function for Units.
@@ -388,6 +278,128 @@ void BehaviorUnit::CollisionHandler(GameObject& stub, GameObject& other)
 	UNREFERENCED_PARAMETER(other);
 }
 
+void BehaviorUnit::Load(rapidjson::Value& obj)
+{
+
+}
+
+void BehaviorUnit::UseNone()
+{
+
+}
+
+void BehaviorUnit::UseArmor()
+{
+
+}
+
+void BehaviorUnit::UseStrobebang()
+{
+
+}
+
+void BehaviorUnit::UseEMP()
+{
+
+}
+
+void BehaviorUnit::Attack()
+{
+}
+
+// Calculates velocity based off of movement speed, target pos, and current pos.
+void BehaviorUnit::CalculateVelocity()
+{
+	// Calculate a direction vector from current position to taget position.
+	Vector2D dir = moveTarget->worldPos - ((Transform*)GetParent()->GetComponent("Transform"))->GetTranslation();
+	dir.Normalized();
+
+	// Set velocity.
+	((Physics*)GetParent()->GetComponent("Physics"))->SetVelocity(dir * (defaultStats.speed * traits.agility));
+}
+
+// Checks for enemies within a certain radius of the unit.
+// Returns:
+// A standard vector containing all of the found units.
+std::vector<GameObject*> BehaviorUnit::FindEnemiesInRange()
+{
+	std::vector<GameObject*> foundUnits;
+
+	for (GameObject* unit : units)
+	{
+		// if unit.team != team
+		// if dist(unit.gridPos <= traits.weapon.range) foundUnits.push_back(unit);
+		foundUnits.push_back(unit);
+	}
+
+	return foundUnits;
+}
+
+// Checks if the unit can target an enemy.
+// Params:
+//	enemy - the enemy we're checking.
+// Returns:
+// True if the unit can be targeted, false if not.
+bool BehaviorUnit::CanTarget(GameObject* enemy)
+{
+	AttackGroup enemyGroup = ((BehaviorUnit*)enemy->GetComponent("Behavior"))->traits.group;
+
+	switch (traits.weapon.group)
+	{
+	case cGroupMelee:
+	case cGroupRanged:
+		if (enemyGroup == cGroupInfantry || enemyGroup == cGroupArtillary)
+			return true;
+		return false;
+	case cGroupLongRanged:
+		return true;
+	}
+}
+
+// Checks if the unit can attack an enemy.
+// Params:
+//	enemy - the enemy we're checking.
+// Returns:
+// True if the unit can be attacked, false if not.
+bool BehaviorUnit::CheckAttack()
+{
+	// Do we have a target?
+	if (target == nullptr)
+	{
+		// If we are moving to a location, ignore all nearby enemies.
+		if (moveTarget == nullptr)
+			return false;
+
+		// Find all enemies within attack range.
+		std::vector<GameObject*> objsInRange = FindEnemiesInRange();
+
+		// Check if we can target each enemy.
+		for (GameObject* enemy : objsInRange)
+		{
+			if (CanTarget(enemy))
+			{
+				// If we can target this enemy, set state to attack.
+				target = enemy;
+				SetNextState(cUnitAttack);
+				return false;
+			}
+		}
+	}
+	else
+	{
+		// Can we attack our target?
+		// if (range < stats.range && target.team != team)
+		//	return true;
+		// else
+		//	return false;
+	}
+}
+
+void BehaviorUnit::Attack()
+{
+
+}
+
 //------------------------------------------------------------------------------
 // Private Variables:
 //------------------------------------------------------------------------------
@@ -397,3 +409,4 @@ void BehaviorUnit::CollisionHandler(GameObject& stub, GameObject& other)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+

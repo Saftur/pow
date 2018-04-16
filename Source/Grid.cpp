@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "Grid.h"
 
-Grid::Node::Node(int gridX, int gridY, Vector2D worldPos, bool state)
-	: gridX(gridX), gridY(gridY), worldPos(worldPos), open(state) {}
+using Node = Grid::Node;
+
+Node::Node(int gridX, int gridY, Vector2D worldPos, bool highGround, bool state)
+	: gridX(gridX), gridY(gridY), worldPos(worldPos), isHighGround(highGround), open(state) {}
 
 Grid::Grid(int width, int height)
 	: width(width), height(height) 
@@ -12,17 +14,44 @@ Grid::Grid(int width, int height)
 	{
 		for (int j = 0; j < height; j++)
 		{
+			// TODO: Retreive map data frpm the level's json file.
 			grid[i * width + j] = new Node(i, j);
 		}
 	}
 }
 
-int Grid::Node::fVal()
+Node* Grid::GetNode(Vector2D worldPos)
+{
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			if (grid[Pos(i, j)]->worldPos == worldPos)
+			{
+				return grid[Pos(i, j)];
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+int Grid::Pos(int xIndex, int yIndex)
+{
+	return xIndex * width + yIndex;
+}
+
+Node* Grid::operator[](int index)
+{
+	return grid[index];
+}
+
+int Node::fVal()
 {
 	return hVal + gVal;
 }
 
-std::vector<Grid::Node*> Grid::GetNeighbors(Node* node)
+std::vector<Node*> Grid::GetNeighbors(Node* node)
 {
 	// Create a vector to store our result.
 	std::vector<Node*> result;
@@ -51,6 +80,11 @@ std::vector<Grid::Node*> Grid::GetNeighbors(Node* node)
 void Grid::SetNode(int xPos, int yPos, bool newState)
 {
 	grid[xPos * width + yPos]->open = newState;
+}
+
+void Grid::SetHighGround(int xPos, int yPos, bool highGround)
+{
+	grid[xPos * width + yPos]->isHighGround = highGround;
 }
 
 Grid& Grid::GetInstance()

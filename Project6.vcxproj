@@ -43,12 +43,11 @@
     <ClInclude Include="Source\AnimationFrame.h" />
     <ClInclude Include="Source\AnimationSequence.h" />
     <ClInclude Include="Source\Behavior.h" />
-    <ClInclude Include="Source\BehaviorArmy.h" />
     <ClInclude Include="Source\BehaviorProjectile.h" />
+    <ClInclude Include="source\BehaviorUnit.h" />
     <ClInclude Include="Source\ButtonEffects.h" />
     <ClInclude Include="Source\CompList.h" />
     <ClInclude Include="Source\BehaviorStub.h" />
-    <ClInclude Include="Source\BehaviorUnit.h" />
     <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\ColliderBox.h" />
@@ -87,12 +86,11 @@
     <ClCompile Include="Source\Animation.cpp" />
     <ClCompile Include="Source\AnimationSequence.cpp" />
     <ClCompile Include="Source\Behavior.cpp" />
-    <ClCompile Include="Source\BehaviorArmy.cpp" />
     <ClCompile Include="Source\BehaviorProjectile.cpp" />
+    <ClCompile Include="source\BehaviorUnit.cpp" />
     <ClCompile Include="Source\ButtonEffects.cpp" />
     <ClCompile Include="Source\CompList.cpp" />
     <ClCompile Include="Source\BehaviorStub.cpp" />
-    <ClCompile Include="Source\BehaviorUnit.cpp" />
     <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\ColliderBox.cpp" />

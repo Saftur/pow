@@ -139,9 +139,6 @@
     <ClCompile Include="Source\Intersection2D.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LevelManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\BehaviorStub.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
@@ -150,12 +147,6 @@
     </ClCompile>
     <ClCompile Include="source\Serializable.cpp">
       <Filter>Engine\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BehaviorUnit.cpp">
-      <Filter>Game\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BehaviorArmy.cpp">
-      <Filter>Game\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="Source\CompList.cpp">
       <Filter>Game</Filter>
@@ -187,6 +178,12 @@
     </ClCompile>
     <ClCompile Include="source\Grid.cpp">
       <Filter>Engine\GameObjects\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BehaviorUnit.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LevelManager.cpp">
+      <Filter>Engine\Levels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -293,9 +290,6 @@
     <ClInclude Include="Source\Intersection2D.h">
       <Filter>Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\LevelManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\BehaviorStub.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
@@ -365,12 +359,6 @@
     <ClInclude Include="source\Serializable.h">
       <Filter>Engine\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BehaviorUnit.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BehaviorArmy.h">
-      <Filter>Game\Behaviors</Filter>
-    </ClInclude>
     <ClInclude Include="Source\CompList.h">
       <Filter>Game</Filter>
     </ClInclude>
@@ -401,6 +389,12 @@
     </ClInclude>
     <ClInclude Include="source\Grid.h">
       <Filter>Engine\GameObjects\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BehaviorUnit.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelManager.h">
+      <Filter>Engine\Levels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

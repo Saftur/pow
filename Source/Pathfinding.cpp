@@ -15,7 +15,7 @@ vector<Grid::Node*> Pathfinding::FindPath(Grid::Node* start, Grid::Node* end)
 	openNodes.push_back(start);
 
 	// Loop until there are no more nodes to explore.
-	while (openNodes.size > 0)
+	while (openNodes.size() > 0)
 	{
 		// Start with the first open node.
 		Grid::Node* currNode = openNodes.front();
@@ -71,7 +71,7 @@ vector<Grid::Node*> Pathfinding::FindPath(Grid::Node* start, Grid::Node* end)
 	}
 
 	// Return null because we didn't find a path.
-	return nullptr;
+	return vector<Grid::Node*>();
 }
 
 vector<Grid::Node*> Pathfinding::RetracePath(Grid::Node* end)
@@ -80,16 +80,16 @@ vector<Grid::Node*> Pathfinding::RetracePath(Grid::Node* end)
 
 	while (end)
 	{
-		tmp.push_back(*end);
+		tmp.push_back(end);
 		end = end->parent;
 	}
 
 	// Reverse the vector.
 	vector<Grid::Node*> path;
 
-	for (vector<Grid::Node>::iterator iter = tmp.end(); iter != tmp.begin(); iter--)
+	for (vector<Grid::Node*>::iterator iter = tmp.end(); iter != tmp.begin(); iter--)
 	{
-		path->push_back(*iter);
+		path.push_back(*iter);
 	}
 
 	return path;
