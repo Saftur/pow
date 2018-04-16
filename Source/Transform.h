@@ -35,6 +35,8 @@ public:
 	// Public Functions:
 	//------------------------------------------------------------------------------
 
+	Transform();
+
 	// Create a new transform object.
 	// (Hint: Failing to initialize the scale values to non-zero values will result in invisible sprites.)
 	// Params:

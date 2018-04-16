@@ -247,6 +247,9 @@
       "Mesh": "CursorMesh",
       "Alpha": 0.5,
       "ModulateColor": [ 1, 0, 0, 1 ]
+    },
+    "Cursor": {
+      "MoveSpeed": 1600
     }
   },
   {
@@ -261,6 +264,9 @@
       "Mesh": "CursorMesh",
       "Alpha": 0.5,
       "ModulateColor": [ 0, 0, 1, 1 ]
+    },
+    "Cursor": {
+      "MoveSpeed": 1600
     }
   }
 ]

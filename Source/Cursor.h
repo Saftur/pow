@@ -1,80 +1,75 @@
 //------------------------------------------------------------------------------
 //
-// File Name:	Component.h
-// Author(s):	Jeremy Kings (j.kings)
-// Project:		Project 7
-// Course:		CS230
+// File Name:	Cursor.h
+// Author(s):	Arthur Bouvier
+// Project:		MyGame
+// Course:		CS230S17
 //
-// Copyright © 2018 DigiPen (USA) Corporation.
+// Copyright © 2017 DigiPen (USA) Corporation.
 //
 //------------------------------------------------------------------------------
 
 #pragma once
-#include "Serializable.h"
 
 //------------------------------------------------------------------------------
 // Include Files:
 //------------------------------------------------------------------------------
 
+#include "Component.h"
+#include "Gamepad.h"
+
+typedef class Transform Transform;
+typedef class Tilemap Tilemap;
+
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-// Forward References:
+// Public Consts:
 //------------------------------------------------------------------------------
-
-typedef class GameObject GameObject;
 
 //------------------------------------------------------------------------------
 // Public Structures:
 //------------------------------------------------------------------------------
 
-// You are free to change the contents of this structure as long as you do not
-//   change the public interface (function prototypes) declared in the header.
-class Component : public Serializable
+// An example of the class to be defined in Cursor.h
+class Cursor : public Component
 {
 public:
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
 
-	// Constructor
-	Component(const char* name);
+	// Allocate a new (Cursor) behavior component.
+	// Params:
+	//  parent = The object that owns this behavior.
+	Cursor();
 
-	// Destructor - virtual so that correct destructor is called.
-	virtual ~Component();
+	void Load(rapidjson::Value &obj);
 
-	// Clones the component, returning a dynamically allocated copy.
-	virtual Component* Clone() const = 0;
+	void PostLoadInit();
 
-	virtual void PostLoadInit();
+	void Update(float dt);
 
-	// Logic update for this component.
-	virtual void Update(float dt);
-
-	// Rendering phase for this component.
-	virtual void Draw() const;
-
-	virtual void OnDestroy();
-
-	// Retrieve component's parent object (if any).
-	GameObject* GetParent() const;
-
-	// Set component's parent object/owner.
-	virtual void SetParent(GameObject* object);
-
-	// Get the name of this component's type.
-	const char* GetName() const;
+	void SetGamepad(Gamepad *gp);
 
 private:
+	// Clone an advanced behavior and return a pointer to the cloned object.
+	// Params:
+	//   behavior = Reference to the behavior that will be destroyed.
+	//   parent = A reference to the parent object (the object that owns this component).
+	// Returns:
+	//   A pointer to an advanced behavior.
+	Component* Clone() const;
+
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
 
-	// Object that owns this component
-	GameObject* parent;
+	Gamepad *gamepad;
+	Transform *transform;
+	Tilemap *tilemap;
 
-	// Name of component type (e.g. Transform, Sprite, etc.)
-	const char* name;
+	float moveSpeed;
 };
 
 //------------------------------------------------------------------------------

@@ -53,7 +53,10 @@
     <ClInclude Include="Source\ColliderBox.h" />
     <ClInclude Include="Source\ColliderCircle.h" />
     <ClInclude Include="Source\Component.h" />
+    <ClInclude Include="Source\ComponentStub.h" />
     <ClInclude Include="Source\ControlList.h" />
+    <ClInclude Include="Source\Controls.h" />
+    <ClInclude Include="Source\Cursor.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\GameObjectManager.h" />
@@ -93,7 +96,9 @@
     <ClCompile Include="Source\ColliderBox.cpp" />
     <ClCompile Include="Source\ColliderCircle.cpp" />
     <ClCompile Include="Source\Component.cpp" />
+    <ClCompile Include="Source\ComponentStub.cpp" />
     <ClCompile Include="Source\ControlList.cpp" />
+    <ClCompile Include="Source\Cursor.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\GameObjectManager.cpp" />
@@ -187,7 +192,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(SolutionDir)rapidjson/include/</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4127;4100;4706</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4100;4706;4458</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

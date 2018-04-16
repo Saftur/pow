@@ -67,6 +67,7 @@ public:
 		unsigned GetCost();
 	};
 
+	// Army side
 	enum Side {
 		sIllegal, sLeft, sRight
 	};
@@ -80,13 +81,34 @@ public:
 	//  parent = The object that owns this behavior.
 	BehaviorArmy();
 
+	// Push the army's front line forward
+	// Params:
+	//  pos = The position of the unit pushing forward
 	void PushFrontLine(Vector2D pos);
 
+	// Get the army's side
+	// Returns:
+	//  The army's side
 	Side GetSide();
+	// Increase number of units in army
 	void IncreaseUnits();
+	// Decrease number of units in army
 	void DescreaseUnits();
+	// Get the amount of funds
+	// Returns:
+	//  The amount of funds
 	unsigned GetFunds();
+	// Take money from funds
+	// If there isn't enough, doesn't take
+	// anything and returns false
+	// Params:
+	//  amount = amount to take
+	// Returns:
+	//  If there was enough
 	bool TakeFromFunds(unsigned amount);
+	// Add money to funds
+	// Params:
+	//  amount = amount to add
 	void AddToFunds(unsigned amount);
 
 	// 0 = cost over time
@@ -121,99 +143,142 @@ private:
 
 	void Load(rapidjson::Value& obj);
 
+	// Create a unit
+	// Params:
+	//  unitName = Name of unit to spawn
+	//  startPos = Start position of unit
+	//  path     = Starting path
 	void CreateUnit(const char *unitName, Vector2D startPos, vector<Vector2D> path);
+	// Is spawn position "legal"
+	// Params:
+	//  pos = Spawn pos
+	// Returns:
+	//  Whether or not it's legal
 	bool LegalSpawn(Vector2D pos);
+	// Is position behind army's front line
+	// Params:
+	//  pos = Position to check
+	// Returns:
+	//  Whether or not it's behind the front line
 	bool BehindFrontLine(Vector2D pos);
+	// Select unit under cursor
+	// Params:
+	//  curspos  = Position of cursor
+	//  deselect = Deselect instead
 	void SelectUnits(Vector2D &curspos, bool deselect=false);
+	// Add direction to editing path
+	// Params:
+	//  dir = direction to add
+	// Returns:
+	//  false if failed (ie would go off-screen)
 	bool AddToEditPath(Vector2D dir);
+	// Draw the currently editing path
 	void DrawPath() const;
 
+	// Get unit data by name of unit
+	// Params:
+	//  name = name of unit
+	// Returns:
+	//  unit data
 	UnitData GetUnitData(const char *name) const;
+	// Update on-screen funds text
 	void UpdateFundsText();
 
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
-	enum ControlType {ctKeyboard, ctGamepad};
 
-	/*struct ControlOptions : public Serializable {
-		ControlType type;
-		// Camera controls
-		struct {
-			int cameraAxisX;
-			int cameraAxisY;
-			int cameraUp;
-			int cameraDown;
-			int cameraLeft;
-			int cameraRight;
-		} Camera;
-		// Normal controls
-		struct {
-			int spawnUnit1;
-			int spawnUnit2;
-			int spawnUnit3;
-			int spawnUnit4;
-			int commandMode;
-		} Normal;
-		// Command controls
-		struct {
-			int clearPath;
-			int backPath;
-			int pathToEnd;
-			int selectMode;
-		} Command;
-		// Select controls
-		struct {
-			int manualMode;
-			int autoMode;
-		} Select;
-		// Manual mode
-		struct {
-			int select;
-			int deselect;
-		} SelectManual;
-
-		void Load(rapidjson::Value& obj);
-		static int GetAxis(const char *name);
-		static int GetButton(const char *name);
-	};*/
+	// Type of controls
+	// TODO keyboard controls not yet implemented
+	//enum ControlType {ctKeyboard, ctGamepad};
 
 
-	Tilemap *tilemap;
-	vector<UnitData> units;
+	// List of unit types
+	vector<UnitData> unitTypes;
+	// Side of army
 	Side side;
-	int frontLine, flStart;
-	string flObjName;
-	Transform *flTransform;
-	string fundsObjName;
-	Text *fundsText;
-	//ControlType controlType;
-	ControlList controlList;
-	Gamepad gamepad;
-	//Vector2D cursor;
-	string cursorObjName;
-	Transform *cursor;
-	Sprite *cursorSprite;
-	Vector2D *camera;
-
-	unsigned funds, startFunds;
-	vector<Vector2D> path_;
+	// Number of units alive from army
 	unsigned numUnits;
 
-	Vector2D editPos = { -1, -1 };
-	Vector2D editExtraLastPos = { -1, -1 };
-	BehaviorUnit *editUnit;
-	vector<BehaviorUnit*> editExtraUnits;
-	Vector2D editStartPos;
-	vector<Vector2D> editExtraStartPos;
-	enum SelectMode {smAuto, smManual/*, smSelect, smDeselect*/};
-	SelectMode editSelectMode;
-	vector<Vector2D> editPath;
-	string pathLineName;
-	Sprite *pathSprite;
-	Transform *pathTransform;
-	Transform diamondTransform;
-	Transform targetTransform;
+	// Funds data
+	struct {
+		// Current funds
+		unsigned amount;
+		// Starting funds
+		unsigned startAmount;
+		// Name of funds display object
+		string dispObjName;
+		// Text component of funds display object
+		Text *text;
+	} funds;
+
+	// Pointer to tilemap
+	Tilemap *tilemap;
+
+	// Front line data
+	struct {
+		// Current position of front line
+		int pos;
+		// Start position of front line
+		int start;
+		// Name of front line display object
+		string dispObjName;
+		// Pointer to Transform component of front line display object
+		Transform *transform;
+	} frontLine;
+
+	// Controls data
+	struct {
+		// Player's gamepad
+		Gamepad *gamepad;
+		// List of controls for army
+		ControlList list;
+	} controls;
+
+	// Cursor data
+	struct {
+		// Name of cursor display object
+		string objName;
+		// Transform component of cursor display object
+		Transform *transform;
+		// Sprite component of cursor display object
+		Sprite *sprite;
+	} cursor;
+
+	// Pointer to camera position
+	Vector2D *camera;
+
+	// Editing data
+	struct {
+		// Currently editing unit
+		BehaviorUnit *unit;
+		// Currently editing path
+		vector<Vector2D> path;
+		// Last map position of cursor while editing
+		Vector2D pos = {-1, -1};
+		// Path start position
+		Vector2D startPos;
+		// Extra unit editing data
+		struct {
+			// Last position where an extra unit was selected
+			Vector2D lastPos = {-1, -1};
+			// List of extra editing units
+			vector<BehaviorUnit*> units;
+			// Start position of editing units
+			vector<Vector2D> startPos;
+		} extra;
+		// Select mode (auto = hover over units, manual = press A on them)
+		enum { smAuto, smManual } selectMode;
+	} edit;
+
+	// Path drawing
+	struct {
+		string lineDispName;
+		Sprite *sprite;
+		Transform *transform;
+		Transform diamondTransform;
+		Transform targetTransform;
+	} path;
 };
 
 //------------------------------------------------------------------------------

@@ -2,24 +2,26 @@
 
 #include "Gamepad.h"
 
+Gamepad Gamepad::gamepads[MAX_GAMEPADS];
+
 Gamepad::Gamepad() :
-		gpNum(-1)
+		gpNum(-1), error(true)
 {
 }
 
-Gamepad::Gamepad(int gpNum_) :
-		Gamepad()
-{
-	for (DWORD i = 0; i < XUSER_MAX_COUNT && gpNum == -1; i++) {
-		if (XInputGetState(i, &state) == ERROR_SUCCESS) {
-			if (!gpNum_) gpNum = i;
-			else gpNum_--;
-		}
-	}
+void Gamepad::SetGpNum(int gpNum) {
+	this->gpNum = gpNum;
+	error = (XInputGetState(gpNum, &state) != ERROR_SUCCESS);
+	oldState = state;
+}
+
+bool Gamepad::Connected() {
+	return !error;
 }
 
 void Gamepad::Update()
 {
+	if (gpNum == -1) return;
 	oldState = state;
 	error = (XInputGetState(gpNum, &state) != ERROR_SUCCESS);
 }
@@ -133,6 +135,18 @@ void Gamepad::SetTriggerDeadzone(int deadzone)
 {
 	if (deadzone >= 0 && deadzone < 255)
 		stickDeadzone = deadzone;
+}
+
+Gamepad & Gamepad::GetGamepad(unsigned index) {
+	if (gamepads[index].gpNum == -1)
+		gamepads[index].SetGpNum(index);
+	return gamepads[index];
+}
+
+void Gamepad::UpdateAll() {
+	for (Gamepad &gamepad : gamepads) {
+		gamepad.Update();
+	}
 }
 
 float Gamepad::StickToFloat(int s)
