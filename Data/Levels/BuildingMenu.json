@@ -37,12 +37,12 @@
   {
     "Name": "Button",
     "Transform": {
-      "Translation": [ -325, -200 ],
+      "Translation": [ -235, -200 ],
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
     "Button": {
-      "ClickEffect": "Restart"
+      "ClickEffect": "CreateNeoridiumMine"
     },
     "Sprite": {
       "Mesh": {
@@ -66,19 +66,19 @@
         "UV": [ 0.0625, 0.1666666666667 ]
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
-      "Text": "Restart Game!",
-      "Scale": [ 25, 30 ]
+      "Text": "Create Neoridium Mine",
+      "Scale": [ 15, 20 ]
     }
   },
   {
     "Name": "Button",
     "Transform": {
-      "Translation": [ -75, -200 ],
+      "Translation": [ 0, -200 ],
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
     "Button": {
-      "ClickEffect": "Quit"
+      "ClickEffect": "CreateResearchCenter"
     },
     "Sprite": {
       "Mesh": "ButtonMesh",
@@ -89,8 +89,8 @@
       "SpriteSource": "Font",
       "Mesh": "TextMesh",
       "ModulateColor": [ 0, 0, 0, 1 ],
-      "Text": "Quit Game!",
-      "Scale": [ 36, 40 ]
+      "Text": "Create Research Center",
+      "Scale": [ 15, 20 ]
     }
   },
   {
@@ -101,7 +101,7 @@
 	  "Rotation": 0
 	},
 	"Button": {
-	  "ClickEffect": "JaxiumMine"
+	  "ClickEffect": "CreateJaxiumMine"
 	},
     "Sprite": {
       "Mesh": "ButtonMesh",
@@ -112,8 +112,8 @@
       "SpriteSource": "Font",
       "Mesh": "TextMesh",
       "ModulateColor": [ 0, 0, 0, 1 ],
-      "Text": "Create Mine",
-      "Scale": [ 30, 36 ]
+      "Text": "Create Jaxium Mine",
+      "Scale": [ 20, 25 ]
     }
   }
 ]

@@ -2,10 +2,8 @@
 #include "BuildingJaxiumMine.h"
 #include "GameObjectManager.h"
 #include "LevelManager.h"
-#include <vector>
-using std::vector;
 
-BuildingJaxiumMine::BuildingJaxiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, JaxiumMine, Advanced, 15.0f, 200.0f, Jaxium, pos)
+BuildingJaxiumMine::BuildingJaxiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, JaxiumMine, Basic, 10.0f, 100.0f, Jaxium, pos)
 {
 }
 

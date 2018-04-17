@@ -2,10 +2,10 @@
 #include "BuildingNeoridiumMine.h"
 #include "GameObjectManager.h"
 #include "LevelManager.h"
-#include <vector>
-using std::vector;
 
-BuildingNeoridiumMine::BuildingNeoridiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, JaxiumMine, Basic, 10.0f, 100.0f, Jaxium, pos)
+std::map<BehaviorArmy::Side, float> BuildingNeoridiumMine::neoridium;
+
+BuildingNeoridiumMine::BuildingNeoridiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, NeoridiumMine, Advanced, 15.0f, 200.0f, Jaxium, pos)
 {
 }
 

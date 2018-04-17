@@ -25,14 +25,19 @@
 #include "ButtonEffects.h"
 #include "Engine.h"
 #include "PopupMenu.h"
-#include "BuildingJaxiumMine.h"
 #include "SpriteSource.h"
+
+//Building includes.
+#include "BuildingNeoridiumMine.h"
+#include "BuildingJaxiumMine.h"
+#include "BuildingResearchCenter.h"
 
 //------------------------------------------------------------------------------
 
 map<string, void(*)(Button&,float, int, ...)> Button::clickEffects;
 
 map<string, Building::BuildingType> Button::buildingType;
+map<string, BuildingResearchCenter::Research> Button::researchType;
 
 vector<AEGfxTexture*> Button::textures;
 
@@ -170,7 +175,7 @@ void Button::QuitEffect(Button &button, float dt, int count, ...)
 	Engine::GetInstance().Quit();
 }
 
-void Button::CreateMineEffect(Button & button, float dt, int count, ...)
+void Button::CreateJaxiumMineEffect(Button & button, float dt, int count, ...)
 {
 	va_list args;
 	va_start(args, count);
@@ -188,16 +193,15 @@ void Button::CreateMineEffect(Button & button, float dt, int count, ...)
 		return;
 	}
 
-	GameObject *mineObj = new GameObject("Mine");
+	GameObject *mineObj = new GameObject("Jaxium Mine");
 	Transform* transform = new Transform(screenPos.x, screenPos.y);
 	transform->SetScale({ 100, 100 });
 	mineObj->AddComponent(transform);
 
 	Sprite *sprite = new Sprite();
-	sprite->SetModulateColor({ 0, 1, 0, 1 });
-	//mine->texture = AEGfxTextureLoad("");
-	//SpriteSource* spriteSource = new SpriteSource(1, 1, mine->texture);
-	//sprite->SetSpriteSource(spriteSource);
+	mine->texture = AEGfxTextureLoad("Data\\Assets\\Isometric Jaxium Mine Team 1.png");
+	SpriteSource* spriteSource = new SpriteSource(1, 1, mine->texture);
+	sprite->SetSpriteSource(spriteSource);
 	mine->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
 	sprite->SetMesh(mine->mesh);
 
@@ -207,11 +211,133 @@ void Button::CreateMineEffect(Button & button, float dt, int count, ...)
 	LevelManager::GetLayer(0)->GetObjectManager()->Add(*mineObj);
 }
 
+void Button::CreateNeoridiumMineEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	Vector2D mapPos = va_arg(args, Vector2D);
+	Vector2D screenPos = va_arg(args, Vector2D);
+	va_end(args);
+
+	BuildingNeoridiumMine *mine;
+
+	try {
+		mine = new BuildingNeoridiumMine(side, mapPos);
+	}
+	catch (int) {
+		return;
+	}
+
+	GameObject *mineObj = new GameObject("Neoridium Mine");
+	Transform* transform = new Transform(screenPos.x, screenPos.y);
+	transform->SetScale({ 100, 100 });
+	mineObj->AddComponent(transform);
+
+	Sprite *sprite = new Sprite();
+	mine->texture = AEGfxTextureLoad("");
+	SpriteSource* spriteSource = new SpriteSource(1, 1, mine->texture);
+	sprite->SetSpriteSource(spriteSource);
+	mine->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
+	sprite->SetMesh(mine->mesh);
+
+	mineObj->AddComponent(sprite);
+	mineObj->AddComponent(mine);
+
+	LevelManager::GetLayer(0)->GetObjectManager()->Add(*mineObj);
+}
+
+void Button::CreateResearchCenterEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	Vector2D mapPos = va_arg(args, Vector2D);
+	Vector2D screenPos = va_arg(args, Vector2D);
+	va_end(args);
+
+	BuildingResearchCenter *researchCenter;
+
+	try {
+		researchCenter = new BuildingResearchCenter(side, mapPos);
+	}
+	catch (int) {
+		return;
+	}
+
+	GameObject *researchCenterObj = new GameObject("Neoridium Mine");
+	Transform* transform = new Transform(screenPos.x, screenPos.y);
+	transform->SetScale({ 100, 100 });
+	researchCenterObj->AddComponent(transform);
+
+	Sprite *sprite = new Sprite();
+	researchCenter->texture = AEGfxTextureLoad("");
+	SpriteSource* spriteSource = new SpriteSource(1, 1, researchCenter->texture);
+	sprite->SetSpriteSource(spriteSource);
+	researchCenter->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
+	sprite->SetMesh(researchCenter->mesh);
+
+	researchCenterObj->AddComponent(sprite);
+	researchCenterObj->AddComponent(researchCenter);
+
+	LevelManager::GetLayer(0)->GetObjectManager()->Add(*researchCenterObj);
+}
+
+void Button::ResearchSpaceportEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	va_end(args);
+
+	Building::Unlock(side, Building::BuildingType::Spaceport);
+}
+
+void Button::ResearchVehicleDepotEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	va_end(args);
+
+	Building::Unlock(side, Building::BuildingType::VehicleDepot);
+}
+
+void Button::ResearchTurretEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	va_end(args);
+
+	Building::Unlock(side, Building::BuildingType::Turret);
+}
+
+void Button::ResearchTeleporterEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	va_end(args);
+
+	Building::Unlock(side, Building::BuildingType::Teleporter);
+}
+
 void Button::ListEffects()
 {
 	AddClickEffect("Restart", RestartEffect);
 	AddClickEffect("Quit", QuitEffect);
-	AddClickEffect("JaxiumMine", CreateMineEffect, Building::BuildingType::JaxiumMine);
+	
+	//Create Building Effects
+	AddClickEffect("CreateJaxiumMine", CreateJaxiumMineEffect, Building::BuildingType::JaxiumMine);
+	AddClickEffect("CreateNeoridiumMine", CreateNeoridiumMineEffect, Building::BuildingType::NeoridiumMine);
+	AddClickEffect("CreateResearchCenter", CreateResearchCenterEffect, Building::BuildingType::ResearchCenter);
+
+	//Create Research Unlock Effects
+	AddClickEffect("ResearchSpaceport", ResearchSpaceportEffect, Building::BuildingType::Spaceport, BuildingResearchCenter::Research::Spaceport);
+	AddClickEffect("ResearchVehicleDepot", ResearchVehicleDepotEffect, Building::BuildingType::VehicleDepot, BuildingResearchCenter::Research::VehicleDepot);
+	AddClickEffect("ResearchTurret", ResearchTurretEffect, Building::BuildingType::Turret, BuildingResearchCenter::Research::Turret);
+	AddClickEffect("ResearchTeleporter", ResearchTeleporterEffect, Building::BuildingType::Teleporter, BuildingResearchCenter::Research::Teleporter);
 	ButtonEffects::List();
 }
 
@@ -220,10 +346,11 @@ void Button::Shutdown() {
 	textures.clear();
 }
 
-void Button::AddClickEffect(const char * name, void(*effectFunc)(Button&,float, int, ...), Building::BuildingType type)
+void Button::AddClickEffect(const char * name, void(*effectFunc)(Button&,float, int, ...), Building::BuildingType type, BuildingResearchCenter::Research search)
 {
 	clickEffects[name] = effectFunc;
 	buildingType[name] = type;
+	researchType[name] = search;
 }
 
 void(*Button::GetClickEffect(const char * name))(Button&,float, int, ...)

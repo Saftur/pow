@@ -5,7 +5,9 @@
 #include "GameObject.h"
 #include "AEEngine.h"
 #include "Transform.h"
+
 #include "BuildingNeoridiumMine.h"
+#include "BuildingResearchCenter.h"
 
 map<BehaviorArmy::Side, bool[Building::BuildingType::BuildingCount]> Building::buildings;
 
@@ -34,9 +36,14 @@ Building::~Building()
 
 void Building::InitializeBuildings(BehaviorArmy::Side side)
 {
-	for (int i = 0; i < BuildingCount; i++) Lock(side, (BuildingType)i);
-	Unlock(side, JaxiumMine);
+	BuildingResearchCenter::InitializeResearchCost();
+
+	for (int i = 0; i < BuildingCount; i++) Lock(side, (BuildingType)i); //Lock all of the buildings.
+	Unlock(side, JaxiumMine); //Unlock the JaxiumMine.
+	///TODO: Remove further unlocks, their only purpose is for testing.
 	Unlock(side, NeoridiumMine);
+	Unlock(side, ResearchCenter);
+
 	BuildingNeoridiumMine::neoridium[side] = 0.0f;
 }
 

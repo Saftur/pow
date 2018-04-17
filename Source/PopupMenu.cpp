@@ -93,7 +93,7 @@ void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, ControlList con
 
 			//If we hit select, click the button and close the menu.	
 			if (gamepad.GetButtonTriggered(controlList["Select.Manual.Select"]) || AEInputCheckTriggered(VK_RETURN)) {
-				Button::ForceClick(*(Button*)selectedButton->GetComponent("Button"), dt, 1, side, menu->armyCursorMapPos, menu->armyCursorScreenPos);
+				Button::ForceClick(*(Button*)selectedButton->GetComponent("Button"), dt, 3, side, menu->armyCursorMapPos, menu->armyCursorScreenPos);
 				PopupMenu::DestroyMenu(side);
 				return;
 			}
@@ -123,9 +123,11 @@ PopupMenu::PopupMenu(BehaviorArmy::Side side, MenuType type) : side(side), type(
 	//Load the level for the correct type of level.
 	switch (type) {
 	case Building:
-		LevelManager::LoadLayer(LevelManager::GetLayerCount(), "TestPopup", true);
+		LevelManager::LoadLayer(LevelManager::GetLayerCount(), "BuildingMenu", true);
 		break;
 	case Unit:
+		break;
+	case Research:
 		break;
 	}
 	menuLevelLayer = LevelManager::GetLayerCount() - 1;
@@ -153,9 +155,21 @@ void PopupMenu::ConfigureMenu(BehaviorArmy::Side side, PopupMenu* menu) {
 
 			Button* button = (Button*)obj->GetComponent("Button");
 			if (button) {
-				//If this button creates a building, check if the building it creates is locked.
-				if (Button::buildingType[button->effectName] != Building::BuildingType::Null && !Building::IsUnlocked(side, Button::buildingType[button->effectName])) {
-					button->active = false;
+				//If this button creates a building, check if the building it creates is locked and if it has been researched.
+				Building::BuildingType buildingType = Button::buildingType[button->effectName];
+				if (buildingType != Building::BuildingType::Null && !Building::IsUnlocked(side, buildingType)) button->active = false;
+
+				//If this button researches something, check if we can unlock it.
+				BuildingResearchCenter::Research researchType = Button::researchType[button->effectName];
+				if (researchType != BuildingResearchCenter::Research::Null) {
+					vector<GameObject*> disableButtons = LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
+						BehaviorArmy* army = (BehaviorArmy*)obj->GetComponent("BehaviorArmy");
+						//If we found the army we want check if the building is already unlocked or if we can't afford to unlock it.
+						if (army && army->GetSide() == side) {
+							if (Building::IsUnlocked(side, buildingType) || army->GetFunds < BuildingResearchCenter::GetCost(researchType)) button->active = false;
+						}
+						return false;
+					});
 				}
 			}
 			return false;

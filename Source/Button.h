@@ -26,6 +26,7 @@ using std::string;
 
 #include "BehaviorArmy.h"
 #include "Building.h"
+#include "BuildingResearchCenter.h"
 
 typedef class Vector2D Vector2D;
 typedef class GameObject GameObject;
@@ -91,12 +92,14 @@ public:
 	static void Shutdown();
 	
 	static void ListEffects();
-	static void AddClickEffect(const char *name, void(*effectFunc)(Button&,float, int, ...), Building::BuildingType type = Building::BuildingType::Null);
+	static void AddClickEffect(const char *name, void(*effectFunc)(Button&,float, int, ...), Building::BuildingType type = Building::BuildingType::Null, 
+		BuildingResearchCenter::Research search = BuildingResearchCenter::Research::Null);
 	static void (*GetClickEffect(const char *name))(Button&,float, int, ...);
 
 	static void ForceClick(Button& button, float dt, unsigned count = 0, ...);
 
 	static map<string, Building::BuildingType> buildingType; //Type of building this is, paired with the name of the effect.
+	static map<string, BuildingResearchCenter::Research> researchType; //Type of research that is being conducted, paired with the name of the effect.
 	string effectName; //The name of the effect on this building.
 
 	bool active = true; //Is this button active.
@@ -129,7 +132,15 @@ private:
 	// End click effects
 
 	//Building Buttons
-	static void CreateMineEffect(Button &button, float dt, int count = 0,  ...);
+	static void CreateJaxiumMineEffect(Button &button, float dt, int count = 0, ...);
+	static void CreateNeoridiumMineEffect(Button &button, float dt, int count = 0, ...);
+	static void CreateResearchCenterEffect(Button &button, float dt, int count = 0, ...);
+
+	//Research Buttons
+	static void ResearchSpaceportEffect(Button &button, float dt, int count = 0, ...);
+	static void ResearchVehicleDepotEffect(Button &button, float dt, int count = 0, ...);
+	static void ResearchTurretEffect(Button &button, float dt, int count = 0, ...);
+	static void ResearchTeleporterEffect(Button &button, float dt, int count = 0, ...);
 
 	static vector<AEGfxTexture*> textures;
 };

@@ -32,7 +32,7 @@ typedef class Sprite Sprite;
 class PopupMenu
 {
 public:
-	enum MenuType { Building, Unit };
+	enum MenuType { Building, Unit, Research };
 
 	static void CreateMenu(BehaviorArmy::Side side, MenuType type, Vector2D cursorMapPos, Vector2D cursorScreenPos); //Create a menu for the given army.
 	static void DestroyMenu(BehaviorArmy::Side side); //Destroy a menu for the given army.
