@@ -2,6 +2,7 @@
 #include "BuildingResearchCenter.h"
 #include "GameObjectManager.h"
 #include "LevelManager.h"
+#include "BuildingNeoridiumMine.h"
 
 map<BehaviorArmy::Side, map<BuildingResearchCenter::Research, bool>> BuildingResearchCenter::research;
 
@@ -9,6 +10,7 @@ map<BuildingResearchCenter::Research, float> BuildingResearchCenter::researchCos
 
 BuildingResearchCenter::BuildingResearchCenter(BehaviorArmy::Side side, Vector2D pos) : Building(side, ResearchCenter, Basic, 20.0f, 250.0f, Jaxium, pos)
 {
+	if (!IsUnlocked(side, NeoridiumMine)) Unlock(side, NeoridiumMine);
 }
 
 Component * BuildingResearchCenter::Clone() const
@@ -23,6 +25,11 @@ void BuildingResearchCenter::BuildingUpdate(float dt)
 void BuildingResearchCenter::OpenResearchMenu(PopupMenu::MenuType type, Vector2D cursorMapPos, Vector2D cursorScreenPos)
 {
 	PopupMenu::CreateMenu(side, type, cursorMapPos, cursorScreenPos);
+}
+
+void BuildingResearchCenter::Unlock(BehaviorArmy::Side side, Building::BuildingType type)
+{
+	if (BuildingNeoridiumMine::TakeNeoridium(side, GetCost((Research)type))) Building::Unlock(side, type);
 }
 
 void BuildingResearchCenter::InitializeResearchCost()

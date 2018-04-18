@@ -128,6 +128,7 @@ PopupMenu::PopupMenu(BehaviorArmy::Side side, MenuType type) : side(side), type(
 	case Unit:
 		break;
 	case Research:
+		LevelManager::LoadLayer(LevelManager::GetLayerCount(), "ResearchMenu", true);
 		break;
 	}
 	menuLevelLayer = LevelManager::GetLayerCount() - 1;
@@ -157,7 +158,7 @@ void PopupMenu::ConfigureMenu(BehaviorArmy::Side side, PopupMenu* menu) {
 			if (button) {
 				//If this button creates a building, check if the building it creates is locked and if it has been researched.
 				Building::BuildingType buildingType = Button::buildingType[button->effectName];
-				if (buildingType != Building::BuildingType::Null && !Building::IsUnlocked(side, buildingType)) button->active = false;
+				if (Button::researchType[button->effectName] == BuildingResearchCenter::Research::Null && buildingType != Building::BuildingType::Null && !Building::IsUnlocked(side, buildingType)) button->active = false;
 
 				//If this button researches something, check if we can unlock it.
 				BuildingResearchCenter::Research researchType = Button::researchType[button->effectName];
@@ -166,7 +167,7 @@ void PopupMenu::ConfigureMenu(BehaviorArmy::Side side, PopupMenu* menu) {
 						BehaviorArmy* army = (BehaviorArmy*)obj->GetComponent("BehaviorArmy");
 						//If we found the army we want check if the building is already unlocked or if we can't afford to unlock it.
 						if (army && army->GetSide() == side) {
-							if (Building::IsUnlocked(side, buildingType) || army->GetFunds < BuildingResearchCenter::GetCost(researchType)) button->active = false;
+							if (Building::IsUnlocked(side, buildingType) || army->GetFunds() < BuildingResearchCenter::GetCost(researchType)) button->active = false;
 						}
 						return false;
 					});

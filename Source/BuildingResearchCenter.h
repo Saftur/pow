@@ -31,7 +31,7 @@ typedef class GameObject GameObject;
 class BuildingResearchCenter : public Building
 {
 public:
-	enum Research { Spaceport, VehicleDepot, Turret, Teleporter, ResearchCount, Null };
+	enum Research { Spaceport = 3, VehicleDepot, Turret, Teleporter, ResearchCount = 4, Null = -1 };
 
 	BuildingResearchCenter(BehaviorArmy::Side side, Vector2D pos);
 	Component* Clone() const;
@@ -39,6 +39,8 @@ public:
 	void BuildingUpdate(float dt); //Update the building.
 
 	void OpenResearchMenu(PopupMenu::MenuType type, Vector2D cursorMapPos, Vector2D cursorScreenPos); //Open a menu for the research center.
+
+	static void Unlock(BehaviorArmy::Side side, Building::BuildingType type); //Research the building.
 
 	static void InitializeResearchCost(); //Initialize the researchCost map.
 	static float GetCost(Research search); //Get the cost of the research.

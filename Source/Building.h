@@ -36,7 +36,7 @@ typedef class GameObject GameObject;
 class Building : public Component
 {
 public:
-	enum BuildingType { JaxiumMine, NeoridiumMine, ResearchCenter, Spaceport, VehicleDepot, Turret, Teleporter, BuildingCount, Null };
+	enum BuildingType { JaxiumMine, NeoridiumMine, ResearchCenter, Spaceport, VehicleDepot, Turret, Teleporter, BuildingCount, Null = -1 };
 	enum SpecialtyType { Basic, Advanced, Special };
 	enum CostType { Jaxium, Neoridium };
 

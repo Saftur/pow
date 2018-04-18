@@ -290,7 +290,7 @@ void Button::ResearchSpaceportEffect(Button & button, float dt, int count, ...)
 	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
 	va_end(args);
 
-	Building::Unlock(side, Building::BuildingType::Spaceport);
+	BuildingResearchCenter::Unlock(side, Building::BuildingType::Spaceport);
 }
 
 void Button::ResearchVehicleDepotEffect(Button & button, float dt, int count, ...)
@@ -300,7 +300,7 @@ void Button::ResearchVehicleDepotEffect(Button & button, float dt, int count, ..
 	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
 	va_end(args);
 
-	Building::Unlock(side, Building::BuildingType::VehicleDepot);
+	BuildingResearchCenter::Unlock(side, Building::BuildingType::VehicleDepot);
 }
 
 void Button::ResearchTurretEffect(Button & button, float dt, int count, ...)
@@ -310,7 +310,7 @@ void Button::ResearchTurretEffect(Button & button, float dt, int count, ...)
 	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
 	va_end(args);
 
-	Building::Unlock(side, Building::BuildingType::Turret);
+	BuildingResearchCenter::Unlock(side, Building::BuildingType::Turret);
 }
 
 void Button::ResearchTeleporterEffect(Button & button, float dt, int count, ...)
@@ -320,7 +320,7 @@ void Button::ResearchTeleporterEffect(Button & button, float dt, int count, ...)
 	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
 	va_end(args);
 
-	Building::Unlock(side, Building::BuildingType::Teleporter);
+	BuildingResearchCenter::Unlock(side, Building::BuildingType::Teleporter);
 }
 
 void Button::ListEffects()
@@ -332,6 +332,7 @@ void Button::ListEffects()
 	AddClickEffect("CreateJaxiumMine", CreateJaxiumMineEffect, Building::BuildingType::JaxiumMine);
 	AddClickEffect("CreateNeoridiumMine", CreateNeoridiumMineEffect, Building::BuildingType::NeoridiumMine);
 	AddClickEffect("CreateResearchCenter", CreateResearchCenterEffect, Building::BuildingType::ResearchCenter);
+	///TODO: Implement Click Effects for the remaining buildings.
 
 	//Create Research Unlock Effects
 	AddClickEffect("ResearchSpaceport", ResearchSpaceportEffect, Building::BuildingType::Spaceport, BuildingResearchCenter::Research::Spaceport);

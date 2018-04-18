@@ -39,12 +39,12 @@ void Building::InitializeBuildings(BehaviorArmy::Side side)
 	BuildingResearchCenter::InitializeResearchCost();
 
 	for (int i = 0; i < BuildingCount; i++) Lock(side, (BuildingType)i); //Lock all of the buildings.
-	Unlock(side, JaxiumMine); //Unlock the JaxiumMine.
+	Unlock(side, JaxiumMine);
+	Unlock(side, ResearchCenter);
 	///TODO: Remove further unlocks, their only purpose is for testing.
 	Unlock(side, NeoridiumMine);
-	Unlock(side, ResearchCenter);
 
-	BuildingNeoridiumMine::neoridium[side] = 0.0f;
+	BuildingNeoridiumMine::neoridium[side] = 0.0f; //Intitialize the amount of Neoridium each player has to 0.
 }
 
 void Building::Update(float dt)
