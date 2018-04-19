@@ -1,0 +1,119 @@
+[
+  {
+    "Name": "Background",
+    "Transform": {
+      "Translation": [ 0, -200 ],
+      "Scale": [ 700, 150 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "Mesh": {
+        "Name": "BackgroundMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 0.5,
+      "ModulateColor": [ 0.4, 0.4, 0.4, 1 ]
+    }
+  },
+  {
+    "Name": "Cursor",
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 128, 128 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": "CursorSpriteSource",
+      "Mesh": {
+		"Name": "CursorMesh",
+		"HalfSize": [ 0.5, 0.5 ],
+		"UV": [ 1, 1 ]
+	  },
+      "Alpha": 1.0,
+      "ModulateColor": [ 1, 0, 0, 1 ]
+    }
+  },
+  {
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ -235, -200 ],
+      "Scale": [ 200, 50 ],
+      "Rotation": 0
+    },
+    "Button": {
+      "ClickEffect": "CreateNeoridiumMine"
+    },
+    "Sprite": {
+      "Mesh": {
+        "Name": "ButtonMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Data\\Assets\\Comic Sans.png",
+        "Cols": 16,
+        "Rows": 6
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.0625, 0.1666666666667 ]
+      },
+      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "Text": "Create Neoridium Mine",
+      "Scale": [ 15, 20 ]
+    }
+  },
+  {
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ 0, -200 ],
+      "Scale": [ 200, 50 ],
+      "Rotation": 0
+    },
+    "Button": {
+      "ClickEffect": "CreateResearchCenter"
+    },
+    "Sprite": {
+      "Mesh": "ButtonMesh",
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
+      "ModulateColor": [ 0, 0, 0, 1 ],
+      "Text": "Create Research Center",
+      "Scale": [ 15, 20 ]
+    }
+  },
+  {
+	"Name": "Button",
+	"Transform": {
+	  "Translation": [ 225, -200 ],
+	  "Scale": [200, 50 ],
+	  "Rotation": 0
+	},
+	"Button": {
+	  "ClickEffect": "CreateJaxiumMine"
+	},
+    "Sprite": {
+      "Mesh": "ButtonMesh",
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
+      "ModulateColor": [ 0, 0, 0, 1 ],
+      "Text": "Create Jaxium Mine",
+      "Scale": [ 20, 25 ]
+    }
+  }
+]

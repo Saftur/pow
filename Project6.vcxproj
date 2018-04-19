@@ -44,6 +44,10 @@
     <ClInclude Include="Source\AnimationSequence.h" />
     <ClInclude Include="Source\Behavior.h" />
     <ClInclude Include="Source\BehaviorArmy.h" />
+    <ClInclude Include="Source\Building.h" />
+    <ClInclude Include="Source\BuildingJaxiumMine.h" />
+    <ClInclude Include="Source\BuildingNeoridiumMine.h" />
+    <ClInclude Include="Source\BuildingResearchCenter.h" />
     <ClInclude Include="Source\ButtonEffects.h" />
     <ClInclude Include="Source\CompList.h" />
     <ClInclude Include="Source\BehaviorStub.h" />
@@ -66,6 +70,7 @@
     <ClInclude Include="Source\Matrix2D.h" />
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\Physics.h" />
+    <ClInclude Include="Source\PopupMenu.h" />
     <ClInclude Include="Source\Random.h" />
     <ClInclude Include="Source\Rendertext.h" />
     <ClInclude Include="source\Serializable.h" />
@@ -87,6 +92,10 @@
     <ClCompile Include="Source\AnimationSequence.cpp" />
     <ClCompile Include="Source\Behavior.cpp" />
     <ClCompile Include="Source\BehaviorArmy.cpp" />
+    <ClCompile Include="Source\Building.cpp" />
+    <ClCompile Include="Source\BuildingJaxiumMine.cpp" />
+    <ClCompile Include="Source\BuildingNeoridiumMine.cpp" />
+    <ClCompile Include="Source\BuildingResearchCenter.cpp" />
     <ClCompile Include="Source\ButtonEffects.cpp" />
     <ClCompile Include="Source\CompList.cpp" />
     <ClCompile Include="Source\BehaviorStub.cpp" />
@@ -109,6 +118,7 @@
     <ClCompile Include="Source\Matrix2D.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
+    <ClCompile Include="Source\PopupMenu.cpp" />
     <ClCompile Include="Source\Random.cpp" />
     <ClCompile Include="Source\Rendertext.cpp" />
     <ClCompile Include="source\Serializable.cpp" />

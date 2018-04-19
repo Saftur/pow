@@ -16,7 +16,7 @@ void ButtonEffects::List()
 	Button::AddClickEffect("KillAllUnits", KillAllUnits);
 }
 
-void ButtonEffects::KillAllUnits(Button &button, float dt)
+void ButtonEffects::KillAllUnits(Button &button, float dt, int count, ...)
 {
 	vector<GameObject*> units = button.GetParent()->GetObjectManager()->GetObjectsByName("Unit");
 	for (GameObject* go : units)

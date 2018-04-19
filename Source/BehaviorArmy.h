@@ -97,7 +97,7 @@ public:
 	// Get the amount of funds
 	// Returns:
 	//  The amount of funds
-	unsigned GetFunds();
+	float GetFunds();
 	// Take money from funds
 	// If there isn't enough, doesn't take
 	// anything and returns false
@@ -105,15 +105,22 @@ public:
 	//  amount = amount to take
 	// Returns:
 	//  If there was enough
-	bool TakeFromFunds(unsigned amount);
+	bool TakeFromFunds(float amount);
 	// Add money to funds
 	// Params:
 	//  amount = amount to add
-	void AddToFunds(unsigned amount);
+	void AddToFunds(float amount);
 
 	// 0 = cost over time
 	// 1 = higher train cost for bigger army
 	static const int costType = -1;
+
+	// Is spawn position "legal"
+	// Params:
+	//  pos = Spawn pos
+	// Returns:
+	//  Whether or not it's legal
+	bool LegalSpawn(Vector2D pos);
 
 private:
 	// Clone an advanced behavior and return a pointer to the cloned object.
@@ -149,12 +156,6 @@ private:
 	//  startPos = Start position of unit
 	//  path     = Starting path
 	void CreateUnit(const char *unitName, Vector2D startPos, vector<Vector2D> path);
-	// Is spawn position "legal"
-	// Params:
-	//  pos = Spawn pos
-	// Returns:
-	//  Whether or not it's legal
-	bool LegalSpawn(Vector2D pos);
 	// Is position behind army's front line
 	// Params:
 	//  pos = Position to check
@@ -203,9 +204,9 @@ private:
 	// Funds data
 	struct {
 		// Current funds
-		unsigned amount;
+		float amount;
 		// Starting funds
-		unsigned startAmount;
+		float startAmount;
 		// Name of funds display object
 		string dispObjName;
 		// Text component of funds display object

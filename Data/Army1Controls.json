@@ -10,7 +10,8 @@
     "SpawnUnit2": "X",
     "SpawnUnit3": "Y",
     "SpawnUnit4": "B",
-    "SwitchCommand": "RTrigger"
+    "SwitchCommand": "RTrigger",
+	"BuildingMenu": "RShoulder"
   },
   "Command": {
     "ClearPath": "X",

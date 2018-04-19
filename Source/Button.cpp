@@ -24,10 +24,20 @@
 #include "Mesh.h"
 #include "ButtonEffects.h"
 #include "Engine.h"
+#include "PopupMenu.h"
+#include "SpriteSource.h"
+
+//Building includes.
+#include "BuildingNeoridiumMine.h"
+#include "BuildingJaxiumMine.h"
+#include "BuildingResearchCenter.h"
 
 //------------------------------------------------------------------------------
 
-map<string, void(*)(Button&,float)> Button::clickEffects;
+map<string, void(*)(Button&,float, int, ...)> Button::clickEffects;
+
+map<string, Building::BuildingType> Button::buildingType;
+map<string, BuildingResearchCenter::Research> Button::researchType;
 
 vector<AEGfxTexture*> Button::textures;
 
@@ -50,9 +60,10 @@ Button::Button(const char * effectName) :
 	SetEffect(effectName);
 }
 
-void Button::SetEffect(const char * effectName)
+void Button::SetEffect(const char * effectNameA)
 {
-	ClickEffect = GetClickEffect(effectName);
+	ClickEffect = GetClickEffect(effectNameA);
+	effectName = effectNameA;
 }
 
 void Button::Load(rapidjson::Value & obj)
@@ -97,28 +108,48 @@ Component * Button::Clone() const
 // Params:
 //	 dt = Change in time (in seconds) since the last game loop.
 void Button::Update(float dt) {
-	//OnUpdate(dt);
-	if (AEInputCheckTriggered(VK_LBUTTON)) {
-		//Get the mouse position on screen.
-		s32 mouseX;
-		s32 mouseY;
-		AEInputGetCursorPosition(&mouseX, &mouseY);
+	if (active) {
+		//OnUpdate(dt);
+		if (AEInputCheckTriggered(VK_LBUTTON)) {
+			//Get the mouse position on screen.
+			s32 mouseX;
+			s32 mouseY;
+			AEInputGetCursorPosition(&mouseX, &mouseY);
 
-		//Convert mouse screen position to world position.
-		float worldX;
-		float worldY;
-		AEGfxConvertScreenCoordinatesToWorld((float)mouseX, (float)mouseY, &worldX, &worldY);
-		Vector2D mousePos = Vector2D(worldX, worldY);
+			//Convert mouse screen position to world position.
+			float worldX;
+			float worldY;
+			AEGfxConvertScreenCoordinatesToWorld((float)mouseX, (float)mouseY, &worldX, &worldY);
+			Vector2D mousePos = Vector2D(worldX, worldY);
 
-		//Check if the mouse is within the bounds of this button.
-		Vector2D buttonScale = ((Transform*)GetParent()->GetComponent("Transform"))->GetScale();
-		Vector2D buttonPos = ((Transform*)GetParent()->GetComponent("Transform"))->GetTranslation();
+			//Check if the mouse is within the bounds of this button.
+			Vector2D buttonScale = ((Transform*)GetParent()->GetComponent("Transform"))->GetScale();
+			Vector2D buttonPos = ((Transform*)GetParent()->GetComponent("Transform"))->GetTranslation();
 
-		if (mousePos.X() > buttonPos.X() - (buttonScale.X() / 2) && mousePos.X() <= buttonPos.X() + (buttonScale.X() / 2)
-			&& mousePos.Y() > buttonPos.Y() - (buttonScale.Y() / 2) && mousePos.Y() <= buttonPos.Y() + (buttonScale.Y() / 2)) {
-			if (ClickEffect)
-				ClickEffect(*this, dt);
+			if (mousePos.X() > buttonPos.X() - (buttonScale.X() / 2) && mousePos.X() <= buttonPos.X() + (buttonScale.X() / 2)
+				&& mousePos.Y() > buttonPos.Y() - (buttonScale.Y() / 2) && mousePos.Y() <= buttonPos.Y() + (buttonScale.Y() / 2)) {
+				if (ClickEffect)
+					ClickEffect(*this, dt, 0);
+			}
 		}
+	}
+	else {
+		((Sprite*)GetParent()->GetComponent("Sprite"))->SetModulateColor({ 0.6f, 0.6f, 0.4f, 0.5f });
+	}
+}
+
+void Button::ForceClick(Button& button, float dt, unsigned count, ...) {
+	if (button.active) {
+		if (count > 0) {
+			va_list args;
+			va_start(args, count);
+			BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+			Vector2D mapPos = va_arg(args, Vector2D);
+			Vector2D screenPos = va_arg(args, Vector2D);
+			if (button.ClickEffect) button.ClickEffect(button, dt, count, side, mapPos, screenPos);
+			va_end(args);
+		}
+		else if (button.ClickEffect) button.ClickEffect(button, dt, 0);
 	}
 }
 
@@ -128,22 +159,186 @@ void Button::Update(float dt) {
 	UNREFERENCED_PARAMETER(dt);
 }*/
 
-void Button::RestartEffect(Button & button, float dt)
+void Button::RestartEffect(Button & button, float dt, int count, ...)
 {
 	Engine::GetInstance().SetPaused(false);
 	LevelManager::GetLayer(0)->Restart();
+	if (LevelManager::GetLayerCount() > 1) {
+		PopupMenu::Shutdown();
+		for (int i = 1; i < LevelManager::GetLayerCount(); i++) LevelManager::UnloadLayer(i);
+	}
 }
 
-void Button::QuitEffect(Button &button, float dt)
+void Button::QuitEffect(Button &button, float dt, int count, ...)
 {
 	//LevelManager::GetInstance().Quit();
 	Engine::GetInstance().Quit();
+}
+
+void Button::CreateJaxiumMineEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	Vector2D mapPos = va_arg(args, Vector2D);
+	Vector2D screenPos = va_arg(args, Vector2D);
+	va_end(args);
+
+	BuildingJaxiumMine *mine;
+
+	try {
+		mine = new BuildingJaxiumMine(side, mapPos);
+	}
+	catch (int) {
+		return;
+	}
+
+	GameObject *mineObj = new GameObject("Jaxium Mine");
+	Transform* transform = new Transform(screenPos.x, screenPos.y);
+	transform->SetScale({ 100, 100 });
+	mineObj->AddComponent(transform);
+
+	Sprite *sprite = new Sprite();
+	mine->texture = AEGfxTextureLoad("Data\\Assets\\Isometric Jaxium Mine Team 1.png");
+	SpriteSource* spriteSource = new SpriteSource(1, 1, mine->texture);
+	sprite->SetSpriteSource(spriteSource);
+	mine->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
+	sprite->SetMesh(mine->mesh);
+
+	mineObj->AddComponent(sprite);
+	mineObj->AddComponent(mine);
+
+	LevelManager::GetLayer(0)->GetObjectManager()->Add(*mineObj);
+}
+
+void Button::CreateNeoridiumMineEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	Vector2D mapPos = va_arg(args, Vector2D);
+	Vector2D screenPos = va_arg(args, Vector2D);
+	va_end(args);
+
+	BuildingNeoridiumMine *mine;
+
+	try {
+		mine = new BuildingNeoridiumMine(side, mapPos);
+	}
+	catch (int) {
+		return;
+	}
+
+	GameObject *mineObj = new GameObject("Neoridium Mine");
+	Transform* transform = new Transform(screenPos.x, screenPos.y);
+	transform->SetScale({ 100, 100 });
+	mineObj->AddComponent(transform);
+
+	Sprite *sprite = new Sprite();
+	mine->texture = AEGfxTextureLoad("");
+	SpriteSource* spriteSource = new SpriteSource(1, 1, mine->texture);
+	sprite->SetSpriteSource(spriteSource);
+	mine->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
+	sprite->SetMesh(mine->mesh);
+
+	mineObj->AddComponent(sprite);
+	mineObj->AddComponent(mine);
+
+	LevelManager::GetLayer(0)->GetObjectManager()->Add(*mineObj);
+}
+
+void Button::CreateResearchCenterEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	Vector2D mapPos = va_arg(args, Vector2D);
+	Vector2D screenPos = va_arg(args, Vector2D);
+	va_end(args);
+
+	BuildingResearchCenter *researchCenter;
+
+	try {
+		researchCenter = new BuildingResearchCenter(side, mapPos);
+	}
+	catch (int) {
+		return;
+	}
+
+	GameObject *researchCenterObj = new GameObject("Neoridium Mine");
+	Transform* transform = new Transform(screenPos.x, screenPos.y);
+	transform->SetScale({ 100, 100 });
+	researchCenterObj->AddComponent(transform);
+
+	Sprite *sprite = new Sprite();
+	researchCenter->texture = AEGfxTextureLoad("");
+	SpriteSource* spriteSource = new SpriteSource(1, 1, researchCenter->texture);
+	sprite->SetSpriteSource(spriteSource);
+	researchCenter->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
+	sprite->SetMesh(researchCenter->mesh);
+
+	researchCenterObj->AddComponent(sprite);
+	researchCenterObj->AddComponent(researchCenter);
+
+	LevelManager::GetLayer(0)->GetObjectManager()->Add(*researchCenterObj);
+}
+
+void Button::ResearchSpaceportEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	va_end(args);
+
+	BuildingResearchCenter::Unlock(side, Building::BuildingType::Spaceport);
+}
+
+void Button::ResearchVehicleDepotEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	va_end(args);
+
+	BuildingResearchCenter::Unlock(side, Building::BuildingType::VehicleDepot);
+}
+
+void Button::ResearchTurretEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	va_end(args);
+
+	BuildingResearchCenter::Unlock(side, Building::BuildingType::Turret);
+}
+
+void Button::ResearchTeleporterEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	va_end(args);
+
+	BuildingResearchCenter::Unlock(side, Building::BuildingType::Teleporter);
 }
 
 void Button::ListEffects()
 {
 	AddClickEffect("Restart", RestartEffect);
 	AddClickEffect("Quit", QuitEffect);
+	
+	//Create Building Effects
+	AddClickEffect("CreateJaxiumMine", CreateJaxiumMineEffect, Building::BuildingType::JaxiumMine);
+	AddClickEffect("CreateNeoridiumMine", CreateNeoridiumMineEffect, Building::BuildingType::NeoridiumMine);
+	AddClickEffect("CreateResearchCenter", CreateResearchCenterEffect, Building::BuildingType::ResearchCenter);
+	///TODO: Implement Click Effects for the remaining buildings.
+
+	//Create Research Unlock Effects
+	AddClickEffect("ResearchSpaceport", ResearchSpaceportEffect, Building::BuildingType::Spaceport, BuildingResearchCenter::Research::Spaceport);
+	AddClickEffect("ResearchVehicleDepot", ResearchVehicleDepotEffect, Building::BuildingType::VehicleDepot, BuildingResearchCenter::Research::VehicleDepot);
+	AddClickEffect("ResearchTurret", ResearchTurretEffect, Building::BuildingType::Turret, BuildingResearchCenter::Research::Turret);
+	AddClickEffect("ResearchTeleporter", ResearchTeleporterEffect, Building::BuildingType::Teleporter, BuildingResearchCenter::Research::Teleporter);
 	ButtonEffects::List();
 }
 
@@ -152,12 +347,14 @@ void Button::Shutdown() {
 	textures.clear();
 }
 
-void Button::AddClickEffect(const char * name, void(*effectFunc)(Button&,float))
+void Button::AddClickEffect(const char * name, void(*effectFunc)(Button&,float, int, ...), Building::BuildingType type, BuildingResearchCenter::Research search)
 {
 	clickEffects[name] = effectFunc;
+	buildingType[name] = type;
+	researchType[name] = search;
 }
 
-void(*Button::GetClickEffect(const char * name))(Button&,float)
+void(*Button::GetClickEffect(const char * name))(Button&,float, int, ...)
 {
 	return clickEffects.count(name) > 0 ? clickEffects.at(name) : nullptr;
 }

@@ -226,7 +226,7 @@ void BehaviorUnit::OnEnter()
 			}
 		}
 		if (BehaviorArmy::costType == 0) {
-			if (!(unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 15 + 0.5f)))) {
+			if (!(unitData.army->TakeFromFunds((float)unitData.GetCost() / 15.f))) {
 				SetCurrentState(cUnitWaiting);
 				SetNextState(cUnitWaiting);
 			}
@@ -307,7 +307,7 @@ void BehaviorUnit::OnUpdate(float dt)
 		if (target) {
 			if (!(target->GetParent()->IsDestroyed()) && IsAdjacent(target)) {
 				if (attackTimer <= 0) {
-					if (unitData.army->costType != 0 || unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 10 + 0.5f))) {
+					if (unitData.army->costType != 0 || unitData.army->TakeFromFunds((float)unitData.GetCost() / 10.f)) {
 						//Trace::GetInstance().GetStream() << "Attack!" << std::endl;
 						abilityAnimation->PlaySequence(&abilityAnimSequence);
 						target->hp -= (float)(unitData.damage) / 4;
@@ -323,7 +323,7 @@ void BehaviorUnit::OnUpdate(float dt)
 		} else {
 			if (BehaviorArmy::costType == 0) {
 				if (payTimer <= 0) {
-					if (!(unitData.army->TakeFromFunds((unsigned)(unitData.GetCost() / 20 + 0.5f))))
+					if (!(unitData.army->TakeFromFunds((float)unitData.GetCost() / 20.f)))
 						GetParent()->Destroy();
 					payTimer = payCooldown;
 				} else payTimer -= dt;

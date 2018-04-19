@@ -61,6 +61,9 @@
     <Filter Include="Game\Armies">
       <UniqueIdentifier>{41f3a029-25d6-4467-a574-2b89e9253d1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameObjects\Buildings">
+      <UniqueIdentifier>{a07c1ffc-9750-4c03-baba-0ba84c23acab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -173,11 +176,26 @@
     <ClCompile Include="Source\ControlList.cpp">
       <Filter>Engine\Control</Filter>
     </ClCompile>
+    <ClCompile Include="Source\PopupMenu.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Building.cpp">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BuildingJaxiumMine.cpp">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Cursor.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="Source\ComponentStub.cpp">
       <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BuildingNeoridiumMine.cpp">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BuildingResearchCenter.cpp">
+      <Filter>Engine\GameObjects\Buildings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -381,6 +399,15 @@
     <ClInclude Include="Source\ControlList.h">
       <Filter>Engine\Control</Filter>
     </ClInclude>
+    <ClInclude Include="Source\PopupMenu.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Building.h">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingJaxiumMine.h">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Cursor.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
@@ -389,6 +416,12 @@
     </ClInclude>
     <ClInclude Include="Source\Controls.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingNeoridiumMine.h">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingResearchCenter.h">
+      <Filter>Engine\GameObjects\Buildings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

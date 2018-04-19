@@ -145,12 +145,12 @@ void BehaviorArmy::DescreaseUnits()
 	numUnits--;
 }
 
-unsigned BehaviorArmy::GetFunds()
+float BehaviorArmy::GetFunds()
 {
 	return funds.amount;
 }
 
-bool BehaviorArmy::TakeFromFunds(unsigned amount)
+bool BehaviorArmy::TakeFromFunds(float amount)
 {
 	if (funds.amount >= amount) {
 		funds.amount -= amount;
@@ -161,7 +161,7 @@ bool BehaviorArmy::TakeFromFunds(unsigned amount)
 	}
 }
 
-void BehaviorArmy::AddToFunds(unsigned amount)
+void BehaviorArmy::AddToFunds(float amount)
 {
 	funds.amount += amount;
 	UpdateFundsText();
@@ -406,10 +406,10 @@ void BehaviorArmy::OnUpdate(float dt)
 						curspos = tilemap->GetPosOnScreen(edit.pos);
 					}
 					if (controls.gamepad->GetButtonTriggered(controls.list["Command.Recycle"])) {
-						AddToFunds(edit.unit->GetRecycleReturns());
+						AddToFunds((float)edit.unit->GetRecycleReturns());
 						edit.unit->GetParent()->Destroy();
 						for (BehaviorUnit *bu : edit.extra.units) {
-							AddToFunds(bu->GetRecycleReturns());
+							AddToFunds((float)bu->GetRecycleReturns());
 							bu->GetParent()->Destroy();
 						}
 						if (!edit.extra.units.empty())
@@ -572,7 +572,7 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 		funds.dispObjName = "";
 	}
 	if (obj.HasMember("StartFunds") && obj["StartFunds"].IsUint()) {
-		funds.startAmount = obj["StartFunds"].GetUint();
+		funds.startAmount = obj["StartFunds"].GetFloat();
 	} else {
 		funds.startAmount = 0;
 	}
@@ -827,7 +827,7 @@ BehaviorArmy::UnitData BehaviorArmy::GetUnitData(const char * name_) const
 void BehaviorArmy::UpdateFundsText()
 {
 	if (funds.text) {
-		funds.text->SetText(std::to_string(funds.amount).c_str());
+		funds.text->SetText(std::to_string((unsigned)funds.amount).c_str());
 	}
 }
 

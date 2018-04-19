@@ -1,0 +1,181 @@
+[
+  {
+    "Name": "Background",
+    "Transform": {
+      "Translation": [ 0, -200 ],
+      "Scale": [ 700, 150 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "Mesh": {
+        "Name": "BackgroundMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 0.5,
+      "ModulateColor": [ 0.4, 0.4, 0.4, 1 ]
+    }
+  },
+  {
+    "Name": "Cursor",
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 128, 128 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": "CursorSpriteSource",
+      "Mesh": {
+		"Name": "CursorMesh",
+		"HalfSize": [ 0.5, 0.5 ],
+		"UV": [ 1, 1 ]
+	  },
+      "Alpha": 1.0,
+      "ModulateColor": [ 1, 0, 0, 1 ]
+    }
+  },
+  {
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ -235, -165 ],
+      "Scale": [ 200, 50 ],
+      "Rotation": 0
+    },
+    "Button": {
+      "ClickEffect": "ResearchSpaceport"
+    },
+    "Sprite": {
+      "Mesh": {
+        "Name": "ButtonMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Data\\Assets\\Comic Sans.png",
+        "Cols": 16,
+        "Rows": 6
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.0625, 0.1666666666667 ]
+      },
+      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "Text": "Research Spaceport",
+      "Scale": [ 18, 23 ]
+    }
+  },
+  {
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ 0, -165 ],
+      "Scale": [ 200, 50 ],
+      "Rotation": 0
+    },
+    "Button": {
+      "ClickEffect": "ResearchVehicleDepot"
+    },
+    "Sprite": {
+      "Mesh": {
+        "Name": "ButtonMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Data\\Assets\\Comic Sans.png",
+        "Cols": 16,
+        "Rows": 6
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.0625, 0.1666666666667 ]
+      },
+      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "Text": "Research Vehicle Depot",
+      "Scale": [ 15, 20 ]
+    }
+  },
+  {
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ 235, -165 ],
+      "Scale": [ 200, 50 ],
+      "Rotation": 0
+    },
+    "Button": {
+      "ClickEffect": "ResearchTurret"
+    },
+    "Sprite": {
+      "Mesh": {
+        "Name": "ButtonMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Data\\Assets\\Comic Sans.png",
+        "Cols": 16,
+        "Rows": 6
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.0625, 0.1666666666667 ]
+      },
+      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "Text": "Research Turret",
+      "Scale": [ 20, 25 ]
+    }
+  },
+  {
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ -235, -235 ],
+      "Scale": [ 200, 50 ],
+      "Rotation": 0
+    },
+    "Button": {
+      "ClickEffect": "ResearchTeleporter"
+    },
+    "Sprite": {
+      "Mesh": {
+        "Name": "ButtonMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Data\\Assets\\Comic Sans.png",
+        "Cols": 16,
+        "Rows": 6
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.0625, 0.1666666666667 ]
+      },
+      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "Text": "Research Teleporter",
+      "Scale": [ 17, 22 ]
+    }
+  }
+]

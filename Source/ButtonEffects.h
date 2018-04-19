@@ -8,5 +8,5 @@ public:
 
 private:
 	// Define game-side button effects here
-	static void KillAllUnits(Button &button, float dt);
+	static void KillAllUnits(Button &button, float dt, int count = 0, ...);
 };

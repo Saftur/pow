@@ -46,6 +46,7 @@ public:
 	static void UnloadLayer(unsigned layer);
 	static LevelManager* GetLoadingLevel();
 	static LevelManager* GetLayer(unsigned num);
+	static int GetLayerCount();
 	static void ShutdownLayers();
 
 	void AddMesh(const char* name, AEGfxVertexList* mesh);
@@ -98,4 +99,5 @@ private:
 	//static LevelManager *instance;
 	//static vector<LevelManager*> instances;
 	static LevelManager *layers[MAX_LAYERS];
+	static int numLayers;
 };
