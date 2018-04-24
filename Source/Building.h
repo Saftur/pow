@@ -69,6 +69,8 @@ private:
 	static map<BehaviorArmy::Side, bool[BuildingCount]> buildings; //Map of boolean arrays each belonging to an army.
 
 	float buildTimeRemaining; //How long until the building will be finnished creating.
+
+	Vector2D originalScale; //The original scale of the building, used to play a temporary building "animation".
 };
 
 //------------------------------------------------------------------------------
