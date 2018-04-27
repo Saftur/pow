@@ -8,7 +8,7 @@ map<BehaviorArmy::Side, map<BuildingResearchCenter::Research, bool>> BuildingRes
 
 map<BuildingResearchCenter::Research, float> BuildingResearchCenter::researchCost;
 
-BuildingResearchCenter::BuildingResearchCenter(BehaviorArmy::Side side, Vector2D pos) : Building(side, ResearchCenter, Basic, 20.0f, 250.0f, Jaxium, pos)
+BuildingResearchCenter::BuildingResearchCenter(BehaviorArmy::Side side, Vector2D pos) : Building(side, ResearchCenter, Basic, 20.0f, 1000.0f, pos)
 {
 	if (!IsUnlocked(side, NeoridiumMine)) Unlock(side, NeoridiumMine);
 }
@@ -22,9 +22,9 @@ void BuildingResearchCenter::BuildingUpdate(float dt)
 {
 }
 
-void BuildingResearchCenter::OpenResearchMenu(PopupMenu::MenuType type, Vector2D cursorMapPos, Vector2D cursorScreenPos)
+void BuildingResearchCenter::OpenResearchMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos)
 {
-	PopupMenu::CreateMenu(side, type, cursorMapPos, cursorScreenPos);
+	PopupMenu::CreateMenu(side, PopupMenu::MenuType::Research, cursorMapPos, cursorScreenPos);
 }
 
 void BuildingResearchCenter::Unlock(BehaviorArmy::Side side, Building::BuildingType type)

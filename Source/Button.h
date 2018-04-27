@@ -141,6 +141,12 @@ private:
 	static void ResearchVehicleDepotEffect(Button &button, float dt, int count = 0, ...);
 	static void ResearchTurretEffect(Button &button, float dt, int count = 0, ...);
 	static void ResearchTeleporterEffect(Button &button, float dt, int count = 0, ...);
+	
+	//Create Unit Buttons
+	static void CreateUnit1Effect(Button &button, float dt, int count = 0, ...);
+	static void CreateUnit2Effect(Button &button, float dt, int count = 0, ...);
+	static void CreateUnit3Effect(Button &button, float dt, int count = 0, ...);
+	static void CreateUnit4Effect(Button &button, float dt, int count = 0, ...);
 
 	static vector<AEGfxTexture*> textures;
 };

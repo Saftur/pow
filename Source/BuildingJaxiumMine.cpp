@@ -3,7 +3,7 @@
 #include "GameObjectManager.h"
 #include "LevelManager.h"
 
-BuildingJaxiumMine::BuildingJaxiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, JaxiumMine, Basic, 10.0f, 100.0f, Jaxium, pos)
+BuildingJaxiumMine::BuildingJaxiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, JaxiumMine, Basic, 3.5f, 1000.0f, pos)
 {
 }
 
@@ -13,5 +13,6 @@ Component * BuildingJaxiumMine::Clone() const
 }
 
 void BuildingJaxiumMine::BuildingUpdate(float dt){
+	///TODO: Drop some money instead of simply adding it to the balance.
 	army->AddToFunds(fundsPerSecond * dt);
 }

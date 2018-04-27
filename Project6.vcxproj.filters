@@ -197,6 +197,9 @@
     <ClCompile Include="Source\BuildingResearchCenter.cpp">
       <Filter>Engine\GameObjects\Buildings</Filter>
     </ClCompile>
+    <ClCompile Include="Source\BuildingCommandPost.cpp">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h">
@@ -421,6 +424,9 @@
       <Filter>Engine\GameObjects\Buildings</Filter>
     </ClInclude>
     <ClInclude Include="Source\BuildingResearchCenter.h">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingCommandPost.h">
       <Filter>Engine\GameObjects\Buildings</Filter>
     </ClInclude>
   </ItemGroup>

@@ -32,7 +32,7 @@ typedef class Sprite Sprite;
 class PopupMenu
 {
 public:
-	enum MenuType { Building, Unit, Research };
+	enum MenuType { Building, Unit, Research, CommandPost };
 
 	static void CreateMenu(BehaviorArmy::Side side, MenuType type, Vector2D cursorMapPos, Vector2D cursorScreenPos); //Create a menu for the given army.
 	static void DestroyMenu(BehaviorArmy::Side side); //Destroy a menu for the given army.
@@ -49,6 +49,7 @@ private:
 
 	MenuType type; //The type of menu that this is.
 	BehaviorArmy::Side side; //The army that this menu belongs to.
+	BehaviorArmy* army; //The army that this menu belongs to.
 	int menuLevelLayer = -1; //The layer that the menu has been loaded onto.
 	int selectedButton = 0; //Which button is selected on this menu.
 

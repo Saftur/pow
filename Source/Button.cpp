@@ -146,7 +146,8 @@ void Button::ForceClick(Button& button, float dt, unsigned count, ...) {
 			BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
 			Vector2D mapPos = va_arg(args, Vector2D);
 			Vector2D screenPos = va_arg(args, Vector2D);
-			if (button.ClickEffect) button.ClickEffect(button, dt, count, side, mapPos, screenPos);
+			BehaviorArmy *army = va_arg(args, BehaviorArmy*);
+			if (button.ClickEffect) button.ClickEffect(button, dt, count, side, mapPos, screenPos, army);
 			va_end(args);
 		}
 		else if (button.ClickEffect) button.ClickEffect(button, dt, 0);
@@ -323,6 +324,67 @@ void Button::ResearchTeleporterEffect(Button & button, float dt, int count, ...)
 	BuildingResearchCenter::Unlock(side, Building::BuildingType::Teleporter);
 }
 
+///TODO: Change so that they create the unit at the nearest available position to the command post. (This should still be the cursor position).
+void Button::CreateUnit1Effect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	Vector2D mapPos = va_arg(args, Vector2D);
+	Vector2D screenPos = va_arg(args, Vector2D);
+	BehaviorArmy *army = va_arg(args, BehaviorArmy*);
+	va_end(args);
+
+	UNREFERENCED_PARAMETER(side);
+	UNREFERENCED_PARAMETER(screenPos);
+	army->CreateUnit("Unit1", mapPos, vector<Vector2D>());
+}
+
+void Button::CreateUnit2Effect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	Vector2D mapPos = va_arg(args, Vector2D);
+	Vector2D screenPos = va_arg(args, Vector2D);
+	BehaviorArmy *army = va_arg(args, BehaviorArmy*);
+	va_end(args);
+
+	UNREFERENCED_PARAMETER(side);
+	UNREFERENCED_PARAMETER(screenPos);
+	army->CreateUnit("Unit2", mapPos, vector<Vector2D>());
+}
+
+void Button::CreateUnit3Effect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	Vector2D mapPos = va_arg(args, Vector2D);
+	Vector2D screenPos = va_arg(args, Vector2D);
+	BehaviorArmy *army = va_arg(args, BehaviorArmy*);
+	va_end(args);
+
+	UNREFERENCED_PARAMETER(side);
+	UNREFERENCED_PARAMETER(screenPos);
+	army->CreateUnit("Unit3", mapPos, vector<Vector2D>());
+}
+
+void Button::CreateUnit4Effect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	Vector2D mapPos = va_arg(args, Vector2D);
+	Vector2D screenPos = va_arg(args, Vector2D);
+	BehaviorArmy *army = va_arg(args, BehaviorArmy*);
+	va_end(args);
+
+	UNREFERENCED_PARAMETER(side);
+	UNREFERENCED_PARAMETER(screenPos);
+	army->CreateUnit("Unit4", mapPos, vector<Vector2D>());
+}
+
 void Button::ListEffects()
 {
 	AddClickEffect("Restart", RestartEffect);
@@ -339,6 +401,12 @@ void Button::ListEffects()
 	AddClickEffect("ResearchVehicleDepot", ResearchVehicleDepotEffect, Building::BuildingType::VehicleDepot, BuildingResearchCenter::Research::VehicleDepot);
 	AddClickEffect("ResearchTurret", ResearchTurretEffect, Building::BuildingType::Turret, BuildingResearchCenter::Research::Turret);
 	AddClickEffect("ResearchTeleporter", ResearchTeleporterEffect, Building::BuildingType::Teleporter, BuildingResearchCenter::Research::Teleporter);
+
+	//Create Unit Effects
+	AddClickEffect("CreateUnit1", CreateUnit1Effect);
+	AddClickEffect("CreateUnit2", CreateUnit2Effect);
+	AddClickEffect("CreateUnit3", CreateUnit3Effect);
+	AddClickEffect("CreateUnit4", CreateUnit4Effect);
 	ButtonEffects::List();
 }
 

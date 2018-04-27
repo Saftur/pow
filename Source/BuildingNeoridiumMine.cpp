@@ -5,7 +5,7 @@
 
 std::map<BehaviorArmy::Side, float> BuildingNeoridiumMine::neoridium;
 
-BuildingNeoridiumMine::BuildingNeoridiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, NeoridiumMine, Advanced, 15.0f, 200.0f, Jaxium, pos)
+BuildingNeoridiumMine::BuildingNeoridiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, NeoridiumMine, Advanced, 15.0f, 1000.0f, pos)
 {
 }
 

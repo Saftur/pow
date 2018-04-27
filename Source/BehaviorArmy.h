@@ -122,6 +122,13 @@ public:
 	//  Whether or not it's legal
 	bool LegalSpawn(Vector2D pos);
 
+	// Create a unit
+	// Params:
+	//  unitName = Name of unit to spawn
+	//  startPos = Start position of unit
+	//  path     = Starting path
+	void CreateUnit(const char *unitName, Vector2D startPos, vector<Vector2D> path);
+
 private:
 	// Clone an advanced behavior and return a pointer to the cloned object.
 	// Params:
@@ -150,12 +157,6 @@ private:
 
 	void Load(rapidjson::Value& obj);
 
-	// Create a unit
-	// Params:
-	//  unitName = Name of unit to spawn
-	//  startPos = Start position of unit
-	//  path     = Starting path
-	void CreateUnit(const char *unitName, Vector2D startPos, vector<Vector2D> path);
 	// Is position behind army's front line
 	// Params:
 	//  pos = Position to check
