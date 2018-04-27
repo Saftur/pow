@@ -31,29 +31,6 @@
     }
   },
   {
-    "Name": "KillAllButton",
-    "Transform": {
-      "Translation": [ 0, 260 ],
-      "Scale": [ 100, 50 ],
-      "Rotation": 0
-    },
-    "Button": {
-      "ClickEffect": "KillAllUnits"
-    },
-    "Sprite": {
-      "Mesh": "ButtonMesh",
-      "Alpha": 1,
-      "ModulateColor": [ 0, 1, 0, 1 ]
-    },
-    "Text": {
-      "SpriteSource": "Font",
-      "Mesh": "TextMesh",
-      "ModulateColor": [ 1, 0, 0, 1 ],
-      "Text": "Kill All",
-      "Scale": [ 20, 30 ]
-    }
-  },
-  {
     "Name": "UnitArchetype",
     "Archetype": true,
     "Transform": {
