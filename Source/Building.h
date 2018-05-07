@@ -40,12 +40,15 @@ public:
 	enum SpecialtyType { Basic, Advanced, Special };
 	enum CostType { Jaxium, Neoridium };
 
-	Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, float maxHealth, Vector2D pos);
+	Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, float maxHealth, Vector2D pos, float jaxiumDropAmount, float neoridiumDropAmount);
 	~Building();
 
 	virtual Component* Clone() const = 0;
 
 	static void InitializeBuildings(BehaviorArmy::Side side); //Initialize the buildings for the given army.
+
+	void Update(float dt); //Update the generic building.
+	virtual void BuildingUpdate(float dt) = 0; //Run the specific update on the building.
 
 	static void Lock(BehaviorArmy::Side side, BuildingType type); //Lock the given building for the given army.
 	static void Unlock(BehaviorArmy::Side side, BuildingType type); //Unlock the given building for the given army.
@@ -68,9 +71,6 @@ public:
 	AEGfxVertexList *mesh = nullptr; //Mesh for this building.
 	AEGfxTexture *texture = nullptr; //Texture for this building.
 
-	void Update(float dt); //Update the generic building.
-	virtual void BuildingUpdate(float dt) = 0; //Run the specific update on the building.
-
 private:
 	static map<BehaviorArmy::Side, bool[BuildingCount]> buildings; //Map of boolean arrays each belonging to an army.
 
@@ -80,6 +80,9 @@ private:
 
 	float maxHealth; //The maximum health of the building.
 	float health; //The health of the building.
+
+	float jaxiumDropAmount; //The amount of Jaxium to drop on death.
+	float neoridiumDropAmount; //The amount of Neoridium to drop on death.
 };
 
 //------------------------------------------------------------------------------

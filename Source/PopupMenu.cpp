@@ -28,6 +28,8 @@
 #include "Button.h"
 #include "BehaviorArmy.h"
 #include "Building.h"
+#include "BuildingNeoridiumMine.h"
+#include "BuildingResearchCenter.h"
 
 vector<PopupMenu*> PopupMenu::menus;
 
@@ -177,7 +179,7 @@ void PopupMenu::ConfigureMenu(BehaviorArmy::Side side, PopupMenu* menu) {
 
 				//If this button researches something, check if we can unlock it.
 				if (researchType != BuildingResearchCenter::Research::Null) {
-					if (Building::IsUnlocked(side, buildingType) || menu->army->GetFunds() < BuildingResearchCenter::GetCost(researchType)) button->active = false;
+					if (Building::IsUnlocked(side, buildingType) || BuildingNeoridiumMine::neoridium[side] < BuildingResearchCenter::GetCost(researchType)) button->active = false;
 				}
 			}
 			return false;

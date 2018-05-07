@@ -13,8 +13,9 @@ map<BehaviorArmy::Side, bool[Building::BuildingType::BuildingCount]> Building::b
 
 map<Building::BuildingType, float> Building::buildingCost;
 
-Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, float maxHealth, Vector2D pos) 
-	: Component("Building"), buildingType(type), specialtyType(specialtyType), buildTime(buildTime), side(side), maxHealth(maxHealth), health(maxHealth)
+Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, float maxHealth, Vector2D pos, float jaxiumDropAmount, 
+	float neoridiumDropAmount) : Component("Building"), buildingType(type), specialtyType(specialtyType), buildTime(buildTime), side(side), maxHealth(maxHealth),
+	health(maxHealth), jaxiumDropAmount(jaxiumDropAmount), neoridiumDropAmount(neoridiumDropAmount)
 {
 	//Find the army that this building should belong to.
 	vector<GameObject*> objs = LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsByName("Army");
@@ -49,7 +50,7 @@ void Building::InitializeBuildings(BehaviorArmy::Side side)
 	BuildingNeoridiumMine::neoridium[side] = 0.0f; //Intitialize the amount of Neoridium each player has to 0.
 
 	//Inititialize the cost of buildings.
-	buildingCost[JaxiumMine] = 100.0f;
+	buildingCost[JaxiumMine] = 250.0f;
 	buildingCost[NeoridiumMine] = 200.0f;
 	buildingCost[ResearchCenter] = 250.0f;
 	buildingCost[Spaceport] = 350.0f;

@@ -3,7 +3,7 @@
 #include "GameObjectManager.h"
 #include "LevelManager.h"
 
-BuildingJaxiumMine::BuildingJaxiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, JaxiumMine, Basic, 3.5f, 1000.0f, pos)
+BuildingJaxiumMine::BuildingJaxiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, JaxiumMine, Basic, 3.5f, 1000.0f, pos, 50, 0)
 {
 }
 

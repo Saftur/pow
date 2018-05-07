@@ -272,7 +272,7 @@ void Button::CreateResearchCenterEffect(Button & button, float dt, int count, ..
 	researchCenterObj->AddComponent(transform);
 
 	Sprite *sprite = new Sprite();
-	researchCenter->texture = AEGfxTextureLoad("");
+	researchCenter->texture = AEGfxTextureLoad("Data\\Assets\\Research Center.png");
 	SpriteSource* spriteSource = new SpriteSource(1, 1, researchCenter->texture);
 	sprite->SetSpriteSource(spriteSource);
 	researchCenter->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);

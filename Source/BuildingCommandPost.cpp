@@ -4,7 +4,7 @@
 #include "LevelManager.h"
 #include "BuildingNeoridiumMine.h"
 
-BuildingCommandPost::BuildingCommandPost(BehaviorArmy::Side side, Vector2D pos) : Building(side, CommandPost, Basic, 20.0f, 1000.0f, pos)
+BuildingCommandPost::BuildingCommandPost(BehaviorArmy::Side side, Vector2D pos) : Building(side, CommandPost, Basic, 20.0f, 1000.0f, pos, 50, 0)
 {
 
 }

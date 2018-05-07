@@ -292,12 +292,26 @@ void BehaviorArmy::OnUpdate(float dt)
 			}
 		}
 
+		///TODO: Remove after demo.
+		bool createUnitMenu = controls.gamepad->GetButtonTriggered(controls.list["CamUp"]);
+		bool researchMenu = controls.gamepad->GetButtonTriggered(controls.list["CamDown"]);
+		if (createUnitMenu && !PopupMenu::Exists(side)) PopupMenu::CreateMenu(side, PopupMenu::MenuType::CommandPost, 
+			tilemap->GetPosOnMap(curspos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos)));
+		else if (createUnitMenu && PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side); 
+		if (researchMenu && !PopupMenu::Exists(side)) PopupMenu::CreateMenu(side, PopupMenu::MenuType::Research, 
+			tilemap->GetPosOnMap(curspos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos)));
+		else if (researchMenu && PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side); 
+
+
 		//Control whether there is a menu open or not.
-		bool popupMenu = controls.gamepad->GetButtonTriggered(controls.list["Normal.BuildingMenu"]);
-		if (cursor.objName == "Cursor2") popupMenu = AEInputCheckTriggered('M'); ///TODO: Remove when controllers are available.
+		bool buildingMenu = controls.gamepad->GetButtonTriggered(controls.list["Normal.BuildingMenu"]);
+		if (cursor.objName == "Cursor2") buildingMenu = AEInputCheckTriggered('M'); ///TODO: Remove when controllers are available.
+
 		//If we are hitting the key to open a menu, and one isn't already open, open a building menu.
-		if (popupMenu && !PopupMenu::Exists(side)) PopupMenu::CreateMenu(side, PopupMenu::MenuType::Building, tilemap->GetPosOnMap(curspos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos)));
-		else if (popupMenu && PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side); //If we hit the building menu button and the menu is open, destroy it.
+		if (buildingMenu && !PopupMenu::Exists(side)) PopupMenu::CreateMenu(side, PopupMenu::MenuType::Building, 
+			tilemap->GetPosOnMap(curspos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos)));
+		else if (buildingMenu && PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side); //If we hit the building menu button and the menu is open, destroy it.
+
 		if (PopupMenu::Exists(side)) PopupMenu::Update(side, *controls.gamepad, controls.list, dt); //If a menu exists, update it.
 		else {
 			if (inEditMode) {
