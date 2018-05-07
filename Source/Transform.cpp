@@ -5,6 +5,9 @@ Vector2D Transform::camTranslation = { 0, 0 };
 Vector2D Transform::camScale = { 1, 1 };
 bool Transform::camIsDirty = false;
 
+Transform::Transform() : Transform(0.f, 0.f) {
+}
+
 Transform::Transform(float x, float y) :
 		Component("Transform"), translation(x, y), rotation(0), scale(1, 1), isDirty(true), followCamera(true)
 {

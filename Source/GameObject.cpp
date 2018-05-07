@@ -99,6 +99,12 @@ bool GameObject::CheckDestroyNow()
 	return destroyNext;
 }
 
+void GameObject::PostLoadInit() {
+	for (unsigned i = 0; i < numComponents; i++) {
+		components[i]->PostLoadInit();
+	}
+}
+
 void GameObject::Update(float dt)
 {
 	Trace::GetInstance().GetStream() << "GameObject " << name << ": Update" << std::endl;

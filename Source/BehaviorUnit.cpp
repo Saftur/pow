@@ -15,6 +15,7 @@
 
 #include "stdafx.h"
 #include "Random.h"
+#include <algorithm>
 #include "AEEngine.h"
 #include "Teleporter.h"
 #include "BehaviorUnit.h"
@@ -31,7 +32,7 @@
 // Public Consts:
 //------------------------------------------------------------------------------
 
-std::vector<GameObject*> units;
+vector<GameObject*> BehaviorUnit::allUnits;
 
 //------------------------------------------------------------------------------
 // Public Structures:
@@ -47,6 +48,14 @@ BehaviorUnit::BaseStats BehaviorUnit::defaultStats =
 1.0f		// Movement speed.
 };
 
+BehaviorUnit::Weapon BehaviorUnit::Weapons[cNumWeapons];
+BehaviorUnit::Equipment BehaviorUnit::Equips[cNumEquips];
+
+
+Grid::Node BehaviorUnit::GetNextPos()
+{
+	return gridPos;
+}
 //------------------------------------------------------------------------------
 // Public Functions:
 //------------------------------------------------------------------------------
@@ -54,52 +63,55 @@ BehaviorUnit::BaseStats BehaviorUnit::defaultStats =
 // Allocate a new (Unit) behavior component.
 // Params:
 //  parent = The object that owns this behavior.
-BehaviorUnit::BehaviorUnit(int strength, int agility, int defense, Ability ability, WeaponType weapon, EquipmentType item1, EquipmentType item2) :
+BehaviorUnit::BehaviorUnit() :
 	Behavior("BehaviorUnit")
 {
 	SetCurrentState(cBehaviorInvalid);
 	SetNextState(cUnitIdle);
+}
+
+void BehaviorUnit::Init(BehaviorUnit::Traits theTraits, BehaviorArmy* theArmy)
+{
+	army = theArmy;
 
 	// Build the static arrays if they haven't already been built.
 	BuildArrays();
 
 	// Initialize this unit's traits.
-	traits.ability = ability;
-	traits.strength = strength;
-	traits.agility = agility;
-	traits.defense = defense;
-	traits.weapon = Weapons[weapon];
-	traits.item1 = Equips[item1];
-	traits.item2 = Equips[item2];
-}
+	traits = theTraits;
 
-void BehaviorUnit::CalculateStats()
-{
-	stats.attackRange = traits.weapon.range;
-	stats.maxHP = defaultStats.maxHP + 0.05f * traits.strength + 0.15f * traits.defense;
+	stats.attackRange = Weapons[traits.weapon].range;
+	stats.maxHP = (int)(defaultStats.maxHP + 0.05f * traits.strength + 0.15f * traits.defense);
 	stats.currHP = stats.maxHP;
-	stats.inventorySize = defaultStats.inventorySize + 0.5f * traits.strength + 0.5f * traits.agility;
+	stats.inventorySize = (int)(defaultStats.inventorySize + 0.5f * traits.strength + 0.5f * traits.agility);
 	stats.detectRange = defaultStats.detectRange;
-	stats.defense = defaultStats.defense + 0.05f * traits.defense;
+	stats.defense = (int)(defaultStats.defense + 0.05f * traits.defense);
 
 	// If there's armor, apply an HP boost. If there's an empty slot, give an inventory size boost.
-	if (traits.item1.name == Equips[cEquipArmor].name)
+	if (Equips[traits.item1].name == Equips[cEquipArmor].name)
 	{
 		stats.currHP += 50;
 	}
-	else if (traits.item1.name == Equips[cEquipNone].name)
+	else if (Equips[traits.item1].name == Equips[cEquipNone].name)
 	{
 		stats.inventorySize += 2;
 	}
 
-	if (traits.item2.name == Equips[cEquipArmor].name)
+	if (Equips[traits.item2].name == Equips[cEquipArmor].name)
 	{
 		stats.currHP += 50;
 	}
-	else if (traits.item2.name == Equips[cEquipNone].name)
+	else if (Equips[traits.item2].name == Equips[cEquipNone].name)
 	{
 		stats.inventorySize += 2;
 	}
+
+	
+}
+
+void BehaviorUnit::SetPath(std::vector<Grid::Node> newPath)
+{
+	path = newPath;
 }
 
 void BehaviorUnit::BuildArrays()
@@ -137,10 +149,12 @@ Component* BehaviorUnit::Clone() const
 //	 behavior = Pointer to the behavior component.
 void BehaviorUnit::OnEnter()
 {
+	gridPos = Grid::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation());
+	Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = false;
 	switch (GetCurrentState())
 	{
 	case cUnitIdle:
-		CalculateStats();
+		allUnits.push_back(GetParent());
 		break;
 	case cUnitMove:
 		break;
@@ -186,8 +200,8 @@ void BehaviorUnit::OnUpdate(float dt)
 		// Do we need to do pathfinding?
 		if (path.empty())
 		{
-			Grid::Node* start = Grid::GetInstance().GetNode(((Transform*)GetParent()->GetComponent("Transform"))->GetWorldTranslation());
-			Grid::Node* end = Grid::GetInstance().GetNode(targetPos);
+			Grid::Node start = Grid::GetInstance().ConvertToGridPoint(((Transform*)GetParent()->GetComponent("Transform"))->GetWorldTranslation());
+			Grid::Node end = Grid::GetInstance().ConvertToGridPoint(targetPos);
 
 			path = Pathfinding::FindPath(start, end);
 
@@ -197,10 +211,10 @@ void BehaviorUnit::OnUpdate(float dt)
 		}
 
 		// Have we reached a node?
-		if (Grid::GetInstance().GetNode(((Transform*)GetParent()->GetComponent("Transform"))->GetWorldTranslation()) == moveTarget)
+		if (Grid::GetInstance().ConvertToGridPoint(((Transform*)GetParent()->GetComponent("Transform"))->GetWorldTranslation()) == moveTarget)
 		{
 			// Set the next node.
-			delete (((moveTarget)));
+			moveTarget = Node();
 			moveTarget = path.back();
 			path.pop_back();
 		}
@@ -215,6 +229,10 @@ void BehaviorUnit::OnUpdate(float dt)
 
 		// Update velocity
 		CalculateVelocity();
+
+		Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = true;
+		gridPos = Grid::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation());
+		Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = false;
 		break;
 	case cUnitAttack:
 		// Can we attack our target?
@@ -268,6 +286,12 @@ void BehaviorUnit::OnExit()
 	}
 }
 
+void BehaviorUnit::OnDestroy()
+{
+	allUnits.erase(std::find(allUnits.begin(), allUnits.end(), GetParent()));
+	Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = true;
+}
+
 // The collision handling function for Units.
 // Params:
 //	 stub = The stub object.
@@ -303,15 +327,11 @@ void BehaviorUnit::UseEMP()
 
 }
 
-void BehaviorUnit::Attack()
-{
-}
-
 // Calculates velocity based off of movement speed, target pos, and current pos.
 void BehaviorUnit::CalculateVelocity()
 {
 	// Calculate a direction vector from current position to taget position.
-	Vector2D dir = moveTarget->worldPos - ((Transform*)GetParent()->GetComponent("Transform"))->GetTranslation();
+	Vector2D dir = moveTarget.worldPos - ((Transform*)GetParent()->GetComponent("Transform"))->GetTranslation();
 	dir.Normalized();
 
 	// Set velocity.
@@ -325,7 +345,7 @@ std::vector<GameObject*> BehaviorUnit::FindEnemiesInRange()
 {
 	std::vector<GameObject*> foundUnits;
 
-	for (GameObject* unit : units)
+	for (GameObject* unit : allUnits)
 	{
 		// if unit.team != team
 		// if dist(unit.gridPos <= traits.weapon.range) foundUnits.push_back(unit);
@@ -342,9 +362,9 @@ std::vector<GameObject*> BehaviorUnit::FindEnemiesInRange()
 // True if the unit can be targeted, false if not.
 bool BehaviorUnit::CanTarget(GameObject* enemy)
 {
-	AttackGroup enemyGroup = ((BehaviorUnit*)enemy->GetComponent("Behavior"))->traits.group;
+	AttackGroup enemyGroup = AttackGroup::cGroupInfantry;//((BehaviorUnit*)enemy->GetComponent("Behavior"))->traits.group;
 
-	switch (traits.weapon.group)
+	switch (Weapons[traits.weapon].group)
 	{
 	case cGroupMelee:
 	case cGroupRanged:
@@ -354,6 +374,8 @@ bool BehaviorUnit::CanTarget(GameObject* enemy)
 	case cGroupLongRanged:
 		return true;
 	}
+
+	return false;
 }
 
 // Checks if the unit can attack an enemy.
@@ -367,7 +389,7 @@ bool BehaviorUnit::CheckAttack()
 	if (target == nullptr)
 	{
 		// If we are moving to a location, ignore all nearby enemies.
-		if (moveTarget == nullptr)
+		if (moveTarget == Node())
 			return false;
 
 		// Find all enemies within attack range.
@@ -391,13 +413,45 @@ bool BehaviorUnit::CheckAttack()
 		// if (range < stats.range && target.team != team)
 		//	return true;
 		// else
-		//	return false;
+		return false;
 	}
+
+	return false;
+}
+
+unsigned BehaviorUnit::Traits::GetCost()
+{
+	return 9;
 }
 
 void BehaviorUnit::Attack()
 {
 
+}
+
+bool BehaviorUnit::IsStuck()
+{
+	return false;
+}
+
+BehaviorArmy* BehaviorUnit::GetArmy()
+{
+	return army;
+}
+
+std::vector<Grid::Node> BehaviorUnit::GetPath()
+{
+	return path;
+}
+
+Vector2D BehaviorUnit::GetGridPos()
+{
+	return GetNode().gridPos;
+}
+
+Node BehaviorUnit::GetNode()
+{
+	return gridPos;
 }
 
 //------------------------------------------------------------------------------

@@ -130,9 +130,6 @@
     <ClCompile Include="Source\Component.cpp">
       <Filter>Engine\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Tilemap.cpp">
-      <Filter>Engine\GameObjects\Tilemap</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ColliderCircle.cpp">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClCompile>
@@ -184,6 +181,21 @@
     </ClCompile>
     <ClCompile Include="Source\LevelManager.cpp">
       <Filter>Engine\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Cursor.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ComponentStub.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorArmy.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tilemap.cpp">
+      <Filter>Engine\GameObjects\Tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BehaviorTestBox.cpp">
+      <Filter>Game\Behaviors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -280,9 +292,6 @@
     </ClInclude>
     <ClInclude Include="Source\Component.h">
       <Filter>Engine\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Tilemap.h">
-      <Filter>Engine\GameObjects\Tilemap</Filter>
     </ClInclude>
     <ClInclude Include="Source\ColliderCircle.h">
       <Filter>Engine\GameObjects\Colliders</Filter>
@@ -395,6 +404,24 @@
     </ClInclude>
     <ClInclude Include="Source\LevelManager.h">
       <Filter>Engine\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cursor.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ComponentStub.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controls.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorArmy.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Tilemap.h">
+      <Filter>Engine\GameObjects\Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BehaviorTestBox.h">
+      <Filter>Game\Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

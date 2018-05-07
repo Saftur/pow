@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-// File Name:	BehaviorProjectile.h
+// File Name:	BehaviorTestBox.h
 // Author(s):	Doug Schilling (dschilling)
 // Project:		MyGame
 // Course:		CS230S17
@@ -24,9 +24,9 @@
 // Public Consts:
 //------------------------------------------------------------------------------
 
-// An example of the enums to be defined in BehaviorProjectile.cpp.
+// An example of the enums to be defined in BehaviorTestBox.cpp.
 #if 0
-enum ProjectileState
+enum TestBoxState
 {
 };
 #endif
@@ -35,22 +35,24 @@ enum ProjectileState
 // Public Structures:
 //------------------------------------------------------------------------------
 
-// An example of the class to be defined in BehaviorProjectile.h
-class BehaviorProjectile : public Behavior
+// An example of the class to be defined in BehaviorTestBox.h
+class BehaviorTestBox : public Behavior
 {
 public:
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
 
-	// Allocate a new (Projectile) behavior component.
+	// Allocate a new (TestBox) behavior component.
 	// Params:
 	//  parent = The object that owns this behavior.
-	BehaviorProjectile();
+	BehaviorTestBox();
 
-	// Fire the projectile towards the given target vector at the given speed.
-	// Bullet will be assumed to have "missed" after lifetime seconds.
-	void Fire(Vector2D target, int damage, int range, float speed);
+	void SetBoundPos(Vector2D pos);
+
+	Vector2D GetBoundPos();
+
+	void SetNodeState(bool state);
 
 private:
 	// Clone an advanced behavior and return a pointer to the cloned object.
@@ -76,29 +78,20 @@ private:
 
 	void OnExit();
 
-	// The collision handling function for Projectiles.
+	
+
+	// The collision handling function for TestBoxs.
 	// Params:
-	//	 projectile = The projectile object.
+	//	 stub = The stub object.
 	//	 other = The object the asteroid is colliding with.
-	static void CollisionHandler(GameObject& projectile, GameObject& other);
+	static void CollisionHandler(GameObject& stub, GameObject& other);
 
 	void Load(rapidjson::Value& obj);
 
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
-
-	struct
-	{
-		int damage;
-		float speed;
-
-		// TODO: Sound pointers and such
-	} projectile;
-
-	Vector2D target;
-	float lifetime; // Range * speed
-	float timer;
+	Vector2D gridPos;
 };
 
 //------------------------------------------------------------------------------

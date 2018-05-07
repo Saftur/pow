@@ -3,6 +3,8 @@
 #include <windows.h>
 #include <xinput.h>
 
+#define MAX_GAMEPADS 4
+
 class Gamepad {
 public:
 	enum Button {
@@ -19,10 +21,9 @@ public:
 		aUnbound, aLTrigger = bLTrigger, aRTrigger, aLStickX, aLStickY, aRStickX, aRStickY
 	};
 
-	Gamepad();
-	Gamepad(int gpNum);
-
+	bool Connected();
 	void Update();
+
 	bool GetButton(int button);
 	bool GetButtonTriggered(int button);
 	bool GetButtonReleased(int button);
@@ -33,16 +34,25 @@ public:
 	void SetStickDeadzone(int deadzone);
 	void SetTriggerDeadzone(int deadzone);
 
+	static Gamepad &GetGamepad(unsigned index);
+	static void UpdateAll();
+
 private:
+	Gamepad();
+
+	void SetGpNum(int gpNum);
+
 	float StickToFloat(int s);
 	float TriggerToFloat(int t);
 
 	int gpNum;
-	bool error = true;
+	bool error;
 	XINPUT_STATE oldState;
 	XINPUT_STATE state;
 
 	float triggerButtonPress = 0.9f;
 	int triggerDeadzone = 5;
 	int stickDeadzone = 3500;
+
+	static Gamepad gamepads[MAX_GAMEPADS];
 };

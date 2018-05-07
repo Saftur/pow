@@ -1,44 +1,92 @@
 #include "stdafx.h"
 #include "Grid.h"
+#include "BehaviorUnit.h"
+#include "GameObjectManager.h"
 
 using Node = Grid::Node;
+Grid Grid::Gridy = Grid(6, 4, 128, 128, 0, 28);
 
-Node::Node(int gridX, int gridY, Vector2D worldPos, bool highGround, bool state)
-	: gridX(gridX), gridY(gridY), worldPos(worldPos), isHighGround(highGround), open(state) {}
-
-Grid::Grid(int width, int height)
-	: width(width), height(height) 
+Grid::Grid()
+	:Grid(10, 2, 10, 10)
 {
+
+}
+Node::Node(Vector2D gridPos, bool state)
+	: gridPos(gridPos), open(state), parent(nullptr) {
+	Grid &grid = GetInstance();
+	worldPos.X(grid.tileWidth * gridPos.x + grid.screenOffsetX - (grid.width * grid.tileWidth) / 2 + grid.tileWidth / 2);
+	worldPos.Y(-(grid.tileHeight * gridPos.y + grid.screenOffsetY - (grid.height * grid.tileHeight) / 2 + grid.tileHeight / 2));
+}
+
+
+Grid::Node::operator Vector2D()
+{
+	//gridPos = ;
+	return gridPos;
+}
+
+int Grid::Node::X() const
+{
+	return (int)gridPos.x;
+}
+
+int Grid::Node::Y() const
+{
+	return (int)gridPos.y;
+}
+
+bool Grid::Node::operator==(const Node & other)
+{
+	return X() == other.X() && Y() == other.Y();
+}
+
+bool Grid::Node::operator!=(const Node & other)
+{
+	return X() != other.X() || Y() != other.Y();
+}
+
+Grid::Grid(int width, int height, int tileWidth, int tileHeight, int screenOffsetX, int screenOffsetY)
+	: width(width), height(height), tileWidth(tileWidth), tileHeight(tileHeight), screenOffsetX(screenOffsetX), screenOffsetY(screenOffsetY)
+{
+	grid = new Node*[height];
 	// Initialize the grid.
-	for (int i = 0; i < width; i++)
+	for (int y = 0; y < height; y++)
 	{
-		for (int j = 0; j < height; j++)
+		grid[y] = new Node[width];
+
+		for (int x = 0; x < width; x++)
 		{
-			// TODO: Retreive map data frpm the level's json file.
-			grid[i * width + j] = new Node(i, j);
+			grid[y][x] = Node(Vector2D((float)x, (float)y));
 		}
 	}
 }
 
-Node* Grid::GetNode(Vector2D worldPos)
+Grid::~Grid()
 {
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			if (grid[Pos(i, j)]->worldPos == worldPos)
-			{
-				return grid[Pos(i, j)];
-			}
-		}
-	}
-
-	return nullptr;
+	for (int y = 0; y < height; y++)
+		delete[] grid[y];
+	delete[] grid;
 }
 
-int Grid::Pos(int xIndex, int yIndex)
+Vector2D Grid::ConvertToWorldPoint(Node node)
 {
-	return xIndex * width + yIndex;
+	return node.worldPos;
+}
+
+Node Grid::ConvertToGridPoint(Vector2D screenPos)
+{
+	Vector2D pos;
+	pos.X(floor((screenPos.X() - screenOffsetX + ((tileWidth*width) / 2)) / tileWidth));
+	pos.Y(floor((-screenPos.Y() - screenOffsetY + ((tileHeight*height) / 2)) / tileHeight));
+	if (pos.X() < 0)
+		pos.X(0);
+	if (pos.Y() < 0)
+		pos.Y(0);
+	if (pos.X() >= width)
+		pos.X((float)(width - 1));
+	if (pos.Y() >= height)
+		pos.Y((float)(height - 1));
+	return pos;
 }
 
 Node* Grid::operator[](int index)
@@ -51,10 +99,10 @@ int Node::fVal()
 	return hVal + gVal;
 }
 
-std::vector<Node*> Grid::GetNeighbors(Node* node)
+std::vector<Node> Grid::GetNeighbors(Node node)
 {
 	// Create a vector to store our result.
-	std::vector<Node*> result;
+	std::vector<Node> result;
 
 	// Find adjacent nodes.
 	for (int i = -1; i <= 1; i++)
@@ -62,7 +110,7 @@ std::vector<Node*> Grid::GetNeighbors(Node* node)
 		for (int j = -1; j <= 1; j++)
 		{
 			// Make sure this is a valid position in the array.
-			if (node->gridX + i < 0 || node->gridX + i > width || node->gridY + j < 0 || node->gridY + j > height)
+			if (node.X() + i < 0 || node.X() + i >= width || node.Y() + j < 0 || node.Y() + j >= height)
 				continue;
 
 			// Skip the center node (the node whose neightbors we're finding).
@@ -70,7 +118,7 @@ std::vector<Node*> Grid::GetNeighbors(Node* node)
 				continue;
 
 			// Add this node to the result vector.
-			result.push_back(grid[node->gridX * width + i + node->gridY + j]);
+			result.push_back(GetNode(node.X() + i, node.Y() + j));
 		}
 	}
 
@@ -79,16 +127,28 @@ std::vector<Node*> Grid::GetNeighbors(Node* node)
 
 void Grid::SetNode(int xPos, int yPos, bool newState)
 {
-	grid[xPos * width + yPos]->open = newState;
+	grid[yPos][xPos].open = newState;
 }
 
-void Grid::SetHighGround(int xPos, int yPos, bool highGround)
+Node& Grid::GetNode(int x, int y)
 {
-	grid[xPos * width + yPos]->isHighGround = highGround;
+	return grid[y][x];
+}
+
+GameObject* Grid::GetOccupant(int xPos, int yPos, GameObjectManager* manager)
+{
+	for (GameObject* obj : manager->GetObjectsByName("Unit"))
+	{
+		if (obj->GetComponent<BehaviorUnit>()->GetGridPos() == Vector2D((float)xPos, (float)yPos))
+		{
+			return obj;
+		}
+	}
+
+	return nullptr;
 }
 
 Grid& Grid::GetInstance()
 {
-	static Grid grid;
-	return grid;
+	return Gridy;
 }

@@ -61,6 +61,14 @@ public:
 
 	// Retrieves the component with the given name if it exists.
 	Component* GetComponent(const char* name) const;
+	template <typename T>
+	T *GetComponent() {
+		unsigned hash = typeid(T).hash_code();
+		for (unsigned i = 0; i < numComponents; i++)
+			if (typeid(*components[i]).hash_code() == hash)
+				return static_cast<T*>(components[i]);
+		return nullptr;
+	}
 
 	Component* GetComponent(const char* name, int number) const;
 	vector<Component*> GetComponents(const char* name) const;
@@ -86,6 +94,8 @@ public:
 
 	void SetDestroyNext();
 	bool CheckDestroyNow();
+
+	void PostLoadInit();
 
 	// Update any components attached to the game object.
 	// (Hint: You will need to call Update on the Animation and Physics components.)

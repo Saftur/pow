@@ -82,7 +82,7 @@ public:
 	//	  to a list that is passed as a parameter.)
 	// Params:
 	//	 gameObject = Reference to the game object to be added to the list.
-	void Add(GameObject& gameObject);
+	GameObject* Add(GameObject& gameObject);
 
 	// Add a game object to the game object archetype list.
 	// (Hint: This function and the GameObjectManagerAdd functions require
@@ -130,6 +130,7 @@ public:
 	// Returns a reference to the singleton instance of the GameObjectManager.
 	//static GameObjectManager& GetInstance();
 	static GameObjectManager *InitLayer(unsigned layer, bool updateLower, bool drawLower);
+	static GameObjectManager *GetLayer(unsigned layer);
 	static void DeleteLayer(unsigned layer);
 	static void ShutdownLayers();
 

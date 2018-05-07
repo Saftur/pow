@@ -19,10 +19,12 @@
 #include "Teleporter.h"
 #include "BehaviorArmy.h"
 #include "GameObjectManager.h"
+#include "Cursor.h"
 #include "BehaviorUnit.h"
 #include "Transform.h"
 #include "Trace.h"
 #include "Engine.h"
+#include "Controls.h"
 #include <iostream>
 #include <sstream>
 using std::ifstream;
@@ -50,9 +52,8 @@ enum states { cArmyNormal };
 // Params:
 //  parent = The object that owns this behavior.
 BehaviorArmy::BehaviorArmy() :
-		Behavior("BehaviorArmy"), diamondTransform(0, 0), targetTransform(0, 0)
+		Behavior("BehaviorArmy")
 {
-	diamondTransform.SetRotation((float)M_PI / 4);
 	SetCurrentState(cBehaviorInvalid);
 	SetNextState(cArmyNormal);
 }
@@ -63,65 +64,65 @@ void BehaviorArmy::PushFrontLine(Vector2D pos)
 	vector<GameObject*> armyGOs = GetParent()->GetObjectManager()->GetObjectsByName("Army");
 	switch (side) {
 	case sLeft:
-		if (pos.x > frontLine) {
-			frontLine = (int)pos.x;
+		if (pos.x > frontLine.pos) {
+			frontLine.pos = (int)pos.x;
 			for (GameObject *unit : unitGOs) {
-				Transform *t = (Transform*)unit->GetComponent("Transform");
-				BehaviorUnit *bu = (BehaviorUnit*)unit->GetComponent("BehaviorUnit");
+				Transform *t = unit->GetComponent<Transform>();
+				BehaviorUnit *bu = unit->GetComponent<BehaviorUnit>();
 				if (!t || !bu) continue;
 				Vector2D mapPos = tilemap->GetPosOnMap(t->GetTranslation());
-				if (bu->GetArmy()->GetSide() != side && mapPos.x <= frontLine) {
-					frontLine = (int)mapPos.x - 1;
+				if (bu->GetArmy()->GetSide() != side && mapPos.x <= frontLine.pos) {
+					frontLine.pos = (int)mapPos.x - 1;
 				}
 			}
 		}
-		if (frontLine < 0) frontLine = 0;
-		if (frontLine >= tilemap->GetTilemapWidth() - 1) frontLine = tilemap->GetTilemapWidth() - 2;
-		if (flTransform)
-			flTransform->SetTranslation(tilemap->GetPosOnScreen({ (float)frontLine, (float)(tilemap->GetTilemapHeight()) / 2 }) + 
+		if (frontLine.pos < 0) frontLine.pos = 0;
+		if (frontLine.pos >= tilemap->GetTilemapWidth() - 1) frontLine.pos = tilemap->GetTilemapWidth() - 2;
+		if (frontLine.transform)
+			frontLine.transform->SetTranslation(tilemap->GetPosOnScreen({ (float)frontLine.pos, (float)(tilemap->GetTilemapHeight()) / 2 }) + 
 										Vector2D((float)(tilemap->GetTileWidth())/2, (float)(tilemap->GetTileHeight())/2));
 		break;
 	case sRight:
-		if (pos.x < frontLine) {
-			frontLine = (int)pos.x;
+		if (pos.x < frontLine.pos) {
+			frontLine.pos = (int)pos.x;
 			for (GameObject *unit : unitGOs) {
-				Transform *t = (Transform*)unit->GetComponent("Transform");
-				BehaviorUnit *bu = (BehaviorUnit*)unit->GetComponent("BehaviorUnit");
+				Transform *t = unit->GetComponent<Transform>();
+				BehaviorUnit *bu = unit->GetComponent<BehaviorUnit>();
 				if (!t || !bu) continue;
 				Vector2D mapPos = tilemap->GetPosOnMap(t->GetTranslation());
-				if (bu->GetArmy()->GetSide() != side && mapPos.x >= frontLine) {
-					frontLine = (int)mapPos.x + 1;
+				if (bu->GetArmy()->GetSide() != side && mapPos.x >= frontLine.pos) {
+					frontLine.pos = (int)mapPos.x + 1;
 				}
 			}
 		}
-		if (frontLine >= tilemap->GetTilemapWidth()) frontLine = tilemap->GetTilemapWidth()-1;
-		if (frontLine <= 0) frontLine = 1;
-		if (flTransform)
-			flTransform->SetTranslation(tilemap->GetPosOnScreen({ (float)frontLine, (float)(tilemap->GetTilemapHeight()) / 2 }) + 
+		if (frontLine.pos >= tilemap->GetTilemapWidth()) frontLine.pos = tilemap->GetTilemapWidth()-1;
+		if (frontLine.pos <= 0) frontLine.pos = 1;
+		if (frontLine.transform)
+			frontLine.transform->SetTranslation(tilemap->GetPosOnScreen({ (float)frontLine.pos, (float)(tilemap->GetTilemapHeight()) / 2 }) + 
 										Vector2D(-(float)(tilemap->GetTileWidth())/2, (float)(tilemap->GetTileHeight())/2));
 		break;
 	}
 	for (GameObject *army : armyGOs) {
-		BehaviorArmy *ba = (BehaviorArmy*)army->GetComponent("BehaviorArmy");
-		if (!ba || ba->frontLine < 0) continue;
+		BehaviorArmy *ba = army->GetComponent<BehaviorArmy>();
+		if (!ba || ba->frontLine.pos < 0) continue;
 		if (ba->GetSide() != side) {
 			switch (ba->GetSide()) {
 			case sLeft:
-				if (pos.x <= ba->frontLine) {
-					ba->frontLine = (int)pos.x - 1;
-					if (ba->frontLine < 0) ba->frontLine = 0;
+				if (pos.x <= ba->frontLine.pos) {
+					ba->frontLine.pos = (int)pos.x - 1;
+					if (ba->frontLine.pos < 0) ba->frontLine.pos = 0;
 				}
-				if (ba->flTransform)
-					ba->flTransform->SetTranslation(tilemap->GetPosOnScreen({ (float)ba->frontLine, (float)(tilemap->GetTilemapHeight()) / 2 }) + 
+				if (ba->frontLine.transform)
+					ba->frontLine.transform->SetTranslation(tilemap->GetPosOnScreen({ (float)ba->frontLine.pos, (float)(tilemap->GetTilemapHeight()) / 2 }) + 
 												Vector2D((float)(tilemap->GetTileWidth())/2, (float)(tilemap->GetTileHeight())/2));
 				break;
 			case sRight:
-				if (pos.x >= ba->frontLine) {
-					ba->frontLine = (int)pos.x + 1;
-					if (ba->frontLine >= tilemap->GetTilemapWidth()) ba->frontLine = tilemap->GetTilemapWidth()-1;
+				if (pos.x >= ba->frontLine.pos) {
+					ba->frontLine.pos = (int)pos.x + 1;
+					if (ba->frontLine.pos >= tilemap->GetTilemapWidth()) ba->frontLine.pos = tilemap->GetTilemapWidth()-1;
 				}
-				if (ba->flTransform)
-					ba->flTransform->SetTranslation(tilemap->GetPosOnScreen({ (float)ba->frontLine, (float)(tilemap->GetTilemapHeight()) / 2 }) + 
+				if (ba->frontLine.transform)
+					ba->frontLine.transform->SetTranslation(tilemap->GetPosOnScreen({ (float)ba->frontLine.pos, (float)(tilemap->GetTilemapHeight()) / 2 }) + 
 												Vector2D(-(float)(tilemap->GetTileWidth())/2, (float)(tilemap->GetTileHeight())/2));
 				break;
 			}
@@ -146,13 +147,13 @@ void BehaviorArmy::DescreaseUnits()
 
 unsigned BehaviorArmy::GetFunds()
 {
-	return funds;
+	return funds.amount;
 }
 
 bool BehaviorArmy::TakeFromFunds(unsigned amount)
 {
-	if (funds >= amount) {
-		funds -= amount;
+	if (funds.amount >= amount) {
+		funds.amount -= amount;
 		UpdateFundsText();
 		return true;
 	} else {
@@ -162,7 +163,7 @@ bool BehaviorArmy::TakeFromFunds(unsigned amount)
 
 void BehaviorArmy::AddToFunds(unsigned amount)
 {
-	funds += amount;
+	funds.amount += amount;
 	UpdateFundsText();
 }
 
@@ -186,52 +187,40 @@ void BehaviorArmy::OnEnter()
 	switch (GetCurrentState())
 	{
 	case cArmyNormal:
-		tilemap = (Tilemap*)GetParent()->GetObjectManager()->GetObjectByName("Tilemap")->GetComponent("Tilemap");
-		GameObject *fl = GetParent()->GetObjectManager()->GetObjectByName(flObjName.c_str());
-		if (fl) flTransform = (Transform*)fl->GetComponent("Transform");
-		else flTransform = nullptr;
-		GameObject *fd = GetParent()->GetObjectManager()->GetObjectByName(fundsObjName.c_str());
-		if (fd) fundsText = (Text*)fd->GetComponent("Text");
-		else fundsText = nullptr;
-		//f32 winWidth = AEGfxGetWinMaxX() - AEGfxGetWinMinX();
-		//f32 winHeight = AEGfxGetWinMaxY() - AEGfxGetWinMinY();
-		funds = startFunds;
+		tilemap = GetParent()->GetObjectManager()->GetObjectByName("Tilemap")->GetComponent<Tilemap>();
+		GameObject *fl = GetParent()->GetObjectManager()->GetObjectByName(frontLine.dispObjName.c_str());
+		if (fl) frontLine.transform = fl->GetComponent<Transform>();
+		else frontLine.transform = nullptr;
+		GameObject *fd = GetParent()->GetObjectManager()->GetObjectByName(funds.dispObjName.c_str());
+		if (fd) funds.text = fd->GetComponent<Text>();
+		else funds.text = nullptr;
+		funds.amount = funds.startAmount;
 		UpdateFundsText();
-		//cursor = Vector2D(0, 0);
-		GameObject *cursorObj = GetParent()->GetObjectManager()->GetObjectByName(cursorObjName.c_str());
-		cursor = (Transform*)cursorObj->GetComponent("Transform");
-		cursorSprite = (Sprite*)cursorObj->GetComponent("Sprite");
-		GameObject *pathArchetype = GetParent()->GetObjectManager()->GetArchetype(pathLineName.c_str());
+		GameObject *cursorObj = GetParent()->GetObjectManager()->GetObjectByName(cursor.objName.c_str());
+		cursor.transform = cursorObj->GetComponent<Transform>();
+		cursorObj->GetComponent<Cursor>()->SetGamepad(controls.gamepad);
+		cursor.sprite = cursorObj->GetComponent<Sprite>();
+		GameObject *pathArchetype = GetParent()->GetObjectManager()->GetArchetype(path.lineDispName.c_str());
 		if (pathArchetype) {
-			pathSprite = (Sprite*)pathArchetype->GetComponent("Sprite");
-			pathTransform = (Transform*)pathArchetype->GetComponent("Transform");
-			if (pathTransform) {
-				Vector2D pathScl = pathTransform->GetScale();
-				diamondTransform.SetScale({pathScl.y, pathScl.y});
-				targetTransform.SetScale(cursor->GetScale() * 0.75);
-			}
+			path.sprite = pathArchetype->GetComponent<Sprite>();
+			path.transform = pathArchetype->GetComponent<Transform>();
+			/*if (path.transform) {
+				Vector2D pathScl = path.transform->GetScale();
+			}*/
 		}
 		switch (side) {
 		case sLeft:
-			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ 1, 0 });
-			flStart = flStart < 0 ? 0 : flStart;
-			cursor->SetTranslation(tilemap->GetPosOnScreen({ 0, 0 }));
-			/*camera = Engine::GetInstance().AddCamera({AEGfxGetWinMinX() + winWidth/4, AEGfxGetWinMinY() + winHeight/2}, 
-													 {AEGfxGetWinMinX(), AEGfxGetWinMaxY()}, {AEGfxGetWinMaxX(), AEGfxGetWinMinY()}, 
-													 {0, 0});*/
+			frontLine.start = frontLine.start < 0 ? 0 : frontLine.start;
+			cursor.transform->SetTranslation(tilemap->GetPosOnScreen({ 0, 0 }));
 			break;
 		case sRight:
-			for (int i = 0; i < tilemap->GetTilemapWidth()-1; i++) path_.push_back({ -1, 0 });
-			flStart = flStart < 0 ? tilemap->GetTilemapWidth() - 1 : flStart;
-			cursor->SetTranslation(tilemap->GetPosOnScreen({ (float)tilemap->GetTilemapWidth() - 1, 0 }));
-			/*camera = Engine::GetInstance().AddCamera({AEGfxGetWinMaxX() - winWidth/4, AEGfxGetWinMinY() + winHeight/2}, 
-													 {AEGfxGetWinMinX(), AEGfxGetWinMaxY()}, {AEGfxGetWinMaxX(), AEGfxGetWinMinY()}, 
-													 {0, 0});*/
+			frontLine.start = frontLine.start < 0 ? tilemap->GetTilemapWidth() - 1 : frontLine.start;
+			cursor.transform->SetTranslation(tilemap->GetPosOnScreen({ (float)tilemap->GetTilemapWidth() - 1, 0 }));
 			break;
 		}
-		frontLine = flStart;
-		if (flTransform) {
-			PushFrontLine({ (float)frontLine, 0 });
+		frontLine.pos = frontLine.start;
+		if (frontLine.transform) {
+			PushFrontLine({ (float)frontLine.pos, 0 });
 		}
 		break;
 	}
@@ -249,207 +238,62 @@ void BehaviorArmy::OnUpdate(float dt)
 	switch (GetCurrentState())
 	{
 	case cArmyNormal:
-		gamepad.Update();
-		Vector2D curspos = cursor->GetScreenTranslation();
-		curspos.x += gamepad.GetAxis(/*Gamepad::aLStickX*/controlList["CamAxisX"]) * 1600 * dt;
-		curspos.y += gamepad.GetAxis(/*Gamepad::aLStickY*/controlList["CamAxisY"]) * 1600 * dt;
-		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(/*Gamepad::aLStickX*/controlList["CamAxisX"]) << std::endl;
-		Trace::GetInstance().GetStream() << gamepad.GetAxisNoDeadzone(/*Gamepad::aLStickY*/controlList["CamAxisY"]) << std::endl;
+		// Get current cursor position
+		Vector2D curspos = cursor.transform->GetScreenTranslation();
+		// Tilemap top left point
 		Vector2D tmTopLeft = tilemap->GetTilemapScreenTopLeft();
+		// Tilemap bottom right point
 		Vector2D tmBottomRight = tilemap->GetTilemapScreenBottomRight();
-		bool inEditMode = gamepad.GetButton(/*Gamepad::bRTrigger*/controlList["Normal.SwitchCommand"]);
-		bool inSelectMode = gamepad.GetButton(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"]);
-		if (gamepad.GetButtonTriggered(/*Gamepad::bDpadUp*/controlList["CamUp"])) {
-			curspos.y += tilemap->GetTileHeight();
-			if ((!inEditMode || inSelectMode) && curspos.y > tmTopLeft.y)
-				curspos.y -= tilemap->GetTileHeight() * tilemap->GetTilemapHeight();
-			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
-		} else if (gamepad.GetButtonTriggered(/*Gamepad::bDpadDown*/controlList["CamDown"])) {
-			curspos.y -= tilemap->GetTileHeight();
-			if ((!inEditMode || inSelectMode) && curspos.y < tmBottomRight.y)
-				curspos.y += tilemap->GetTileHeight() * tilemap->GetTilemapHeight();
-			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
-		} else if (gamepad.GetButtonTriggered(/*Gamepad::bDpadLeft*/controlList["CamLeft"])) {
-			curspos.x -= tilemap->GetTileHeight();
-			if ((!inEditMode || inSelectMode) && curspos.x < tmTopLeft.x)
-				curspos.x += tilemap->GetTileWidth() * tilemap->GetTilemapWidth();
-			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
-		} else if (gamepad.GetButtonTriggered(/*Gamepad::bDpadRight*/controlList["CamRight"])) {
-			curspos.x += tilemap->GetTileHeight();
-			if ((!inEditMode || inSelectMode) && curspos.x > tmBottomRight.x)
-				curspos.x -= tilemap->GetTileWidth() * tilemap->GetTilemapWidth();
-			curspos = tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos));
-		}
-		if (editUnit && editUnit->GetParent()->IsDestroyed()) {
-			editUnit = nullptr;
-			editPos = { -1, -1 };
-		}
-		for (unsigned i = 0; i < editExtraUnits.size(); i++) {
-			if (editExtraUnits[i]->GetParent()->IsDestroyed()) {
-				editExtraUnits.erase(editExtraUnits.begin() + i);
-				editExtraStartPos.erase(editExtraStartPos.begin() + i);
+		// Cursor Node position
+		Node cursorNode = Grid::GetInstance().ConvertToGridPoint(curspos);
+
+		// If any extra selected units are destroyed, deselect them
+		for (unsigned i = 0; i < selectedUnits.size(); i++) {
+			if (selectedUnits[i].unit->GetParent()->IsDestroyed()) {
+				selectedUnits.erase(selectedUnits.begin() + i);
 				i--;
 			}
 		}
-		if (inEditMode) {
-			if (inSelectMode) {
-				if (gamepad.GetButtonTriggered(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"])) {
-					if (tilemap->GetPosOnMap(curspos) != editStartPos)
-						curspos = tilemap->GetPosOnScreen(editStartPos);
-					//editSelectMode = smSelect;
-					editSelectMode = smAuto;
-				}
-				//if (gamepad.GetButton(Gamepad::bB))
-					//SelectUnits(curspos, true);
-				//else SelectUnits(curspos);
-				//if (gamepad.GetButtonTriggered(Gamepad::bA)) {
-					//editSelectMode = smSelect;
-					//editExtraLastPos = { -1, -1 };
-				//}
-				//if (gamepad.GetButtonTriggered(Gamepad::bB)) {
-					//editSelectMode = smDeselect;
-					//editExtraLastPos = { -1, -1 };
-				//}
-				//if (editSelectMode == smSelect)
-					//SelectUnits(curspos);
-				//else if (editSelectMode == smDeselect)
-					//SelectUnits(curspos, true);
-				if (gamepad.GetButtonTriggered(/*Gamepad::bX*/controlList["Select.SwitchManual"])) {
-					editSelectMode = smManual;
-				}
-				if (gamepad.GetButtonTriggered(/*Gamepad::bY*/controlList["Select.SwitchAuto"])) {
-					editSelectMode = smAuto;
-					editExtraLastPos = { -1, -1 };
-				}
-				if (editSelectMode == smAuto) {
-					if (tilemap->GetPosOnMap(curspos) != editExtraLastPos)
-						editExtraLastPos = { -1, -1 };
-					SelectUnits(curspos);
-				} else if (editSelectMode == smManual) {
-					editExtraLastPos = { -1, -1 };
-					if (gamepad.GetButtonTriggered(/*Gamepad::bA*/controlList["Select.Manual.Select"]))
-						SelectUnits(curspos);
-					if (gamepad.GetButtonTriggered(/*Gamepad::bB*/controlList["Select.Manual.Deselect"]))
-						SelectUnits(curspos, true);
-				}
-			} else {
-				if (gamepad.GetButtonReleased(/*Gamepad::bLTrigger*/controlList["Command.SwitchSelect"])) {
-					if (tilemap->GetPosOnMap(curspos) != tilemap->NormalizeMapPos(editPos))
-						curspos = tilemap->GetPosOnScreen(editPos);
-					editExtraLastPos = { -1, -1 };
-				}
-				if (!editUnit) {
-					SelectUnits(curspos);
-				}
-				if (editUnit) {
-					if (curspos.x <= tmTopLeft.x)
-						curspos.x = tmTopLeft.x;
-					if (curspos.x >= tmBottomRight.x)
-						curspos.x = tmBottomRight.x - 1;
-					if (curspos.y >= tmTopLeft.y)
-						curspos.y = tmTopLeft.y;
-					if (curspos.y <= tmBottomRight.y)
-						curspos.y = tmBottomRight.y - 1;
-					if (tilemap->GetPosOnMap(curspos) != tilemap->NormalizeMapPos(editPos)) {
-						Vector2D delta;
-						while (tilemap->GetPosOnMap(curspos) != tilemap->NormalizeMapPos(editPos)) {
-							delta = (tilemap->GetPosOnMap(curspos) - editPos).Normalized();
-							if (delta.x && delta.y) {
-								delta.y = 0;
-								delta = delta.Normalized();
-							}
-							if (AddToEditPath(delta))
-								editPos += delta;
-							else curspos = tilemap->GetPosOnScreen(editPos);
-						}
-					}
-					if (gamepad.GetButtonTriggered(/*Gamepad::bX*/controlList["Command.ClearPath"])) {
-						if (!editPath.empty()) {
-							editPath.clear();
-							curspos = tilemap->GetPosOnScreen(editStartPos);
-							editPos = editStartPos;
-						}
-					}
-					if (!editPath.empty() && gamepad.GetButtonTriggered(/*Gamepad::bB*/controlList["Command.BackPath"])) {
-						Vector2D d = editPath[editPath.size() - 1];
-						editPath.pop_back();
-						editPos = tilemap->GetPosOnMap(curspos) - d;
-						curspos = tilemap->GetPosOnScreen(editPos);
-					}
-					if (gamepad.GetButtonTriggered(/*Gamepad::bY*/controlList["Command.PathToEnd"])) {
-						for (Vector2D d : path_) {
-							if (AddToEditPath(d)) {
-								editPos = tilemap->GetPosOnMap(curspos) + d;
-								curspos = tilemap->GetPosOnScreen(editPos);
-							}
-						}
-					}
-					if (gamepad.GetButtonTriggered(controlList["Command.Recycle"])) {
-						AddToFunds(editUnit->GetRecycleReturns());
-						editUnit->GetParent()->Destroy();
-						for (BehaviorUnit *bu : editExtraUnits) {
-							AddToFunds(bu->GetRecycleReturns());
-							bu->GetParent()->Destroy();
-						}
-						/*if (!editExtraUnits.empty())
-							editExtraUnits.clear();
-						if (!editExtraStartPos.empty())
-							editExtraStartPos.clear();*/
-						editPos = { -1, -1 };
-					}
-				}
+
+		if (controls.gamepad->GetButtonTriggered(SELECT)) {
+			rectStartPos = cursorNode;
+		}
+		if (controls.gamepad->GetButtonTriggered(MOVE)) {
+			for (SelectedUnit &unit : selectedUnits)
+			{
+				unit.unit->SetPath(unit.path);
+				unit.unit->SetNextState(BehaviorUnit::cUnitMove);
+			}
+			selectedUnits.clear();
+		}
+		if (controls.gamepad->GetButtonReleased(SELECT)) {
+			CalculateOffsets();
+			rectEndPos.gridPos = { -1,-1 };
+		}
+
+		// Are we selecting units?
+		if (controls.gamepad->GetButton(SELECT)) {
+			if (cursorNode != rectEndPos) {
+				rectEndPos = cursorNode;
+				SelectUnits();
 			}
 		} else {
-			if (editUnit) {
-				editUnit->AddToPath(editPath);
-				editUnit = nullptr;
-				for (BehaviorUnit *extraUnit : editExtraUnits)
-					extraUnit->AddToPath(editPath);
-				if (!editExtraUnits.empty())
-					editExtraUnits.clear();
-				if (!editExtraStartPos.empty())
-					editExtraStartPos.clear();
-				if (!editPath.empty())
-					editPath.clear();
-				editPos = { -1, -1 };
-				curspos = tilemap->GetPosOnScreen(editStartPos);
+			if (selectedUnits.size() > 0)
+			{
+				if (cursorNode != prevTarget) {
+					prevTarget = cursorNode;
+					for (SelectedUnit unit : selectedUnits)
+					{
+						unit.path = Pathfinding::FindPath(unit.unit->GetNode(), Grid::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation() + unit.offset));
+					}
+				}
 			}
-
-			vector<Vector2D> path;// = gamepad.GetButton(Gamepad::bRShoulder) ? path_ : vector<Vector2D>();
-
-			if (gamepad.GetButton(controlList["Normal.SpawnUnit1"]))
-				CreateUnit("Unit1", tilemap->GetPosOnMap(curspos), path);
-			else if (gamepad.GetButton(controlList["Normal.SpawnUnit2"]))
-				CreateUnit("Unit2", tilemap->GetPosOnMap(curspos), path);
-			else if (gamepad.GetButton(controlList["Normal.SpawnUnit3"]))
-				CreateUnit("Unit3", tilemap->GetPosOnMap(curspos), path);
-			else if (gamepad.GetButton(controlList["Normal.SpawnUnit4"]))
-				CreateUnit("Unit4", tilemap->GetPosOnMap(curspos), path);
+			else
+			{
+				if (controls.gamepad->GetButtonTriggered(SPAWNUNIT))
+					CreateUnit("Unit1", cursorNode);
+			}
 		}
-		Vector2D cursscl = cursor->GetScreenScale();
-		if (curspos.x + cursscl.x / 2 > AEGfxGetWinMaxX())
-			curspos.x = AEGfxGetWinMaxX() - cursscl.x / 2;
-		if (curspos.x - cursscl.x / 2 < AEGfxGetWinMinX())
-			curspos.x = AEGfxGetWinMinX() + cursscl.x / 2;
-		if (curspos.y + cursscl.y / 2 > AEGfxGetWinMaxY())
-			curspos.y = AEGfxGetWinMaxY() - cursscl.y / 2;
-		if (curspos.y - cursscl.y / 2 < AEGfxGetWinMinY())
-			curspos.y = AEGfxGetWinMinY() + cursscl.y / 2;
-		cursor->SetScreenTranslation(curspos);
-		//if (camera)
-		//	*camera = -curspos;
-		//for (unsigned i = 0; i < controls.size(); i++) {
-		//	if (controls[i].CheckTriggered()) {
-		//		switch (side) {
-		//		case sLeft:
-		//			CreateUnit("Unit1", { 0, (float)i }, path_);
-		//			break;
-		//		case sRight:
-		//			CreateUnit("Unit1", { (float)tilemap->GetTilemapWidth()-1, (float)i }, path_);
-		//			break;
-		//		}
-		//	}
-		//}
 		break;
 	}
 }
@@ -458,8 +302,7 @@ void BehaviorArmy::OnExit()
 {
 	switch (GetCurrentState()) {
 	case cArmyNormal:
-		units.clear();
-		path_.clear();
+		unitTypes.clear();
 		break;
 	}
 }
@@ -467,8 +310,8 @@ void BehaviorArmy::OnExit()
 void BehaviorArmy::Draw() const
 {
 	Transform territoryTransform(0, 0);
-	Vector2D flTrs = flTransform->GetTranslation();
-	Vector2D flScl = flTransform->GetScale();
+	Vector2D flTrs = frontLine.transform->GetTranslation();
+	Vector2D flScl = frontLine.transform->GetScale();
 	switch (side) {
 	case sLeft: {
 		Vector2D tmTopLeft = tilemap->GetTilemapScreenTopLeft();
@@ -483,11 +326,11 @@ void BehaviorArmy::Draw() const
 		break;
 	}
 	}
-	float alpha = pathSprite->GetAlpha();
-	pathSprite->SetAlpha(0.25f);
-	pathSprite->Draw(territoryTransform);
-	pathSprite->SetAlpha(alpha);
-	if (editUnit)
+	float alpha = path.sprite->GetAlpha();
+	path.sprite->SetAlpha(0.25f);
+	path.sprite->Draw(territoryTransform);
+	path.sprite->SetAlpha(alpha);
+	if (selectedUnits.size() > 0)
 		DrawPath();
 }
 
@@ -501,22 +344,24 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 		ifstream workingFile(path);
 
 		string line = "";
-		UnitData unit;
+		BehaviorUnit::Traits unit;
 
 		while (getline(workingFile, line))
 		{
-			unit = UnitData();
+			unit = BehaviorUnit::Traits();
 
 			stringstream reader (line);
 
 			reader >> unit.name;
-			reader >> unit.hp;
-			reader >> unit.damage;
-			reader >> unit.speed;
-			reader >> *((int*)&(unit.ability));
+			reader >> unit.strength;
+			reader >> unit.agility;
+			reader >> unit.defense;
+			reader >> unit.ability;
+			reader >> unit.weapon;
+			reader >> unit.item1;
+			reader >> unit.item2;
 
-			unit.army = this;
-			units.push_back(unit);
+			unitTypes.push_back(unit);
 		}
 	}
 	if (obj.HasMember("Side") && obj["Side"].IsString()) {
@@ -529,43 +374,40 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 		}
 	}
 	if (obj.HasMember("FrontLineName") && obj["FrontLineName"].IsString()) {
-		flObjName = obj["FrontLineName"].GetString();
+		frontLine.dispObjName = obj["FrontLineName"].GetString();
 	} else {
-		flObjName = "";
+		frontLine.dispObjName = "";
 	}
 	if (obj.HasMember("FrontLineStart") && obj["FrontLineStart"].IsInt()) {
-		flStart = obj["FrontLineStart"].GetInt();
+		frontLine.start = obj["FrontLineStart"].GetInt();
 	} else {
 		switch (side) {
 		case sLeft:
-			flStart = 0;
+			frontLine.start = 0;
 			break;
 		case sRight:
-			flStart = -1;
+			frontLine.start = -1;
 			break;
 		}
 	}
-	frontLine = -1;
+	frontLine.pos = -1;
 	if (obj.HasMember("FundsDisplayName") && obj["FundsDisplayName"].IsString()) {
-		fundsObjName = obj["FundsDisplayName"].GetString();
+		funds.dispObjName = obj["FundsDisplayName"].GetString();
 	} else {
-		fundsObjName = "";
+		funds.dispObjName = "";
 	}
 	if (obj.HasMember("StartFunds") && obj["StartFunds"].IsUint()) {
-		startFunds = obj["StartFunds"].GetUint();
+		funds.startAmount = obj["StartFunds"].GetUint();
 	} else {
-		startFunds = 0;
+		funds.startAmount = 0;
 	}
-	funds = 0;
+	funds.amount = 0;
 	numUnits = 0;
 	if (obj.HasMember("PathLineName") && obj["PathLineName"].IsString()) {
-		pathLineName = obj["PathLineName"].GetString();
+		path.lineDispName = obj["PathLineName"].GetString();
 	}
-	if (obj.HasMember("GamepadNum") && obj["GamepadNum"].IsInt() && obj["GamepadNum"].GetInt() >= 0) {
-		//controlType = ctGamepad;
-		gamepad = Gamepad(obj["GamepadNum"].GetInt());
-	} else {
-		//controlType = ctKeyboard;
+	if (obj.HasMember("GamepadNum") && obj["GamepadNum"].IsUint() && obj["GamepadNum"].GetUint() >= 0) {
+		controls.gamepad = &Gamepad::GetGamepad(obj["GamepadNum"].GetUint());
 	}
 	if (obj.HasMember("Controls") && obj["Controls"].IsString()) {
 		string path = "Data\\";
@@ -585,19 +427,19 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 
 		levelDoc.Parse(contents.c_str());
 		assert(levelDoc.IsObject());
-		controlList.Load(levelDoc);
+		controls.list.Load(levelDoc);
 	}
 	if (obj.HasMember("CursorName") && obj["CursorName"].IsString()) {
-		cursorObjName = obj["CursorName"].GetString();
+		cursor.objName = obj["CursorName"].GetString();
 	}
 }
 
-void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos, vector<Vector2D> path)
+void BehaviorArmy::CreateUnit(const char *unitName, Node startPos)
 {
-	UnitData unitData = GetUnitData(unitName);
-	if (funds < unitData.GetCost()) return;
+	BehaviorUnit::Traits unitData = GetUnitData(unitName);
+	if (funds.amount < unitData.GetCost()) return;
 	if (!LegalSpawn(startPos)) return;
-	funds -= unitData.GetCost();
+	funds.amount -= unitData.GetCost();
 	UpdateFundsText();
 	GameObject *go = GetParent()->GetObjectManager()->GetArchetype("UnitArchetype");
 	if (!go) {
@@ -607,21 +449,16 @@ void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos, vector<Ve
 	go = new GameObject(*go);
 	go->SetName("Unit");
 
-	Transform *t = (Transform*)go->GetComponent("Transform");
-	t->SetTranslation(tilemap->GetPosOnScreen(startPos));
+	Transform *t = go->GetComponent<Transform>();
+	t->SetTranslation(Grid::GetInstance().ConvertToWorldPoint(startPos));
 
-	BehaviorUnit *bh = (BehaviorUnit*)go->GetComponent("BehaviorUnit");
+	BehaviorUnit *bh = go->GetComponent<BehaviorUnit>();
 	if (!bh) {
 		Trace::GetInstance().GetStream() << "No \"BehaviorUnit\" Component found on \"UnitArchetype\"" << std::endl;
 		delete go;
 		return;
 	}
-	if (unitData.hp == -1) {
-		Trace::GetInstance().GetStream() << "No Unit \"" << unitName << "\" found" << std::endl;
-		delete go;
-		return;
-	}
-	bh->Init(unitData, path, tilemap);
+	bh->Init(unitData, this);
 
 	GetParent()->GetObjectManager()->Add(*go);
 }
@@ -630,18 +467,18 @@ bool BehaviorArmy::LegalSpawn(Vector2D pos)
 {
 	vector<GameObject*> unitGOs = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
 	for (GameObject *unit : unitGOs) {
-		BehaviorUnit *bu = (BehaviorUnit*)(unit->GetComponent("BehaviorUnit"));
-		Transform *t = (Transform*)unit->GetComponent("Transform");
-		if (t) {
+		BehaviorUnit *bu = unit->GetComponent<BehaviorUnit>();
+		Transform *t = unit->GetComponent<Transform>();
+		if (t) 
+		{
 			if (pos == tilemap->GetPosOnMap(t->GetTranslation()))
 				return false;
 		}
-		if (bu) {
-			//if (pos == bu->GetNextPos() && bu->IsMoving())
-			//	return false;
-			if (pos == bu->GetNextPos()) {
-				if (bu->IsMoving())
-					return false;
+		if (bu) 
+		{
+			if (pos == bu->GetGridPos()) 
+			{
+				return false;
 			}
 		}
 	}
@@ -654,157 +491,111 @@ bool BehaviorArmy::BehindFrontLine(Vector2D pos)
 {
 	switch (side) {
 	case sLeft:
-		return pos.X() <= frontLine;
+		return pos.X() <= frontLine.pos;
 	case sRight:
-		return pos.X() >= frontLine;
+		return pos.X() >= frontLine.pos;
 	default:
 		return false;
 	}
 }
 
-void BehaviorArmy::SelectUnits(Vector2D &curspos, bool deselect)
+void BehaviorArmy::SelectUnits()
 {
-	if (editUnit) {
-		if (!deselect && tilemap->GetPosOnMap(curspos) == editExtraLastPos)
-			return;
-	} else {
-		if (tilemap->GetPosOnMap(curspos) == editPos)
-			return;
-	}
-	vector<GameObject*> found = GetParent()->GetObjectManager()->GetObjectsWithFilter([&](GameObject *obj) {
-		BehaviorUnit *bu = (BehaviorUnit*)obj->GetComponent("BehaviorUnit");
-		if (!obj->IsDestroyed() && bu && bu->GetMapPos() == tilemap->GetPosOnMap(curspos) && bu->GetArmy() == this)
-			return true;
-		else return false;
-	});
-	if (found.size() > 0) {
-		if (deselect) {
-			BehaviorUnit *unit = (BehaviorUnit*)found[0]->GetComponent("BehaviorUnit");
-			if (unit == editUnit && editExtraUnits.size() > 0) {
-				editUnit = editExtraUnits[0];
-				editStartPos = editExtraStartPos[0];
-				editPos = editStartPos;
-				for (Vector2D d : editPath)
-					editPos += d;
-				editExtraUnits.erase(editExtraUnits.begin());
-				editExtraStartPos.erase(editExtraStartPos.begin());
-				editExtraLastPos = tilemap->GetPosOnMap(curspos);
-			} else {
-				for (unsigned i = 0; i < editExtraUnits.size(); i++) {
-					if (unit == editExtraUnits[i]) {
-						editExtraUnits.erase(editExtraUnits.begin() + i);
-						editExtraStartPos.erase(editExtraStartPos.begin() + i);
-						editExtraLastPos = tilemap->GetPosOnMap(curspos);
-						break;
-					}
-				}
-			}
-		} else {
-			if (!editUnit) {
-				editUnit = (BehaviorUnit*)found[0]->GetComponent("BehaviorUnit");
-				editStartPos = editUnit->GetMapPos();//tilemap->GetPosOnMap(((Transform*)found[0]->GetComponent("Transform"))->GetTranslation());
-				editPath = editUnit->GetPath();
-				editPos = tilemap->GetPosOnMap(curspos);
-				editExtraLastPos = editPos;
-				if (editUnit->IsMoving()) {
-					editStartPos = editUnit->GetNextPos();
-					if (editUnit->GetNextPos() != editPos)
-						editPos += editPath[0];
-					editPath.erase(editPath.begin());
-				}
-				for (Vector2D d : editPath)
-					editPos += d;
-				editUnit->ClearPath();
-				if (tilemap->GetPosOnMap(curspos) != editPos)
-					curspos = tilemap->GetPosOnScreen(editPos);
-			} else {
-				BehaviorUnit *unit = (BehaviorUnit*)found[0]->GetComponent("BehaviorUnit");
-				if (unit == editUnit) return;
-				for (BehaviorUnit *u : editExtraUnits)
-					if (unit == u) return;
-				Vector2D startPos = unit->IsMoving() ? unit->GetNextPos() : unit->GetMapPos();
-				Vector2D pos = startPos;
-				for (unsigned i = 0; i < editPath.size(); i++) {
-					pos += editPath[i];
-					if (!tilemap->IsMapPosOnMap(pos))
-						while (i < editPath.size()) {
-							editPos -= editPath[editPath.size() - 1];
-							editPath.pop_back();
-						}
-				}
-				editExtraUnits.push_back(unit);
-				unit->ClearPath();
-				editExtraStartPos.push_back(startPos);
-				editExtraLastPos = tilemap->GetPosOnMap(curspos);
+	selectedUnits.clear();
+
+	for (GameObject* unit : BehaviorUnit::allUnits)
+	{
+		SelectedUnit selUnit;
+		selUnit.unit = unit->GetComponent<BehaviorUnit>();
+		if ((selUnit.unit->GetGridPos().X() <= rectEndPos.X() && selUnit.unit->GetGridPos().X() >= rectStartPos.X()) ||
+			(selUnit.unit->GetGridPos().X() >= rectEndPos.X() && selUnit.unit->GetGridPos().X() <= rectStartPos.X()))
+		{
+			if ((selUnit.unit->GetGridPos().Y() <= rectEndPos.Y() && selUnit.unit->GetGridPos().Y() >= rectStartPos.Y()) ||
+				(selUnit.unit->GetGridPos().Y() >= rectEndPos.Y() && selUnit.unit->GetGridPos().Y() <= rectStartPos.Y()))
+			{
+				selectedUnits.push_back(selUnit);
 			}
 		}
 	}
 }
 
-bool BehaviorArmy::AddToEditPath(Vector2D dir)
+// Function is used to figure out the midpoint of all selected units, then determines the offset for each unit from this point.
+// Allows for the offset to be used when determining target position.
+void BehaviorArmy::CalculateOffsets()
 {
-	if (!editUnit) return false;
-	Vector2D pos = editStartPos;
-	for (unsigned i = 0; i <= editExtraStartPos.size(); i++) {
-		for (Vector2D d : editPath)
-			pos += d;
-		pos += dir;
-		if (!tilemap->IsMapPosOnMap(pos))
-			return false;
-		if (i < editExtraStartPos.size())
-			pos = editExtraStartPos[i];
+	// Figure out the mean point of all selected units.
+	Vector2D midpoint;
+	
+	for (SelectedUnit unit : selectedUnits)
+	{
+		midpoint.x += unit.unit->GetParent()->GetComponent<Transform>()->GetTranslation().x;
+		midpoint.y += unit.unit->GetParent()->GetComponent<Transform>()->GetTranslation().y;
 	}
-	/*if (tilemap->IsMapPosOnMap(pos))
-		editPath.push_back(dir);
-	else return false;*/
-	editPath.push_back(dir);
-	return true;
+
+	midpoint /= (float)selectedUnits.size();
+
+	// Use the calculated point to determine offsets for all selected units.
+	for (SelectedUnit unit : selectedUnits)
+	{
+		unit.offset = unit.unit->GetParent()->GetComponent<Transform>()->GetTranslation() - midpoint;
+	}
 }
 
 void BehaviorArmy::DrawPath() const
 {
-	if (!pathTransform || !pathSprite) return;
-	Vector2D startPos = editStartPos;
-	for (unsigned i = 0; i <= editExtraStartPos.size(); i++) {
+	for (SelectedUnit unit : selectedUnits)
+	{
+		if (!path.transform || !path.sprite) continue;
+
+		Transform targetT = Transform();
+		targetT.SetScale(cursor.transform->GetScale() * 0.75);
+
+		targetT.SetTranslation(Grid::GetInstance().ConvertToWorldPoint(unit.unit->GetGridPos()));
+		cursor.sprite->Draw(targetT);
+
+		if (unit.path.size() == 0) continue;
+		Vector2D startPos = unit.path[0];
+
 		Vector2D pos = tilemap->GetPosOnScreen(startPos);
 		Vector2D invY = { 1, -1 };
-		Transform diamondT = diamondTransform;
-		Transform targetT = targetTransform;
-		targetT.SetTranslation(pos);
-		cursorSprite->Draw(targetT);
+
+		Transform diamondT = Transform();
+		diamondT.SetRotation((float)M_PI / 4);
+		Vector2D pathScl = path.transform->GetScale();
+		diamondT.SetScale({ pathScl.y, pathScl.y });
 		diamondT.SetTranslation(pos);
-		pathSprite->SetAlpha(1.0f);
-		pathSprite->Draw(diamondT);
-		for (Vector2D dir : editPath) {
-			dir *= invY;
-			pos += tilemap->GetTileSize() * dir / 2;
-			pathTransform->SetTranslation(pos);
-			pathTransform->SetRotation(dir.GetAngleRadians());
-			pathSprite->SetAlpha(0.5f);
-			pathSprite->Draw();
-			pos += tilemap->GetTileSize() * dir / 2;
+		path.sprite->SetAlpha(1.0f);
+		path.sprite->Draw(diamondT);
+
+		for (Node node : unit.path)
+		{
+			node.gridPos *= invY;
+			pos += tilemap->GetTileSize() * node.gridPos / 2;
+			path.transform->SetTranslation(pos);
+			path.transform->SetRotation(node.gridPos.GetAngleRadians());
+			path.sprite->SetAlpha(0.5f);
+			path.sprite->Draw();
+			pos += tilemap->GetTileSize() * node.gridPos / 2;
 			diamondT.SetTranslation(pos);
-			pathSprite->SetAlpha(1.0f);
-			pathSprite->Draw(diamondT);
+			path.sprite->SetAlpha(1.0f);
+			path.sprite->Draw(diamondT);
 		}
-		if (i < editExtraStartPos.size())
-			startPos = editExtraStartPos[i];
 	}
 }
 
-BehaviorArmy::UnitData BehaviorArmy::GetUnitData(const char * name_) const
+BehaviorUnit::Traits BehaviorArmy::GetUnitData(const char * name_) const
 {
-	for (UnitData unit : units) {
-		if (strcmp(name_, unit.name) == 0)
+	for (BehaviorUnit::Traits unit : unitTypes) {
+		if (strcmp(name_, unit.name.c_str()) == 0)
 			return unit;
 	}
-	return UnitData({ -1 });
+	return BehaviorUnit::Traits({ -1 });
 }
 
 void BehaviorArmy::UpdateFundsText()
 {
-	if (fundsText) {
-		fundsText->SetText(std::to_string(funds).c_str());
+	if (funds.text) {
+		funds.text->SetText(std::to_string(funds.amount).c_str());
 	}
 }
 
@@ -818,90 +609,11 @@ void BehaviorArmy::UpdateFundsText()
 
 //------------------------------------------------------------------------------
 
-unsigned BehaviorArmy::UnitData::GetCost()
+/*unsigned BehaviorArmy::UnitData::GetCost()
 {
 	unsigned cost = (unsigned)(((float)hp / 100)*((float)hp / 100)*10 + 0.5f);
 	cost += (unsigned)(((float)damage / 100)*((float)damage / 100)*10 + 0.5f);
 	cost += (unsigned)(((float)speed / 50)*((float)speed / 50)*10 + 0.5f);
 	if (BehaviorArmy::costType == 1) cost += (unsigned)(army->numUnits * 1.5);
 	return cost;
-}
-
-/*void BehaviorArmy::ControlOptions::Load(rapidjson::Value & obj)
-{
-	if (obj.HasMember("Camera")) {
-		rapidjson::Value &tmp = obj["Camera"];
-		if (obj.HasMember("CameraAxisX") && obj["CameraAxisX"].IsString()) {
-			Camera.cameraAxisX = GetAxis(obj["CameraAxisX"].GetString());
-		}
-		if (obj.HasMember("CameraAxisY") && obj["CameraAxisY"].IsString()) {
-			Camera.cameraAxisY = GetAxis(obj["CameraAxisY"].GetString());
-		}
-		if (obj.HasMember("CameraUp") && obj["CameraUp"].IsString()) {
-			Camera.cameraUp = GetButton(obj["CameraUp"].GetString());
-		}
-		if (obj.HasMember("CameraDown") && obj["CameraDown"].IsString()) {
-			Camera.cameraDown = GetButton(obj["CameraDown"].GetString());
-		}
-		if (obj.HasMember("CameraLeft") && obj["CameraLeft"].IsString()) {
-			Camera.cameraLeft = GetButton(obj["CameraLeft"].GetString());
-		}
-		if (obj.HasMember("CameraUp") && obj["CameraUp"].IsString()) {
-			Camera.cameraRight = GetButton(obj["CameraRight"].GetString());
-		}
-	}
-}
-
-int BehaviorArmy::ControlOptions::GetAxis(const char * name)
-{
-	if (strcmp(name, "LStickX") == 0)
-		return Gamepad::aLStickX;
-	if (strcmp(name, "LStickY") == 0)
-		return Gamepad::aLStickY;
-	if (strcmp(name, "RStickX") == 0)
-		return Gamepad::aRStickX;
-	if (strcmp(name, "RStickY") == 0)
-		return Gamepad::aRStickY;
-	if (strcmp(name, "LTrigger") == 0)
-		return Gamepad::aLTrigger;
-	if (strcmp(name, "RTrigger") == 0)
-		return Gamepad::aRTrigger;
-	return Gamepad::aUnbound;
-}
-
-int BehaviorArmy::ControlOptions::GetButton(const char * name)
-{
-	if (strcmp(name, "A") == 0)
-		return Gamepad::bA;
-	if (strcmp(name, "A") == 0)
-		return Gamepad::bA;
-	if (strcmp(name, "A") == 0)
-		return Gamepad::bA;
-	if (strcmp(name, "A") == 0)
-		return Gamepad::bA;
-	if (strcmp(name, "DpadUp") == 0)
-		return Gamepad::bDpadUp;
-	if (strcmp(name, "DpadDown") == 0)
-		return Gamepad::bDpadDown;
-	if (strcmp(name, "DpadLeft") == 0)
-		return Gamepad::bDpadLeft;
-	if (strcmp(name, "DpadRight") == 0)
-		return Gamepad::bDpadRight;
-	if (strcmp(name, "LShoulder") == 0)
-		return Gamepad::bLShoulder;
-	if (strcmp(name, "RShoulder") == 0)
-		return Gamepad::bRShoulder;
-	if (strcmp(name, "LThumb") == 0)
-		return Gamepad::bLThumb;
-	if (strcmp(name, "RThumb") == 0)
-		return Gamepad::bRThumb;
-	if (strcmp(name, "Back") == 0)
-		return Gamepad::bBack;
-	if (strcmp(name, "Start") == 0)
-		return Gamepad::bStart;
-	if (strcmp(name, "LTrigger") == 0)
-		return Gamepad::bLTrigger;
-	if (strcmp(name, "RTrigger") == 0)
-		return Gamepad::bRTrigger;
-	return Gamepad::bUnbound;
 }*/

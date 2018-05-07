@@ -235,6 +235,11 @@ void LevelManager::Load(const char* name)
 	id = 0;
 	while (stateNext != IDLE)
 		loadObject(levelDoc);
+
+	objectManager->GetObjectsWithFilter([](GameObject *obj) {
+		obj->PostLoadInit();
+		return false;
+	});
 }
 
 void LevelManager::loadObject(Document& levelDoc)

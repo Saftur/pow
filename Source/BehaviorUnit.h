@@ -19,6 +19,8 @@
 #include <vector>
 #include "Pathfinding.h"
 
+typedef class BehaviorArmy BehaviorArmy;
+
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -40,9 +42,9 @@ class Building
 	float buildTime;
 };
 
-enum WeaponType { cWeaponDrillsaw, cWeaponHandcannon, cWeaponBeamRifle, cNumWeapons };
+enum WeaponType { cWeaponDrillsaw = 0, cWeaponHandcannon = 1, cWeaponBeamRifle = 2, cNumWeapons = 3 };
 enum EquipmentType { cEquipNone, cEquipArmor, cEquipStrobebang, cEquipEMP, cNumEquips };
-enum Ability { cAbilityNone, cAbilityTechnician, cAbilityEngineer, cAbilityScientist };
+enum Ability { cAbilityNone = 0, cAbilityTechnician = 1, cAbilityEngineer = 2, cAbilityScientist = 3 };
 enum AttackGroup { cGroupAircraft, cGroupInfantry, cGroupArtillary };
 enum WeaponGroup { cGroupMelee, cGroupRanged, cGroupLongRanged };
 
@@ -54,6 +56,48 @@ enum WeaponGroup { cGroupMelee, cGroupRanged, cGroupLongRanged };
 class BehaviorUnit : public Behavior
 {
 public:
+	/////////////////////
+	// Items
+	/////////////////////
+	struct Weapon
+	{
+		std::string name;
+		WeaponGroup group;
+		float cooldown;
+		int range;
+		int damage;
+		GameObject* projectileArchetype;
+		// TODO: Pointers for sounds & maybe art?
+	};
+
+	struct Equipment
+	{
+		std::string name;
+		int count;
+		void(*use)();
+		float deployTime;
+		float cooldown;
+		// TODO: Pointers for sounds & maybe art?
+	};
+
+	/////////////////////
+	// Stats
+	/////////////////////
+
+	struct Traits
+	{
+		int strength;
+		int agility;
+		int defense;
+		int ability;
+		int group;
+		int weapon;
+		int item1;
+		int item2;
+		unsigned GetCost();
+		std::string name;
+	} traits;
+	
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
@@ -61,9 +105,12 @@ public:
 	// Allocate a new (Unit) behavior component.
 	// Params:
 	//  parent = The object that owns this behavior.
-	BehaviorUnit(int strength, int agility, int defense, Ability ability, WeaponType weapon, EquipmentType item1, EquipmentType item2);
+	BehaviorUnit();
 
-private:
+	Grid::Node GetNextPos();
+
+	BehaviorArmy* GetArmy();
+
 	enum states { cUnitIdle, cUnitMove, cUnitAttack, cUnitSoftChase, cUnitReturn, cUnitGuard, cUnitFollow, cUnitBuild, cUnitEndBuild };
 
 	// Clone an advanced behavior and return a pointer to the cloned object.
@@ -73,6 +120,8 @@ private:
 	// Returns:
 	//   A pointer to an advanced behavior.
 	Component* Clone() const;
+
+	void Init(BehaviorUnit::Traits data, BehaviorArmy* army);
 
 	// Initialize the current state of the behavior component.
 	// (Hint: Refer to the lecture notes on finite state machines (FSM).)
@@ -89,6 +138,8 @@ private:
 
 	void OnExit();
 
+	void OnDestroy();
+
 	// The collision handling function for Units.
 	// Params:
 	//	 stub = The stub object.
@@ -97,11 +148,18 @@ private:
 
 	void Load(rapidjson::Value& obj);
 
+	void SetPath(std::vector<Grid::Node> path);
+	std::vector<Grid::Node> GetPath();
+
+	Vector2D GetGridPos();
+	Node GetNode();
+
+	static vector<GameObject*> allUnits;
+
+private:
 	//------------------------------------------------------------------------------
 	// Private Functions:
 	//------------------------------------------------------------------------------
-	// Initializes this unit's stats based off of its traits.
-	void CalculateStats();
 
 	// Checks for enemies within a certain radius of the unit.
 	// Returns:
@@ -128,6 +186,8 @@ private:
 	// Builds the weapon and equipment arrays.
 	void BuildArrays();
 
+	bool IsStuck();
+
 	// Equipment use functions.
 	static void UseNone();
 	static void UseArmor();
@@ -136,50 +196,16 @@ private:
 
 	void Attack();
 
+
+
 	//------------------------------------------------------------------------------
 	// Stats
 	//------------------------------------------------------------------------------
 	
-	/////////////////////
-	// Items
-	/////////////////////
-	struct Weapon
-	{
-		std::string name;
-		WeaponGroup group;
-		float cooldown;
-		int range;
-		int damage;
-		GameObject* projectileArchetype;
-		// TODO: Pointers for sounds & maybe art?
-	};
 	
-	struct Equipment
-	{
-		std::string name;
-		int count;
-		void (*use)();
-		float deployTime;
-		float cooldown;
-		// TODO: Pointers for sounds & maybe art?
-	};
+	
 
-	/////////////////////
-	// Stats
-	/////////////////////
-	struct 
-	{
-		int strength;
-		int agility;
-		int defense;
-		Ability ability;
-		AttackGroup group;
-		Weapon weapon;
-		Equipment item1;
-		Equipment item2;
-	} traits;
-
-	static struct BaseStats
+	struct BaseStats
 	{
 		int maxHP;
 		int defense;
@@ -187,6 +213,7 @@ private:
 		int disengageRange;
 		int inventorySize;
 		float speed;
+		int baseCost;
 	};
 
 	static BaseStats defaultStats;
@@ -211,9 +238,13 @@ private:
 	GameObject* target;
 	int prevHP;
 	Vector2D targetPos, lastFrameTarget, guardingPos;
-	std::vector<Grid::Node*> path;
-	Grid::Node* moveTarget;
+	std::vector<Grid::Node> path;
+	Grid::Node moveTarget;
 	states prevState;
+	float stuckTimer;
+	Grid::Node gridPos;
+
+	BehaviorArmy* army;
 
 	static Weapon Weapons[cNumWeapons];
 	static Equipment Equips[cNumEquips];

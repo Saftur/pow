@@ -13,7 +13,7 @@ Map::Map() {
 }*/
 
 Grid Map::InitGrid() {
-	Grid grid(GetTilemapWidth(), GetTilemapHeight());
+	Grid grid = Grid::GetInstance();
 	for (int y = 0; y < GetTilemapHeight(); y++) {
 		for (int x = 0; x < GetTilemapWidth(); x++) {
 			int tile = GetTile(x, y);

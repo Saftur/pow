@@ -8,16 +8,23 @@ class Grid
 public:
 	struct Node
 	{
-		int gridX, gridY;
+		Vector2D gridPos;
 		Vector2D worldPos;
 		int hVal, gVal;
 		bool open;
-		bool isHighGround;
 		Node* parent;
 
 		int fVal();
 
-		Node(int gridX, int gridY, Vector2D worldPos = Vector2D(0, 0), bool highGround = false, bool state = false);
+		Node(Vector2D gridPos = Vector2D(0, 0), bool state = true);
+
+		operator Vector2D();
+
+		int X() const;
+		int Y() const;
+
+		bool operator==(const Node &other);
+		bool operator!=(const Node &other);
 	};
 
 	// Finds all nodes adjacent to a given node.
@@ -25,7 +32,7 @@ public:
 	//	node - the node whose neighbors we're finding.
 	// Returns:
 	// A standard vector containing all adjacent nodes.
-	std::vector<Node*> GetNeighbors(Node* node);
+	std::vector<Node> GetNeighbors(Node node);
 
 	// Updates a node's values.
 	// Params:
@@ -35,22 +42,7 @@ public:
 	//	newState - is this node valid for pathfinding?
 	void SetNode(int xPos, int yPos, bool newState);
 
-	void SetHighGround(int xPos, int yPos, bool highGround);
-
-	// Finds the node with the given world position.
-	// Params:
-	//	worldPos - the pos to find.
-	// Returns:
-	// A pointer to the found node. NULL if none was found.
-	Node* GetNode(Vector2D worldPos);
-
-	// Converts a given coordinate pair into a single index.
-	// Params:
-	//	xIndex - the x position on the grid.
-	//	yIndex - the y position on the grid.
-	// Returns:
-	// The computed index.
-	int Pos(int xIndex, int yIndex);
+	Node& GetNode(int x, int y);
 
 	// Finds the unit occupying a tile.
 	// Params:
@@ -58,15 +50,26 @@ public:
 	//	yPos - the y position on the grid.
 	// Returns:
 	// A pointer to the unit (or building) at the specified location. NULL if unoccupied.
-	GameObject* GetOccupant(int xPos, int yPos);
+	GameObject* GetOccupant(int xPos, int yPos, GameObjectManager* manager);
+
+	Vector2D ConvertToWorldPoint(Node node);
+	Node ConvertToGridPoint(Vector2D pos);
 
 	Node* operator[](int index);
 
-	Grid(int width, int height);
+	Grid(int width, int height, int tileWidth, int tileHeight, int screenOffsetX=0, int screenOffsetY=0);
+	~Grid();
 	static Grid& GetInstance();
 private:
+	static Grid Gridy;
+
 	const int width;
 	const int height;
+	const int tileWidth;
+	const int tileHeight;
+	const int screenOffsetX;
+	const int screenOffsetY;
+	
 	Grid();
 
 	Node** grid;

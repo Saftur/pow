@@ -11,6 +11,13 @@ Component::~Component()
 {
 }
 
+Component * Component::Clone() const {
+	return nullptr;
+}
+
+void Component::PostLoadInit() {
+}
+
 void Component::Update(float dt)
 {
 	Trace::GetInstance().GetStream() << "Component " << name << ": Update" << std::endl;

@@ -54,6 +54,34 @@
     }
   },
   {
+    "Name": "TestBox",
+    "Archetype": true,
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 64, 64 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "UnitSpriteSource",
+        "Texture": "Data\\Assets\\tilemap.png",
+        "Cols": 1,
+        "Rows": 1
+      },
+      "Mesh": {
+        "Name": "UnitMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "FrameIndex": 0,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "BehaviorTestBox": {
+
+    }
+  },
+  {
     "Name": "UnitArchetype",
     "Archetype": true,
     "Transform": {
@@ -61,8 +89,7 @@
       "Scale": [ 64, 64 ],
       "Rotation": 0
     },
-    {
-      "CompType": "Sprite",
+    "Sprite": {
       "SpriteSource": {
         "Name": "UnitSpriteSource",
         "Texture": "Data\\Assets\\baseunit2.png",
@@ -115,7 +142,7 @@
       "Name": "Army1",
       "Side": "Left",
       "FrontLineName": "FrontLine1",
-      "FrontLineStart": 0,
+      "FrontLineStart": 5,
       "FundsDisplayName": "FundsDisplay1",
       "StartFunds": 1000,
       "PathLineName": "PathLine1",
@@ -248,6 +275,9 @@
       "Mesh": "CursorMesh",
       "Alpha": 0.5,
       "ModulateColor": [ 1, 0, 0, 1 ]
+    },
+    "Cursor": {
+      "MoveSpeed": 1600
     }
   },
   {
@@ -262,6 +292,9 @@
       "Mesh": "CursorMesh",
       "Alpha": 0.5,
       "ModulateColor": [ 0, 0, 1, 1 ]
+    },
+    "Cursor": {
+      "MoveSpeed": 1600
     }
   }
 ]
