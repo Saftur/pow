@@ -337,7 +337,7 @@ void Button::CreateUnit1Effect(Button & button, float dt, int count, ...)
 
 	UNREFERENCED_PARAMETER(side);
 	UNREFERENCED_PARAMETER(screenPos);
-	army->CreateUnit("Unit1", mapPos, vector<Vector2D>());
+	army->CreateUnit("Unit1", Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
 }
 
 void Button::CreateUnit2Effect(Button & button, float dt, int count, ...)
@@ -352,7 +352,7 @@ void Button::CreateUnit2Effect(Button & button, float dt, int count, ...)
 
 	UNREFERENCED_PARAMETER(side);
 	UNREFERENCED_PARAMETER(screenPos);
-	army->CreateUnit("Unit2", mapPos, vector<Vector2D>());
+	army->CreateUnit("Unit2", Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
 }
 
 void Button::CreateUnit3Effect(Button & button, float dt, int count, ...)
@@ -367,7 +367,7 @@ void Button::CreateUnit3Effect(Button & button, float dt, int count, ...)
 
 	UNREFERENCED_PARAMETER(side);
 	UNREFERENCED_PARAMETER(screenPos);
-	army->CreateUnit("Unit3", mapPos, vector<Vector2D>());
+	army->CreateUnit("Unit3", Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
 }
 
 void Button::CreateUnit4Effect(Button & button, float dt, int count, ...)
@@ -382,7 +382,7 @@ void Button::CreateUnit4Effect(Button & button, float dt, int count, ...)
 
 	UNREFERENCED_PARAMETER(side);
 	UNREFERENCED_PARAMETER(screenPos);
-	army->CreateUnit("Unit4", mapPos, vector<Vector2D>());
+	army->CreateUnit("Unit4", Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
 }
 
 void Button::ListEffects()

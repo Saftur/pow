@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 //
 // File Name:	BehaviorUnit.cpp
-// Author(s):	Arthur Bouvier
+// Author(s):	Mark Culp
 // Project:		MyGame
 // Course:		CS230S17
 //
@@ -15,27 +15,47 @@
 
 #include "stdafx.h"
 #include "Random.h"
+#include <algorithm>
 #include "AEEngine.h"
 #include "Teleporter.h"
 #include "BehaviorUnit.h"
 #include "GameObjectManager.h"
 #include "Transform.h"
+#include "Pathfinding.h"
 #include "Physics.h"
 
 //------------------------------------------------------------------------------
 // Enums:
 //------------------------------------------------------------------------------
 
-enum states { cUnitWaiting, cUnitMoving, cUnitCheckMove, cUnitAttacking };
-
 //------------------------------------------------------------------------------
 // Public Consts:
 //------------------------------------------------------------------------------
+
+vector<GameObject*> BehaviorUnit::allUnits;
 
 //------------------------------------------------------------------------------
 // Public Structures:
 //------------------------------------------------------------------------------
 
+BehaviorUnit::BaseStats BehaviorUnit::defaultStats = 
+{
+100,		// Max HP.
+0,			// Defense
+5,			// Detection range.
+8,			// Disengagement range.
+3,			// Inventory size.
+1.0f		// Movement speed.
+};
+
+BehaviorUnit::Weapon BehaviorUnit::Weapons[cNumWeapons];
+BehaviorUnit::Equipment BehaviorUnit::Equips[cNumEquips];
+
+
+Grid::Node BehaviorUnit::GetNextPos()
+{
+	return gridPos;
+}
 //------------------------------------------------------------------------------
 // Public Functions:
 //------------------------------------------------------------------------------
@@ -44,122 +64,72 @@ enum states { cUnitWaiting, cUnitMoving, cUnitCheckMove, cUnitAttacking };
 // Params:
 //  parent = The object that owns this behavior.
 BehaviorUnit::BehaviorUnit() :
-		Behavior("BehaviorUnit")
+	Behavior("BehaviorUnit")
 {
-	SetCurrentState(cUnitWaiting);
-	SetNextState(cUnitMoving);
+	SetCurrentState(cBehaviorInvalid);
+	SetNextState(cUnitIdle);
 }
 
-void BehaviorUnit::Init(BehaviorArmy::UnitData unitData_, vector<Vector2D> path_, Tilemap *tilemap_)
+void BehaviorUnit::Init(BehaviorUnit::Traits theTraits, BehaviorArmy* theArmy)
 {
-	SetNextState(cUnitMoving);
-	tilemap = tilemap_;
-	unitData = unitData_;
-	hp = (float)(unitData.hp);
-	startPos = GetMapPos();
-	path = path_;
-	target = nullptr;
-	attackTimer = 0;
-	payTimer = 0;
-	abilitySprite = (Sprite*)GetParent()->GetComponent("Sprite", 1);
-	abilitySprite->SetFrame(unitData.ability);
-	abilityAnimation = (Animation*)GetParent()->GetComponent("Animation");
-	vector<AnimationFrame> seq;
-	seq.push_back({ unitData.ability + BehaviorArmy::UnitData::NUMABILITIES, 0.333f });
-	seq.push_back({ unitData.ability, 0.0f });
-	abilityAnimSequence = AnimationSequence(seq, false);
+	army = theArmy;
 
-	unitData.army->IncreaseUnits();
+	// Build the static arrays if they haven't already been built.
+	BuildArrays();
+
+	// Initialize this unit's traits.
+	traits = theTraits;
+
+	stats.attackRange = Weapons[traits.weapon].range;
+	stats.maxHP = (int)(defaultStats.maxHP + 0.05f * traits.strength + 0.15f * traits.defense);
+	stats.currHP = stats.maxHP;
+	stats.inventorySize = (int)(defaultStats.inventorySize + 0.5f * traits.strength + 0.5f * traits.agility);
+	stats.detectRange = defaultStats.detectRange;
+	stats.defense = (int)(defaultStats.defense + 0.05f * traits.defense);
+
+	// If there's armor, apply an HP boost. If there's an empty slot, give an inventory size boost.
+	if (Equips[traits.item1].name == Equips[cEquipArmor].name)
+	{
+		stats.currHP += 50;
+	}
+	else if (Equips[traits.item1].name == Equips[cEquipNone].name)
+	{
+		stats.inventorySize += 2;
+	}
+
+	if (Equips[traits.item2].name == Equips[cEquipArmor].name)
+	{
+		stats.currHP += 50;
+	}
+	else if (Equips[traits.item2].name == Equips[cEquipNone].name)
+	{
+		stats.inventorySize += 2;
+	}
+
+	
 }
 
-Vector2D BehaviorUnit::GetScrPos()
+void BehaviorUnit::SetPath(std::vector<Grid::Node> newPath)
 {
-	if (!(GetParent()->GetComponent("Transform")))
-		return { 0, 0 };
-	return ((Transform*)(GetParent()->GetComponent("Transform")))->GetTranslation();
+	path = newPath;
 }
 
-Vector2D BehaviorUnit::GetMapPos()
+void BehaviorUnit::BuildArrays()
 {
-	if (!(GetParent()->GetComponent("Transform")))
-		return { 0, 0 };
-	return tilemap->GetPosOnMap(GetScrPos());
-}
+	// Prevent duplicate initialization.
+	if (Weapons[0].name == "Drillsaw")
+		return;
 
-Vector2D BehaviorUnit::GetNextDir()
-{
-	if (path.empty())
-		return { 0, 0 };
-	return path[0];
-}
+	// Build weapon array.
+	Weapons[cWeaponDrillsaw] = { "Drillsaw", cGroupMelee, 0.05f, 1, 10, GetParent()->GetObjectManager()->GetArchetype("ProjectileInvisible") };
+	Weapons[cWeaponHandcannon] = { "Handcannon", cGroupRanged, 0.2f, 3, 20, GetParent()->GetObjectManager()->GetArchetype("ProjectileLaser") };
+	Weapons[cWeaponBeamRifle] = { "Beam Rifle", cGroupLongRanged, 0.5f, 5, 30, GetParent()->GetObjectManager()->GetArchetype("ProjectileLaser") };
 
-Vector2D BehaviorUnit::GetNextScrPos()
-{
-	return tilemap->GetPosOnScreen(GetNextPos());
-}
-
-Vector2D BehaviorUnit::GetNextPos()
-{
-	return startPos+GetNextDir();
-}
-
-int BehaviorUnit::GetRecycleReturns()
-{
-	BehaviorArmy::UnitData ud = unitData;
-	ud.hp = (int)hp;
-	return ud.GetCost();
-}
-
-BehaviorArmy::UnitData BehaviorUnit::GetUnitData()
-{
-	return unitData;
-}
-
-vector<Vector2D> BehaviorUnit::GetPath()
-{
-	return path;
-}
-
-void BehaviorUnit::ClearPath()
-{
-	Vector2D d = path.empty() ? Vector2D(0, 0) : path[0];
-	if (!path.empty())
-		path.clear();
-	if (IsMoving())
-		path.push_back(d);
-}
-
-void BehaviorUnit::AddToPath(Vector2D pos)
-{
-	path.push_back(pos);
-}
-
-void BehaviorUnit::AddToPath(vector<Vector2D> path_)
-{
-	for (Vector2D d : path_)
-		path.push_back(d);
-}
-
-bool BehaviorUnit::IsMoving()
-{
-	return GetCurrentState() == cUnitMoving;
-}
-
-bool BehaviorUnit::IsAdjacent(BehaviorUnit * other)
-{
-	Vector2D diff = GetMapPos() - other->GetMapPos();
-	return diff.Magnitude() <= 1;
-}
-
-bool BehaviorUnit::WillBeAdjacent(BehaviorUnit * other)
-{
-	Vector2D diff = GetMapPos() - other->GetNextPos();
-	return diff.Magnitude() <= 1;
-}
-
-BehaviorArmy *BehaviorUnit::GetArmy()
-{
-	return unitData.army;
+	// Build equipment array.
+	Equips[cEquipNone] = { "null", 0, UseNone, 0.0f, 0.0f };
+	Equips[cEquipArmor] = { "Diamondium Armor", -1, UseArmor, 0.0f, 0.0f };
+	Equips[cEquipStrobebang] = { "Strobebang", 5, UseStrobebang, 1.0f, 30.0f };
+	Equips[cEquipEMP] = { "EMP", 5, UseEMP, 1.0f, 30.0f };
 }
 
 // Clone an advanced behavior and return a pointer to the cloned object.
@@ -173,74 +143,34 @@ Component* BehaviorUnit::Clone() const
 	return new BehaviorUnit(*this);
 }
 
-void BehaviorUnit::OnDestroy()
-{
-	unitData.army->DescreaseUnits();
-}
-
 // Initialize the current state of the behavior component.
 // (Hint: Refer to the lecture notes on finite state machines (FSM).)
 // Params:
 //	 behavior = Pointer to the behavior component.
 void BehaviorUnit::OnEnter()
 {
+	gridPos = Grid::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation());
+	Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = false;
 	switch (GetCurrentState())
 	{
-	case cUnitMoving:
-		unitData.army->PushFrontLine(GetMapPos());
-		if (path.empty() || target) {
-			SetCurrentState(cUnitWaiting);
-			SetNextState(cUnitWaiting);
-			break;
-		}
-		Vector2D nextPos = GetNextPos();
-		while (nextPos.X() < 0 || nextPos.Y() < 0 ||
-			nextPos.X() >= tilemap->GetTilemapWidth() ||
-			nextPos.Y() >= tilemap->GetTilemapHeight()) {
-			path.erase(path.begin());
-			nextPos = GetNextPos();
-		}
-		if (path.empty()) {
-			SetCurrentState(cUnitWaiting);
-			SetNextState(cUnitWaiting);
-			break;
-		}
-		SetCurrentState(cUnitCheckMove); // Prevent  self detection
-		vector<GameObject*> units = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
-		for (GameObject* obj : units) {
-			BehaviorUnit *bu = (BehaviorUnit*)(obj->GetComponent("BehaviorUnit"));
-			Transform *t = (Transform*)(obj->GetComponent("Transform"));
-			if (!bu || !t || bu == this) continue; // If missing behavior or transform, skip
-			if (bu->GetCurrentState() == cUnitMoving || bu->GetCurrentState() == cUnitWaiting/*cUnitDoneMove*/) { // If other already moving
-				if (unitData.army->GetSide() != bu->unitData.army->GetSide() && (IsAdjacent(bu) || (bu->GetCurrentState() == cUnitMoving && WillBeAdjacent(bu)))) {
-					target = bu;
-					SetCurrentState(cUnitWaiting);
-					SetNextState(cUnitWaiting);
-					break;
-				}
-				if ((GetNextPos() == bu->GetMapPos()/* && GetNextDir() != bu->GetNextDir()*/) || (GetNextPos() == bu->GetNextPos() && bu->GetCurrentState() == cUnitMoving)) {
-					SetCurrentState(cUnitWaiting); // Skip init
-					SetNextState(cUnitWaiting);
-					break;
-				}
-			}
-		}
-		if (BehaviorArmy::costType == 0) {
-			if (!(unitData.army->TakeFromFunds((float)unitData.GetCost() / 15.f))) {
-				SetCurrentState(cUnitWaiting);
-				SetNextState(cUnitWaiting);
-			}
-		}
-		if (GetCurrentState() == cUnitCheckMove) {
-			SetCurrentState(cUnitMoving);
-			Vector2D direction = GetNextDir();
-			direction.X(direction.X() * tilemap->GetTileWidth());
-			direction.Y(direction.Y() * tilemap->GetTileHeight());
-			direction *= (float)(unitData.speed);
-			direction /= 100;
-			direction.Y(-direction.Y());
-			((Physics*)(GetParent()->GetComponent("Physics")))->SetVelocity(direction);
-		}
+	case cUnitIdle:
+		allUnits.push_back(GetParent());
+		break;
+	case cUnitMove:
+		break;
+	case cUnitAttack:
+		break;
+	case cUnitSoftChase:
+		break;
+	case cUnitReturn:
+		break;
+	case cUnitGuard:
+		break;
+	case cUnitFollow:
+		break;
+	case cUnitBuild:
+		break;
+	case cUnitEndBuild:
 		break;
 	}
 }
@@ -254,93 +184,112 @@ void BehaviorUnit::OnUpdate(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
 
-	if (GetParent()->IsDestroyed())
-		return;
-	/*if (hp <= 0) {
-		GetParent()->Destroy();
-		abilityOverlay->Destroy();
-		return;
-	}*/
-
 	switch (GetCurrentState())
 	{
-	case cUnitMoving: {
-		Vector2D dir = GetNextDir();
-		Vector2D scrPos = GetScrPos();
-		Vector2D nextScrPos = GetNextScrPos();
-		Vector2D diff = scrPos - nextScrPos;
-		if (diff.X() * dir.X() >= 0 && diff.Y() * -dir.Y() >= 0) {
-			((Physics*)(GetParent()->GetComponent("Physics")))->SetVelocity({ 0, 0 });
-			path.erase(path.begin());
-			SetCurrentState(cUnitWaiting);//cUnitDoneMove;
-			startPos = GetMapPos();
-			((Transform*)GetParent()->GetComponent("Transform"))->SetTranslation(tilemap->GetPosOnScreen(GetMapPos()));
-			//Init(behavior);
-		}
-		/*if (dir.X() != 0) {
-			if (scrPos.X()*dir.X() >= nextScrPos.X()*dir.X()) {
-				scrPos.X(nextScrPos.X());
-			}
-		}
-		if (dir.Y() != 0) {
-			if (scrPos.Y()*dir.Y() >= nextScrPos.Y()*dir.Y()) {
-				scrPos.Y(nextScrPos.Y());
-			}
-		}*/
-	}
+	case cUnitIdle:
+		// Check for enemies.
+		CheckAttack();
 		break;
-	case cUnitWaiting:
-		if (!target) {
-			vector<GameObject*> units = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
-			for (GameObject* obj : units) {
-				BehaviorUnit *bu = (BehaviorUnit*)(obj->GetComponent("BehaviorUnit"));
-				Transform *t = (Transform*)(obj->GetComponent("Transform"));
-				if (!bu || !t || bu == this) continue; // If missing behavior or transform, skip
-				if (bu->GetCurrentState() == cUnitMoving || bu->GetCurrentState() == cUnitWaiting/*cUnitDoneMove*/) { // If other already moving
-					if (unitData.army != bu->unitData.army && (IsAdjacent(bu) || (bu->GetCurrentState() == cUnitMoving && WillBeAdjacent(bu)))) {
-						target = bu;
-						break;
-					}
-				}
-			}
+	case cUnitMove:
+		// If our target has changed, we need to calculate a new path.
+		if (lastFrameTarget != targetPos)
+		{
+			path.clear();
 		}
-		if (target) {
-			if (!(target->GetParent()->IsDestroyed()) && IsAdjacent(target)) {
-				if (attackTimer <= 0) {
-					if (unitData.army->costType != 0 || unitData.army->TakeFromFunds((float)unitData.GetCost() / 10.f)) {
-						//Trace::GetInstance().GetStream() << "Attack!" << std::endl;
-						abilityAnimation->PlaySequence(&abilityAnimSequence);
-						target->hp -= (float)(unitData.damage) / 4;
-						if (target->hp <= 0) {
-							target->GetParent()->Destroy();
-							target = nullptr;
-						}
-						attackTimer = attackCooldown;
-					}
-				} else attackTimer -= dt;
-				break;
-			} else target = nullptr;
-		} else {
-			if (BehaviorArmy::costType == 0) {
-				if (payTimer <= 0) {
-					if (!(unitData.army->TakeFromFunds((float)unitData.GetCost() / 20.f)))
-						GetParent()->Destroy();
-					payTimer = payCooldown;
-				} else payTimer -= dt;
-			}
+
+		// Do we need to do pathfinding?
+		if (path.empty())
+		{
+			Grid::Node start = Grid::GetInstance().ConvertToGridPoint(((Transform*)GetParent()->GetComponent("Transform"))->GetWorldTranslation());
+			Grid::Node end = Grid::GetInstance().ConvertToGridPoint(targetPos);
+
+			path = Pathfinding::FindPath(start, end);
+
+			// Set the first node.
+			moveTarget = path.back();
+			path.pop_back();
 		}
-		SetNextState(cUnitMoving);
+
+		// Have we reached a node?
+		if (Grid::GetInstance().ConvertToGridPoint(((Transform*)GetParent()->GetComponent("Transform"))->GetWorldTranslation()) == moveTarget)
+		{
+			// Set the next node.
+			moveTarget = Node();
+			moveTarget = path.back();
+			path.pop_back();
+		}
+
+		// If pathfinding failed, set state to Idle.
+		if (path.empty())
+		{
+			SetNextState(cUnitIdle);
+			target = nullptr;
+			return;
+		}
+
+		// Update velocity
+		CalculateVelocity();
+
+		Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = true;
+		gridPos = Grid::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation());
+		Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = false;
+		break;
+	case cUnitAttack:
+		// Can we attack our target?
+		if (CheckAttack())
+		{
+
+		}
+		else
+		{
+			// Return to the previous state.
+			SetNextState(prevState);
+		}
+		break;
+	case cUnitSoftChase:
+		break;
+	case cUnitReturn:
+		break;
+	case cUnitGuard:
+		break;
+	case cUnitFollow:
+		break;
+	case cUnitBuild:
+		break;
+	case cUnitEndBuild:
 		break;
 	}
 }
 
 void BehaviorUnit::OnExit()
 {
+	switch (GetCurrentState()) 
+	{
+	case cUnitIdle:
+		break;
+	case cUnitMove:
+		break;
+	case cUnitAttack:
+		break;
+	case cUnitSoftChase:
+		break;
+	case cUnitReturn:
+		break;
+	case cUnitGuard:
+		break;
+	case cUnitFollow:
+		break;
+	case cUnitBuild:
+		break;
+	case cUnitEndBuild:
+		break;
+	}
 }
 
-void BehaviorUnit::Load(rapidjson::Value & obj)
+void BehaviorUnit::OnDestroy()
 {
-	UNREFERENCED_PARAMETER(obj);
+	allUnits.erase(std::find(allUnits.begin(), allUnits.end(), GetParent()));
+	Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = true;
 }
 
 // The collision handling function for Units.
@@ -353,6 +302,158 @@ void BehaviorUnit::CollisionHandler(GameObject& stub, GameObject& other)
 	UNREFERENCED_PARAMETER(other);
 }
 
+void BehaviorUnit::Load(rapidjson::Value& obj)
+{
+
+}
+
+void BehaviorUnit::UseNone()
+{
+
+}
+
+void BehaviorUnit::UseArmor()
+{
+
+}
+
+void BehaviorUnit::UseStrobebang()
+{
+
+}
+
+void BehaviorUnit::UseEMP()
+{
+
+}
+
+// Calculates velocity based off of movement speed, target pos, and current pos.
+void BehaviorUnit::CalculateVelocity()
+{
+	// Calculate a direction vector from current position to taget position.
+	Vector2D dir = moveTarget.worldPos - ((Transform*)GetParent()->GetComponent("Transform"))->GetTranslation();
+	dir.Normalized();
+
+	// Set velocity.
+	((Physics*)GetParent()->GetComponent("Physics"))->SetVelocity(dir * (defaultStats.speed * traits.agility));
+}
+
+// Checks for enemies within a certain radius of the unit.
+// Returns:
+// A standard vector containing all of the found units.
+std::vector<GameObject*> BehaviorUnit::FindEnemiesInRange()
+{
+	std::vector<GameObject*> foundUnits;
+
+	for (GameObject* unit : allUnits)
+	{
+		// if unit.team != team
+		// if dist(unit.gridPos <= traits.weapon.range) foundUnits.push_back(unit);
+		foundUnits.push_back(unit);
+	}
+
+	return foundUnits;
+}
+
+// Checks if the unit can target an enemy.
+// Params:
+//	enemy - the enemy we're checking.
+// Returns:
+// True if the unit can be targeted, false if not.
+bool BehaviorUnit::CanTarget(GameObject* enemy)
+{
+	AttackGroup enemyGroup = AttackGroup::cGroupInfantry;//((BehaviorUnit*)enemy->GetComponent("Behavior"))->traits.group;
+
+	switch (Weapons[traits.weapon].group)
+	{
+	case cGroupMelee:
+	case cGroupRanged:
+		if (enemyGroup == cGroupInfantry || enemyGroup == cGroupArtillary)
+			return true;
+		return false;
+	case cGroupLongRanged:
+		return true;
+	}
+
+	return false;
+}
+
+// Checks if the unit can attack an enemy.
+// Params:
+//	enemy - the enemy we're checking.
+// Returns:
+// True if the unit can be attacked, false if not.
+bool BehaviorUnit::CheckAttack()
+{
+	// Do we have a target?
+	if (target == nullptr)
+	{
+		// If we are moving to a location, ignore all nearby enemies.
+		if (moveTarget == Node())
+			return false;
+
+		// Find all enemies within attack range.
+		std::vector<GameObject*> objsInRange = FindEnemiesInRange();
+
+		// Check if we can target each enemy.
+		for (GameObject* enemy : objsInRange)
+		{
+			if (CanTarget(enemy))
+			{
+				// If we can target this enemy, set state to attack.
+				target = enemy;
+				SetNextState(cUnitAttack);
+				return false;
+			}
+		}
+	}
+	else
+	{
+		// Can we attack our target?
+		// if (range < stats.range && target.team != team)
+		//	return true;
+		// else
+		return false;
+	}
+
+	return false;
+}
+
+unsigned BehaviorUnit::Traits::GetCost()
+{
+	return 9;
+}
+
+void BehaviorUnit::Attack()
+{
+
+}
+
+bool BehaviorUnit::IsStuck()
+{
+	return false;
+}
+
+BehaviorArmy* BehaviorUnit::GetArmy()
+{
+	return army;
+}
+
+std::vector<Grid::Node> BehaviorUnit::GetPath()
+{
+	return path;
+}
+
+Vector2D BehaviorUnit::GetGridPos()
+{
+	return GetNode().gridPos;
+}
+
+Node BehaviorUnit::GetNode()
+{
+	return gridPos;
+}
+
 //------------------------------------------------------------------------------
 // Private Variables:
 //------------------------------------------------------------------------------
@@ -362,3 +463,4 @@ void BehaviorUnit::CollisionHandler(GameObject& stub, GameObject& other)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+

@@ -65,7 +65,7 @@ public:
 	// Get the name of this component's type.
 	const char* GetName() const;
 
-private:
+protected:
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------

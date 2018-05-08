@@ -26,10 +26,10 @@ using std::string;
 #include "Rendertext.h"
 #include "Transform.h"
 #include "ControlList.h"
-
+#include "Grid.h"
+#include "BehaviorUnit.h"
 
 typedef class Sprite Sprite;
-typedef class BehaviorUnit BehaviorUnit;
 
 //------------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ enum ArmyState
 class BehaviorArmy : public Behavior
 {
 public:
-	struct UnitData {
+	/*struct UnitData {
 		// NUMABILITIES isn't an actual ability, it's just a counter
 		enum Ability { NONE, ARMOR, BOW, BUILDER, NUMABILITIES };
 
@@ -65,7 +65,7 @@ public:
 		Sprite* abilitySprite;
 
 		unsigned GetCost();
-	};
+	};*/
 
 	// Army side
 	enum Side {
@@ -111,10 +111,12 @@ public:
 	//  amount = amount to add
 	void AddToFunds(float amount);
 
-	// 0 = cost over time
-	// 1 = higher train cost for bigger army
-	static const int costType = -1;
-
+	// Create a unit
+	// Params:
+	//  unitName = Name of unit to spawn
+	//  startPos = Start position of unit
+	//  path     = Starting path
+	void CreateUnit(const char *unitName, Node startPos);
 	// Is spawn position "legal"
 	// Params:
 	//  pos = Spawn pos
@@ -122,12 +124,9 @@ public:
 	//  Whether or not it's legal
 	bool LegalSpawn(Vector2D pos);
 
-	// Create a unit
-	// Params:
-	//  unitName = Name of unit to spawn
-	//  startPos = Start position of unit
-	//  path     = Starting path
-	void CreateUnit(const char *unitName, Vector2D startPos, vector<Vector2D> path);
+	// 0 = cost over time
+	// 1 = higher train cost for bigger army
+	static const int costType = -1;
 
 private:
 	// Clone an advanced behavior and return a pointer to the cloned object.
@@ -167,13 +166,7 @@ private:
 	// Params:
 	//  curspos  = Position of cursor
 	//  deselect = Deselect instead
-	void SelectUnits(Vector2D &curspos, bool deselect=false);
-	// Add direction to editing path
-	// Params:
-	//  dir = direction to add
-	// Returns:
-	//  false if failed (ie would go off-screen)
-	bool AddToEditPath(Vector2D dir);
+	void SelectUnits();
 	// Draw the currently editing path
 	void DrawPath() const;
 
@@ -182,7 +175,7 @@ private:
 	//  name = name of unit
 	// Returns:
 	//  unit data
-	UnitData GetUnitData(const char *name) const;
+	BehaviorUnit::Traits GetUnitData(const char *name) const;
 	// Update on-screen funds text
 	void UpdateFundsText();
 
@@ -196,7 +189,7 @@ private:
 
 
 	// List of unit types
-	vector<UnitData> unitTypes;
+	vector<BehaviorUnit::Traits> unitTypes;
 	// Side of army
 	Side side;
 	// Number of units alive from army
@@ -207,7 +200,7 @@ private:
 		// Current funds
 		float amount;
 		// Starting funds
-		float startAmount;
+		unsigned startAmount;
 		// Name of funds display object
 		string dispObjName;
 		// Text component of funds display object
@@ -216,6 +209,8 @@ private:
 
 	// Pointer to tilemap
 	Tilemap *tilemap;
+
+
 
 	// Front line data
 	struct {
@@ -249,38 +244,32 @@ private:
 
 	// Pointer to camera position
 	Vector2D *camera;
+	
+	struct SelectedUnit
+	{
+		BehaviorUnit* unit;	// The unit
+		vector<Node> path;	// The unit's path
+		Vector2D offset;	// An offset from the move target
+	};
 
 	// Editing data
-	struct {
-		// Currently editing unit
-		BehaviorUnit *unit;
-		// Currently editing path
-		vector<Vector2D> path;
-		// Last map position of cursor while editing
-		Vector2D pos = {-1, -1};
-		// Path start position
-		Vector2D startPos;
-		// Extra unit editing data
-		struct {
-			// Last position where an extra unit was selected
-			Vector2D lastPos = {-1, -1};
-			// List of extra editing units
-			vector<BehaviorUnit*> units;
-			// Start position of editing units
-			vector<Vector2D> startPos;
-		} extra;
-		// Select mode (auto = hover over units, manual = press A on them)
-		enum { smAuto, smManual } selectMode;
-	} edit;
+	vector<SelectedUnit> selectedUnits;
+
+	// Selection rectangle positions
+	Node rectStartPos;
+	Node rectEndPos;
+
+	// Node targetted previous frame
+	Node prevTarget;
 
 	// Path drawing
 	struct {
 		string lineDispName;
 		Sprite *sprite;
 		Transform *transform;
-		Transform diamondTransform;
-		Transform targetTransform;
 	} path;
+
+	void CalculateOffsets();
 };
 
 //------------------------------------------------------------------------------

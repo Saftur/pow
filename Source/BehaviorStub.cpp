@@ -19,6 +19,7 @@
 #include "Teleporter.h"
 #include "BehaviorStub.h"
 #include "GameObjectManager.h"
+#include "Vector2D.h"
 
 //------------------------------------------------------------------------------
 // Enums:
@@ -104,6 +105,11 @@ void BehaviorStub::CollisionHandler(GameObject& stub, GameObject& other)
 {
 	UNREFERENCED_PARAMETER(stub);
 	UNREFERENCED_PARAMETER(other);
+}
+
+void BehaviorStub::Load(rapidjson::Value& obj)
+{
+	
 }
 
 //------------------------------------------------------------------------------

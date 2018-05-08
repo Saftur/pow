@@ -17,7 +17,6 @@
 #include <map>
 using std::map;
 
-typedef BehaviorArmy BehaviorArmy;
 typedef AEGfxVertexList AEGfxVertexList;
 typedef AEGfxTexture AEGfxTexture;
 

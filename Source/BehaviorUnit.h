@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 //
 // File Name:	BehaviorUnit.h
-// Author(s):	Arthur Bouvier
+// Author(s):	Doug Schilling (dschilling)
 // Project:		MyGame
 // Course:		CS230S17
 //
@@ -16,11 +16,10 @@
 //------------------------------------------------------------------------------
 
 #include "Behavior.h"
-#include "Vector2D.h"
-#include "BehaviorArmy.h"
-#include "Animation.h"
-#include "AnimationSequence.h"
-#include "Tilemap.h"
+#include <vector>
+#include "Pathfinding.h"
+
+typedef class BehaviorArmy BehaviorArmy;
 
 //------------------------------------------------------------------------------
 
@@ -35,6 +34,14 @@ enum UnitState
 };
 #endif
 
+enum SpecialtyType { Basic, Advanced, Special };
+
+enum WeaponType { cWeaponDrillsaw = 0, cWeaponHandcannon = 1, cWeaponBeamRifle = 2, cNumWeapons = 3 };
+enum EquipmentType { cEquipNone, cEquipArmor, cEquipStrobebang, cEquipEMP, cNumEquips };
+enum Ability { cAbilityNone = 0, cAbilityTechnician = 1, cAbilityEngineer = 2, cAbilityScientist = 3 };
+enum AttackGroup { cGroupAircraft, cGroupInfantry, cGroupArtillary };
+enum WeaponGroup { cGroupMelee, cGroupRanged, cGroupLongRanged };
+
 //------------------------------------------------------------------------------
 // Public Structures:
 //------------------------------------------------------------------------------
@@ -43,6 +50,48 @@ enum UnitState
 class BehaviorUnit : public Behavior
 {
 public:
+	/////////////////////
+	// Items
+	/////////////////////
+	struct Weapon
+	{
+		std::string name;
+		WeaponGroup group;
+		float cooldown;
+		int range;
+		int damage;
+		GameObject* projectileArchetype;
+		// TODO: Pointers for sounds & maybe art?
+	};
+
+	struct Equipment
+	{
+		std::string name;
+		int count;
+		void(*use)();
+		float deployTime;
+		float cooldown;
+		// TODO: Pointers for sounds & maybe art?
+	};
+
+	/////////////////////
+	// Stats
+	/////////////////////
+
+	struct Traits
+	{
+		int strength;
+		int agility;
+		int defense;
+		int ability;
+		int group;
+		int weapon;
+		int item1;
+		int item2;
+		unsigned GetCost();
+		std::string name;
+	} traits;
+	
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
@@ -52,29 +101,12 @@ public:
 	//  parent = The object that owns this behavior.
 	BehaviorUnit();
 
-	void Init(BehaviorArmy::UnitData unitData, vector<Vector2D> path, Tilemap *tilemap);
+	Grid::Node GetNextPos();
 
-	Vector2D GetScrPos();
-	Vector2D GetMapPos();
-	Vector2D GetNextDir();
-	Vector2D GetNextScrPos();
-	Vector2D GetNextPos();
+	BehaviorArmy* GetArmy();
 
-	int GetRecycleReturns();
-	BehaviorArmy::UnitData GetUnitData();
-	vector<Vector2D> GetPath();
-	void ClearPath();
-	void AddToPath(Vector2D pos);
-	void AddToPath(vector<Vector2D> path);
+	enum states { cUnitIdle, cUnitMove, cUnitAttack, cUnitSoftChase, cUnitReturn, cUnitGuard, cUnitFollow, cUnitBuild, cUnitEndBuild };
 
-	bool IsMoving();
-
-	bool IsAdjacent(BehaviorUnit *other);
-	bool WillBeAdjacent(BehaviorUnit *other);
-
-	BehaviorArmy *GetArmy();
-
-private:
 	// Clone an advanced behavior and return a pointer to the cloned object.
 	// Params:
 	//   behavior = Reference to the behavior that will be destroyed.
@@ -83,7 +115,7 @@ private:
 	//   A pointer to an advanced behavior.
 	Component* Clone() const;
 
-	void OnDestroy();
+	void Init(BehaviorUnit::Traits data, BehaviorArmy* army);
 
 	// Initialize the current state of the behavior component.
 	// (Hint: Refer to the lecture notes on finite state machines (FSM).)
@@ -100,7 +132,7 @@ private:
 
 	void OnExit();
 
-	void Load(rapidjson::Value& obj);
+	void OnDestroy();
 
 	// The collision handling function for Units.
 	// Params:
@@ -108,25 +140,108 @@ private:
 	//	 other = The object the asteroid is colliding with.
 	static void CollisionHandler(GameObject& stub, GameObject& other);
 
+	void Load(rapidjson::Value& obj);
+
+	void SetPath(std::vector<Grid::Node> path);
+	std::vector<Grid::Node> GetPath();
+
+	Vector2D GetGridPos();
+	Node GetNode();
+
+	static vector<GameObject*> allUnits;
+
+private:
 	//------------------------------------------------------------------------------
-	// Private Variables:
+	// Private Functions:
 	//------------------------------------------------------------------------------
 
-	BehaviorArmy::UnitData unitData;
-	float hp;
-	Vector2D startPos;
-	vector<Vector2D> path;
-	BehaviorUnit *target;
-	//bool follow;
-	float attackTimer;
-	float payTimer;
-	Sprite *abilitySprite;
-	Animation *abilityAnimation;
-	AnimationSequence abilityAnimSequence;
-	Tilemap *tilemap;
+	// Checks for enemies within a certain radius of the unit.
+	// Returns:
+	// A standard vector containing all of the found units.
+	std::vector<GameObject*> FindEnemiesInRange();
 
-	const float attackCooldown = 0.5;
-	const float payCooldown = 1;
+	// Checks if the unit can target an enemy.
+	// Params:
+	//	enemy - the enemy we're checking.
+	// Returns:
+	// True if the unit can be targeted, false if not.
+	bool CanTarget(GameObject* enemy);
+
+	// Checks if the unit can attack an enemy.
+	// Params:
+	//	enemy - the enemy we're checking.
+	// Returns:
+	// True if the unit can be attacked, false if not.
+	bool CheckAttack();
+
+	// Calculates velocity based off of movement speed, target pos, and current pos.
+	void CalculateVelocity();
+
+	// Builds the weapon and equipment arrays.
+	void BuildArrays();
+
+	bool IsStuck();
+
+	// Equipment use functions.
+	static void UseNone();
+	static void UseArmor();
+	static void UseStrobebang();
+	static void UseEMP();
+
+	void Attack();
+
+
+
+	//------------------------------------------------------------------------------
+	// Stats
+	//------------------------------------------------------------------------------
+	
+	
+	
+
+	struct BaseStats
+	{
+		int maxHP;
+		int defense;
+		int detectRange;
+		int disengageRange;
+		int inventorySize;
+		float speed;
+		int baseCost;
+	};
+
+	static BaseStats defaultStats;
+
+	struct
+	{
+		int maxHP;
+		int currHP;
+		int defense;
+		int detectRange; // increase on high ground
+		int attackRange; // increase on high ground
+		int inventorySize;
+	} stats;
+
+	/////////////////////
+	// Misc/placeholder
+	/////////////////////
+
+	//------------------------------------------------------------------------------
+	// Data
+	//------------------------------------------------------------------------------
+	GameObject* target;
+	int prevHP;
+	Vector2D targetPos, lastFrameTarget, guardingPos;
+	std::vector<Grid::Node> path;
+	Grid::Node moveTarget;
+	states prevState;
+	float stuckTimer;
+	Grid::Node gridPos;
+
+	BehaviorArmy* army;
+
+	static Weapon Weapons[cNumWeapons];
+	static Equipment Equips[cNumEquips];
 };
 
 //------------------------------------------------------------------------------

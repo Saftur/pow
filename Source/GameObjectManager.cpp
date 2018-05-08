@@ -106,8 +106,10 @@ void GameObjectManager::DrawAll()
 
 void GameObjectManager::Shutdown(void)
 {
-	for (GameObject *gameObject : activeList)
+	for (GameObject *gameObject : activeList) {
+		gameObject->Destroy();
 		delete gameObject;
+	}
 	for (GameObject *gameObject : archetypes)
 		delete gameObject;
 
@@ -118,9 +120,11 @@ void GameObjectManager::Shutdown(void)
 	Button::Shutdown();
 }
 
-void GameObjectManager::Add(GameObject & gameObject)
+GameObject* GameObjectManager::Add(GameObject & gameObject)
 {
-	activeList.push_back(&gameObject);
+	GameObject *newObject = new GameObject(gameObject);
+	activeList.push_back(newObject);
+	return newObject;
 }
 
 void GameObjectManager::AddArchetype(GameObject & gameObject)
@@ -171,6 +175,11 @@ GameObjectManager *GameObjectManager::InitLayer(unsigned layer, bool updateLower
 	if (layer >= MAX_LAYERS) return nullptr;
 	layers[layer] = { updateLower, drawLower, new GameObjectManager() };
 	layers[layer].instance->Init();
+	return layers[layer].instance;
+}
+
+GameObjectManager * GameObjectManager::GetLayer(unsigned layer)
+{
 	return layers[layer].instance;
 }
 

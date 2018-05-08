@@ -61,6 +61,9 @@
     <Filter Include="Game\Armies">
       <UniqueIdentifier>{41f3a029-25d6-4467-a574-2b89e9253d1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameObjects\Pathfinding">
+      <UniqueIdentifier>{9b3ce7ad-4ba3-4916-820b-3743a8719c33}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\GameObjects\Buildings">
       <UniqueIdentifier>{a07c1ffc-9750-4c03-baba-0ba84c23acab}</UniqueIdentifier>
     </Filter>
@@ -139,9 +142,6 @@
     <ClCompile Include="Source\Intersection2D.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LevelManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\BehaviorStub.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
@@ -169,21 +169,27 @@
     <ClCompile Include="Source\ButtonEffects.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Button.cpp">
-      <Filter>Engine\GameObjects\Button</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\ControlList.cpp">
       <Filter>Engine\Control</Filter>
     </ClCompile>
-    <ClCompile Include="Source\PopupMenu.cpp">
+    <ClCompile Include="Source\Map.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Building.cpp">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+    <ClCompile Include="Source\BehaviorProjectile.cpp">
+      <Filter>Game\Behaviors</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BuildingJaxiumMine.cpp">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+    <ClCompile Include="source\Pathfinding.cpp">
+      <Filter>Engine\GameObjects\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Grid.cpp">
+      <Filter>Engine\GameObjects\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BehaviorUnit.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LevelManager.cpp">
+      <Filter>Engine\Levels</Filter>
     </ClCompile>
     <ClCompile Include="Source\Cursor.cpp">
       <Filter>Game\Behaviors</Filter>
@@ -191,14 +197,35 @@
     <ClCompile Include="Source\ComponentStub.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
+    <ClCompile Include="Source\PopupMenu.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorArmy.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tilemap.cpp">
+      <Filter>Engine\GameObjects\Tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BehaviorTestBox.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Building.cpp">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BuildingCommandPost.cpp">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BuildingJaxiumMine.cpp">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClCompile>
     <ClCompile Include="Source\BuildingNeoridiumMine.cpp">
       <Filter>Engine\GameObjects\Buildings</Filter>
     </ClCompile>
     <ClCompile Include="Source\BuildingResearchCenter.cpp">
       <Filter>Engine\GameObjects\Buildings</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BuildingCommandPost.cpp">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+    <ClCompile Include="Source\Button.cpp">
+      <Filter>Engine\GameObjects\Button</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,21 +422,30 @@
     <ClInclude Include="Source\ButtonEffects.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Button.h">
-      <Filter>Engine\GameObjects\Button</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\ControlList.h">
       <Filter>Engine\Control</Filter>
     </ClInclude>
-    <ClInclude Include="Source\PopupMenu.h">
+    <ClInclude Include="Source\Map.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Building.h">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+    <ClInclude Include="Source\BehaviorProjectile.h">
+      <Filter>Game\Behaviors</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BuildingJaxiumMine.h">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+    <ClInclude Include="source\Pathfinding.h">
+      <Filter>Engine\GameObjects\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Grid.h">
+      <Filter>Engine\GameObjects\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BehaviorUnit.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelManager.h">
+      <Filter>Engine\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PopupMenu.h">
+      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\Cursor.h">
       <Filter>Game\Behaviors</Filter>
@@ -420,7 +456,16 @@
     <ClInclude Include="Source\Controls.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BuildingNeoridiumMine.h">
+    <ClInclude Include="Source\BehaviorArmy.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Tilemap.h">
+      <Filter>Engine\GameObjects\Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BehaviorTestBox.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Building.h">
       <Filter>Engine\GameObjects\Buildings</Filter>
     </ClInclude>
     <ClInclude Include="Source\BuildingResearchCenter.h">
@@ -428,6 +473,15 @@
     </ClInclude>
     <ClInclude Include="Source\BuildingCommandPost.h">
       <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingJaxiumMine.h">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingNeoridiumMine.h">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Button.h">
+      <Filter>Engine\GameObjects\Button</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
