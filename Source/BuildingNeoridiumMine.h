@@ -37,10 +37,22 @@ public:
 	static bool TakeNeoridium(BehaviorArmy::Side side, float amount); //Take neoridium from the given army if it has enough to give it.
 	static void AddNeoridium(BehaviorArmy::Side side, float amount); //Give neoridium to the given army.
 
+	bool AddWorker(); //Add a worker to the mine if there arent already too many workers.
+	bool RemoveWorker(); //Remove a worker from the mine if there is at least one worker.
+
 	static std::map<BehaviorArmy::Side, float> neoridium; //How much neoridium each army has.
 
 private:
-	unsigned fundsPerSecond = 10; //How much Neoridium does this mine generate per second.
+	float fundsPerCrystal = 10; //How much each Neoridium crystal is worth.
+
+	float crystalSpawnTime = 10; //How long it takes for a crystal to spawn. (HINT: This is divided by the number of workers).
+	float remainingSpawnTime = crystalSpawnTime; //How long until the next crystal will spawn.
+
+	float workers = 0; //How many units are working this mine.
+	float maxWorkers = 3; //The maximum number of workers on this mine.
+
+	float crystalWorthVariance = 0.5f; //The percentage that the value of each crystal can vary by.
+	float crystalSpawnTimeVariance = 0.3f; //The percentage that the spawn time of each crystal can vary by.
 };
 
 //------------------------------------------------------------------------------

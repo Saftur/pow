@@ -62,7 +62,14 @@ void Cursor::Update(float dt) {
 
 	Vector2D move = {gamepad->GetAxis(CURSOR_X), gamepad->GetAxis(CURSOR_Y)};
 
+	//Temporary keyboard controls.
+	if (AEInputCheckCurr(VK_UP)) move.y += 0.5;
+	if (AEInputCheckCurr(VK_DOWN)) move.y -= 0.5;
+	if (AEInputCheckCurr(VK_LEFT)) move.x -= 0.5;
+	if (AEInputCheckCurr(VK_RIGHT)) move.x += 0.5;
+
 	pos += move * moveSpeed * dt;
+
 
 	if (pos.x + scl.x / 2 > AEGfxGetWinMaxX())
 		pos.x = AEGfxGetWinMaxX() - scl.x / 2;

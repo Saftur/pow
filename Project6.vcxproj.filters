@@ -227,6 +227,9 @@
     <ClCompile Include="Source\Button.cpp">
       <Filter>Engine\GameObjects\Button</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Crystal.cpp">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h">
@@ -482,6 +485,9 @@
     </ClInclude>
     <ClInclude Include="Source\Button.h">
       <Filter>Engine\GameObjects\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Crystal.h">
+      <Filter>Engine\GameObjects\Buildings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

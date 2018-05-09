@@ -1,0 +1,50 @@
+#include "stdafx.h"
+#include "AEEngine.h"
+#include "SpriteSource.h"
+#include "Mesh.h"
+#include "Crystal.h"
+#include "GameObjectManager.h"
+#include "LevelManager.h"
+#include "Grid.h"
+#include "Transform.h"
+#include "BehaviorUnit.h"
+#include "GameObject.h"
+#include "BehaviorArmy.h"
+#include "BuildingNeoridiumMine.h"
+
+Crystal::Crystal(CrystalType type, float amount) : Component("Crystal"), type(type), crystalCount(amount)
+{
+}
+
+Crystal::~Crystal()
+{
+	if(mesh) {
+		AEGfxMeshFree(mesh);
+		AEGfxTextureUnload(texture);
+		mesh = nullptr;
+		texture = nullptr;
+	}
+}
+
+Component * Crystal::Clone() const
+{
+	return new Crystal(*this);
+}
+
+void Crystal::Update(float dt)
+{
+	///TODO: If a unit moves over this crystal, add either Jaxium or Neoridium to their army.
+	LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
+		if (obj->GetComponent<BehaviorUnit>()) {
+			if (Grid::GetInstance().ConvertToGridPoint(obj->GetComponent<Transform>()->GetTranslation())
+				== Grid::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation())) {
+
+				BehaviorArmy* army = obj->GetComponent<BehaviorUnit>()->GetArmy();
+				if (type == Jaxium) army->AddToFunds(crystalCount);
+				else if (type == Neoridium) BuildingNeoridiumMine::AddNeoridium(army->GetSide(), crystalCount);
+				GetParent()->Destroy();
+			}
+		}
+		return false;
+	});
+}

@@ -49,6 +49,10 @@ public:
 	void Update(float dt); //Update the generic building.
 	virtual void BuildingUpdate(float dt) = 0; //Run the specific update on the building.
 
+
+
+	float Variance(float value, float variance); //Return a float = the value +- a percentage of it based on the variance.
+
 	static void Lock(BehaviorArmy::Side side, BuildingType type); //Lock the given building for the given army.
 	static void Unlock(BehaviorArmy::Side side, BuildingType type); //Unlock the given building for the given army.
 	static bool IsUnlocked(BehaviorArmy::Side side, BuildingType type); //Checks if the given building for the given army is unlocked.
@@ -69,6 +73,8 @@ public:
 
 	AEGfxVertexList *mesh = nullptr; //Mesh for this building.
 	AEGfxTexture *texture = nullptr; //Texture for this building.
+
+	Vector2D mapPos; //The position of the building on the map.
 
 private:
 	static map<BehaviorArmy::Side, bool[BuildingCount]> buildings; //Map of boolean arrays each belonging to an army.

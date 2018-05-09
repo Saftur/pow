@@ -5,6 +5,10 @@
 #include "GameObject.h"
 #include "AEEngine.h"
 #include "Transform.h"
+#include "SpriteSource.h"
+#include "Mesh.h"
+#include "Crystal.h"
+#include <time.h>
 
 #include "BuildingNeoridiumMine.h"
 #include "BuildingResearchCenter.h"
@@ -14,7 +18,7 @@ map<BehaviorArmy::Side, bool[Building::BuildingType::BuildingCount]> Building::b
 map<Building::BuildingType, float> Building::buildingCost;
 
 Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, float maxHealth, Vector2D pos, float jaxiumDropAmount, 
-	float neoridiumDropAmount) : Component("Building"), buildingType(type), specialtyType(specialtyType), buildTime(buildTime), side(side), maxHealth(maxHealth),
+	float neoridiumDropAmount) : Component("Building"), buildingType(type), specialtyType(specialtyType), buildTime(buildTime), mapPos(pos), side(side), maxHealth(maxHealth),
 	health(maxHealth), jaxiumDropAmount(jaxiumDropAmount), neoridiumDropAmount(neoridiumDropAmount)
 {
 	//Find the army that this building should belong to.
@@ -39,13 +43,14 @@ Building::~Building()
 
 void Building::InitializeBuildings(BehaviorArmy::Side side)
 {
+	srand((unsigned) time(NULL));
 	BuildingResearchCenter::InitializeResearchCost();
 
 	for (int i = 0; i < BuildingCount; i++) Lock(side, (BuildingType)i); //Lock all of the buildings.
 	Unlock(side, JaxiumMine);
 	Unlock(side, ResearchCenter);
 	///TODO: Remove further unlocks, their only purpose is for testing.
-	Unlock(side, NeoridiumMine);
+	Unlock(side, NeoridiumMine); //Get's unlocked when you first build a Research Center.
 
 	BuildingNeoridiumMine::neoridium[side] = 0.0f; //Intitialize the amount of Neoridium each player has to 0.
 
@@ -57,6 +62,7 @@ void Building::InitializeBuildings(BehaviorArmy::Side side)
 	buildingCost[VehicleDepot] = 300.0f;
 	buildingCost[Turret] = 200.0f;
 	buildingCost[Teleporter] = 200.0f;
+
 }
 
 void Building::Update(float dt)
@@ -86,6 +92,13 @@ void Building::Update(float dt)
 
 		///TODO: Drop some money for the other team.
 	}
+}
+
+float Building::Variance(float value, float variance) {
+	float change = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / variance));
+
+	if (rand() % 2) return value + value * change;
+	return value - value * change;
 }
 
 void Building::Lock(BehaviorArmy::Side side, BuildingType type)

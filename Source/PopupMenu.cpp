@@ -30,6 +30,7 @@
 #include "Building.h"
 #include "BuildingNeoridiumMine.h"
 #include "BuildingResearchCenter.h"
+#include "Controls.h"
 
 vector<PopupMenu*> PopupMenu::menus;
 
@@ -65,17 +66,17 @@ bool PopupMenu::Exists(BehaviorArmy::Side side)
 	return false;
 }
 
-void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, ControlList controlList, float dt)
+void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, float dt)
 {
 	//Update which button is currently being selected on the menu belonging to the given army.
 	PopupMenu* menu = GetMenu(side);
 	if (menu && LevelManager::GetLayer(menu->menuLevelLayer)) {
 		int buttons = LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectsByName("Button").size(); //Number of buttons in the menu.
-		if (gamepad.GetButtonTriggered(controlList["CamLeft"]) || AEInputCheckTriggered(VK_LEFT)) {
+		if (gamepad.GetButtonTriggered(MENU_LEFT) || AEInputCheckTriggered(VK_LEFT)) {
 			if (menu->selectedButton <= 0) menu->selectedButton = buttons - 1;
 			else menu->selectedButton--;
 		}
-		else if (gamepad.GetButtonTriggered(controlList["CamRight"])) {
+		else if (gamepad.GetButtonTriggered(MENU_RIGHT)) {
 			if (menu->selectedButton >= buttons - 1) menu->selectedButton = 0;
 			else menu->selectedButton++;
 		}
@@ -94,7 +95,7 @@ void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, ControlList con
 			cursorTransform->SetScreenTranslation(selectedButtonTransform->GetTranslation());
 
 			//If we hit select, click the button and close the menu.	
-			if (gamepad.GetButtonTriggered(controlList["Select.Manual.Select"]) || AEInputCheckTriggered(VK_RETURN)) {
+			if (gamepad.GetButtonTriggered(MENU_SELECT) || AEInputCheckTriggered(VK_RETURN)) {
 				Button::ForceClick(*(Button*)selectedButton->GetComponent<Button>(), dt, 4, side, menu->armyCursorMapPos, menu->armyCursorScreenPos, menu->army);
 				PopupMenu::DestroyMenu(side);
 				return;

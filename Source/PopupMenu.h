@@ -37,7 +37,7 @@ public:
 	static void CreateMenu(BehaviorArmy::Side side, MenuType type, Vector2D cursorMapPos, Vector2D cursorScreenPos); //Create a menu for the given army.
 	static void DestroyMenu(BehaviorArmy::Side side); //Destroy a menu for the given army.
 	static bool Exists(BehaviorArmy::Side side); //Does a menu currently exist for the given army?
-	static void Update(BehaviorArmy::Side side, Gamepad gamepad, ControlList controlList, float dt); //Update the cursor selection for the given army based on gamepad input.
+	static void Update(BehaviorArmy::Side side, Gamepad gamepad, float dt); //Update the cursor selection for the given army based on gamepad input.
 	static void Shutdown(); //Destroy all menus and all objects belonging to the menus.
 
 private:

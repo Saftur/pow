@@ -263,7 +263,7 @@ void BehaviorArmy::OnUpdate(float dt)
 			tilemap->GetPosOnMap(curspos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos)));
 		else if (buildingMenu && PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side);
 
-		if (PopupMenu::Exists(side)) PopupMenu::Update(side, *controls.gamepad, controls.list, dt);
+		if (PopupMenu::Exists(side)) PopupMenu::Update(side, *controls.gamepad, dt);
 		else {
 			if (controls.gamepad->GetButtonTriggered(SELECT)) {
 				rectStartPos = cursorNode;
