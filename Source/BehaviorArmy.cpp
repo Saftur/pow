@@ -245,7 +245,7 @@ void BehaviorArmy::OnUpdate(float dt)
 		// Tilemap bottom right point
 		Vector2D tmBottomRight = tilemap->GetTilemapScreenBottomRight();
 		// Cursor Node position
-		Node cursorNode = Grid::GetInstance().ConvertToGridPoint(curspos);
+		Node* cursorNode = Grid::GetInstance().ConvertToGridPoint(curspos);
 
 		// If any extra selected units are destroyed, deselect them
 		for (unsigned i = 0; i < selectedUnits.size(); i++) {
@@ -256,7 +256,7 @@ void BehaviorArmy::OnUpdate(float dt)
 		}
 
 		if (controls.gamepad->GetButtonTriggered(SELECT)) {
-			rectStartPos = cursorNode;
+			rectStartPos = *cursorNode;
 		}
 		if (controls.gamepad->GetButtonTriggered(MOVE)) {
 			for (SelectedUnit &unit : selectedUnits)
@@ -273,25 +273,26 @@ void BehaviorArmy::OnUpdate(float dt)
 
 		// Are we selecting units?
 		if (controls.gamepad->GetButton(SELECT)) {
-			if (cursorNode != rectEndPos) {
-				rectEndPos = cursorNode;
+			if (*cursorNode != rectEndPos) {
+				rectEndPos = *cursorNode;
 				SelectUnits();
 			}
 		} else {
 			if (selectedUnits.size() > 0)
 			{
-				if (cursorNode != prevTarget) {
-					prevTarget = cursorNode;
-					for (SelectedUnit unit : selectedUnits)
+				if (*cursorNode != prevTarget) {
+					prevTarget = *cursorNode;
+					for (SelectedUnit& unit : selectedUnits)
 					{
-						unit.path = Pathfinding::FindPath(unit.unit->GetNode(), Grid::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation() + unit.offset));
+						Vector2D pos = *Grid::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation() + unit.offset);
+						unit.path = Pathfinding::FindPath(unit.unit->GetNode(), &Grid::GetInstance().GetNode((int)pos.x, (int)pos.y));
 					}
 				}
 			}
 			else
 			{
 				if (controls.gamepad->GetButtonTriggered(SPAWNUNIT))
-					CreateUnit("Unit1", cursorNode);
+					CreateUnit("Unit1", *cursorNode);
 			}
 		}
 		break;
@@ -554,7 +555,7 @@ void BehaviorArmy::DrawPath() const
 		cursor.sprite->Draw(targetT);
 
 		if (unit.path.size() == 0) continue;
-		Vector2D startPos = unit.path[0];
+		Vector2D startPos = *unit.path[0];
 
 		Vector2D pos = tilemap->GetPosOnScreen(startPos);
 		Vector2D invY = { 1, -1 };
@@ -567,15 +568,15 @@ void BehaviorArmy::DrawPath() const
 		path.sprite->SetAlpha(1.0f);
 		path.sprite->Draw(diamondT);
 
-		for (Node node : unit.path)
+		for (Node* node : unit.path)
 		{
-			node.gridPos *= invY;
-			pos += tilemap->GetTileSize() * node.gridPos / 2;
+			node->gridPos *= invY;
+			pos += tilemap->GetTileSize() * node->gridPos / 2;
 			path.transform->SetTranslation(pos);
-			path.transform->SetRotation(node.gridPos.GetAngleRadians());
+			path.transform->SetRotation(node->gridPos.GetAngleRadians());
 			path.sprite->SetAlpha(0.5f);
 			path.sprite->Draw();
-			pos += tilemap->GetTileSize() * node.gridPos / 2;
+			pos += tilemap->GetTileSize() * node->gridPos / 2;
 			diamondT.SetTranslation(pos);
 			path.sprite->SetAlpha(1.0f);
 			path.sprite->Draw(diamondT);

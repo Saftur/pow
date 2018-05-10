@@ -14,7 +14,7 @@ public:
 	//	end - the target node.
 	// Returns:
 	// A standard vector containing the found path (null if none was found).
-	static std::vector<Node> FindPath(Node start, Node end);
+	static std::vector<Node*> FindPath(Node* start, Node* end);
 
 private:
 	// Retraces the path taken to reach the end node.
@@ -22,7 +22,7 @@ private:
 	//  end - the end node.
 	// Returns:
 	// A standard vector containing the found path.
-	static std::vector<Node> RetracePath(Node& end);
+	static std::vector<Node*> RetracePath(Node* end);
 
 	// Finds the Manhattan distance between two nodes.
 	// Params:
@@ -30,7 +30,7 @@ private:
 	//	node2 - the second node.
 	// Returns:
 	// The Manhattan distance between the two nodes.
-	static int ManhattanDist(Node node1, Node node2);
+	static int ManhattanDist(Node* node1, Node* node2);
 
 	static std::vector<GameObject*> testNodes;
 };

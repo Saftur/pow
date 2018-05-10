@@ -52,7 +52,7 @@ BehaviorUnit::Weapon BehaviorUnit::Weapons[cNumWeapons];
 BehaviorUnit::Equipment BehaviorUnit::Equips[cNumEquips];
 
 
-Grid::Node BehaviorUnit::GetNextPos()
+Grid::Node* BehaviorUnit::GetNextPos()
 {
 	return gridPos;
 }
@@ -109,9 +109,10 @@ void BehaviorUnit::Init(BehaviorUnit::Traits theTraits, BehaviorArmy* theArmy)
 	
 }
 
-void BehaviorUnit::SetPath(std::vector<Grid::Node> newPath)
+void BehaviorUnit::SetPath(std::vector<Grid::Node*> newPath)
 {
 	path = newPath;
+	moveTarget = &Grid::GetInstance().GetNode((int)gridPos->X(),(int)gridPos->Y());
 }
 
 void BehaviorUnit::BuildArrays()
@@ -150,7 +151,7 @@ Component* BehaviorUnit::Clone() const
 void BehaviorUnit::OnEnter()
 {
 	gridPos = Grid::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation());
-	Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = false;
+	Grid::GetInstance().GetNode(gridPos->X(), gridPos->Y()).open = false;
 	switch (GetCurrentState())
 	{
 	case cUnitIdle:
@@ -191,48 +192,25 @@ void BehaviorUnit::OnUpdate(float dt)
 		CheckAttack();
 		break;
 	case cUnitMove:
-		// If our target has changed, we need to calculate a new path.
-		if (lastFrameTarget != targetPos)
+		// Are we there yet?
+		if (*Grid::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation()) == moveTarget->gridPos)
 		{
-			path.clear();
-		}
+			// Do we have more movements to make?
+			if (path.empty())
+			{
+				moveTarget = nullptr;
+				GetParent()->GetComponent<Physics>()->SetVelocity(Vector2D(0, 0));
+				SetNextState(cUnitIdle);
+				return;
+			}
 
-		// Do we need to do pathfinding?
-		if (path.empty())
-		{
-			Grid::Node start = Grid::GetInstance().ConvertToGridPoint(((Transform*)GetParent()->GetComponent("Transform"))->GetWorldTranslation());
-			Grid::Node end = Grid::GetInstance().ConvertToGridPoint(targetPos);
-
-			path = Pathfinding::FindPath(start, end);
-
-			// Set the first node.
-			moveTarget = path.back();
+			// Update our target.
+			moveTarget = *(path.end() - 1);
 			path.pop_back();
 		}
 
-		// Have we reached a node?
-		if (Grid::GetInstance().ConvertToGridPoint(((Transform*)GetParent()->GetComponent("Transform"))->GetWorldTranslation()) == moveTarget)
-		{
-			// Set the next node.
-			moveTarget = Node();
-			moveTarget = path.back();
-			path.pop_back();
-		}
-
-		// If pathfinding failed, set state to Idle.
-		if (path.empty())
-		{
-			SetNextState(cUnitIdle);
-			target = nullptr;
-			return;
-		}
-
-		// Update velocity
+		// Update velocity.
 		CalculateVelocity();
-
-		Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = true;
-		gridPos = Grid::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation());
-		Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = false;
 		break;
 	case cUnitAttack:
 		// Can we attack our target?
@@ -289,7 +267,7 @@ void BehaviorUnit::OnExit()
 void BehaviorUnit::OnDestroy()
 {
 	allUnits.erase(std::find(allUnits.begin(), allUnits.end(), GetParent()));
-	Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = true;
+	Grid::GetInstance().GetNode(gridPos->X(), gridPos->Y()).open = true;
 }
 
 // The collision handling function for Units.
@@ -331,11 +309,11 @@ void BehaviorUnit::UseEMP()
 void BehaviorUnit::CalculateVelocity()
 {
 	// Calculate a direction vector from current position to taget position.
-	Vector2D dir = moveTarget.worldPos - ((Transform*)GetParent()->GetComponent("Transform"))->GetTranslation();
-	dir.Normalized();
+	Vector2D dir = moveTarget->worldPos - (GetParent()->GetComponent<Transform>()->GetTranslation());
+	dir = dir.Normalized();
 
 	// Set velocity.
-	((Physics*)GetParent()->GetComponent("Physics"))->SetVelocity(dir * (defaultStats.speed * traits.agility));
+	GetParent()->GetComponent<Physics>()->SetVelocity(dir * (defaultStats.speed * traits.agility));
 }
 
 // Checks for enemies within a certain radius of the unit.
@@ -389,7 +367,7 @@ bool BehaviorUnit::CheckAttack()
 	if (target == nullptr)
 	{
 		// If we are moving to a location, ignore all nearby enemies.
-		if (moveTarget == Node())
+		if (moveTarget == nullptr)
 			return false;
 
 		// Find all enemies within attack range.
@@ -439,17 +417,17 @@ BehaviorArmy* BehaviorUnit::GetArmy()
 	return army;
 }
 
-std::vector<Grid::Node> BehaviorUnit::GetPath()
+std::vector<Grid::Node*> BehaviorUnit::GetPath()
 {
 	return path;
 }
 
 Vector2D BehaviorUnit::GetGridPos()
 {
-	return GetNode().gridPos;
+	return GetNode()->gridPos;
 }
 
-Node BehaviorUnit::GetNode()
+Node* BehaviorUnit::GetNode()
 {
 	return gridPos;
 }

@@ -107,7 +107,7 @@ public:
 	//  parent = The object that owns this behavior.
 	BehaviorUnit();
 
-	Grid::Node GetNextPos();
+	Grid::Node* GetNextPos();
 
 	BehaviorArmy* GetArmy();
 
@@ -148,11 +148,11 @@ public:
 
 	void Load(rapidjson::Value& obj);
 
-	void SetPath(std::vector<Grid::Node> path);
-	std::vector<Grid::Node> GetPath();
+	void SetPath(std::vector<Grid::Node*> path);
+	std::vector<Grid::Node*> GetPath();
 
 	Vector2D GetGridPos();
-	Node GetNode();
+	Node* GetNode();
 
 	static vector<GameObject*> allUnits;
 
@@ -238,11 +238,11 @@ private:
 	GameObject* target;
 	int prevHP;
 	Vector2D targetPos, lastFrameTarget, guardingPos;
-	std::vector<Grid::Node> path;
-	Grid::Node moveTarget;
+	std::vector<Grid::Node*> path;
+	Grid::Node* moveTarget;
 	states prevState;
 	float stuckTimer;
-	Grid::Node gridPos;
+	Grid::Node* gridPos;
 
 	BehaviorArmy* army;
 

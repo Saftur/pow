@@ -248,7 +248,7 @@ private:
 	struct SelectedUnit
 	{
 		BehaviorUnit* unit;	// The unit
-		vector<Node> path;	// The unit's path
+		vector<Node*> path;	// The unit's path
 		Vector2D offset;	// An offset from the move target
 	};
 

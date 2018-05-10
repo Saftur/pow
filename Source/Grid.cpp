@@ -12,14 +12,19 @@ Grid::Grid()
 
 }
 Node::Node(Vector2D gridPos, bool state)
-	: gridPos(gridPos), open(state), parent(nullptr) {
+	: gridPos(gridPos), open(state), parent({ -1000, -1000 }) {
 	Grid &grid = GetInstance();
 	worldPos.X(grid.tileWidth * gridPos.x + grid.screenOffsetX - (grid.width * grid.tileWidth) / 2 + grid.tileWidth / 2);
 	worldPos.Y(-(grid.tileHeight * gridPos.y + grid.screenOffsetY - (grid.height * grid.tileHeight) / 2 + grid.tileHeight / 2));
 }
 
+Grid::Node::Node(const Node & other)
+	: gridPos(other.gridPos), worldPos(other.worldPos), hVal(other.hVal), gVal(other.gVal), open(other.open), parent(other.parent)
+{
+}
 
-Grid::Node::operator Vector2D()
+
+Grid::Node::operator Vector2D() const
 {
 	//gridPos = ;
 	return gridPos;
@@ -35,12 +40,12 @@ int Grid::Node::Y() const
 	return (int)gridPos.y;
 }
 
-bool Grid::Node::operator==(const Node & other)
+bool Grid::Node::operator==(const Node & other) const
 {
 	return X() == other.X() && Y() == other.Y();
 }
 
-bool Grid::Node::operator!=(const Node & other)
+bool Grid::Node::operator!=(const Node & other) const
 {
 	return X() != other.X() || Y() != other.Y();
 }
@@ -73,7 +78,7 @@ Vector2D Grid::ConvertToWorldPoint(Node node)
 	return node.worldPos;
 }
 
-Node Grid::ConvertToGridPoint(Vector2D screenPos)
+Node* Grid::ConvertToGridPoint(Vector2D screenPos)
 {
 	Vector2D pos;
 	pos.X(floor((screenPos.X() - screenOffsetX + ((tileWidth*width) / 2)) / tileWidth));
@@ -86,7 +91,7 @@ Node Grid::ConvertToGridPoint(Vector2D screenPos)
 		pos.X((float)(width - 1));
 	if (pos.Y() >= height)
 		pos.Y((float)(height - 1));
-	return pos;
+	return &grid[(int)pos.y][(int)pos.x];
 }
 
 Node* Grid::operator[](int index)
@@ -94,15 +99,15 @@ Node* Grid::operator[](int index)
 	return grid[index];
 }
 
-int Node::fVal()
+int Node::fVal() const
 {
 	return hVal + gVal;
 }
 
-std::vector<Node> Grid::GetNeighbors(Node node)
+std::vector<Node*> Grid::GetNeighbors(Node* node)
 {
 	// Create a vector to store our result.
-	std::vector<Node> result;
+	std::vector<Node*> result;
 
 	// Find adjacent nodes.
 	for (int i = -1; i <= 1; i++)
@@ -110,7 +115,7 @@ std::vector<Node> Grid::GetNeighbors(Node node)
 		for (int j = -1; j <= 1; j++)
 		{
 			// Make sure this is a valid position in the array.
-			if (node.X() + i < 0 || node.X() + i >= width || node.Y() + j < 0 || node.Y() + j >= height)
+			if (node->X() + i < 0 || node->X() + i >= width || node->Y() + j < 0 || node->Y() + j >= height)
 				continue;
 
 			// Skip the center node (the node whose neightbors we're finding).
@@ -118,7 +123,7 @@ std::vector<Node> Grid::GetNeighbors(Node node)
 				continue;
 
 			// Add this node to the result vector.
-			result.push_back(GetNode(node.X() + i, node.Y() + j));
+			result.push_back(&GetNode(node->X() + i, node->Y() + j));
 		}
 	}
 
