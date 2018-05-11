@@ -187,28 +187,47 @@ void BehaviorArmy::OnEnter()
 	switch (GetCurrentState())
 	{
 	case cArmyNormal:
+		// Initialize tilemap
 		tilemap = GetParent()->GetObjectManager()->GetObjectByName("Tilemap")->GetComponent<Tilemap>();
-		GameObject *fl = GetParent()->GetObjectManager()->GetObjectByName(frontLine.dispObjName.c_str());
-		if (fl) frontLine.transform = fl->GetComponent<Transform>();
-		else frontLine.transform = nullptr;
-		GameObject *fd = GetParent()->GetObjectManager()->GetObjectByName(funds.dispObjName.c_str());
-		if (fd) funds.text = fd->GetComponent<Text>();
-		else funds.text = nullptr;
+
+		// Initialize the front line struct.
+		GameObject *frontLineObj = GetParent()->GetObjectManager()->GetObjectByName(frontLine.dispObjName.c_str());
+		
+		if (frontLineObj) 
+			frontLine.transform = frontLineObj->GetComponent<Transform>();
+		else 
+			frontLine.transform = nullptr;
+
+		// Initialize the funds struct.
+		GameObject *fundsTextObj = GetParent()->GetObjectManager()->GetObjectByName(funds.dispObjName.c_str());
+
+		if (fundsTextObj) 
+			funds.text = fundsTextObj->GetComponent<Text>();
+		else 
+			funds.text = nullptr;
+
 		funds.amount = funds.startAmount;
 		UpdateFundsText();
+
+		// Initialize the cursor struct.
 		GameObject *cursorObj = GetParent()->GetObjectManager()->GetObjectByName(cursor.objName.c_str());
+
 		cursor.transform = cursorObj->GetComponent<Transform>();
 		cursorObj->GetComponent<Cursor>()->SetGamepad(controls.gamepad);
 		cursor.sprite = cursorObj->GetComponent<Sprite>();
+
+		// Initialize the path struct.
 		GameObject *pathArchetype = GetParent()->GetObjectManager()->GetArchetype(path.lineDispName.c_str());
-		if (pathArchetype) {
+
+		if (pathArchetype) 
+		{
 			path.sprite = pathArchetype->GetComponent<Sprite>();
 			path.transform = pathArchetype->GetComponent<Transform>();
-			/*if (path.transform) {
-				Vector2D pathScl = path.transform->GetScale();
-			}*/
 		}
-		switch (side) {
+
+		// Initialize the front line and cursor positions.
+		switch (side) 
+		{
 		case sLeft:
 			frontLine.start = frontLine.start < 0 ? 0 : frontLine.start;
 			cursor.transform->SetTranslation(tilemap->GetPosOnScreen({ 0, 0 }));
@@ -239,13 +258,16 @@ void BehaviorArmy::OnUpdate(float dt)
 	{
 	case cArmyNormal:
 		// Get current cursor position
-		Vector2D curspos = cursor.transform->GetScreenTranslation();
+		Vector2D cursPos = cursor.transform->GetScreenTranslation();
+
 		// Tilemap top left point
-		Vector2D tmTopLeft = tilemap->GetTilemapScreenTopLeft();
+		Vector2D tilemapTopLeft = tilemap->GetTilemapScreenTopLeft();
+
 		// Tilemap bottom right point
-		Vector2D tmBottomRight = tilemap->GetTilemapScreenBottomRight();
+		Vector2D tilemapBottomRight = tilemap->GetTilemapScreenBottomRight();
+
 		// Cursor Node position
-		Node* cursorNode = Grid::GetInstance().ConvertToGridPoint(curspos);
+		Node* cursorNode = GridManager::GetInstance().GetNode(GridManager::GetInstance().ConvertToGridPoint(cursPos));
 
 		// If any extra selected units are destroyed, deselect them
 		for (unsigned i = 0; i < selectedUnits.size(); i++) {
@@ -255,9 +277,12 @@ void BehaviorArmy::OnUpdate(float dt)
 			}
 		}
 
+		// If the select button is pressed down this frame, set the select rectangle start positions.
 		if (controls.gamepad->GetButtonTriggered(SELECT)) {
-			rectStartPos = *cursorNode;
+			rectStartPos = cursorNode;
 		}
+
+		// If the move button is down, set the path for all selected units.
 		if (controls.gamepad->GetButtonTriggered(MOVE)) {
 			for (SelectedUnit &unit : selectedUnits)
 			{

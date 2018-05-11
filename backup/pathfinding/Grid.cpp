@@ -2,6 +2,7 @@
 #include "Grid.h"
 #include "BehaviorUnit.h"
 #include "GameObjectManager.h"
+#include "GridManager.h"
 
 using Node = Grid::Node;
 Grid Grid::Gridy = Grid(6, 4, 128, 128, 0, 28);
@@ -11,7 +12,7 @@ Grid::Grid()
 {
 
 }
-Node::Node(Vector2D gridPos, bool state)
+/*Node::Node(Vector2D gridPos, bool state)
 	: gridPos(gridPos), open(state), parent({ -1000, -1000 }) {
 	Grid &grid = GetInstance();
 	worldPos.X(grid.tileWidth * gridPos.x + grid.screenOffsetX - (grid.width * grid.tileWidth) / 2 + grid.tileWidth / 2);
@@ -48,7 +49,7 @@ bool Grid::Node::operator==(const Node & other) const
 bool Grid::Node::operator!=(const Node & other) const
 {
 	return X() != other.X() || Y() != other.Y();
-}
+}*/
 
 Grid::Grid(int width, int height, int tileWidth, int tileHeight, int screenOffsetX, int screenOffsetY)
 	: width(width), height(height), tileWidth(tileWidth), tileHeight(tileHeight), screenOffsetX(screenOffsetX), screenOffsetY(screenOffsetY)
@@ -99,10 +100,7 @@ Node* Grid::operator[](int index)
 	return grid[index];
 }
 
-int Node::fVal() const
-{
-	return hVal + gVal;
-}
+
 
 std::vector<Node*> Grid::GetNeighbors(Node* node)
 {

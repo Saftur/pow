@@ -17,7 +17,7 @@
 
 #include "Behavior.h"
 #include <vector>
-#include "Pathfinding.h"
+#include "Pathfinder.h"
 
 typedef class BehaviorArmy BehaviorArmy;
 
@@ -86,14 +86,13 @@ public:
 
 	struct Traits
 	{
-		int strength;
-		int agility;
-		int defense;
+		int strength, agility, defense;
+
 		int ability;
 		int group;
-		int weapon;
-		int item1;
-		int item2;
+
+		int weapon, item1, item2;
+
 		unsigned GetCost();
 		std::string name;
 	} traits;
@@ -107,9 +106,7 @@ public:
 	//  parent = The object that owns this behavior.
 	BehaviorUnit();
 
-	Grid::Node* GetNextPos();
-
-	BehaviorArmy* GetArmy();
+	BehaviorArmy* GetArmy() const;
 
 	enum states { cUnitIdle, cUnitMove, cUnitAttack, cUnitSoftChase, cUnitReturn, cUnitGuard, cUnitFollow, cUnitBuild, cUnitEndBuild };
 
@@ -121,7 +118,7 @@ public:
 	//   A pointer to an advanced behavior.
 	Component* Clone() const;
 
-	void Init(BehaviorUnit::Traits data, BehaviorArmy* army);
+	void Init(Traits& data, BehaviorArmy* army);
 
 	// Initialize the current state of the behavior component.
 	// (Hint: Refer to the lecture notes on finite state machines (FSM).)
@@ -144,15 +141,15 @@ public:
 	// Params:
 	//	 stub = The stub object.
 	//	 other = The object the asteroid is colliding with.
-	static void CollisionHandler(GameObject& stub, GameObject& other);
+	static void CollisionHandler(GameObject& unit, GameObject& other);
 
 	void Load(rapidjson::Value& obj);
 
-	void SetPath(std::vector<Grid::Node*> path);
-	std::vector<Grid::Node*> GetPath();
+	void SetPath(vector<Node*> path);
+	vector<Node*> GetPath() const;
 
-	Vector2D GetGridPos();
-	Node* GetNode();
+	Vector2D GetGridPos() const;
+	Node* GetNode() const;
 
 	static vector<GameObject*> allUnits;
 
@@ -164,21 +161,21 @@ private:
 	// Checks for enemies within a certain radius of the unit.
 	// Returns:
 	// A standard vector containing all of the found units.
-	std::vector<GameObject*> FindEnemiesInRange();
+	vector<GameObject*> FindEnemiesInRange() const;
 
 	// Checks if the unit can target an enemy.
 	// Params:
 	//	enemy - the enemy we're checking.
 	// Returns:
 	// True if the unit can be targeted, false if not.
-	bool CanTarget(GameObject* enemy);
+	bool CanTarget(GameObject* enemy) const;
 
 	// Checks if the unit can attack an enemy.
 	// Params:
 	//	enemy - the enemy we're checking.
 	// Returns:
 	// True if the unit can be attacked, false if not.
-	bool CheckAttack();
+	bool CheckAttack() const;
 
 	// Calculates velocity based off of movement speed, target pos, and current pos.
 	void CalculateVelocity();
@@ -186,7 +183,7 @@ private:
 	// Builds the weapon and equipment arrays.
 	void BuildArrays();
 
-	bool IsStuck();
+	bool IsStuck() const;
 
 	// Equipment use functions.
 	static void UseNone();
@@ -196,14 +193,9 @@ private:
 
 	void Attack();
 
-
-
 	//------------------------------------------------------------------------------
 	// Stats
 	//------------------------------------------------------------------------------
-	
-	
-	
 
 	struct BaseStats
 	{
@@ -238,11 +230,11 @@ private:
 	GameObject* target;
 	int prevHP;
 	Vector2D targetPos, lastFrameTarget, guardingPos;
-	std::vector<Grid::Node*> path;
-	Grid::Node* moveTarget;
+	vector<Node*> path;
+	Node* currMoveTarget;
 	states prevState;
 	float stuckTimer;
-	Grid::Node* gridPos;
+	Vector2D gridPos;
 
 	BehaviorArmy* army;
 

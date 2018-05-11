@@ -6,7 +6,7 @@
 class Grid
 {
 public:
-	struct Node
+	/*struct Node
 	{
 		Vector2D gridPos;
 		Vector2D worldPos;
@@ -26,7 +26,7 @@ public:
 
 		bool operator==(const Node &other) const;
 		bool operator!=(const Node &other) const;
-	};
+	};*/
 
 	// Finds all nodes adjacent to a given node.
 	// Params:
