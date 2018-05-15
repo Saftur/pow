@@ -12,8 +12,8 @@ Map::Map() {
 	return tiles[y * width + x];
 }*/
 
-Grid Map::InitGrid() {
-	Grid grid = Grid::GetInstance();
+GridManager Map::InitGrid() {
+	GridManager grid = GridManager::GetInstance();
 	for (int y = 0; y < GetTilemapHeight(); y++) {
 		for (int x = 0; x < GetTilemapWidth(); x++) {
 			int tile = GetTile(x, y);

@@ -89,7 +89,7 @@ public:
 		int strength, agility, defense;
 
 		int ability;
-		int group;
+		AttackGroup group;
 
 		int weapon, item1, item2;
 
@@ -108,7 +108,7 @@ public:
 
 	BehaviorArmy* GetArmy() const;
 
-	enum states { cUnitIdle, cUnitMove, cUnitAttack, cUnitSoftChase, cUnitReturn, cUnitGuard, cUnitFollow, cUnitBuild, cUnitEndBuild };
+	enum states { cUnitIdle, cUnitError, cUnitMove, cUnitAttack, cUnitSoftChase, cUnitReturn, cUnitGuard, cUnitFollow, cUnitBuild, cUnitEndBuild };
 
 	// Clone an advanced behavior and return a pointer to the cloned object.
 	// Params:
@@ -170,12 +170,14 @@ private:
 	// True if the unit can be targeted, false if not.
 	bool CanTarget(GameObject* enemy) const;
 
+	void UpdatePath();
+
 	// Checks if the unit can attack an enemy.
 	// Params:
 	//	enemy - the enemy we're checking.
 	// Returns:
 	// True if the unit can be attacked, false if not.
-	bool CheckAttack() const;
+	bool CheckAttack();
 
 	// Calculates velocity based off of movement speed, target pos, and current pos.
 	void CalculateVelocity();

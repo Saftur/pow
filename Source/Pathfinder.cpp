@@ -7,11 +7,8 @@ using Node = GridManager::Node;
 
 vector<Node*> Pathfinder::FindPath(Node * start, Node * end)
 {
-	if (!end->open)
-		return vector<Node*>();
-
-	vector<Node*> openNodes;
-	vector<Node*> closedNodes;
+	vector<GridManager::Node*> openNodes;
+	vector<GridManager::Node*> closedNodes;
 
 	openNodes.push_back(start);
 
@@ -37,23 +34,31 @@ vector<Node*> Pathfinder::FindPath(Node * start, Node * end)
 		// Check if we've reached the target node. If so, retrace our steps and exit the loop.
 		if (currNode == end)
 		{
-			return Retrace(end);
+			vector<Node*> path = Retrace(end);
+
+			if (!end->open)
+				if (!path.empty())
+					path.pop_back();
+
+			return path;
 		}
 
-		vector<Node*> neighbors = GridManager::GetInstance().GetNeighbors(currNode);
+		vector<GridManager::Node*> neighbors = GridManager::GetInstance().GetNeighbors(currNode);
 
 		// Iterate through all nodes adjacent to the current node.
-		for (vector<Node*>::iterator neighbor = neighbors.begin(); neighbor < neighbors.end(); neighbor++)
+		for (vector<GridManager::Node*>::iterator neighbor = neighbors.begin();
+			neighbor != neighbors.end(); 
+			++neighbor)
 		{
 			// We don't need to update the costs on closed nodes, so skip them.
-			if (find(closedNodes.begin(), closedNodes.end(), neighbor) != closedNodes.end())
+			if (find(closedNodes.begin(), closedNodes.end(), *neighbor) != closedNodes.end())
 				continue;
 
 			// Calculate each neighbor's new cost (Manhattan distance from start and end nodes).
 			int newMoveCost = currNode->gVal + ManhattanDistance(currNode, *neighbor);
 
 			// Update the path to the node if we've found a more efficient route, or if the node hasn't been explored yet.
-			if (newMoveCost < (*neighbor)->gVal || find(openNodes.begin(), openNodes.end(), neighbor) == openNodes.end())
+			if (newMoveCost < (*neighbor)->gVal || find(openNodes.begin(), openNodes.end(), *neighbor) == openNodes.end())
 			{
 				(*neighbor)->gVal = newMoveCost;
 				(*neighbor)->hVal = ManhattanDistance(*neighbor, end);
@@ -62,25 +67,26 @@ vector<Node*> Pathfinder::FindPath(Node * start, Node * end)
 			}
 
 			// Add the neighboring nodes to the list of open nodes.
-			if (find(openNodes.begin(), openNodes.end(), neighbor) == openNodes.end() && (*neighbor)->open)
+			if (find(openNodes.begin(), openNodes.end(), *neighbor) == openNodes.end() && (*neighbor)->open)
 			{
 				openNodes.push_back(*neighbor);
 			}
 		}
-
-		// Return null because we didn't find a path.
-		return vector<Node*>();
 	}
+	// Return null because we didn't find a path.
+	return vector<Node*>();
 }
 
 vector<Node*> Pathfinder::Retrace(Node * end)
 {
 	vector<Node*> returnVal;
 
-	while (end)
+	while (end->parent)
 	{
 		returnVal.push_back(end);
+		Node* tmp = end;
 		end = end->parent;
+		tmp->parent = nullptr;
 	}
 
 	return returnVal;
@@ -88,5 +94,10 @@ vector<Node*> Pathfinder::Retrace(Node * end)
 
 int Pathfinder::ManhattanDistance(Node * node1, Node * node2)
 {
-	return (int)abs((float)(node1->x - node2->x) + (int)abs((float)(node1->y - node2->y)));
+	Vector2D result = Vector2D(abs(node1->gridPos().x - node2->gridPos().x), abs(node1->gridPos().y - node2->gridPos().y));
+
+	if (result.x == result.y)
+		return 14;
+	else
+		return 10;
 }
