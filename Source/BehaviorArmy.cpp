@@ -194,29 +194,47 @@ void BehaviorArmy::OnEnter()
 	switch (GetCurrentState())
 	{
 	case cArmyNormal:
+		// Initialize tilemap
 		tilemap = GetParent()->GetObjectManager()->GetObjectByName("Tilemap")->GetComponent<Tilemap>();
-		GameObject *fl = GetParent()->GetObjectManager()->GetObjectByName(frontLine.dispObjName.c_str());
-		if (fl) frontLine.transform = fl->GetComponent<Transform>();
-		else frontLine.transform = nullptr;
-		GameObject *fd = GetParent()->GetObjectManager()->GetObjectByName(funds.dispObjName.c_str());
-		if (fd) funds.text = fd->GetComponent<Text>();
-		else funds.text = nullptr;
+
+		// Initialize the front line struct.
+		GameObject *frontLineObj = GetParent()->GetObjectManager()->GetObjectByName(frontLine.dispObjName.c_str());
+		
+		if (frontLineObj) 
+			frontLine.transform = frontLineObj->GetComponent<Transform>();
+		else 
+			frontLine.transform = nullptr;
+
+		// Initialize the funds struct.
+		GameObject *fundsTextObj = GetParent()->GetObjectManager()->GetObjectByName(funds.dispObjName.c_str());
+
+		if (fundsTextObj) 
+			funds.text = fundsTextObj->GetComponent<Text>();
+		else 
+			funds.text = nullptr;
+
 		funds.amount = (float)funds.startAmount;
 		UpdateFundsText();
+
+		// Initialize the cursor struct.
 		GameObject *cursorObj = GetParent()->GetObjectManager()->GetObjectByName(cursor.objName.c_str());
+
 		cursor.transform = cursorObj->GetComponent<Transform>();
 		cursorObj->GetComponent<Cursor>()->SetGamepad(controls.gamepad);
 		cursor.sprite = cursorObj->GetComponent<Sprite>();
+
+		// Initialize the path struct.
 		GameObject *pathArchetype = GetParent()->GetObjectManager()->GetArchetype(path.lineDispName.c_str());
-		if (pathArchetype) {
+
+		if (pathArchetype) 
+		{
 			path.sprite = pathArchetype->GetComponent<Sprite>();
 			path.transform = pathArchetype->GetComponent<Transform>();
-			/*if (path.transform) {
-				Vector2D pathScl = path.transform->GetScale();
-			}*/
 		}
 
-		switch (side) {
+		// Initialize the front line and cursor positions.
+		switch (side) 
+		{
 		case sLeft:
 			frontLine.start = frontLine.start < 0 ? 0 : frontLine.start;
 			cursor.transform->SetTranslation(tilemap->GetPosOnScreen({ 0, 0 }));
@@ -232,8 +250,8 @@ void BehaviorArmy::OnEnter()
 		}
 
 		Vector2D pos;
-		if (side == sLeft) pos = Grid::GetInstance().ConvertToWorldPoint(Grid::GetInstance().GetNode(2, 4));
-		if (side == sRight) pos = Grid::GetInstance().ConvertToWorldPoint(Grid::GetInstance().GetNode(10, 4));
+		if (side == sLeft) pos = GridManager::GetInstance().ConvertToWorldPoint(GridManager::GetInstance().GetNode(2, 4));
+		if (side == sRight) pos = GridManager::GetInstance().ConvertToWorldPoint(GridManager::GetInstance().GetNode(10, 4));
 
 		BuildingCommandPost *commandPost;
 		commandPost = new BuildingCommandPost(side, pos);
@@ -272,13 +290,16 @@ void BehaviorArmy::OnUpdate(float dt)
 	{
 	case cArmyNormal:
 		// Get current cursor position
-		Vector2D curspos = cursor.transform->GetScreenTranslation();
+		Vector2D cursPos = cursor.transform->GetScreenTranslation();
+
 		// Tilemap top left point
-		Vector2D tmTopLeft = tilemap->GetTilemapScreenTopLeft();
+		Vector2D tilemapTopLeft = tilemap->GetTilemapScreenTopLeft();
+
 		// Tilemap bottom right point
-		Vector2D tmBottomRight = tilemap->GetTilemapScreenBottomRight();
+		Vector2D tilemapBottomRight = tilemap->GetTilemapScreenBottomRight();
+
 		// Cursor Node position
-		Node cursorNode = Grid::GetInstance().ConvertToGridPoint(curspos);
+		Node* cursorNode = GridManager::GetInstance().GetNode(GridManager::GetInstance().ConvertToGridPoint(cursPos));
 
 		// If any extra selected units are destroyed, deselect them
 		for (unsigned i = 0; i < selectedUnits.size(); i++) {
@@ -288,65 +309,70 @@ void BehaviorArmy::OnUpdate(float dt)
 			}
 		}
 
-		if (controls.gamepad->GetButtonTriggered(SELECT_BUILDING)) {
-
-		}
-
 		bool buildingMenu = controls.gamepad->GetButtonTriggered(BUILDING_MENU);
 
 		if (buildingMenu || AEInputCheckTriggered('B')) {
 			if (PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side);
-			else PopupMenu::CreateMenu(side, PopupMenu::MenuType::Building, tilemap->GetPosOnMap(curspos),
-				tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos)));
+			else PopupMenu::CreateMenu(side, PopupMenu::MenuType::Building, tilemap->GetPosOnMap(cursPos),
+				tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
 		}
 		if (PopupMenu::Exists(side)) PopupMenu::Update(side, *controls.gamepad, dt);
 		else {
+			// If the select button is pressed down this frame, set the select rectangle start positions.
 			if (controls.gamepad->GetButtonTriggered(SELECT) || AEInputCheckTriggered(VK_RETURN)) { ///TODDO: Remove AEInput check
 				rectStartPos = cursorNode;
 
 				//Check if we are trying to select a building, and open the menu associated with that building if we are.
 				LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
-					if (obj->GetComponent<Transform>() && obj->GetComponent<Transform>()->GetTranslation() == Grid::GetInstance().ConvertToWorldPoint(cursorNode)) {
+					if (obj->GetComponent<Transform>() && obj->GetComponent<Transform>()->GetTranslation() == GridManager::GetInstance().ConvertToWorldPoint(cursorNode)) {
 						if (obj->GetComponent<BuildingResearchCenter>()) {
-							obj->GetComponent<BuildingResearchCenter>()->OpenMenu(tilemap->GetPosOnMap(curspos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos)));
+							obj->GetComponent<BuildingResearchCenter>()->OpenMenu(tilemap->GetPosOnMap(cursPos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
 						}
 						if (obj->GetComponent<BuildingCommandPost>()) {
-							obj->GetComponent<BuildingCommandPost>()->OpenMenu(tilemap->GetPosOnMap(curspos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos)));
+							obj->GetComponent<BuildingCommandPost>()->OpenMenu(tilemap->GetPosOnMap(cursPos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
 						}
 					}
 					return false;
 				});
 			}
-			if (controls.gamepad->GetButtonTriggered(MOVE)) {
-				for (SelectedUnit &unit : selectedUnits) {
-					unit.unit->SetPath(unit.path);
-					unit.unit->SetNextState(BehaviorUnit::cUnitMove);
-				}
-				selectedUnits.clear();
-			}
-			if (controls.gamepad->GetButtonReleased(SELECT)) {
-				CalculateOffsets();
-				rectEndPos.gridPos = {-1,-1};
-			}
+		}
 
-			// Are we selecting units?
-			if (controls.gamepad->GetButton(SELECT)) {
-				if (cursorNode != rectEndPos) {
-					rectEndPos = cursorNode;
-					SelectUnits();
-				}
-			} else {
-				if (selectedUnits.size() > 0) {
-					if (cursorNode != prevTarget) {
-						prevTarget = cursorNode;
-						for (SelectedUnit unit : selectedUnits) {
-							unit.path = Pathfinding::FindPath(unit.unit->GetNode(), Grid::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation() + unit.offset));
-						}
+		// If the move button is down, set the path for all selected units.
+		if (controls.gamepad->GetButtonTriggered(MOVE)) {
+			for (SelectedUnit &unit : selectedUnits)
+			{
+				unit.unit->SetPath(unit.path);
+				unit.unit->SetNextState(BehaviorUnit::cUnitMove);
+			}
+			selectedUnits.clear();
+		}
+		if (controls.gamepad->GetButtonReleased(SELECT)) {
+			CalculateOffsets();
+			rectEndPos = nullptr;
+		}
+
+		// Are we selecting units?
+		if (controls.gamepad->GetButton(SELECT)) {
+			if (cursorNode != rectEndPos) {
+				rectEndPos = cursorNode;
+				SelectUnits();
+			}
+		} else {
+			if (selectedUnits.size() > 0)
+			{
+				if (cursorNode != prevTarget) {
+					prevTarget = cursorNode;
+					for (SelectedUnit& unit : selectedUnits)
+					{
+						Vector2D pos = GridManager::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation() + unit.offset);
+						unit.path = Pathfinder::FindPath(unit.unit->GetNode(), GridManager::GetInstance().GetNode((int)pos.x, (int)pos.y));
 					}
-				} else {
-					if (controls.gamepad->GetButtonTriggered(SPAWNUNIT))
-						CreateUnit("Unit1", cursorNode);
 				}
+			}
+			else
+			{
+				if (controls.gamepad->GetButtonTriggered(SPAWNUNIT))
+					CreateUnit("Unit1", cursorNode->gridPos());
 			}
 		}
 		break;
@@ -491,7 +517,7 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 	}
 }
 
-void BehaviorArmy::CreateUnit(const char *unitName, Node startPos)
+void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos)
 {
 	BehaviorUnit::Traits unitData = GetUnitData(unitName);
 	if (funds.amount < unitData.GetCost()) return;
@@ -507,7 +533,7 @@ void BehaviorArmy::CreateUnit(const char *unitName, Node startPos)
 	go->SetName("Unit");
 
 	Transform *t = go->GetComponent<Transform>();
-	t->SetTranslation(Grid::GetInstance().ConvertToWorldPoint(startPos));
+	t->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(startPos));
 
 	BehaviorUnit *bh = go->GetComponent<BehaviorUnit>();
 	if (!bh) {
@@ -523,22 +549,8 @@ void BehaviorArmy::CreateUnit(const char *unitName, Node startPos)
 bool BehaviorArmy::LegalSpawn(Vector2D pos)
 {
 	vector<GameObject*> unitGOs = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
-	for (GameObject *unit : unitGOs) {
-		BehaviorUnit *bu = unit->GetComponent<BehaviorUnit>();
-		Transform *t = unit->GetComponent<Transform>();
-		if (t) 
-		{
-			if (pos == tilemap->GetPosOnMap(t->GetTranslation()))
-				return false;
-		}
-		if (bu) 
-		{
-			if (pos == bu->GetGridPos()) 
-			{
-				return false;
-			}
-		}
-	}
+	if (!GridManager::GetInstance().GetNode(pos)->open)
+		return false;
 	if (pos.x < 0 || pos.x >= tilemap->GetTilemapWidth() || pos.y < 0 || pos.y >= tilemap->GetTilemapHeight())
 		return false;
 	return BehindFrontLine(pos);
@@ -564,11 +576,11 @@ void BehaviorArmy::SelectUnits()
 	{
 		SelectedUnit selUnit;
 		selUnit.unit = unit->GetComponent<BehaviorUnit>();
-		if ((selUnit.unit->GetGridPos().X() <= rectEndPos.X() && selUnit.unit->GetGridPos().X() >= rectStartPos.X()) ||
-			(selUnit.unit->GetGridPos().X() >= rectEndPos.X() && selUnit.unit->GetGridPos().X() <= rectStartPos.X()))
+		if ((selUnit.unit->GetGridPos().X() <= rectEndPos->x && selUnit.unit->GetGridPos().X() >= rectStartPos->x) ||
+			(selUnit.unit->GetGridPos().X() >= rectEndPos->x && selUnit.unit->GetGridPos().X() <= rectStartPos->x))
 		{
-			if ((selUnit.unit->GetGridPos().Y() <= rectEndPos.Y() && selUnit.unit->GetGridPos().Y() >= rectStartPos.Y()) ||
-				(selUnit.unit->GetGridPos().Y() >= rectEndPos.Y() && selUnit.unit->GetGridPos().Y() <= rectStartPos.Y()))
+			if ((selUnit.unit->GetGridPos().Y() <= rectEndPos->y && selUnit.unit->GetGridPos().Y() >= rectStartPos->y) ||
+				(selUnit.unit->GetGridPos().Y() >= rectEndPos->y && selUnit.unit->GetGridPos().Y() <= rectStartPos->y))
 			{
 				selectedUnits.push_back(selUnit);
 			}
@@ -607,11 +619,11 @@ void BehaviorArmy::DrawPath() const
 		Transform targetT = Transform();
 		targetT.SetScale(cursor.transform->GetScale() * 0.75);
 
-		targetT.SetTranslation(Grid::GetInstance().ConvertToWorldPoint(unit.unit->GetGridPos()));
+		targetT.SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(unit.unit->GetGridPos()));
 		cursor.sprite->Draw(targetT);
 
 		if (unit.path.size() == 0) continue;
-		Vector2D startPos = unit.path[0];
+		Vector2D startPos = unit.path[0]->gridPos();
 
 		Vector2D pos = tilemap->GetPosOnScreen(startPos);
 		Vector2D invY = { 1, -1 };
@@ -624,19 +636,19 @@ void BehaviorArmy::DrawPath() const
 		path.sprite->SetAlpha(1.0f);
 		path.sprite->Draw(diamondT);
 
-		for (Node node : unit.path)
+		/*for (Node* node : unit.path)
 		{
-			node.gridPos *= invY;
-			pos += tilemap->GetTileSize() * node.gridPos / 2;
+			//node->gridPos = invY;
+			pos += tilemap->GetTileSize() * &node->gridPos / 2;
 			path.transform->SetTranslation(pos);
-			path.transform->SetRotation(node.gridPos.GetAngleRadians());
+			path.transform->SetRotation(node->gridPos.GetAngleRadians());
 			path.sprite->SetAlpha(0.5f);
 			path.sprite->Draw();
-			pos += tilemap->GetTileSize() * node.gridPos / 2;
+			pos += tilemap->GetTileSize() * node->gridPos / 2;
 			diamondT.SetTranslation(pos);
 			path.sprite->SetAlpha(1.0f);
 			path.sprite->Draw(diamondT);
-		}
+		}*/
 	}
 }
 

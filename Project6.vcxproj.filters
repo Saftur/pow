@@ -179,12 +179,6 @@
     <ClCompile Include="Source\BehaviorProjectile.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
-    <ClCompile Include="source\Pathfinding.cpp">
-      <Filter>Engine\GameObjects\Pathfinding</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Grid.cpp">
-      <Filter>Engine\GameObjects\Pathfinding</Filter>
-    </ClCompile>
     <ClCompile Include="source\BehaviorUnit.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
@@ -208,6 +202,12 @@
     </ClCompile>
     <ClCompile Include="source\BehaviorTestBox.cpp">
       <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GridManager.cpp">
+      <Filter>Engine\GameObjects\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Pathfinder.cpp">
+      <Filter>Engine\GameObjects\Pathfinding</Filter>
     </ClCompile>
     <ClCompile Include="Source\Building.cpp">
       <Filter>Engine\GameObjects\Buildings</Filter>
@@ -438,12 +438,6 @@
     <ClInclude Include="Source\BehaviorProjectile.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
-    <ClInclude Include="source\Pathfinding.h">
-      <Filter>Engine\GameObjects\Pathfinding</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Grid.h">
-      <Filter>Engine\GameObjects\Pathfinding</Filter>
-    </ClInclude>
     <ClInclude Include="source\BehaviorUnit.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
@@ -470,6 +464,12 @@
     </ClInclude>
     <ClInclude Include="source\BehaviorTestBox.h">
       <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Pathfinder.h">
+      <Filter>Engine\GameObjects\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GridManager.h">
+      <Filter>Engine\GameObjects\Pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="Source\Building.h">
       <Filter>Engine\GameObjects\Buildings</Filter>

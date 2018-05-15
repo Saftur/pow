@@ -98,7 +98,7 @@ void Building::Update(float dt)
 		GetParent()->Destroy();
 
 		//Drop some money.
-		vector<Grid::Node> nearbyNodes = Grid::GetInstance().GetNeighbors(Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y)); //Find all neaby nodes.
+		vector<GridManager::Node> nearbyNodes = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y)); //Find all neaby nodes.
 		unsigned nodeID = rand() % nearbyNodes.size(); //Pick a random node out of the list of nearby nodes.
 
 		if (jaxiumDropAmount > 0) {
@@ -106,7 +106,7 @@ void Building::Update(float dt)
 			GameObject *jaxium = new GameObject("Jaxium Crystal");
 			Transform* transform = new Transform();
 			transform->SetScale({ 25, 25 });
-			transform->SetTranslation(Grid::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
+			transform->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
 			jaxium->AddComponent(transform);
 
 			Crystal *jaxiumCrystal = new Crystal(Crystal::CrystalType::Jaxium, jaxiumDropAmount);
@@ -128,7 +128,7 @@ void Building::Update(float dt)
 			GameObject *neoridium = new GameObject("Neoridium Crystal");
 			Transform* transform = new Transform();
 			transform->SetScale({ 25, 25 });
-			transform->SetTranslation(Grid::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
+			transform->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
 			neoridium->AddComponent(transform);
 
 			Crystal *neoridiumCrystal = new Crystal(Crystal::CrystalType::Neoridium, neoridiumDropAmount);

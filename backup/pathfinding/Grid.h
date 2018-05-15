@@ -6,33 +6,34 @@
 class Grid
 {
 public:
-	struct Node
+	/*struct Node
 	{
 		Vector2D gridPos;
 		Vector2D worldPos;
 		int hVal, gVal;
 		bool open;
-		Node* parent;
+		Vector2D parent;
 
-		int fVal();
+		int fVal() const;
 
 		Node(Vector2D gridPos = Vector2D(0, 0), bool state = true);
+		Node(const Node& other);
 
-		operator Vector2D();
+		operator Vector2D() const;
 
 		int X() const;
 		int Y() const;
 
-		bool operator==(const Node &other);
-		bool operator!=(const Node &other);
-	};
+		bool operator==(const Node &other) const;
+		bool operator!=(const Node &other) const;
+	};*/
 
 	// Finds all nodes adjacent to a given node.
 	// Params:
 	//	node - the node whose neighbors we're finding.
 	// Returns:
 	// A standard vector containing all adjacent nodes.
-	std::vector<Node> GetNeighbors(Node node);
+	std::vector<Node*> GetNeighbors(Node* node);
 
 	// Updates a node's values.
 	// Params:
@@ -53,7 +54,7 @@ public:
 	GameObject* GetOccupant(int xPos, int yPos, GameObjectManager* manager);
 
 	Vector2D ConvertToWorldPoint(Node node);
-	Node ConvertToGridPoint(Vector2D pos);
+	Node* ConvertToGridPoint(Vector2D pos);
 
 	Node* operator[](int index);
 

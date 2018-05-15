@@ -21,7 +21,8 @@
 #include "BehaviorUnit.h"
 #include "GameObjectManager.h"
 #include "Transform.h"
-#include "Pathfinding.h"
+#include "Pathfinder.h"
+#include "GridManager.h"
 #include "Physics.h"
 
 //------------------------------------------------------------------------------
@@ -51,11 +52,6 @@ BehaviorUnit::BaseStats BehaviorUnit::defaultStats =
 BehaviorUnit::Weapon BehaviorUnit::Weapons[cNumWeapons];
 BehaviorUnit::Equipment BehaviorUnit::Equips[cNumEquips];
 
-
-Grid::Node BehaviorUnit::GetNextPos()
-{
-	return gridPos;
-}
 //------------------------------------------------------------------------------
 // Public Functions:
 //------------------------------------------------------------------------------
@@ -67,10 +63,10 @@ BehaviorUnit::BehaviorUnit() :
 	Behavior("BehaviorUnit")
 {
 	SetCurrentState(cBehaviorInvalid);
-	SetNextState(cUnitIdle);
+	SetNextState(cUnitError);
 }
 
-void BehaviorUnit::Init(BehaviorUnit::Traits theTraits, BehaviorArmy* theArmy)
+void BehaviorUnit::Init(Traits& theTraits, BehaviorArmy* theArmy)
 {
 	army = theArmy;
 
@@ -109,9 +105,11 @@ void BehaviorUnit::Init(BehaviorUnit::Traits theTraits, BehaviorArmy* theArmy)
 	
 }
 
-void BehaviorUnit::SetPath(std::vector<Grid::Node> newPath)
+void BehaviorUnit::SetPath(std::vector<Node*> newPath)
 {
 	path = newPath;
+	currMoveTarget = GridManager::GetInstance().GetNode(gridPos);
+	SetNextState(cUnitMove);
 }
 
 void BehaviorUnit::BuildArrays()
@@ -149,12 +147,15 @@ Component* BehaviorUnit::Clone() const
 //	 behavior = Pointer to the behavior component.
 void BehaviorUnit::OnEnter()
 {
-	gridPos = Grid::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation());
-	Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = false;
+	gridPos = GridManager::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation());
+	GridManager::GetInstance().SetNode(gridPos, false);
+
 	switch (GetCurrentState())
 	{
-	case cUnitIdle:
+	case cUnitError:
 		allUnits.push_back(GetParent());
+		break;
+	case cUnitIdle:
 		break;
 	case cUnitMove:
 		break;
@@ -191,48 +192,38 @@ void BehaviorUnit::OnUpdate(float dt)
 		CheckAttack();
 		break;
 	case cUnitMove:
-		// If our target has changed, we need to calculate a new path.
-		if (lastFrameTarget != targetPos)
+		if (currMoveTarget)
+			currMoveTarget->open = true;
+
+		// Are we there yet?
+		if (Vector2D::AlmostEquals(GetParent()->GetComponent<Transform>()->GetTranslation(), GridManager::GetInstance().ConvertToWorldPoint(currMoveTarget->gridPos()), 2.5f))
 		{
-			path.clear();
-		}
+			// Do we have more movements to make?
+			if (path.empty() || !currMoveTarget->open)
+			{
+				if (!currMoveTarget->open)
+					UpdatePath();
 
-		// Do we need to do pathfinding?
-		if (path.empty())
-		{
-			Grid::Node start = Grid::GetInstance().ConvertToGridPoint(((Transform*)GetParent()->GetComponent("Transform"))->GetWorldTranslation());
-			Grid::Node end = Grid::GetInstance().ConvertToGridPoint(targetPos);
+				currMoveTarget = nullptr;
+				GetParent()->GetComponent<Physics>()->SetVelocity(Vector2D(0, 0));
+				SetNextState(cUnitIdle);
+				return;
+			}
 
-			path = Pathfinding::FindPath(start, end);
+			GridManager::GetInstance().GetNode(gridPos)->open = true;
+			
+			// Update our target.
+			gridPos = currMoveTarget->gridPos();
+			GetParent()->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(gridPos));
+			
+			currMoveTarget->open = false;
 
-			// Set the first node.
-			moveTarget = path.back();
+			currMoveTarget = *(path.end() - 1);
 			path.pop_back();
 		}
 
-		// Have we reached a node?
-		if (Grid::GetInstance().ConvertToGridPoint(((Transform*)GetParent()->GetComponent("Transform"))->GetWorldTranslation()) == moveTarget)
-		{
-			// Set the next node.
-			moveTarget = Node();
-			moveTarget = path.back();
-			path.pop_back();
-		}
-
-		// If pathfinding failed, set state to Idle.
-		if (path.empty())
-		{
-			SetNextState(cUnitIdle);
-			target = nullptr;
-			return;
-		}
-
-		// Update velocity
+		// Update velocity.
 		CalculateVelocity();
-
-		Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = true;
-		gridPos = Grid::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation());
-		Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = false;
 		break;
 	case cUnitAttack:
 		// Can we attack our target?
@@ -289,7 +280,7 @@ void BehaviorUnit::OnExit()
 void BehaviorUnit::OnDestroy()
 {
 	allUnits.erase(std::find(allUnits.begin(), allUnits.end(), GetParent()));
-	Grid::GetInstance().GetNode(gridPos.X(), gridPos.Y()).open = true;
+	GridManager::GetInstance().SetNode(gridPos, true);
 }
 
 // The collision handling function for Units.
@@ -300,6 +291,11 @@ void BehaviorUnit::CollisionHandler(GameObject& stub, GameObject& other)
 {
 	UNREFERENCED_PARAMETER(stub);
 	UNREFERENCED_PARAMETER(other);
+}
+
+void BehaviorUnit::UpdatePath()
+{
+	SetPath(Pathfinder::FindPath(GridManager::GetInstance().GetNode(gridPos), GridManager::GetInstance().GetNode(targetPos)));
 }
 
 void BehaviorUnit::Load(rapidjson::Value& obj)
@@ -331,43 +327,57 @@ void BehaviorUnit::UseEMP()
 void BehaviorUnit::CalculateVelocity()
 {
 	// Calculate a direction vector from current position to taget position.
-	Vector2D dir = moveTarget.worldPos - ((Transform*)GetParent()->GetComponent("Transform"))->GetTranslation();
-	dir.Normalized();
+	Vector2D dir = currMoveTarget->gridPos() - gridPos;
+	dir = dir.Normalized();
+
+	dir.y *= -1;
 
 	// Set velocity.
-	((Physics*)GetParent()->GetComponent("Physics"))->SetVelocity(dir * (defaultStats.speed * traits.agility));
+	GetParent()->GetComponent<Physics>()->SetVelocity(dir * (defaultStats.speed * traits.agility));
 }
 
 // Checks for enemies within a certain radius of the unit.
 // Returns:
 // A standard vector containing all of the found units.
-std::vector<GameObject*> BehaviorUnit::FindEnemiesInRange()
+std::vector<GameObject*> BehaviorUnit::FindEnemiesInRange() const
 {
 	std::vector<GameObject*> foundUnits;
 
 	for (GameObject* unit : allUnits)
 	{
-		// if unit.team != team
-		// if dist(unit.gridPos <= traits.weapon.range) foundUnits.push_back(unit);
-		foundUnits.push_back(unit);
+		if (unit->GetComponent<BehaviorUnit>()->GetArmy() == army)
+			continue;
+
+		if (GridManager::GetInstance().IsWithinRange(gridPos, unit->GetComponent<BehaviorUnit>()->GetGridPos(), Weapons[traits.weapon].range))
+			foundUnits.push_back(unit);
 	}
 
 	return foundUnits;
 }
 
-// Checks if the unit can target an enemy.
+// Checks if the unit can target an enemy (using AttackGroups).
 // Params:
 //	enemy - the enemy we're checking.
 // Returns:
 // True if the unit can be targeted, false if not.
-bool BehaviorUnit::CanTarget(GameObject* enemy)
+bool BehaviorUnit::CanTarget(GameObject* enemy) const
 {
-	AttackGroup enemyGroup = AttackGroup::cGroupInfantry;//((BehaviorUnit*)enemy->GetComponent("Behavior"))->traits.group;
+	AttackGroup enemyGroup = enemy->GetComponent<BehaviorUnit>()->traits.group;
 
 	switch (Weapons[traits.weapon].group)
 	{
 	case cGroupMelee:
 	case cGroupRanged:
+		switch (traits.group)
+		{
+		case cGroupInfantry:
+
+			break;
+		case cGroupAircraft:
+			break;
+		case cGroupArtillary:
+			break;
+		}
 		if (enemyGroup == cGroupInfantry || enemyGroup == cGroupArtillary)
 			return true;
 		return false;
@@ -389,7 +399,7 @@ bool BehaviorUnit::CheckAttack()
 	if (target == nullptr)
 	{
 		// If we are moving to a location, ignore all nearby enemies.
-		if (moveTarget == Node())
+		if (currMoveTarget == nullptr)
 			return false;
 
 		// Find all enemies within attack range.
@@ -429,29 +439,29 @@ void BehaviorUnit::Attack()
 
 }
 
-bool BehaviorUnit::IsStuck()
+bool BehaviorUnit::IsStuck() const
 {
 	return false;
 }
 
-BehaviorArmy* BehaviorUnit::GetArmy()
+BehaviorArmy* BehaviorUnit::GetArmy() const
 {
 	return army;
 }
 
-std::vector<Grid::Node> BehaviorUnit::GetPath()
+std::vector<GridManager::Node*> BehaviorUnit::GetPath() const
 {
 	return path;
 }
 
-Vector2D BehaviorUnit::GetGridPos()
+Vector2D BehaviorUnit::GetGridPos() const
 {
-	return GetNode().gridPos;
+	return GetNode()->gridPos();
 }
 
-Node BehaviorUnit::GetNode()
+Node* BehaviorUnit::GetNode() const
 {
-	return gridPos;
+	return GridManager::GetInstance().GetNode(gridPos);
 }
 
 //------------------------------------------------------------------------------

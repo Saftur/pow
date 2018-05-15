@@ -26,10 +26,12 @@ using std::string;
 #include "Rendertext.h"
 #include "Transform.h"
 #include "ControlList.h"
-#include "Grid.h"
+#include "GridManager.h"
 #include "BehaviorUnit.h"
 
 typedef class Sprite Sprite;
+
+using Node = GridManager::Node;
 
 //------------------------------------------------------------------------------
 
@@ -52,20 +54,6 @@ enum ArmyState
 class BehaviorArmy : public Behavior
 {
 public:
-	/*struct UnitData {
-		// NUMABILITIES isn't an actual ability, it's just a counter
-		enum Ability { NONE, ARMOR, BOW, BUILDER, NUMABILITIES };
-
-		int hp;
-		int damage;
-		int speed;
-		Ability ability;
-		BehaviorArmy *army;
-		char name[100];
-		Sprite* abilitySprite;
-
-		unsigned GetCost();
-	};*/
 
 	// Army side
 	enum Side {
@@ -116,7 +104,7 @@ public:
 	//  unitName = Name of unit to spawn
 	//  startPos = Start position of unit
 	//  path     = Starting path
-	void CreateUnit(const char *unitName, Node startPos);
+	void CreateUnit(const char *unitName, Vector2D startPos);
 	// Is spawn position "legal"
 	// Params:
 	//  pos = Spawn pos
@@ -210,8 +198,6 @@ private:
 	// Pointer to tilemap
 	Tilemap *tilemap;
 
-
-
 	// Front line data
 	struct {
 		// Current position of front line
@@ -248,7 +234,7 @@ private:
 	struct SelectedUnit
 	{
 		BehaviorUnit* unit;	// The unit
-		vector<Node> path;	// The unit's path
+		vector<Node*> path;	// The unit's path
 		Vector2D offset;	// An offset from the move target
 	};
 
@@ -256,11 +242,11 @@ private:
 	vector<SelectedUnit> selectedUnits;
 
 	// Selection rectangle positions
-	Node rectStartPos;
-	Node rectEndPos;
+	Node* rectStartPos;
+	Node* rectEndPos;
 
 	// Node targetted previous frame
-	Node prevTarget;
+	Node* prevTarget;
 
 	// Path drawing
 	struct {

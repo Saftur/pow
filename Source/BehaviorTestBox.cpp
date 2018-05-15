@@ -21,7 +21,7 @@
 #include "GameObjectManager.h"
 #include "Sprite.h"
 #include "Transform.h"
-#include "Grid.h"
+#include "GridManager.h"
 
 //------------------------------------------------------------------------------
 // Enums:
@@ -106,11 +106,11 @@ void BehaviorTestBox::OnUpdate(float dt)
 		SetNextState(cNodeOpen);
 		break;
 	case cNodeOpen:
-		GetParent()->GetComponent<Transform>()->SetTranslation(Grid::GetInstance().ConvertToWorldPoint(gridPos));
+		GetParent()->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(gridPos));
 		GetParent()->GetComponent<Sprite>()->SetModulateColor({ 0, 1, 0, 1 });
 		break;
 	case cNodeClosed:
-		GetParent()->GetComponent<Transform>()->SetTranslation(Grid::GetInstance().ConvertToWorldPoint(gridPos));
+		GetParent()->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(gridPos));
 		GetParent()->GetComponent<Sprite>()->SetModulateColor({ 1, 0, 0, 1 });
 		break;
 	}

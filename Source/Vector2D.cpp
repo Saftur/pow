@@ -147,6 +147,16 @@ float Vector2D::DotProduct(const Vector2D &other) const
 	return ((x * other.x) + (y * other.y));
 }
 
+bool Vector2D::AlmostEquals(float first, float second, float epsilon)
+{
+	return fabsf(first - second) < epsilon;
+}
+
+bool Vector2D::AlmostEquals(Vector2D first, Vector2D second, float epsilon)
+{
+	return AlmostEquals(first.x, second.x, epsilon) && AlmostEquals(first.y, second.y, epsilon);
+}
+
 // Static functions (2)
 Vector2D Vector2D::FromAngleDegrees(float angle)
 {

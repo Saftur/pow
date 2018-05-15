@@ -17,6 +17,8 @@
 
 #include "stdafx.h"
 
+#define FP_EPSILON 0.0001f
+
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -59,6 +61,8 @@ public:
 	float Distance(const Vector2D& other) const;
 	Vector2D Midpoint(const Vector2D& other) const;
 	float DotProduct(const Vector2D& other) const;
+	static bool AlmostEquals(float first, float second, float epsilon = FP_EPSILON);
+	static bool AlmostEquals(Vector2D first, Vector2D second, float epsilon = FP_EPSILON);
 
 	// Static functions (2)
 	static Vector2D FromAngleDegrees(float angle);
