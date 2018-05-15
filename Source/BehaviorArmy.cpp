@@ -26,9 +26,14 @@
 #include "Engine.h"
 #include "PopupMenu.h"
 #include "Building.h"
+#include "BuildingResearchCenter.h"
+#include "BuildingCommandPost.h"
 #include "Controls.h"
+#include "Mesh.h"
+#include "SpriteSource.h"
 #include <iostream>
 #include <sstream>
+#include "LevelManager.h"
 using std::ifstream;
 using std::stringstream;
 
@@ -210,6 +215,7 @@ void BehaviorArmy::OnEnter()
 				Vector2D pathScl = path.transform->GetScale();
 			}*/
 		}
+
 		switch (side) {
 		case sLeft:
 			frontLine.start = frontLine.start < 0 ? 0 : frontLine.start;
@@ -224,6 +230,31 @@ void BehaviorArmy::OnEnter()
 		if (frontLine.transform) {
 			PushFrontLine({ (float)frontLine.pos, 0 });
 		}
+
+		Vector2D pos;
+		if (side == sLeft) pos = Grid::GetInstance().ConvertToWorldPoint(Grid::GetInstance().GetNode(2, 4));
+		if (side == sRight) pos = Grid::GetInstance().ConvertToWorldPoint(Grid::GetInstance().GetNode(10, 4));
+
+		BuildingCommandPost *commandPost;
+		commandPost = new BuildingCommandPost(side, pos);
+
+		GameObject *commandPostObj = new GameObject("Command Post");
+		Transform* transform = new Transform(pos.x, pos.y);
+		transform->SetScale({ 50, 50 });
+		commandPostObj->AddComponent(transform);
+
+		Sprite *sprite = new Sprite();
+		commandPost->texture = AEGfxTextureLoad("Data\\Assets\\Command Post.png");
+		SpriteSource* spriteSource = new SpriteSource(1, 1, commandPost->texture);
+		sprite->SetSpriteSource(spriteSource);
+		commandPost->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
+		sprite->SetMesh(commandPost->mesh);
+
+		commandPostObj->AddComponent(sprite);
+		commandPostObj->AddComponent(commandPost);
+
+		LevelManager::GetLayer(0)->GetObjectManager()->Add(*commandPostObj);
+
 		break;
 	}
 }
@@ -257,16 +288,34 @@ void BehaviorArmy::OnUpdate(float dt)
 			}
 		}
 
+		if (controls.gamepad->GetButtonTriggered(SELECT_BUILDING)) {
+
+		}
+
 		bool buildingMenu = controls.gamepad->GetButtonTriggered(BUILDING_MENU);
 
-		if (buildingMenu && !PopupMenu::Exists(side)) PopupMenu::CreateMenu(side, PopupMenu::MenuType::Building,
-			tilemap->GetPosOnMap(curspos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos)));
-		else if (buildingMenu && PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side);
-
+		if (buildingMenu || AEInputCheckTriggered('B')) {
+			if (PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side);
+			else PopupMenu::CreateMenu(side, PopupMenu::MenuType::Building, tilemap->GetPosOnMap(curspos),
+				tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos)));
+		}
 		if (PopupMenu::Exists(side)) PopupMenu::Update(side, *controls.gamepad, dt);
 		else {
-			if (controls.gamepad->GetButtonTriggered(SELECT)) {
+			if (controls.gamepad->GetButtonTriggered(SELECT) || AEInputCheckTriggered(VK_RETURN)) { ///TODDO: Remove AEInput check
 				rectStartPos = cursorNode;
+
+				//Check if we are trying to select a building, and open the menu associated with that building if we are.
+				LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
+					if (obj->GetComponent<Transform>() && obj->GetComponent<Transform>()->GetTranslation() == Grid::GetInstance().ConvertToWorldPoint(cursorNode)) {
+						if (obj->GetComponent<BuildingResearchCenter>()) {
+							obj->GetComponent<BuildingResearchCenter>()->OpenMenu(tilemap->GetPosOnMap(curspos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos)));
+						}
+						if (obj->GetComponent<BuildingCommandPost>()) {
+							obj->GetComponent<BuildingCommandPost>()->OpenMenu(tilemap->GetPosOnMap(curspos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(curspos)));
+						}
+					}
+					return false;
+				});
 			}
 			if (controls.gamepad->GetButtonTriggered(MOVE)) {
 				for (SelectedUnit &unit : selectedUnits) {

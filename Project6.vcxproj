@@ -51,6 +51,7 @@
     <ClInclude Include="Source\BuildingJaxiumMine.h" />
     <ClInclude Include="Source\BuildingNeoridiumMine.h" />
     <ClInclude Include="Source\BuildingResearchCenter.h" />
+    <ClInclude Include="Source\BuildingTeleporter.h" />
     <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\ButtonEffects.h" />
     <ClInclude Include="Source\CompList.h" />
@@ -106,6 +107,7 @@
     <ClCompile Include="Source\BuildingJaxiumMine.cpp" />
     <ClCompile Include="Source\BuildingNeoridiumMine.cpp" />
     <ClCompile Include="Source\BuildingResearchCenter.cpp" />
+    <ClCompile Include="Source\BuildingTeleporter.cpp" />
     <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\ButtonEffects.cpp" />
     <ClCompile Include="Source\CompList.cpp" />

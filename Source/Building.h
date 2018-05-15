@@ -36,7 +36,7 @@ class Building : public Component
 {
 public:
 	enum BuildingType { JaxiumMine, NeoridiumMine, ResearchCenter, Spaceport, VehicleDepot, Turret, Teleporter, CommandPost, BuildingCount, Null = -1 };
-	enum SpecialtyType { Basic, Advanced, Special };
+	enum SpecialtyType { Basic, Advanced, Special, sCommandPost };
 	enum CostType { Jaxium, Neoridium };
 
 	Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, float maxHealth, Vector2D pos, float jaxiumDropAmount, float neoridiumDropAmount);
@@ -49,7 +49,7 @@ public:
 	void Update(float dt); //Update the generic building.
 	virtual void BuildingUpdate(float dt) = 0; //Run the specific update on the building.
 
-
+	virtual void OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos); //Open a menu for the building.
 
 	float Variance(float value, float variance); //Return a float = the value +- a percentage of it based on the variance.
 
@@ -75,6 +75,8 @@ public:
 	AEGfxTexture *texture = nullptr; //Texture for this building.
 
 	Vector2D mapPos; //The position of the building on the map.
+
+	bool firstRun = true; //Allows each building to run things once when the building finishes being built.
 
 private:
 	static map<BehaviorArmy::Side, bool[BuildingCount]> buildings; //Map of boolean arrays each belonging to an army.

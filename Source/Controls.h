@@ -9,6 +9,7 @@
 #define MOVE Gamepad::bA
 #define SPAWNUNIT Gamepad::bX
 
+#define SELECT_BUILDING Gamepad::bY
 #define BUILDING_MENU Gamepad::bRShoulder
 #define MENU_LEFT Gamepad::bDpadLeft
 #define MENU_RIGHT Gamepad::bDpadRight

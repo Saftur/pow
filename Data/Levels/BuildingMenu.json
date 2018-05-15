@@ -115,5 +115,28 @@
       "Text": "Create Jaxium Mine",
       "Scale": [ 20, 25 ]
     }
+  },
+  {
+	"Name": "Button",
+	"Transform": {
+	  "Translation": [ -235, -275 ],
+	  "Scale": [200, 50 ],
+	  "Rotation": 0
+	},
+	"Button": {
+	  "ClickEffect": "CreateTeleporter"
+	},
+    "Sprite": {
+      "Mesh": "ButtonMesh",
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
+      "ModulateColor": [ 0, 0, 0, 1 ],
+      "Text": "Create Teleporter",
+      "Scale": [ 20, 25 ]
+    }
   }
 ]

@@ -22,7 +22,7 @@ void BuildingResearchCenter::BuildingUpdate(float dt)
 {
 }
 
-void BuildingResearchCenter::OpenResearchMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos)
+void BuildingResearchCenter::OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos)
 {
 	PopupMenu::CreateMenu(side, PopupMenu::MenuType::Research, cursorMapPos, cursorScreenPos);
 }

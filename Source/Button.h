@@ -135,6 +135,7 @@ private:
 	static void CreateJaxiumMineEffect(Button &button, float dt, int count = 0, ...);
 	static void CreateNeoridiumMineEffect(Button &button, float dt, int count = 0, ...);
 	static void CreateResearchCenterEffect(Button &button, float dt, int count = 0, ...);
+	static void CreateTeleporterEffect(Button &button, float dt, int count = 0, ...);
 
 	//Research Buttons
 	static void ResearchSpaceportEffect(Button &button, float dt, int count = 0, ...);

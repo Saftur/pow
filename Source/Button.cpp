@@ -26,11 +26,13 @@
 #include "Engine.h"
 #include "PopupMenu.h"
 #include "SpriteSource.h"
+#include <algorithm>
 
 //Building includes.
 #include "BuildingNeoridiumMine.h"
 #include "BuildingJaxiumMine.h"
 #include "BuildingResearchCenter.h"
+#include "BuildingTeleporter.h"
 
 //------------------------------------------------------------------------------
 
@@ -238,14 +240,14 @@ void Button::CreateNeoridiumMineEffect(Button & button, float dt, int count, ...
 	Sprite *sprite = new Sprite();
 	mine->texture = AEGfxTextureLoad("");
 	SpriteSource* spriteSource = new SpriteSource(1, 1, mine->texture);
-	sprite->SetSpriteSource(spriteSource);
-	mine->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
-	sprite->SetMesh(mine->mesh);
+sprite->SetSpriteSource(spriteSource);
+mine->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
+sprite->SetMesh(mine->mesh);
 
-	mineObj->AddComponent(sprite);
-	mineObj->AddComponent(mine);
+mineObj->AddComponent(sprite);
+mineObj->AddComponent(mine);
 
-	LevelManager::GetLayer(0)->GetObjectManager()->Add(*mineObj);
+LevelManager::GetLayer(0)->GetObjectManager()->Add(*mineObj);
 }
 
 void Button::CreateResearchCenterEffect(Button & button, float dt, int count, ...)
@@ -266,7 +268,7 @@ void Button::CreateResearchCenterEffect(Button & button, float dt, int count, ..
 		return;
 	}
 
-	GameObject *researchCenterObj = new GameObject("Neoridium Mine");
+	GameObject *researchCenterObj = new GameObject("Research Center");
 	Transform* transform = new Transform(screenPos.x, screenPos.y);
 	transform->SetScale({ 100, 100 });
 	researchCenterObj->AddComponent(transform);
@@ -282,6 +284,42 @@ void Button::CreateResearchCenterEffect(Button & button, float dt, int count, ..
 	researchCenterObj->AddComponent(researchCenter);
 
 	LevelManager::GetLayer(0)->GetObjectManager()->Add(*researchCenterObj);
+}
+
+void Button::CreateTeleporterEffect(Button & button, float dt, int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+	BehaviorArmy::Side side = va_arg(args, BehaviorArmy::Side);
+	Vector2D mapPos = va_arg(args, Vector2D);
+	Vector2D screenPos = va_arg(args, Vector2D);
+	va_end(args);
+
+	BuildingTeleporter *teleporter;
+
+	try {
+		teleporter = new BuildingTeleporter(side, mapPos);
+	}
+	catch (int) {
+		return;
+	}
+
+	GameObject *teleporterObj = new GameObject("Teleporter");
+	Transform* transform = new Transform(screenPos.x, screenPos.y);
+	transform->SetScale({ 100, 100 });
+	teleporterObj->AddComponent(transform);
+
+	Sprite *sprite = new Sprite();
+	teleporter->texture = AEGfxTextureLoad("Data\\Assets\\Teleporter.png");
+	SpriteSource* spriteSource = new SpriteSource(1, 1, teleporter->texture);
+	sprite->SetSpriteSource(spriteSource);
+	teleporter->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
+	sprite->SetMesh(teleporter->mesh);
+
+	teleporterObj->AddComponent(sprite);
+	teleporterObj->AddComponent(teleporter);
+
+	LevelManager::GetLayer(0)->GetObjectManager()->Add(*teleporterObj);
 }
 
 void Button::ResearchSpaceportEffect(Button & button, float dt, int count, ...)
@@ -337,7 +375,17 @@ void Button::CreateUnit1Effect(Button & button, float dt, int count, ...)
 
 	UNREFERENCED_PARAMETER(side);
 	UNREFERENCED_PARAMETER(screenPos);
-	army->CreateUnit("Unit1", Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+
+	vector<Grid::Node> nearbyNodes = Grid::GetInstance().GetNeighbors(Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+	for (unsigned i = 0; i < nearbyNodes.size(); i++) {
+		if (!army->LegalSpawn(nearbyNodes[i].gridPos)) nearbyNodes[i] = Grid::Node({ -1, -1 });
+	}
+	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), Grid::Node({ -1, -1 })), nearbyNodes.end());
+	if (nearbyNodes.size() == 0) return;
+
+	int nodeID = rand() % nearbyNodes.size();
+
+	army->CreateUnit("Unit1", nearbyNodes[nodeID]);
 }
 
 void Button::CreateUnit2Effect(Button & button, float dt, int count, ...)
@@ -352,7 +400,17 @@ void Button::CreateUnit2Effect(Button & button, float dt, int count, ...)
 
 	UNREFERENCED_PARAMETER(side);
 	UNREFERENCED_PARAMETER(screenPos);
-	army->CreateUnit("Unit2", Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+
+	vector<Grid::Node> nearbyNodes = Grid::GetInstance().GetNeighbors(Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+	for (unsigned i = 0; i < nearbyNodes.size(); i++) {
+		if (!army->LegalSpawn(nearbyNodes[i].gridPos)) nearbyNodes[i] = Grid::Node({ -1, -1 });
+	}
+	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), Grid::Node({ -1, -1 })), nearbyNodes.end());
+	if (nearbyNodes.size() == 0) return;
+
+	int nodeID = rand() % nearbyNodes.size();
+
+	army->CreateUnit("Unit2", nearbyNodes[nodeID]);
 }
 
 void Button::CreateUnit3Effect(Button & button, float dt, int count, ...)
@@ -367,7 +425,17 @@ void Button::CreateUnit3Effect(Button & button, float dt, int count, ...)
 
 	UNREFERENCED_PARAMETER(side);
 	UNREFERENCED_PARAMETER(screenPos);
-	army->CreateUnit("Unit3", Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+
+	vector<Grid::Node> nearbyNodes = Grid::GetInstance().GetNeighbors(Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+	for (unsigned i = 0; i < nearbyNodes.size(); i++) {
+		if (!army->LegalSpawn(nearbyNodes[i].gridPos)) nearbyNodes[i] = Grid::Node({ -1, -1 });
+	}
+	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), Grid::Node({ -1, -1 })), nearbyNodes.end());
+	if (nearbyNodes.size() == 0) return;
+
+	int nodeID = rand() % nearbyNodes.size();
+
+	army->CreateUnit("Unit3", nearbyNodes[nodeID]);
 }
 
 void Button::CreateUnit4Effect(Button & button, float dt, int count, ...)
@@ -382,7 +450,17 @@ void Button::CreateUnit4Effect(Button & button, float dt, int count, ...)
 
 	UNREFERENCED_PARAMETER(side);
 	UNREFERENCED_PARAMETER(screenPos);
-	army->CreateUnit("Unit4", Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+
+	vector<Grid::Node> nearbyNodes = Grid::GetInstance().GetNeighbors(Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+	for (unsigned i = 0; i < nearbyNodes.size(); i++) {
+		if (!army->LegalSpawn(nearbyNodes[i].gridPos)) nearbyNodes[i] = Grid::Node({ -1, -1 });
+	}
+	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), Grid::Node({ -1, -1 })), nearbyNodes.end());
+	if (nearbyNodes.size() == 0) return;
+
+	int nodeID = rand() % nearbyNodes.size();
+
+	army->CreateUnit("Unit4", nearbyNodes[nodeID]);
 }
 
 void Button::ListEffects()
@@ -394,6 +472,7 @@ void Button::ListEffects()
 	AddClickEffect("CreateJaxiumMine", CreateJaxiumMineEffect, Building::BuildingType::JaxiumMine);
 	AddClickEffect("CreateNeoridiumMine", CreateNeoridiumMineEffect, Building::BuildingType::NeoridiumMine);
 	AddClickEffect("CreateResearchCenter", CreateResearchCenterEffect, Building::BuildingType::ResearchCenter);
+	AddClickEffect("CreateTeleporter", CreateTeleporterEffect, Building::BuildingType::Teleporter);
 	///TODO: Implement Click Effects for the remaining buildings.
 
 	//Create Research Unlock Effects

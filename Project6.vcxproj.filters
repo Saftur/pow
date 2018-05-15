@@ -230,6 +230,9 @@
     <ClCompile Include="Source\Crystal.cpp">
       <Filter>Engine\GameObjects\Buildings</Filter>
     </ClCompile>
+    <ClCompile Include="Source\BuildingTeleporter.cpp">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h">
@@ -487,6 +490,9 @@
       <Filter>Engine\GameObjects\Button</Filter>
     </ClInclude>
     <ClInclude Include="Source\Crystal.h">
+      <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingTeleporter.h">
       <Filter>Engine\GameObjects\Buildings</Filter>
     </ClInclude>
   </ItemGroup>

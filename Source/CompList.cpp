@@ -7,6 +7,7 @@
 #include "BehaviorUnit.h"
 #include "Map.h"
 #include "BehaviorTestBox.h"
+#include "BuildingCommandPost.h"
 
 
 void CompList::List() {

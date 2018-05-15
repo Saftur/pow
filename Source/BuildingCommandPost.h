@@ -37,7 +37,7 @@ public:
 
 	void BuildingUpdate(float dt); //Update the building.
 
-	void OpenCommandPostMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos); //Open a menu for the research center.
+	void OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos); //Open a menu for the research center.
 
 private:
 

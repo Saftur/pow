@@ -4,7 +4,7 @@
 #include "GameObjectManager.h"
 
 using Node = Grid::Node;
-Grid Grid::Gridy = Grid(6, 4, 128, 128, 0, 28);
+Grid Grid::Gridy = Grid(12, 8, 64, 64, 0, 28);
 
 Grid::Grid()
 	:Grid(10, 2, 10, 10)

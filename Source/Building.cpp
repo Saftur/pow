@@ -12,6 +12,8 @@
 
 #include "BuildingNeoridiumMine.h"
 #include "BuildingResearchCenter.h"
+#include "BuildingCommandPost.h"
+#include "BuildingTeleporter.h"
 
 map<BehaviorArmy::Side, bool[Building::BuildingType::BuildingCount]> Building::buildings;
 
@@ -27,8 +29,9 @@ Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType spe
 		BehaviorArmy* bArmy = (BehaviorArmy*)objs[i]->GetComponent("BehaviorArmy");
 		if (bArmy->GetSide() == side) {
 			army = bArmy;
-			if (!army->LegalSpawn(pos)) throw(0); //Throw an error if the slot is occupied.
-			if (!army->TakeFromFunds(buildingCost[type])) throw(0); //Throw an error if we can't pay for the building. (This should never happen).
+			//if (specialtyType != sCommandPost && !army->LegalSpawn(pos)) throw(0); //Throw an error if the slot is occupied.
+			if (type == Teleporter) if (!BuildingNeoridiumMine::TakeNeoridium(side, buildingCost[type])) throw(0);
+			else if (!army->TakeFromFunds(buildingCost[type])) throw(0); //Throw an error if we can't pay for the building. (This should never happen).
 			buildTimeRemaining = buildTime; //Set the delay until the building is finnished being built.
 			originalScale = { 0, 0 }; //Default to 0 so we can check if we set it yet or not on update when we actually have the transform component attatched.
 		}
@@ -51,6 +54,7 @@ void Building::InitializeBuildings(BehaviorArmy::Side side)
 	Unlock(side, ResearchCenter);
 	///TODO: Remove further unlocks, their only purpose is for testing.
 	Unlock(side, NeoridiumMine); //Get's unlocked when you first build a Research Center.
+	Unlock(side, Teleporter);
 
 	BuildingNeoridiumMine::neoridium[side] = 0.0f; //Intitialize the amount of Neoridium each player has to 0.
 
@@ -61,8 +65,11 @@ void Building::InitializeBuildings(BehaviorArmy::Side side)
 	buildingCost[Spaceport] = 350.0f;
 	buildingCost[VehicleDepot] = 300.0f;
 	buildingCost[Turret] = 200.0f;
-	buildingCost[Teleporter] = 200.0f;
+	buildingCost[Teleporter] = 0.0f;
+	buildingCost[CommandPost] = -0.0f;
 
+	//Initialize the number of teleporters each army has to 0.
+	BuildingTeleporter::teleporters[side] = 0;
 }
 
 void Building::Update(float dt)
@@ -90,8 +97,59 @@ void Building::Update(float dt)
 	if (health <= 0) {
 		GetParent()->Destroy();
 
-		///TODO: Drop some money for the other team.
+		//Drop some money.
+		vector<Grid::Node> nearbyNodes = Grid::GetInstance().GetNeighbors(Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y)); //Find all neaby nodes.
+		unsigned nodeID = rand() % nearbyNodes.size(); //Pick a random node out of the list of nearby nodes.
+
+		if (jaxiumDropAmount > 0) {
+			//Create a jaxium crystal on the node.
+			GameObject *jaxium = new GameObject("Jaxium Crystal");
+			Transform* transform = new Transform();
+			transform->SetScale({ 25, 25 });
+			transform->SetTranslation(Grid::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
+			jaxium->AddComponent(transform);
+
+			Crystal *jaxiumCrystal = new Crystal(Crystal::CrystalType::Jaxium, jaxiumDropAmount);
+
+			Sprite *sprite = new Sprite();
+			jaxiumCrystal->texture = AEGfxTextureLoad("Data\\Assets\\Jaxium Crystal.png");
+			SpriteSource* spriteSource = new SpriteSource(1, 1, jaxiumCrystal->texture);
+			sprite->SetSpriteSource(spriteSource);
+			jaxiumCrystal->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
+			sprite->SetMesh(jaxiumCrystal->mesh);
+
+			jaxium->AddComponent(sprite);
+			jaxium->AddComponent(jaxiumCrystal);
+
+			LevelManager::GetLayer(0)->GetObjectManager()->Add(*jaxium);
+		}
+		if (neoridiumDropAmount > 0) {
+			//Create a neoridium crystal on the node.
+			GameObject *neoridium = new GameObject("Neoridium Crystal");
+			Transform* transform = new Transform();
+			transform->SetScale({ 25, 25 });
+			transform->SetTranslation(Grid::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
+			neoridium->AddComponent(transform);
+
+			Crystal *neoridiumCrystal = new Crystal(Crystal::CrystalType::Neoridium, neoridiumDropAmount);
+
+			Sprite *sprite = new Sprite();
+			neoridiumCrystal->texture = AEGfxTextureLoad("Data\\Assets\\Neoridium Crystal.png");
+			SpriteSource* spriteSource = new SpriteSource(1, 1, neoridiumCrystal->texture);
+			sprite->SetSpriteSource(spriteSource);
+			neoridiumCrystal->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
+			sprite->SetMesh(neoridiumCrystal->mesh);
+
+			neoridium->AddComponent(sprite);
+			neoridium->AddComponent(neoridiumCrystal);
+
+			LevelManager::GetLayer(0)->GetObjectManager()->Add(*neoridium);
+		}
 	}
+}
+
+void Building::OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos)
+{
 }
 
 float Building::Variance(float value, float variance) {
