@@ -109,6 +109,12 @@ void BehaviorUnit::SetPath(std::vector<Node*> newPath)
 {
 	path = newPath;
 	currMoveTarget = GridManager::GetInstance().GetNode(gridPos);
+	
+	if (path.size() > 0)
+		targetPos = newPath[0]->gridPos();
+	else
+		targetPos = gridPos;
+
 	SetNextState(cUnitMove);
 }
 
@@ -153,6 +159,7 @@ void BehaviorUnit::OnEnter()
 	switch (GetCurrentState())
 	{
 	case cUnitError:
+		GridManager::GetInstance().GetNode(gridPos)->open = false;
 		allUnits.push_back(GetParent());
 		break;
 	case cUnitIdle:
@@ -192,17 +199,21 @@ void BehaviorUnit::OnUpdate(float dt)
 		CheckAttack();
 		break;
 	case cUnitMove:
-		if (currMoveTarget)
-			currMoveTarget->open = true;
+
+		if (lastMoveTarget.Distance(GetParent()->GetComponent<Transform>()->GetTranslation()) >= GridManager::GetInstance().tileWidth / 2)
+			GridManager::GetInstance().GetNode(GridManager::GetInstance().ConvertToGridPoint(lastMoveTarget))->open = true;
 
 		// Are we there yet?
 		if (Vector2D::AlmostEquals(GetParent()->GetComponent<Transform>()->GetTranslation(), GridManager::GetInstance().ConvertToWorldPoint(currMoveTarget->gridPos()), 2.5f))
 		{
+			if (currMoveTarget)
+				currMoveTarget->open = true;
+
 			// Do we have more movements to make?
 			if (path.empty() || !currMoveTarget->open)
 			{
-				if (!currMoveTarget->open)
-					UpdatePath();
+				//if (!currMoveTarget->open)
+					//UpdatePath();
 
 				currMoveTarget = nullptr;
 				GetParent()->GetComponent<Physics>()->SetVelocity(Vector2D(0, 0));
@@ -216,9 +227,22 @@ void BehaviorUnit::OnUpdate(float dt)
 			gridPos = currMoveTarget->gridPos();
 			GetParent()->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(gridPos));
 			
-			currMoveTarget->open = false;
+			lastMoveTarget = GridManager::GetInstance().ConvertToWorldPoint(currMoveTarget);
 
 			currMoveTarget = *(path.end() - 1);
+
+			if (currMoveTarget && !currMoveTarget->open)
+			{
+				currMoveTarget = nullptr;
+				GetParent()->GetComponent<Physics>()->SetVelocity(Vector2D(0, 0));
+				SetNextState(cUnitIdle);
+
+				UpdatePath();
+				return;
+			}
+
+			currMoveTarget->open = false;
+
 			path.pop_back();
 		}
 

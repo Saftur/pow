@@ -66,12 +66,12 @@ public:
 	~GridManager();
 
 	static GridManager& GetInstance();
-private:
-	static GridManager gridy;
 
 	const int width, height;
 	const int tileWidth, tileHeight;
 	const int offsetX, offsetY;
+private:
+	static GridManager gridy;
 
 	GridManager();
 

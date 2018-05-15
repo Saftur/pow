@@ -231,7 +231,7 @@ private:
 	//------------------------------------------------------------------------------
 	GameObject* target;
 	int prevHP;
-	Vector2D targetPos, lastFrameTarget, guardingPos;
+	Vector2D targetPos, lastMoveTarget, guardingPos;
 	vector<Node*> path;
 	Node* currMoveTarget;
 	states prevState;
