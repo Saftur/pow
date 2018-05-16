@@ -81,7 +81,7 @@ Component * Tilemap::Clone() const
 	return newTilemap;
 }
 
-void Tilemap::Draw() const
+void Tilemap::Draw(Camera *cam) const
 {
 	Transform *parentTR = GetParent() ? (Transform*)GetParent()->GetComponent("Transform") : nullptr;
 	for (int y = 0; y < tilemapHeight; y++)
@@ -96,7 +96,7 @@ void Tilemap::Draw() const
 				if (parentTR)
 					translation += parentTR->GetTranslation();
 				transform->SetTranslation(translation);
-				sprite->Draw(*transform);
+				sprite->Draw(cam, *transform);
 			}
 		}
 	}

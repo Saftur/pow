@@ -26,9 +26,11 @@ using std::string;
 // Forward References:
 //------------------------------------------------------------------------------
 
-typedef class GameObjectManager GameObjectManager;
+typedef class Space Space;
 typedef class LevelManager LevelManager;
+typedef class GameObjectManager GameObjectManager;
 typedef class Component Component;
+typedef class Camera Camera;
 
 //------------------------------------------------------------------------------
 // Public Structures:
@@ -46,7 +48,7 @@ public:
 	// Create a new game object.
 	// Params:
 	//	 name = The name of the game object being created.
-	GameObject(const char * name);
+	GameObject(const char * name, Space *space=nullptr);
 
 	// Clone a game object from another game object.
 	// Params:
@@ -107,14 +109,15 @@ public:
 	// Draw any visible components attached to the game object.
 	// (Hint: You will need to call Draw on the Sprite component, passing it the transform component.)
 	// (NOTE: You must first check for valid pointers before calling this function.) 
-	void Draw();
+	void Draw(Camera *cam);
 
 	// Mark an object for destruction.
 	void Destroy();
 
-	GameObjectManager *GetObjectManager() const;
+	Space *GetSpace() const;
+	GameObjectManager *GetGameObjectManager() const;
 	LevelManager *GetLevelManager() const;
-	void SetLevelManager(LevelManager *lm);
+	//void SetLevelManager(LevelManager *lm);
 
 private:
 	//------------------------------------------------------------------------------
@@ -138,7 +141,8 @@ private:
 
 	bool destroyNext;
 
-	LevelManager *levelManager;
+	Space *space;
+	//LevelManager *levelManager;
 };
 
 //------------------------------------------------------------------------------

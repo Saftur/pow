@@ -21,7 +21,7 @@ void Behavior::Update(float dt)
 	OnUpdate(dt);
 }
 
-void Behavior::Draw() const
+void Behavior::Draw(Camera *cam) const
 {
 }
 

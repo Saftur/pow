@@ -34,7 +34,7 @@ Component * Map::Clone() const {
 void Map::Update(float dt) {
 }
 
-void Map::Draw() const {}
+void Map::Draw(Camera *cam) const {}
 
 void Map::Load(rapidjson::Value & obj) {
 	Tilemap::Load(obj);

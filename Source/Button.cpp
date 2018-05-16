@@ -17,6 +17,7 @@
 #include "GameObject.h" // GameObjectIsNamed, GameObjectDestroy
 #include "AEEngine.h" // AEGfxGetWinMaxX, MinX, MaxY, MinY
 #include "GameObjectManager.h" // GameObjectManagerAdd
+#include "Space.h"
 #include "LevelManager.h"
 #include "Button.h"
 #include "Vector2D.h"
@@ -163,10 +164,10 @@ void Button::ForceClick(Button& button, float dt, unsigned count, ...) {
 void Button::RestartEffect(Button & button, float dt, int count, ...)
 {
 	Engine::GetInstance().SetPaused(false);
-	LevelManager::GetLayer(0)->Restart();
-	if (LevelManager::GetLayerCount() > 1) {
+	Space::GetLayer(0)->GetLevelManager()->Restart();
+	if (Space::GetLayerCount() > 1) {
 		PopupMenu::Shutdown();
-		for (int i = 1; i < LevelManager::GetLayerCount(); i++) LevelManager::UnloadLayer(i);
+		for (unsigned i = 1; i < Space::GetLayerCount(); i++) Space::DeleteLayer(i);
 	}
 }
 
@@ -209,7 +210,7 @@ void Button::CreateJaxiumMineEffect(Button & button, float dt, int count, ...)
 	mineObj->AddComponent(sprite);
 	mineObj->AddComponent(mine);
 
-	LevelManager::GetLayer(0)->GetObjectManager()->Add(*mineObj);
+	Space::GetLayer(0)->GetGameObjectManager()->Add(*mineObj);
 }
 
 void Button::CreateNeoridiumMineEffect(Button & button, float dt, int count, ...)
@@ -245,7 +246,7 @@ void Button::CreateNeoridiumMineEffect(Button & button, float dt, int count, ...
 	mineObj->AddComponent(sprite);
 	mineObj->AddComponent(mine);
 
-	LevelManager::GetLayer(0)->GetObjectManager()->Add(*mineObj);
+	Space::GetLayer(0)->GetGameObjectManager()->Add(*mineObj);
 }
 
 void Button::CreateResearchCenterEffect(Button & button, float dt, int count, ...)
@@ -281,7 +282,7 @@ void Button::CreateResearchCenterEffect(Button & button, float dt, int count, ..
 	researchCenterObj->AddComponent(sprite);
 	researchCenterObj->AddComponent(researchCenter);
 
-	LevelManager::GetLayer(0)->GetObjectManager()->Add(*researchCenterObj);
+	Space::GetLayer(0)->GetGameObjectManager()->Add(*researchCenterObj);
 }
 
 void Button::ResearchSpaceportEffect(Button & button, float dt, int count, ...)

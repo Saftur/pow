@@ -62,7 +62,7 @@ public:
 	virtual Component* Clone() const = 0;
 
 	// Debug drawing for colliders.
-	virtual void Draw() const;
+	virtual void Draw(Camera *cam) const;
 
 	virtual void SetParent(GameObject* object);
 

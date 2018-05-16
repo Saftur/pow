@@ -21,7 +21,7 @@ Collider * Collider::NewCollider(ColliderType type_)
 	}
 }
 
-void Collider::Draw() const
+void Collider::Draw(Camera *cam) const
 {
 }
 

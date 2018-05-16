@@ -11,7 +11,7 @@ public:
 	ColliderBox(Transform transform);
 
 	ColliderBox *Clone() const;
-	void Draw() const;
+	void Draw(Camera *cam) const;
 	bool IsCollidingWith(const Collider& other) const;
 
 private:

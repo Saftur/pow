@@ -14,6 +14,7 @@
 #include <vector>
 using std::vector;
 #include "Vector2D.h"
+//#include "Camera.h"
 
 //------------------------------------------------------------------------------
 // Include Files:
@@ -65,15 +66,12 @@ public:
 
 	void Quit();
 
-private:
-	Vector2D* AddCamera(Vector2D screenPos, Vector2D topLeft, Vector2D bottomRight, Vector2D worldPos);
+	//void AddCamera(Camera *cam);
+	//Camera *GetCurrCamera() const;
+	//void DelCamera(Camera *cam);
 
-	struct Camera {
-		Vector2D screenPos;
-		Vector2D topLeft;
-		Vector2D bottomRight;
-		Vector2D worldPos;
-	};
+private:
+	//Vector2D* AddCamera(Vector2D screenPos, Vector2D topLeft, Vector2D bottomRight, Vector2D worldPos);
 
 	//------------------------------------------------------------------------------
 	// Private Variables:
@@ -96,6 +94,6 @@ private:
 	bool paused = false; //Is the game paused?
 	bool switchPause = false;
 
-	vector<Camera> cameras;
+	//vector<Camera*> cameras;
 };
 /*----------------------------------------------------------------------------*/

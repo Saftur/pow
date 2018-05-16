@@ -14,6 +14,10 @@
       },
       "Alpha": 0.5,
       "ModulateColor": [ 0.4, 0.4, 0.4, 1 ]
+    },
+    "Camera": {
+      "ScreenPos": [ 0, 0 ],
+      "ScreenSize": [ 1, 1 ]
     }
   },
   {

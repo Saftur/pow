@@ -169,7 +169,6 @@
     <ClCompile Include="Source\ButtonEffects.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\ControlList.cpp">
       <Filter>Engine\Control</Filter>
     </ClCompile>
@@ -229,6 +228,15 @@
     </ClCompile>
     <ClCompile Include="Source\Crystal.cpp">
       <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera.cpp">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Button.cpp">
+      <Filter>Engine\GameObjects\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Space.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -335,9 +343,6 @@
     <ClInclude Include="Source\Intersection2D.h">
       <Filter>Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\LevelManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\BehaviorStub.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
@@ -425,7 +430,6 @@
     <ClInclude Include="Source\ButtonEffects.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\ControlList.h">
       <Filter>Engine\Control</Filter>
     </ClInclude>
@@ -488,6 +492,18 @@
     </ClInclude>
     <ClInclude Include="Source\Crystal.h">
       <Filter>Engine\GameObjects\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera.h">
+      <Filter>Engine\GameObjects\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelManager.h">
+      <Filter>Engine\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Button.h">
+      <Filter>Engine\GameObjects\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Space.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

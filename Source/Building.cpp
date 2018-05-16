@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Building.h"
+#include "Space.h"
 #include "LevelManager.h"
 #include "GameObjectManager.h"
 #include "GameObject.h"
@@ -22,7 +23,7 @@ Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType spe
 	health(maxHealth), jaxiumDropAmount(jaxiumDropAmount), neoridiumDropAmount(neoridiumDropAmount)
 {
 	//Find the army that this building should belong to.
-	vector<GameObject*> objs = LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsByName("Army");
+	vector<GameObject*> objs = Space::GetLayer(0)->GetGameObjectManager()->GetObjectsByName("Army");
 	for (unsigned i = 0; i < objs.size(); i++) {
 		BehaviorArmy* bArmy = (BehaviorArmy*)objs[i]->GetComponent("BehaviorArmy");
 		if (bArmy->GetSide() == side) {

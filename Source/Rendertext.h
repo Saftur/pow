@@ -35,7 +35,7 @@ public:
 	void SetColor(Color color);
 	void SetScale(Vector2D textScale);
 
-	void Draw() const; //Update the text on screen.
+	void Draw(Camera *cam) const; //Update the text on screen.
 
 	void Load(rapidjson::Value& obj);
 

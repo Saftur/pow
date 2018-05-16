@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Pathfinding.h"
+#include "Space.h"
 #include "GameObjectManager.h"
 #include <list>
 #include <algorithm>
@@ -85,7 +86,7 @@ vector<Grid::Node> Pathfinding::FindPath(Grid::Node start, Grid::Node end)
 				// Add the neighboring nodes to the list of open nodes.
 				if (find(openNodes.begin(), openNodes.end(), neighbor) == openNodes.end() && neighbor.open)
 				{
-					GameObjectManager* gom = GameObjectManager::GetLayer(0);
+					GameObjectManager* gom = Space::GetLayer(0)->GetGameObjectManager();
 					GameObject* node = gom->Add(*gom->GetArchetype("TestBox"));
 					node->GetComponent<BehaviorTestBox>()->SetBoundPos(neighbor.gridPos);
 

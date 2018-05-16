@@ -17,6 +17,7 @@
 #include "GameObjectManager.h"
 #include "Random.h"
 #include "LevelManager.h"
+#include "Space.h"
 #include "AEEngine.h"
 //#include "PauseMenu.h"
 #include "Transform.h"
@@ -64,14 +65,15 @@ void Engine::Init(const char *startLevel)
 	// Initialize the game state manager.
 	//LevelManager::GetInstance().Init(startLevel);
 	LevelManager::StaticInit();
-	LevelManager::LoadLayer(0, startLevel, true, true);
+	Space::LoadLayer(0, startLevel, true, true);
+	//LevelManager::LoadLayer(0, startLevel, true, true);
 
 	hasPauseMenu = LevelManager::LevelExists("PauseLevel");
 
 	//Initialize the pause menu.
 	//PauseMenu::GetInstance().Init();
 
-	AddCamera({ 0, 0 }, { AEGfxGetWinMinX(), AEGfxGetWinMaxY() }, { AEGfxGetWinMaxX(), AEGfxGetWinMinY() }, { 0, 0 });
+	//AddCamera({ 0, 0 }, { AEGfxGetWinMinX(), AEGfxGetWinMaxY() }, { AEGfxGetWinMaxX(), AEGfxGetWinMinY() }, { 0, 0 });
 }
 
 // Update the game engine.
@@ -84,8 +86,9 @@ void Engine::Update(float dt)
 	if (switchPause) {
 		if (hasPauseMenu) {
 			if (paused)
-				LevelManager::LoadLayer(3, "PauseLevel", false, true);
-			else LevelManager::UnloadLayer(3);
+				Space::LoadLayer(3, "PauseLevel", false, true);
+				//LevelManager::LoadLayer(3, "PauseLevel", false, true);
+			else Space::DeleteLayer(3);//LevelManager::UnloadLayer(3);
 		}
 		switchPause = false;
 	}
@@ -95,22 +98,23 @@ void Engine::Update(float dt)
 
 	// Update the game state manager.
 	//LevelManager::GetInstance().Update(dt);
-	LevelManager::UpdateAll(dt);
+	//LevelManager::UpdateAll(dt);
 
 	// Update the game object manager.
 	//if(!paused) GameObjectManager::GetInstance().Update(dt);
-	GameObjectManager::UpdateAll(dt);
+	//GameObjectManager::UpdateAll(dt);
+
+	Space::UpdateAll(dt);
 
 	// Check for collisions.
 	//GameObjectManager::GetInstance().CheckCollisions();
 
 	// Draw objects.
-	for (Camera c : cameras) {
-		Transform::SetCamTranslation(c.worldPos);
-		Sprite::SetBounds(c.topLeft, c.bottomRight);
-		//GameObjectManager::GetInstance().Draw();
-		GameObjectManager::DrawAll();
-	}
+	/*for (Camera *c : cameras) {
+		//Transform::SetCamTranslation(c->);
+		GameObjectManager::DrawAll(c);
+	}*/
+	Space::DrawAll();
 
 	//PauseMenu::GetInstance().Update(dt);
 
@@ -129,13 +133,15 @@ void Engine::Shutdown()
 
 	// Shutdown the game object manager.
 	//GameObjectManager::GetInstance().Shutdown();
-	GameObjectManager::ShutdownLayers();
+	//GameObjectManager::ShutdownLayers();
 
 	//PauseMenu::GetInstance().Shutdown(true);
 
 	// Shutdown the game state manager.
 	//LevelManager::GetInstance().Shutdown();
-	LevelManager::ShutdownLayers();
+	//LevelManager::ShutdownLayers();
+
+	Space::ShutdownLayers();
 
 	//--------------------------------------------------------------------------
 	// NOTE: Certain modules need to be shutdown last and in reverse order.
@@ -146,6 +152,10 @@ void Engine::Shutdown()
 
 	// Shutdown the Tracing/Logging module.
 	Trace::GetInstance().Shutdown();
+
+	/*for (Camera *c : cameras)
+		delete c;
+	cameras.clear();*/
 }
 
 // Retrieve the instance of the Engine singleton
@@ -180,11 +190,28 @@ void Engine::Quit()
 	running = false;
 }
 
-Vector2D* Engine::AddCamera(Vector2D screenPos, Vector2D topLeft, Vector2D bottomRight, Vector2D worldPos)
+/*void Engine::AddCamera(Camera * cam) {
+	if (std::find(cameras.begin(), cameras.end(), cam) == cameras.end())
+		cameras.push_back(cam);
+}*/
+
+/*Camera * Engine::GetCurrCamera() const {
+	if ((unsigned)camNum < cameras.size())
+		return cameras[camNum];
+	else return nullptr;
+}*/
+
+/*void Engine::DelCamera(Camera * cam) {
+	vector<Camera*>::iterator found = std::find(cameras.begin(), cameras.end(), cam);
+	if (found != cameras.end())
+		cameras.erase(found);
+}*/
+
+/*Vector2D* Engine::AddCamera(Vector2D screenPos, Vector2D topLeft, Vector2D bottomRight, Vector2D worldPos)
 {
 	cameras.push_back({ screenPos, topLeft, bottomRight, worldPos });
 	return &(cameras.at(cameras.size() - 1).worldPos);
-}
+}*/
 
 //------------------------------------------------------------------------------
 // Private Functions:

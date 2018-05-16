@@ -62,8 +62,8 @@ BehaviorArmy::BehaviorArmy() :
 
 void BehaviorArmy::PushFrontLine(Vector2D pos)
 {
-	vector<GameObject*> unitGOs = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
-	vector<GameObject*> armyGOs = GetParent()->GetObjectManager()->GetObjectsByName("Army");
+	vector<GameObject*> unitGOs = GetParent()->GetGameObjectManager()->GetObjectsByName("Unit");
+	vector<GameObject*> armyGOs = GetParent()->GetGameObjectManager()->GetObjectsByName("Army");
 	switch (side) {
 	case sLeft:
 		if (pos.x > frontLine.pos) {
@@ -189,20 +189,20 @@ void BehaviorArmy::OnEnter()
 	switch (GetCurrentState())
 	{
 	case cArmyNormal:
-		tilemap = GetParent()->GetObjectManager()->GetObjectByName("Tilemap")->GetComponent<Tilemap>();
-		GameObject *fl = GetParent()->GetObjectManager()->GetObjectByName(frontLine.dispObjName.c_str());
+		tilemap = GetParent()->GetGameObjectManager()->GetObjectByName("Tilemap")->GetComponent<Tilemap>();
+		GameObject *fl = GetParent()->GetGameObjectManager()->GetObjectByName(frontLine.dispObjName.c_str());
 		if (fl) frontLine.transform = fl->GetComponent<Transform>();
 		else frontLine.transform = nullptr;
-		GameObject *fd = GetParent()->GetObjectManager()->GetObjectByName(funds.dispObjName.c_str());
+		GameObject *fd = GetParent()->GetGameObjectManager()->GetObjectByName(funds.dispObjName.c_str());
 		if (fd) funds.text = fd->GetComponent<Text>();
 		else funds.text = nullptr;
 		funds.amount = (float)funds.startAmount;
 		UpdateFundsText();
-		GameObject *cursorObj = GetParent()->GetObjectManager()->GetObjectByName(cursor.objName.c_str());
+		GameObject *cursorObj = GetParent()->GetGameObjectManager()->GetObjectByName(cursor.objName.c_str());
 		cursor.transform = cursorObj->GetComponent<Transform>();
 		cursorObj->GetComponent<Cursor>()->SetGamepad(controls.gamepad);
 		cursor.sprite = cursorObj->GetComponent<Sprite>();
-		GameObject *pathArchetype = GetParent()->GetObjectManager()->GetArchetype(path.lineDispName.c_str());
+		GameObject *pathArchetype = GetParent()->GetGameObjectManager()->GetArchetype(path.lineDispName.c_str());
 		if (pathArchetype) {
 			path.sprite = pathArchetype->GetComponent<Sprite>();
 			path.transform = pathArchetype->GetComponent<Transform>();
@@ -241,7 +241,7 @@ void BehaviorArmy::OnUpdate(float dt)
 	{
 	case cArmyNormal:
 		// Get current cursor position
-		Vector2D curspos = cursor.transform->GetScreenTranslation();
+		Vector2D curspos = cursor.transform->GetWorldTranslation();
 		// Tilemap top left point
 		Vector2D tmTopLeft = tilemap->GetTilemapScreenTopLeft();
 		// Tilemap bottom right point
@@ -313,7 +313,7 @@ void BehaviorArmy::OnExit()
 	}
 }
 
-void BehaviorArmy::Draw() const
+void BehaviorArmy::Draw(Camera *cam) const
 {
 	Transform territoryTransform(0, 0);
 	Vector2D flTrs = frontLine.transform->GetTranslation();
@@ -334,10 +334,10 @@ void BehaviorArmy::Draw() const
 	}
 	float alpha = path.sprite->GetAlpha();
 	path.sprite->SetAlpha(0.25f);
-	path.sprite->Draw(territoryTransform);
+	path.sprite->Draw(cam, territoryTransform);
 	path.sprite->SetAlpha(alpha);
 	if (selectedUnits.size() > 0)
-		DrawPath();
+		DrawPath(cam);
 }
 
 void BehaviorArmy::Load(rapidjson::Value & obj)
@@ -449,7 +449,7 @@ void BehaviorArmy::CreateUnit(const char *unitName, Node startPos)
 	if (!LegalSpawn(startPos)) return;
 	funds.amount -= unitData.GetCost();
 	UpdateFundsText();
-	GameObject *go = GetParent()->GetObjectManager()->GetArchetype("UnitArchetype");
+	GameObject *go = GetParent()->GetGameObjectManager()->GetArchetype("UnitArchetype");
 	if (!go) {
 		Trace::GetInstance().GetStream() << "No Unit archetype found" << std::endl;
 		return;
@@ -468,12 +468,12 @@ void BehaviorArmy::CreateUnit(const char *unitName, Node startPos)
 	}
 	bh->Init(unitData, this);
 
-	GetParent()->GetObjectManager()->Add(*go);
+	GetParent()->GetGameObjectManager()->Add(*go);
 }
 
 bool BehaviorArmy::LegalSpawn(Vector2D pos)
 {
-	vector<GameObject*> unitGOs = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
+	vector<GameObject*> unitGOs = GetParent()->GetGameObjectManager()->GetObjectsByName("Unit");
 	for (GameObject *unit : unitGOs) {
 		BehaviorUnit *bu = unit->GetComponent<BehaviorUnit>();
 		Transform *t = unit->GetComponent<Transform>();
@@ -549,7 +549,7 @@ void BehaviorArmy::CalculateOffsets()
 	}
 }
 
-void BehaviorArmy::DrawPath() const
+void BehaviorArmy::DrawPath(Camera *cam) const
 {
 	for (SelectedUnit unit : selectedUnits)
 	{
@@ -559,7 +559,7 @@ void BehaviorArmy::DrawPath() const
 		targetT.SetScale(cursor.transform->GetScale() * 0.75);
 
 		targetT.SetTranslation(Grid::GetInstance().ConvertToWorldPoint(unit.unit->GetGridPos()));
-		cursor.sprite->Draw(targetT);
+		cursor.sprite->Draw(cam, targetT);
 
 		if (unit.path.size() == 0) continue;
 		Vector2D startPos = unit.path[0];
@@ -573,7 +573,7 @@ void BehaviorArmy::DrawPath() const
 		diamondT.SetScale({ pathScl.y, pathScl.y });
 		diamondT.SetTranslation(pos);
 		path.sprite->SetAlpha(1.0f);
-		path.sprite->Draw(diamondT);
+		path.sprite->Draw(cam, diamondT);
 
 		for (Node node : unit.path)
 		{
@@ -582,11 +582,11 @@ void BehaviorArmy::DrawPath() const
 			path.transform->SetTranslation(pos);
 			path.transform->SetRotation(node.gridPos.GetAngleRadians());
 			path.sprite->SetAlpha(0.5f);
-			path.sprite->Draw();
+			path.sprite->Draw(cam);
 			pos += tilemap->GetTileSize() * node.gridPos / 2;
 			diamondT.SetTranslation(pos);
 			path.sprite->SetAlpha(1.0f);
-			path.sprite->Draw(diamondT);
+			path.sprite->Draw(cam, diamondT);
 		}
 	}
 }

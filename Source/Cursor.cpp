@@ -52,7 +52,7 @@ void Cursor::Load(rapidjson::Value & obj) {
 
 void Cursor::PostLoadInit() {
 	transform = GetParent()->GetComponent<Transform>();
-	tilemap = GetParent()->GetObjectManager()->GetObjectByName("Tilemap")->GetComponent<Tilemap>();
+	tilemap = GetParent()->GetGameObjectManager()->GetObjectByName("Tilemap")->GetComponent<Tilemap>();
 }
 
 void Cursor::Update(float dt) {

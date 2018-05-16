@@ -18,16 +18,19 @@
 #include "GameObject.h"
 #include <vector>
 using std::vector;
+#include "Camera.h"
 
-#ifndef MAX_LAYERS
+/*#ifndef MAX_LAYERS
 #define MAX_LAYERS 10
-#endif
+#endif*/
 
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // Forward References:
 //------------------------------------------------------------------------------
+
+typedef class Space Space;
 
 //------------------------------------------------------------------------------
 // Public Consts:
@@ -60,15 +63,15 @@ public:
 	void Update(float dt);
 	// Update all current instances, if to be updated
 	// Also calls CheckCollisions for all of them
-	static void UpdateAll(float dt);
+	//static void UpdateAll(float dt);
 
 	// Check collisions between pairs of objects.
 	void CheckCollisions();
 
 	// Draw all game objects in the active game object list.
-	void Draw(void);
+	void Draw(Camera * cam);
 	// Draw all current instances, if to be drawn
-	static void DrawAll();
+	//static void DrawAll(Camera * cam);
 
 	// Shutdown the game object manager.
 	// (NOTE: This means removing all game objects from both the active and
@@ -129,10 +132,13 @@ public:
 
 	// Returns a reference to the singleton instance of the GameObjectManager.
 	//static GameObjectManager& GetInstance();
-	static GameObjectManager *InitLayer(unsigned layer, bool updateLower, bool drawLower);
+	/*static GameObjectManager *InitLayer(unsigned layer, bool updateLower, bool drawLower);
 	static GameObjectManager *GetLayer(unsigned layer);
 	static void DeleteLayer(unsigned layer);
-	static void ShutdownLayers();
+	static void ShutdownLayers();*/
+
+	Space* GetSpace();
+	LevelManager* GetLevelManager();
 
 private:
 	//------------------------------------------------------------------------------
@@ -140,7 +146,7 @@ private:
 	//------------------------------------------------------------------------------
 
 	// Constructor is private to prevent accidental instantiations.
-	GameObjectManager();
+	GameObjectManager(Space *space);
 	~GameObjectManager();
 
 	// Disable copy constructor and assignment operator
@@ -150,11 +156,11 @@ private:
 	//------------------------------------------------------------------------------
 	// Private Structures:
 	//------------------------------------------------------------------------------
-	struct Layer {
+	/*struct Layer {
 		bool updateLower;
 		bool drawLower;
 		GameObjectManager *instance;
-	};
+	};*/
 
 	//------------------------------------------------------------------------------
 	// Private Variables:
@@ -162,8 +168,12 @@ private:
 	vector<GameObject*> activeList;
 	vector<GameObject*> archetypes;
 
+	Space *space;
+
 	//static GameObjectManager *instance;
 	//static vector<Layer> instances;
-	static Layer layers[MAX_LAYERS];
+	//static Layer layers[MAX_LAYERS];
+
+	friend class Space;
 };
 //------------------------------------------------------------------------------

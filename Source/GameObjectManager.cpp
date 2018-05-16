@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameObjectManager.h"
+#include "Space.h"
 #include "AEEngine.h"
 #include "Transform.h"
 #include "Collider.h"
@@ -8,7 +9,7 @@
 
 //GameObjectManager *GameObjectManager::instance = nullptr;
 //vector<GameObjectManager::Layer> GameObjectManager::instances;
-GameObjectManager::Layer GameObjectManager::layers[MAX_LAYERS] = {};
+//GameObjectManager::Layer GameObjectManager::layers[MAX_LAYERS] = {};
 
 void GameObjectManager::Init(void)
 {
@@ -35,18 +36,15 @@ void GameObjectManager::Update(float dt)
 	}
 }
 
-void GameObjectManager::UpdateAll(float dt)
+/*void GameObjectManager::UpdateAll(float dt)
 {
 	// TODO Possibly make var 'first' on class and set it in InitLayer()
 	unsigned first = 0;
-	for (int i = /*(int)instances.size()*/MAX_LAYERS - 1; i >= 0; i--) {
-		/*if (!instances[i].update) {
-			first = i + 1;
-		}*/
+	for (int i = MAX_LAYERS - 1; i >= 0; i--) {
 		if (layers[i].instance && !layers[i].updateLower)
 			first = i;
 	}
-	for (unsigned i = first; i < /*instances.size()*/MAX_LAYERS; i++) {
+	for (unsigned i = first; i < MAX_LAYERS; i++) {
 		//instances[i].instance->Update(dt);
 		//instances[i].instance->CheckCollisions();
 		if (!layers[i].instance) continue;
@@ -55,7 +53,7 @@ void GameObjectManager::UpdateAll(float dt)
 	}
 	//instance->Update(dt);
 	//instance->CheckCollisions();
-}
+}*/
 
 void GameObjectManager::CheckCollisions()
 {
@@ -75,34 +73,31 @@ void GameObjectManager::CheckCollisions()
 	}
 }
 
-void GameObjectManager::Draw(void)
+void GameObjectManager::Draw(Camera * cam)
 {
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	
 	for (GameObject *gameObject : activeList)
-		gameObject->Draw();
+		gameObject->Draw(cam);
 	
-	Transform::SetCamIsDirty(false);
+	//Transform::SetCamIsDirty(false);
 }
 
-void GameObjectManager::DrawAll()
+/*void GameObjectManager::DrawAll(Camera * cam)
 {
 	unsigned first = 0;
-	for (int i = /*(int)instances.size()*/MAX_LAYERS - 1; i >= 0; i--) {
-		/*if (!instances[i].draw) {
-			first = i + 1;
-		}*/
+	for (int i = MAX_LAYERS - 1; i >= 0; i--) {
 		if (layers[i].instance && !layers[i].drawLower) {
 			first = i;
 		}
 	}
-	for (unsigned i = first; i < /*instances.size()*/MAX_LAYERS; i++) {
+	for (unsigned i = first; i < MAX_LAYERS; i++) {
 		//instances[i].instance->Draw();
 		if (!layers[i].instance) continue;
-		layers[i].instance->Draw();
+		layers[i].instance->Draw(cam);
 	}
 	//instance->Draw();
-}
+}*/
 
 void GameObjectManager::Shutdown(void)
 {
@@ -159,6 +154,14 @@ GameObject * GameObjectManager::GetArchetype(const char * name) const
 	return nullptr;
 }
 
+Space * GameObjectManager::GetSpace() {
+	return space;
+}
+
+LevelManager * GameObjectManager::GetLevelManager() {
+	return space->GetLevelManager();
+}
+
 /*GameObjectManager & GameObjectManager::GetInstance()
 {
 	//static GameObjectManager instance;
@@ -167,7 +170,7 @@ GameObject * GameObjectManager::GetArchetype(const char * name) const
 	return *instance;
 }*/
 
-GameObjectManager *GameObjectManager::InitLayer(unsigned layer, bool updateLower, bool drawLower)
+/*GameObjectManager *GameObjectManager::InitLayer(unsigned layer, bool updateLower, bool drawLower)
 {
 	//instances.push_back({updateLower, drawLower, instance});
 	//instance = new GameObjectManager();
@@ -208,9 +211,9 @@ void GameObjectManager::ShutdownLayers()
 		}
 	}
 	//instances.clear();
-}
+}*/
 
-GameObjectManager::GameObjectManager()
+GameObjectManager::GameObjectManager(Space *space) : space(space)
 {
 }
 

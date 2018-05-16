@@ -57,7 +57,7 @@ void Text::SetScale(Vector2D textScale)
 	scale = textScale;
 }
 
-void Text::Draw() const {
+void Text::Draw(Camera *cam) const {
 	int len = (int)strlen(string);
 	Transform* transform = (Transform*)GetParent()->GetComponent("Transform");
 	Vector2D startPos = transform->GetTranslation();
@@ -71,7 +71,7 @@ void Text::Draw() const {
 		if (string[i] >= 32 && string[i] <= 125) sprite->SetFrame(string[i] - 32);
 		else sprite->SetFrame(0);
 		
-		sprite->Draw(*transform);
+		sprite->Draw(cam, *transform);
 
 		const char c = string[i];
 		if(c == 'i' || c == '!' || c == '\'' || c == '`' || c == ':' || c == ';') transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x/8, 0.0f));
@@ -113,6 +113,7 @@ void Text::Load(rapidjson::Value & obj)
 	}*/
 
 	sprite = new Sprite();
+	sprite->SetParent(GetParent());
 	sprite->Load(obj);
 	//sprite->SetMesh(mesh);
 	//sprite->SetSpriteSource(spritesource);

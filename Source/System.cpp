@@ -43,7 +43,7 @@ void System::Init()
 	AESysInitInfo sysInitInfo;
 	sysInitInfo.mAppInstance = systemInfo.mAppInstance;
 	sysInitInfo.mShow = systemInfo.mCreateWindow;
-	sysInitInfo.mWinWidth = 800;
+	sysInitInfo.mWinWidth = 1200;
 	sysInitInfo.mWinHeight = 600;
 	sysInitInfo.mCreateConsole = 1;
 	sysInitInfo.mMaxFrameRate = 60;
