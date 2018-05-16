@@ -311,7 +311,7 @@ void BehaviorArmy::OnUpdate(float dt)
 
 		bool buildingMenu = controls.gamepad->GetButtonTriggered(BUILDING_MENU);
 
-		if (buildingMenu || (side == sRight &&AEInputCheckTriggered('B'))) {
+		if (buildingMenu || (side == sRight && AEInputCheckTriggered('B'))) {
 			if (PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side);
 			else PopupMenu::CreateMenu(side, PopupMenu::MenuType::Building, tilemap->GetPosOnMap(cursPos),
 				tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));

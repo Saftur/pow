@@ -45,8 +45,9 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 			return;
 		}
 
-		///TODO: Reset lastTeleportedObject if the object on this teleporter is not the last teleported object.
 		GameObject* unit = GridManager::GetInstance().GetOccupant(mapPos);
+		BehaviorUnit* unitBehavior = unit->GetComponent<BehaviorUnit>();
+
 		if (lastTeleportedObject != unit) lastTeleportedObject = nullptr;
 		 
 		//Check if the exit is currently open.
@@ -55,12 +56,14 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 
 			//Make sure that we arent teleporting the unit back and forth.
 			if (lastTeleportedObject != unit) {
-				///TODO: If unit is currently running pathfinding to move somewhere, do not teleport
+				//If the unit is currently running pathfinding to move somewhere, do not teleport it.
+				if (unitBehavior->GetPath().size()) return;
+
 				teleportationsAvailable--; //Lower the number of teleportations available.
 				exit->GetComponent<BuildingTeleporter>()->lastTeleportedObject = unit;
+
+				//Move the unit to the other teleporter.
 				unit->GetComponent<Transform>()->SetTranslation(exit->GetComponent<Transform>()->GetTranslation());
-				
-				BehaviorUnit* unitBehavior = unit->GetComponent<BehaviorUnit>();
 				unitBehavior->SetGridPos(exitGridPos);
 
 				//Find an open node by the exit.
@@ -73,8 +76,7 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 						break;
 					}
 				}
-				///TODO: Give the unit a path to the chosen node by the exit.
-				//unitBehavior->StopPathfinding();
+				//Give the unit a path to the chosen node by the exit.
 				if(pathNode) unitBehavior->SetPath(Pathfinder::FindPath(unitBehavior->GetNode(), pathNode));
 			}
 		}
