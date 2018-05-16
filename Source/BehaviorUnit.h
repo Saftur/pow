@@ -149,6 +149,7 @@ public:
 	vector<Node*> GetPath() const;
 
 	Vector2D GetGridPos() const;
+	void SetGridPos(Vector2D newPos);
 	Node* GetNode() const;
 
 	static vector<GameObject*> allUnits;
@@ -184,8 +185,6 @@ private:
 
 	// Builds the weapon and equipment arrays.
 	void BuildArrays();
-
-	bool IsStuck() const;
 
 	// Equipment use functions.
 	static void UseNone();

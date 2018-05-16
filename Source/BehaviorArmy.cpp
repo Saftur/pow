@@ -517,6 +517,9 @@ void BehaviorArmy::SelectUnits()
 
 	for (GameObject* unit : BehaviorUnit::allUnits)
 	{
+		if (unit->GetComponent<BehaviorUnit>()->GetArmy() != this)
+			continue;
+
 		SelectedUnit selUnit;
 		selUnit.unit = unit->GetComponent<BehaviorUnit>();
 		if ((selUnit.unit->GetGridPos().X() <= rectEndPos->x && selUnit.unit->GetGridPos().X() >= rectStartPos->x) ||
@@ -555,8 +558,20 @@ void BehaviorArmy::CalculateOffsets()
 
 void BehaviorArmy::DrawPath() const
 {
+	//Node* lastNode = nullptr;
+
 	for (SelectedUnit unit : selectedUnits)
 	{
+		/*for (Node* node : unit.path)
+		{
+			if (lastNode)
+			{
+				
+			}
+
+			lastNode = node;
+		}*/
+
 		if (!path.transform || !path.sprite) continue;
 
 		Transform targetT = Transform();
@@ -582,12 +597,12 @@ void BehaviorArmy::DrawPath() const
 		/*for (Node* node : unit.path)
 		{
 			//node->gridPos = invY;
-			pos += tilemap->GetTileSize() * &node->gridPos / 2;
+			pos += tilemap->GetTileSize() * node->gridPos() / 2;
 			path.transform->SetTranslation(pos);
 			path.transform->SetRotation(node->gridPos.GetAngleRadians());
 			path.sprite->SetAlpha(0.5f);
 			path.sprite->Draw();
-			pos += tilemap->GetTileSize() * node->gridPos / 2;
+			pos += tilemap->GetTileSize() * node->gridPos() / 2;
 			diamondT.SetTranslation(pos);
 			path.sprite->SetAlpha(1.0f);
 			path.sprite->Draw(diamondT);
