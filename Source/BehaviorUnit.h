@@ -180,8 +180,6 @@ private:
 	// Builds the weapon and equipment arrays.
 	void BuildArrays();
 
-	bool IsStuck() const;
-
 	// Equipment use functions.
 	static void UseNone();
 	static void UseArmor();

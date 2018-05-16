@@ -455,17 +455,12 @@ bool BehaviorUnit::CheckAttack()
 
 unsigned BehaviorUnit::Traits::GetCost()
 {
-	return 9;
+	return 7;
 }
 
 void BehaviorUnit::Attack()
 {
 
-}
-
-bool BehaviorUnit::IsStuck() const
-{
-	return false;
 }
 
 BehaviorArmy* BehaviorUnit::GetArmy() const

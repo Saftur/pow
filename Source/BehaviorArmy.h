@@ -248,6 +248,9 @@ private:
 	// Node targetted previous frame
 	Node* prevTarget;
 
+	// The debug path
+	vector<GameObject*> debugPath;
+
 	// Path drawing
 	struct {
 		string lineDispName;
