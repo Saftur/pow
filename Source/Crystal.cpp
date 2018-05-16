@@ -5,7 +5,7 @@
 #include "Crystal.h"
 #include "GameObjectManager.h"
 #include "LevelManager.h"
-#include "Grid.h"
+#include "GridManager.h"
 #include "Transform.h"
 #include "BehaviorUnit.h"
 #include "GameObject.h"
@@ -36,8 +36,8 @@ void Crystal::Update(float dt)
 	///TODO: If a unit moves over this crystal, add either Jaxium or Neoridium to their army.
 	LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
 		if (obj->GetComponent<BehaviorUnit>()) {
-			if (Grid::GetInstance().ConvertToGridPoint(obj->GetComponent<Transform>()->GetTranslation())
-				== Grid::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation())) {
+			if (GridManager::GetInstance().ConvertToGridPoint(obj->GetComponent<Transform>()->GetTranslation())
+				== GridManager::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation())) {
 
 				BehaviorArmy* army = obj->GetComponent<BehaviorUnit>()->GetArmy();
 				if (type == Jaxium) army->AddToFunds(crystalCount);

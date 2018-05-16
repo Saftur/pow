@@ -5,8 +5,9 @@
 #include "BuildingTeleporter.h"
 #include "GameObjectManager.h"
 #include "LevelManager.h"
-#include "Grid.h"
+#include "GridManager.h"
 #include <vector>
+#include "Pathfinder.h"
 
 using std::vector;
 
@@ -44,12 +45,12 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 		}
 
 		///TODO: Reset lastTeleportedObject if the object on this teleporter is not the last teleported object.
-		GameObject* unit = Grid::GetInstance().GetOccupant(mapPos);
+		GameObject* unit = GridManager::GetInstance().GetOccupant(mapPos);
 		if (lastTeleportedObject != unit) lastTeleportedObject = nullptr;
 		 
 		//Check if the exit is currently open.
 		Vector2D exitGridPos = exit->GetComponent<BuildingTeleporter>()->mapPos;
-		if (!Grid::GetInstance().GetOccupant(exitGridPos)) {
+		if (!GridManager::GetInstance().GetOccupant(exitGridPos)) {
 
 			//Make sure that we arent teleporting the unit back and forth.
 			if (lastTeleportedObject != unit) {
@@ -57,18 +58,23 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 				teleportationsAvailable--; //Lower the number of teleportations available.
 				exit->GetComponent<BuildingTeleporter>()->lastTeleportedObject = unit;
 				unit->GetComponent<Transform>()->SetTranslation(exit->GetComponent<Transform>()->GetTranslation());
+				
+				BehaviorUnit* unitBehavior = unit->GetComponent<BehaviorUnit>();
+				unitBehavior->SetGridPos(exitGridPos);
 
 				//Find an open node by the exit.
-				vector<Grid::Node> nodesByExit = Grid::GetInstance().GetNeighbors(exitGridPos);
-				Grid::Node pathNode;
-				for (Grid::Node node : nodesByExit) {
-					if (army->LegalSpawn(node))
+				vector<GridManager::Node*> nodesByExit = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode(exitGridPos));
+				GridManager::Node* pathNode = nullptr;
+				for (GridManager::Node *node : nodesByExit) {
+					if (!GridManager::GetInstance().GetOccupant(node))
 					{
 						pathNode = node;
 						break;
 					}
 				}
 				///TODO: Give the unit a path to the chosen node by the exit.
+				unitBehavior->StopPathfinding();
+				if(pathNode) unitBehavior->SetPath(Pathfinder::FindPath(unitBehavior->GetNode(), pathNode));
 			}
 		}
 	}

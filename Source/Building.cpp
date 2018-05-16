@@ -29,7 +29,7 @@ Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType spe
 		BehaviorArmy* bArmy = (BehaviorArmy*)objs[i]->GetComponent("BehaviorArmy");
 		if (bArmy->GetSide() == side) {
 			army = bArmy;
-			//if (specialtyType != sCommandPost && !army->LegalSpawn(pos)) throw(0); //Throw an error if the slot is occupied.
+			if (specialtyType != sCommandPost && !army->LegalSpawn(pos)) throw(0); //Throw an error if the slot is occupied.
 			if (type == Teleporter) if (!BuildingNeoridiumMine::TakeNeoridium(side, buildingCost[type])) throw(0);
 			else if (!army->TakeFromFunds(buildingCost[type])) throw(0); //Throw an error if we can't pay for the building. (This should never happen).
 			buildTimeRemaining = buildTime; //Set the delay until the building is finnished being built.
@@ -98,7 +98,7 @@ void Building::Update(float dt)
 		GetParent()->Destroy();
 
 		//Drop some money.
-		vector<GridManager::Node> nearbyNodes = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y)); //Find all neaby nodes.
+		vector<GridManager::Node*> nearbyNodes = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y)); //Find all neaby nodes.
 		unsigned nodeID = rand() % nearbyNodes.size(); //Pick a random node out of the list of nearby nodes.
 
 		if (jaxiumDropAmount > 0) {

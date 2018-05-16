@@ -29,13 +29,13 @@ void BuildingNeoridiumMine::BuildingUpdate(float dt){
 		if (remainingSpawnTime <= 0) {
 
 			//Get a list of all nearby nodes.
-			vector<Grid::Node> nearbyNodes = Grid::GetInstance().GetNeighbors(Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+			vector<GridManager::Node*> nearbyNodes = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
 
 			//Find a random open node in the list of nearby nodes.
 			unsigned nodeID = rand() % nearbyNodes.size();
 			if (LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
 				if (obj->GetComponent<Crystal>()) {
-					if (obj->GetComponent<Transform>()->GetTranslation() == Grid::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID])) {
+					if (obj->GetComponent<Transform>()->GetTranslation() == GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID])) {
 						return true;
 					}
 				}
@@ -48,7 +48,7 @@ void BuildingNeoridiumMine::BuildingUpdate(float dt){
 			GameObject *neoridium = new GameObject("Neoridium Crystal");
 			Transform* transform = new Transform();
 			transform->SetScale({ 25, 25 });
-			transform->SetTranslation(Grid::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
+			transform->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
 			neoridium->AddComponent(transform);
 
 			Crystal *neoridiumCrystal = new Crystal(Crystal::CrystalType::Neoridium, Variance(fundsPerCrystal, crystalWorthVariance));

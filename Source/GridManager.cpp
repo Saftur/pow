@@ -5,7 +5,7 @@
 
 using Node = GridManager::Node;
 
-GridManager GridManager::gridy = GridManager(6, 4, 128, 128, 0, 28);
+GridManager GridManager::gridy = GridManager(12, 8, 64, 64, 0, 28);
 
 GridManager::Node::Node(Vector2D gridPos, bool state)
 	: x((int)gridPos.x), y((int)gridPos.y), open(state), parent(nullptr) {}

@@ -376,16 +376,16 @@ void Button::CreateUnit1Effect(Button & button, float dt, int count, ...)
 	UNREFERENCED_PARAMETER(side);
 	UNREFERENCED_PARAMETER(screenPos);
 
-	vector<Grid::Node> nearbyNodes = Grid::GetInstance().GetNeighbors(Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+	vector<GridManager::Node*> nearbyNodes = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
 	for (unsigned i = 0; i < nearbyNodes.size(); i++) {
-		if (!army->LegalSpawn(nearbyNodes[i].gridPos)) nearbyNodes[i] = Grid::Node({ -1, -1 });
+		if (!army->LegalSpawn(nearbyNodes[i]->gridPos())) nearbyNodes[i] = nullptr;
 	}
-	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), Grid::Node({ -1, -1 })), nearbyNodes.end());
+	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), nullptr), nearbyNodes.end());
 	if (nearbyNodes.size() == 0) return;
 
 	int nodeID = rand() % nearbyNodes.size();
 
-	army->CreateUnit("Unit1", nearbyNodes[nodeID]);
+	army->CreateUnit("Unit1", nearbyNodes[nodeID]->gridPos());
 }
 
 void Button::CreateUnit2Effect(Button & button, float dt, int count, ...)
@@ -401,16 +401,16 @@ void Button::CreateUnit2Effect(Button & button, float dt, int count, ...)
 	UNREFERENCED_PARAMETER(side);
 	UNREFERENCED_PARAMETER(screenPos);
 
-	vector<Grid::Node> nearbyNodes = Grid::GetInstance().GetNeighbors(Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+	vector<GridManager::Node*> nearbyNodes = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
 	for (unsigned i = 0; i < nearbyNodes.size(); i++) {
-		if (!army->LegalSpawn(nearbyNodes[i].gridPos)) nearbyNodes[i] = Grid::Node({ -1, -1 });
+		if (!army->LegalSpawn(nearbyNodes[i]->gridPos())) nearbyNodes[i] = nullptr;
 	}
-	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), Grid::Node({ -1, -1 })), nearbyNodes.end());
+	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), nullptr), nearbyNodes.end());
 	if (nearbyNodes.size() == 0) return;
 
 	int nodeID = rand() % nearbyNodes.size();
 
-	army->CreateUnit("Unit2", nearbyNodes[nodeID]);
+	army->CreateUnit("Unit2", nearbyNodes[nodeID]->gridPos());
 }
 
 void Button::CreateUnit3Effect(Button & button, float dt, int count, ...)
@@ -426,16 +426,16 @@ void Button::CreateUnit3Effect(Button & button, float dt, int count, ...)
 	UNREFERENCED_PARAMETER(side);
 	UNREFERENCED_PARAMETER(screenPos);
 
-	vector<Grid::Node> nearbyNodes = Grid::GetInstance().GetNeighbors(Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+	vector<GridManager::Node*> nearbyNodes = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
 	for (unsigned i = 0; i < nearbyNodes.size(); i++) {
-		if (!army->LegalSpawn(nearbyNodes[i].gridPos)) nearbyNodes[i] = Grid::Node({ -1, -1 });
+		if (!army->LegalSpawn(nearbyNodes[i]->gridPos())) nearbyNodes[i] = nullptr;
 	}
-	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), Grid::Node({ -1, -1 })), nearbyNodes.end());
+	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), nullptr), nearbyNodes.end());
 	if (nearbyNodes.size() == 0) return;
 
 	int nodeID = rand() % nearbyNodes.size();
 
-	army->CreateUnit("Unit3", nearbyNodes[nodeID]);
+	army->CreateUnit("Unit3", nearbyNodes[nodeID]->gridPos());
 }
 
 void Button::CreateUnit4Effect(Button & button, float dt, int count, ...)
@@ -451,16 +451,16 @@ void Button::CreateUnit4Effect(Button & button, float dt, int count, ...)
 	UNREFERENCED_PARAMETER(side);
 	UNREFERENCED_PARAMETER(screenPos);
 
-	vector<Grid::Node> nearbyNodes = Grid::GetInstance().GetNeighbors(Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+	vector<GridManager::Node*> nearbyNodes = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
 	for (unsigned i = 0; i < nearbyNodes.size(); i++) {
-		if (!army->LegalSpawn(nearbyNodes[i].gridPos)) nearbyNodes[i] = Grid::Node({ -1, -1 });
+		if (!army->LegalSpawn(nearbyNodes[i]->gridPos())) nearbyNodes[i] = nullptr;
 	}
-	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), Grid::Node({ -1, -1 })), nearbyNodes.end());
+	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), nullptr), nearbyNodes.end());
 	if (nearbyNodes.size() == 0) return;
 
 	int nodeID = rand() % nearbyNodes.size();
 
-	army->CreateUnit("Unit4", nearbyNodes[nodeID]);
+	army->CreateUnit("Unit4", nearbyNodes[nodeID]->gridPos());
 }
 
 void Button::ListEffects()

@@ -5,7 +5,7 @@
 #include "BuildingJaxiumMine.h"
 #include "GameObjectManager.h"
 #include "LevelManager.h"
-#include "Grid.h"
+#include "GridManager.h"
 #include <vector>
 #include "Crystal.h"
 
@@ -48,13 +48,13 @@ void BuildingJaxiumMine::BuildingUpdate(float dt){
 		if (remainingSpawnTime <= 0) {
 
 			//Get a list of all nearby nodes.
-			vector<Grid::Node> nearbyNodes = Grid::GetInstance().GetNeighbors(Grid::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
+			vector<GridManager::Node*> nearbyNodes = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y));
 
 			//Find a random open node in the list of nearby nodes.
 			unsigned nodeID = rand() % nearbyNodes.size();
 			if (LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
 				if (obj->GetComponent<Crystal>()) {
-					if (obj->GetComponent<Transform>()->GetTranslation() == Grid::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID])) {
+					if (obj->GetComponent<Transform>()->GetTranslation() == GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID])) {
 						return true;
 					}
 				}
@@ -67,7 +67,7 @@ void BuildingJaxiumMine::BuildingUpdate(float dt){
 			GameObject *jaxium = new GameObject("Jaxium Crystal");
 			Transform* transform = new Transform();
 			transform->SetScale({ 25, 25 });
-			transform->SetTranslation(Grid::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
+			transform->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
 			jaxium->AddComponent(transform);
 
 			Crystal *jaxiumCrystal = new Crystal(Crystal::CrystalType::Jaxium, Variance(fundsPerCrystal, crystalWorthVariance));
