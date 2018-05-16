@@ -56,7 +56,7 @@ public:
 	//	 dt = Change in time (in seconds) since the last game loop.
 	void Update(float dt);
 
-	virtual void Draw() const;
+	virtual void Draw(Camera *cam) const;
 
 	// Executes when entering the current state of the behavior component.
 	virtual void OnEnter();

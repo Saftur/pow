@@ -11,19 +11,18 @@
 #include "Transform.h"
 #include "Sprite.h"
 #include "SpriteSource.h"
-#include "Behavior.h"
 #include "ColliderBox.h"
 #include "ColliderCircle.h"
 #include "Animation.h"
 #include "Physics.h"
+#include "Camera.h"
 #include "GameObjectManager.h"
+#include "Space.h"
 #include "Tilemap.h"
 #include "Rendertext.h"
 #include "Button.h"
 #include "CompList.h"
 #include "Mesh.h"
-
-//#include "PauseMenu.h"
 
 using namespace std;
 using namespace rapidjson;
@@ -35,11 +34,6 @@ LevelManager *LevelManager::loadingLevelManager = nullptr;
 
 map<string, Component*> LevelManager::components;
 
-//LevelManager *LevelManager::instance = nullptr;
-//vector<LevelManager*> LevelManager::instances;
-LevelManager *LevelManager::layers[MAX_LAYERS] = {};
-int LevelManager::numLayers = 0;
-
 void LevelManager::StaticInit()
 {
 	AddComponentType("Transform", new Transform(0, 0));
@@ -48,6 +42,7 @@ void LevelManager::StaticInit()
 	AddComponentType("Physics", new Physics());
 	AddComponentType("ColliderBox", new ColliderBox());
 	AddComponentType("ColliderCircle", new ColliderCircle(0));
+	AddComponentType("Camera", new Camera());
 	AddComponentType("Tilemap", new Tilemap());
 	AddComponentType("Text", new Text());
 	AddComponentType("Button", new Button());
@@ -57,7 +52,6 @@ void LevelManager::StaticInit()
 void LevelManager::Init(const char *name)
 {
 	SetNextLevel(name);
-	//objectManager = &GameObjectManager::GetInstance();
 }
 
 void LevelManager::Update(float dt)
@@ -75,18 +69,6 @@ void LevelManager::Update(float dt)
 	}
 }
 
-void LevelManager::UpdateAll(float dt)
-{
-	for (unsigned i = 0; i < MAX_LAYERS; i++) {
-		if (layers[i]) {
-			if (layers[i]->levelStatus == lsLevelQuit)
-				UnloadLayer(i);
-			else layers[i]->Update(dt);
-		}
-	}
-	//instance->Update(dt);
-}
-
 void LevelManager::Shutdown()
 {
 	for (pair<string, AEGfxTexture*> p : textures) {
@@ -101,7 +83,7 @@ void LevelManager::Shutdown()
 		delete p.second;
 	}
 	spriteSources.clear();
-	objectManager->Shutdown();
+	GetGameObjectManager()->Shutdown();
 }
 
 void LevelManager::StaticShutdown() {
@@ -128,6 +110,10 @@ void LevelManager::Quit()
 	levelStatus = lsLevelQuit;
 }
 
+LevelManager::LevelStatus LevelManager::GetLevelStatus() const {
+	return levelStatus;
+}
+
 bool LevelManager::IsRunning()
 {
 	return levelStatus != lsLevelQuit;
@@ -142,74 +128,6 @@ bool LevelManager::LevelExists(const char * name)
 		fclose(file);
 		return true;
 	} else return false;
-}
-
-void LevelManager::LoadLayer(unsigned layer, const char * name, bool updateLower, bool drawLower)
-{
-	//instances.push_back(instance);
-	//instance = new LevelManager();
-	if (layer >= MAX_LAYERS) return;
-	if (layers[layer]) UnloadLayer(layer);
-	layers[layer] = new LevelManager();
-	layers[layer]->objectManager = GameObjectManager::InitLayer(layer, updateLower, drawLower);
-	//instance->Init(name);
-	//instance->Load(fileName);
-	layers[layer]->Init(name);
-	numLayers++;
-}
-
-void LevelManager::UnloadLayer(unsigned layer)
-{
-	//if (layers.size() == 0) return;
-	if (layer >= MAX_LAYERS || !layers[layer]) return;
-	//instance->Shutdown();
-	layers[layer]->Shutdown();
-	//delete instance;
-	delete layers[layer];
-	//instance = layers[layers.size()-1];
-	//layers.pop_back();
-	layers[layer] = nullptr;
-	GameObjectManager::DeleteLayer(layer);
-	numLayers--;
-}
-
-LevelManager * LevelManager::GetLoadingLevel()
-{
-	return loadingLevelManager;
-}
-
-/*LevelManager & LevelManager::GetInstance()
-{
-	//static LevelManager instance;
-	if (!instance)
-		instance = new LevelManager();
-	return *instance;
-}*/
-
-LevelManager * LevelManager::GetLayer(unsigned num)
-{
-	//if (level > instances.size()) return nullptr;
-	//return instances[instances.size() - level];
-	return layers[num];
-}
-
-int LevelManager::GetLayerCount()
-{
-	return numLayers;
-}
-
-void LevelManager::ShutdownLayers()
-{
-	//instance->OnExit();
-	//delete instance;
-	for (unsigned i = 0; i < MAX_LAYERS; i++) {
-		if (layers[i]) {
-			layers[i]->Shutdown();
-			delete layers[i];
-			layers[i] = nullptr;
-			numLayers--;
-		}
-	}
 }
 
 void LevelManager::Load(const char* name)
@@ -233,10 +151,7 @@ void LevelManager::Load(const char* name)
 	// Parse it into a levelDoc.
 	levelDoc.Parse(contents.c_str());
 	
-	//assert(levelDoc.IsObject());
 	assert(levelDoc.IsArray());
-
-	//int id = 0;
 
 	stateNext = LOADING;
 
@@ -245,7 +160,7 @@ void LevelManager::Load(const char* name)
 	while (stateNext != IDLE)
 		loadObject(levelDoc);
 
-	objectManager->GetObjectsWithFilter([](GameObject *obj) {
+	GetGameObjectManager()->GetObjectsWithFilter([](GameObject *obj) {
 		obj->PostLoadInit();
 		return false;
 	});
@@ -276,8 +191,7 @@ void LevelManager::loadObject(Document& levelDoc)
 	}
 	switch (type) {
 	case otGameObject: {
-		GameObject* go = new GameObject(v["Name"].GetString());
-		go->SetLevelManager(this);
+		GameObject* go = new GameObject(v["Name"].GetString(), space);
 
 		bool archetype = v.HasMember("Archetype") && v["Archetype"].GetType() == rapidjson::Type::kTrueType;
 
@@ -304,13 +218,13 @@ void LevelManager::loadObject(Document& levelDoc)
 		}
 
 		if (archetype)
-			objectManager->AddArchetype(*go);
-		else objectManager->Add(*go);
+			GetGameObjectManager()->AddArchetype(*go);
+		else GetGameObjectManager()->Add(*go);
 	}
 		break;
 	case otSpriteSource: {
 		// Create and add a sprite source.
-		SpriteSource* ss = new SpriteSource(0, 0, nullptr);
+		SpriteSource* ss = new SpriteSource(0, 0, nullptr, this);
 
 		ss->Load(v);
 
@@ -374,11 +288,15 @@ void LevelManager::AddComponentType(const char * name, Component * component)
 	components[name] = component;
 }
 
-GameObjectManager * LevelManager::GetObjectManager()
-{
-	return objectManager;
+Space * LevelManager::GetSpace() {
+	return space;
 }
 
-LevelManager::LevelManager()
+GameObjectManager * LevelManager::GetGameObjectManager()
+{
+	return space->GetGameObjectManager();
+}
+
+LevelManager::LevelManager(Space *space) : space(space)
 {
 }

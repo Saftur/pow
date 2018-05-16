@@ -25,6 +25,7 @@
 //------------------------------------------------------------------------------
 
 typedef struct AEGfxTexture AEGfxTexture;
+typedef class LevelManager LevelManager;
 
 //------------------------------------------------------------------------------
 // Public Structures:
@@ -43,7 +44,7 @@ public:
 	//	 numCols = The number of columns in the sprite sheet.
 	//	 numRows = The number of rows in the sprite sheet.
 	//	 pTexture = A pointer to a texture that has been loaded by the Alpha Engine.
-	SpriteSource(int numCols, int numRows, struct AEGfxTexture* pTexture);
+	SpriteSource(int numCols, int numRows, struct AEGfxTexture* pTexture, LevelManager *levelManager=nullptr);
 
 	// Returns a pointer to the texture, for the purposes of rendering a sprite.
 	// Returns:
@@ -73,5 +74,8 @@ private:
 
 	// Pointer to a texture created using the Alpha Engine.
 	AEGfxTexture*	pTexture;
+
+	// Pointer to container LevelManager (can be null)
+	LevelManager *levelManager;
 };
 /*----------------------------------------------------------------------------*/

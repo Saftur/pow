@@ -25,7 +25,7 @@ public:
 	Component* Clone() const;
 
 	void Update(float dt);
-	void Draw() const;
+	void Draw(Camera *cam) const;
 
 	void Load(rapidjson::Value &obj);
 

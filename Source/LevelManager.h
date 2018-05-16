@@ -10,23 +10,27 @@ using std::string;
 #include "rapidjson.h"
 #include "document.h"
 
-#ifndef MAX_LAYERS
-#define MAX_LAYERS 10
-#endif
-
 typedef struct AEGfxTexture AEGfxTexture;
 typedef struct AEGfxVertexList AEGfxVertexList;
 typedef class GameObjectManager GameObjectManager;
+typedef class Camera Camera;
 typedef class Component Component;
 typedef class SpriteSource SpriteSource;
+typedef class Space Space;
 enum LM_STATE { IDLE, LOADING };
 
 class LevelManager {
 public:
+	enum LevelStatus {
+		lsLevelUpdate,
+		lsLevelChange,
+		lsLevelRestart,
+		lsLevelQuit,
+	};
+
 	static void StaticInit();
 	void Init(const char *name);
 	void Update(float dt);
-	static void UpdateAll(float dt);
 	void Shutdown();
 	static void StaticShutdown();
 
@@ -37,17 +41,8 @@ public:
 	static bool LevelExists(const char *name);
 	void Load(const char* name);
 
+	LevelStatus GetLevelStatus() const;
 	bool IsRunning();
-
-	//static LevelManager& GetInstance();
-	//static void LoadAbove(const char* name, bool updateLower=false, bool drawLower=true);
-	//static void UnloadAbove();
-	static void LoadLayer(unsigned layer, const char* name, bool updateLower=false, bool drawLower=true);
-	static void UnloadLayer(unsigned layer);
-	static LevelManager* GetLoadingLevel();
-	static LevelManager* GetLayer(unsigned num);
-	static int GetLayerCount();
-	static void ShutdownLayers();
 
 	void AddMesh(const char* name, AEGfxVertexList* mesh);
 	void AddTexture(const char* name,  AEGfxTexture* texture);
@@ -60,22 +55,17 @@ public:
 	static Component *GetComponentType(const char* name);
 	static void AddComponentType(const char* name, Component* component);
 
-	GameObjectManager* GetObjectManager();
+	Space* GetSpace();
+	GameObjectManager* GetGameObjectManager();
 
 private:
-	enum LevelStatus {
-		lsLevelUpdate,
-		lsLevelChange,
-		lsLevelRestart,
-		lsLevelQuit,
-	};
 	enum ObjType {
 		otGameObject,
 		otSpriteSource,
 		otMesh
 	};
 
-	LevelManager();
+	LevelManager(Space *space);
 
 	void loadObject(rapidjson::Document& levelDoc);
 
@@ -90,14 +80,11 @@ private:
 	map<string, AEGfxVertexList*> meshes;
 	map<string, SpriteSource*> spriteSources;
 
-	GameObjectManager *objectManager;
+	Space *space;
 
 	static LevelManager *loadingLevelManager;
 
 	static map<string, Component*> components;
 
-	//static LevelManager *instance;
-	//static vector<LevelManager*> instances;
-	static LevelManager *layers[MAX_LAYERS];
-	static int numLayers;
+	friend class Space;
 };

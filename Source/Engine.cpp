@@ -17,8 +17,8 @@
 #include "GameObjectManager.h"
 #include "Random.h"
 #include "LevelManager.h"
+#include "Space.h"
 #include "AEEngine.h"
-//#include "PauseMenu.h"
 #include "Transform.h"
 #include "Sprite.h"
 #include "Button.h"
@@ -62,16 +62,10 @@ void Engine::Init(const char *startLevel)
 	Button::ListEffects();
 
 	// Initialize the game state manager.
-	//LevelManager::GetInstance().Init(startLevel);
 	LevelManager::StaticInit();
-	LevelManager::LoadLayer(0, startLevel, true, true);
+	Space::LoadLayer(0, startLevel, true, true);
 
 	hasPauseMenu = LevelManager::LevelExists("PauseLevel");
-
-	//Initialize the pause menu.
-	//PauseMenu::GetInstance().Init();
-
-	AddCamera({ 0, 0 }, { AEGfxGetWinMinX(), AEGfxGetWinMaxY() }, { AEGfxGetWinMaxX(), AEGfxGetWinMinY() }, { 0, 0 });
 }
 
 // Update the game engine.
@@ -84,8 +78,8 @@ void Engine::Update(float dt)
 	if (switchPause) {
 		if (hasPauseMenu) {
 			if (paused)
-				LevelManager::LoadLayer(3, "PauseLevel", false, true);
-			else LevelManager::UnloadLayer(3);
+				Space::LoadLayer(3, "PauseLevel", false, true);
+			else Space::DeleteLayer(3);
 		}
 		switchPause = false;
 	}
@@ -93,26 +87,11 @@ void Engine::Update(float dt)
 	// Update the System (Windows, Event Handlers).
 	System::GetInstance().Update(dt);
 
-	// Update the game state manager.
-	//LevelManager::GetInstance().Update(dt);
-	LevelManager::UpdateAll(dt);
+	// Update all Spaces
+	Space::UpdateAll(dt);
 
-	// Update the game object manager.
-	//if(!paused) GameObjectManager::GetInstance().Update(dt);
-	GameObjectManager::UpdateAll(dt);
-
-	// Check for collisions.
-	//GameObjectManager::GetInstance().CheckCollisions();
-
-	// Draw objects.
-	for (Camera c : cameras) {
-		Transform::SetCamTranslation(c.worldPos);
-		Sprite::SetBounds(c.topLeft, c.bottomRight);
-		//GameObjectManager::GetInstance().Draw();
-		GameObjectManager::DrawAll();
-	}
-
-	//PauseMenu::GetInstance().Update(dt);
+	// Draw all Spaces
+	Space::DrawAll();
 
 	// Complete the draw process for the current game loop.
 	System::GetInstance().Draw();
@@ -127,15 +106,8 @@ void Engine::Shutdown()
 	// NOTE: Some modules can be shutdown in any order.
 	//--------------------------------------------------------------------------
 
-	// Shutdown the game object manager.
-	//GameObjectManager::GetInstance().Shutdown();
-	GameObjectManager::ShutdownLayers();
-
-	//PauseMenu::GetInstance().Shutdown(true);
-
-	// Shutdown the game state manager.
-	//LevelManager::GetInstance().Shutdown();
-	LevelManager::ShutdownLayers();
+	// Shutdown Spaces
+	Space::ShutdownLayers();
 
 	//--------------------------------------------------------------------------
 	// NOTE: Certain modules need to be shutdown last and in reverse order.
@@ -178,12 +150,6 @@ bool Engine::IsRunning()
 void Engine::Quit()
 {
 	running = false;
-}
-
-Vector2D* Engine::AddCamera(Vector2D screenPos, Vector2D topLeft, Vector2D bottomRight, Vector2D worldPos)
-{
-	cameras.push_back({ screenPos, topLeft, bottomRight, worldPos });
-	return &(cameras.at(cameras.size() - 1).worldPos);
 }
 
 //------------------------------------------------------------------------------

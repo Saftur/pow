@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "Transform.h"
 
-Vector2D Transform::camTranslation = { 0, 0 };
+/*Vector2D Transform::camTranslation = { 0, 0 };
 Vector2D Transform::camScale = { 1, 1 };
-bool Transform::camIsDirty = false;
+bool Transform::camIsDirty = false;*/
 
 Transform::Transform() : Transform(0.f, 0.f) {
 }
@@ -20,14 +20,14 @@ Component * Transform::Clone() const
 
 Matrix2D & Transform::GetMatrix()
 {
-	if (isDirty || (followCamera && camIsDirty)) {
+	if (isDirty/* || (followCamera && camIsDirty)*/) {
 		matrix = Matrix2D::TranslationMatrix(translation.X(), translation.Y()) *
 				 Matrix2D::RotationMatrixRadians(rotation) *
 				 Matrix2D::ScalingMatrix(scale.X(), scale.Y());
 		isDirty = false;
 	}
-	if (followCamera && camIsDirty)
-        matrix = Matrix2D().TranslationMatrix(camTranslation.X(), camTranslation.Y()) * matrix;
+	/*if (followCamera && camIsDirty)
+        matrix = Matrix2D().TranslationMatrix(camTranslation.X(), camTranslation.Y()) * matrix;*/
 	return matrix;
 }
 
@@ -41,10 +41,10 @@ const Vector2D Transform::GetWorldTranslation() const
 	return parent ? translation + parent->GetWorldTranslation() : translation;
 }
 
-const Vector2D Transform::GetScreenTranslation() const
+/*const Vector2D Transform::GetScreenTranslation() const
 {
 	return GetWorldTranslation() + (followCamera ? -camTranslation : Vector2D(0, 0));
-}
+}*/
 
 float Transform::GetRotation() const
 {
@@ -56,10 +56,10 @@ float Transform::GetWorldRotation() const
 	return parent ? rotation + parent->GetRotation() : rotation;
 }
 
-float Transform::GetScreenRotation() const
+/*float Transform::GetScreenRotation() const
 {
 	return GetWorldRotation();
-}
+}*/
 
 const Vector2D & Transform::GetScale() const
 {
@@ -76,7 +76,7 @@ const Vector2D Transform::GetWorldScale() const
 	return scl;
 }
 
-const Vector2D Transform::GetScreenScale() const
+/*const Vector2D Transform::GetScreenScale() const
 {
 	Vector2D scl = GetWorldScale();
 	if (followCamera) {
@@ -84,7 +84,7 @@ const Vector2D Transform::GetScreenScale() const
 		scl.y /= camScale.y;
 	}
 	return scl;
-}
+}*/
 
 void Transform::SetTranslation(const Vector2D & translation_)
 {
@@ -97,10 +97,10 @@ void Transform::SetWorldTranslation(const Vector2D & translation_)
 	SetTranslation(parent ? translation_ - parent->GetWorldTranslation() : translation_);
 }
 
-void Transform::SetScreenTranslation(const Vector2D & translation_)
+/*void Transform::SetScreenTranslation(const Vector2D & translation_)
 {
 	SetWorldTranslation(translation_ - (followCamera ? -camTranslation : Vector2D(0, 0)));
-}
+}*/
 
 void Transform::SetRotation(float rotation_)
 {
@@ -113,10 +113,10 @@ void Transform::SetWorldRotation(float rotation_)
 	SetRotation(parent ? rotation_ - parent->GetWorldRotation() : rotation_);
 }
 
-void Transform::SetScreenRotation(float rotation_)
+/*void Transform::SetScreenRotation(float rotation_)
 {
 	SetWorldRotation(rotation_);
-}
+}*/
 
 void Transform::SetScale(const Vector2D & scale_)
 {
@@ -135,7 +135,7 @@ void Transform::SetWorldScale(const Vector2D & scale_)
 	//SetScale(parent ? scale_ - parent->GetWorldScale() : scale_);
 }
 
-void Transform::SetScreenScale(const Vector2D & scale_)
+/*void Transform::SetScreenScale(const Vector2D & scale_)
 {
 	Vector2D scl = scale_;
 	if (followCamera) {
@@ -143,7 +143,7 @@ void Transform::SetScreenScale(const Vector2D & scale_)
 		scl.y *= camScale.y;
 	}
 	SetWorldScale(scl);
-}
+}*/
 
 void Transform::SetParent(Transform * transform)
 {
@@ -155,21 +155,21 @@ void Transform::SetFollowCamera(bool fc)
        followCamera = fc;
 }
 
-void Transform::SetCamTranslation(const Vector2D & translation)
+/*void Transform::SetCamTranslation(const Vector2D & translation)
 {
        camTranslation = translation;
        camIsDirty = true;
-}
+}*/
 
-Vector2D Transform::GetCamTranslation()
+/*Vector2D Transform::GetCamTranslation()
 {
        return camTranslation;
-}
+}*/
 
-void Transform::SetCamIsDirty(bool isDirty)
+/*void Transform::SetCamIsDirty(bool isDirty)
 {
        camIsDirty = isDirty;
-}
+}*/
 
 void Transform::Load(rapidjson::Value& obj)
 {

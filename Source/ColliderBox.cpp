@@ -17,7 +17,7 @@ ColliderBox * ColliderBox::Clone() const
 	return new ColliderBox(*this);
 }
 
-void ColliderBox::Draw() const
+void ColliderBox::Draw(Camera *cam) const
 {
 }
 

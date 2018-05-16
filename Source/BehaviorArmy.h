@@ -140,7 +140,7 @@ private:
 
 	void OnExit();
 
-	void Draw() const;
+	void Draw(Camera *cam) const;
 
 	void Load(rapidjson::Value& obj);
 
@@ -156,7 +156,7 @@ private:
 	//  deselect = Deselect instead
 	void SelectUnits();
 	// Draw the currently editing path
-	void DrawPath() const;
+	void DrawPath(Camera *cam) const;
 
 	// Get unit data by name of unit
 	// Params:

@@ -3,6 +3,7 @@
 #include "SpriteSource.h"
 #include "Mesh.h"
 #include "BuildingTeleporter.h"
+#include "Space.h"
 #include "GameObjectManager.h"
 #include "LevelManager.h"
 #include "GridManager.h"
@@ -82,7 +83,7 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 
 bool BuildingTeleporter::SetExit()
 {
-	return (LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsWithFilter([&](GameObject *obj) {
+	return (Space::GetLayer(0)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject *obj) {
 		BuildingTeleporter *teleporter = obj->GetComponent<BuildingTeleporter>();
 		if (teleporter && teleporter != this && teleporter->side == side) {
 			exit = obj;

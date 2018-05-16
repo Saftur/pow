@@ -22,6 +22,7 @@
 // Forward References:
 //------------------------------------------------------------------------------
 
+typedef class Camera Camera;
 typedef class GameObject GameObject;
 
 //------------------------------------------------------------------------------
@@ -52,7 +53,7 @@ public:
 	virtual void Update(float dt);
 
 	// Rendering phase for this component.
-	virtual void Draw() const;
+	virtual void Draw(Camera *cam) const;
 
 	virtual void OnDestroy();
 

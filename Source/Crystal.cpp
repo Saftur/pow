@@ -3,6 +3,7 @@
 #include "SpriteSource.h"
 #include "Mesh.h"
 #include "Crystal.h"
+#include "Space.h"
 #include "GameObjectManager.h"
 #include "LevelManager.h"
 #include "GridManager.h"
@@ -34,7 +35,7 @@ Component * Crystal::Clone() const
 void Crystal::Update(float dt)
 {
 	///TODO: If a unit moves over this crystal, add either Jaxium or Neoridium to their army.
-	LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
+	Space::GetLayer(0)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
 		if (obj->GetComponent<BehaviorUnit>()) {
 			if (GridManager::GetInstance().ConvertToGridPoint(obj->GetComponent<Transform>()->GetTranslation())
 				== GridManager::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation())) {

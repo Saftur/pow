@@ -18,6 +18,7 @@
 #include "AEEngine.h"
 #include "Teleporter.h"
 #include "BehaviorArmy.h"
+#include "Space.h"
 #include "GameObjectManager.h"
 #include "Cursor.h"
 #include "BehaviorUnit.h"
@@ -67,8 +68,8 @@ BehaviorArmy::BehaviorArmy() :
 
 void BehaviorArmy::PushFrontLine(Vector2D pos)
 {
-	vector<GameObject*> unitGOs = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
-	vector<GameObject*> armyGOs = GetParent()->GetObjectManager()->GetObjectsByName("Army");
+	vector<GameObject*> unitGOs = GetParent()->GetGameObjectManager()->GetObjectsByName("Unit");
+	vector<GameObject*> armyGOs = GetParent()->GetGameObjectManager()->GetObjectsByName("Army");
 	switch (side) {
 	case sLeft:
 		if (pos.x > frontLine.pos) {
@@ -195,10 +196,10 @@ void BehaviorArmy::OnEnter()
 	{
 	case cArmyNormal:
 		// Initialize tilemap
-		tilemap = GetParent()->GetObjectManager()->GetObjectByName("Tilemap")->GetComponent<Tilemap>();
+		tilemap = GetParent()->GetGameObjectManager()->GetObjectByName("Tilemap")->GetComponent<Tilemap>();
 
 		// Initialize the front line struct.
-		GameObject *frontLineObj = GetParent()->GetObjectManager()->GetObjectByName(frontLine.dispObjName.c_str());
+		GameObject *frontLineObj = GetParent()->GetGameObjectManager()->GetObjectByName(frontLine.dispObjName.c_str());
 		
 		if (frontLineObj) 
 			frontLine.transform = frontLineObj->GetComponent<Transform>();
@@ -206,7 +207,7 @@ void BehaviorArmy::OnEnter()
 			frontLine.transform = nullptr;
 
 		// Initialize the funds struct.
-		GameObject *fundsTextObj = GetParent()->GetObjectManager()->GetObjectByName(funds.dispObjName.c_str());
+		GameObject *fundsTextObj = GetParent()->GetGameObjectManager()->GetObjectByName(funds.dispObjName.c_str());
 
 		if (fundsTextObj) 
 			funds.text = fundsTextObj->GetComponent<Text>();
@@ -217,14 +218,14 @@ void BehaviorArmy::OnEnter()
 		UpdateFundsText();
 
 		// Initialize the cursor struct.
-		GameObject *cursorObj = GetParent()->GetObjectManager()->GetObjectByName(cursor.objName.c_str());
+		GameObject *cursorObj = GetParent()->GetGameObjectManager()->GetObjectByName(cursor.objName.c_str());
 
 		cursor.transform = cursorObj->GetComponent<Transform>();
 		cursorObj->GetComponent<Cursor>()->SetGamepad(controls.gamepad);
 		cursor.sprite = cursorObj->GetComponent<Sprite>();
 
 		// Initialize the path struct.
-		GameObject *pathArchetype = GetParent()->GetObjectManager()->GetArchetype(path.lineDispName.c_str());
+		GameObject *pathArchetype = GetParent()->GetGameObjectManager()->GetArchetype(path.lineDispName.c_str());
 
 		if (pathArchetype) 
 		{
@@ -271,7 +272,7 @@ void BehaviorArmy::OnEnter()
 		commandPostObj->AddComponent(sprite);
 		commandPostObj->AddComponent(commandPost);
 
-		LevelManager::GetLayer(0)->GetObjectManager()->Add(*commandPostObj);
+		Space::GetLayer(0)->GetGameObjectManager()->Add(*commandPostObj);
 
 		break;
 	}
@@ -290,8 +291,7 @@ void BehaviorArmy::OnUpdate(float dt)
 	{
 	case cArmyNormal:
 		// Get current cursor position
-		Vector2D cursPos = cursor.transform->GetScreenTranslation();
-
+		Vector2D cursPos = cursor.transform->GetWorldTranslation();
 		// Tilemap top left point
 		Vector2D tilemapTopLeft = tilemap->GetTilemapScreenTopLeft();
 
@@ -311,7 +311,7 @@ void BehaviorArmy::OnUpdate(float dt)
 
 		bool buildingMenu = controls.gamepad->GetButtonTriggered(BUILDING_MENU);
 
-		if (buildingMenu || AEInputCheckTriggered('B')) {
+		if (buildingMenu || (side == sRight &&AEInputCheckTriggered('B'))) {
 			if (PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side);
 			else PopupMenu::CreateMenu(side, PopupMenu::MenuType::Building, tilemap->GetPosOnMap(cursPos),
 				tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
@@ -323,7 +323,7 @@ void BehaviorArmy::OnUpdate(float dt)
 				rectStartPos = cursorNode;
 
 				//Check if we are trying to select a building, and open the menu associated with that building if we are.
-				LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
+				Space::GetLayer(0)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
 					if (obj->GetComponent<Transform>() && obj->GetComponent<Transform>()->GetTranslation() == GridManager::GetInstance().ConvertToWorldPoint(cursorNode)) {
 						if (obj->GetComponent<BuildingResearchCenter>()) {
 							obj->GetComponent<BuildingResearchCenter>()->OpenMenu(tilemap->GetPosOnMap(cursPos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
@@ -388,7 +388,7 @@ void BehaviorArmy::OnExit()
 	}
 }
 
-void BehaviorArmy::Draw() const
+void BehaviorArmy::Draw(Camera *cam) const
 {
 	Transform territoryTransform(0, 0);
 	Vector2D flTrs = frontLine.transform->GetTranslation();
@@ -409,10 +409,10 @@ void BehaviorArmy::Draw() const
 	}
 	float alpha = path.sprite->GetAlpha();
 	path.sprite->SetAlpha(0.25f);
-	path.sprite->Draw(territoryTransform);
+	path.sprite->Draw(cam, territoryTransform);
 	path.sprite->SetAlpha(alpha);
 	if (selectedUnits.size() > 0)
-		DrawPath();
+		DrawPath(cam);
 }
 
 void BehaviorArmy::Load(rapidjson::Value & obj)
@@ -524,7 +524,7 @@ void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos)
 	if (!LegalSpawn(startPos)) return;
 	funds.amount -= unitData.GetCost();
 	UpdateFundsText();
-	GameObject *go = GetParent()->GetObjectManager()->GetArchetype("UnitArchetype");
+	GameObject *go = GetParent()->GetGameObjectManager()->GetArchetype("UnitArchetype");
 	if (!go) {
 		Trace::GetInstance().GetStream() << "No Unit archetype found" << std::endl;
 		return;
@@ -543,12 +543,12 @@ void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos)
 	}
 	bh->Init(unitData, this);
 
-	GetParent()->GetObjectManager()->Add(*go);
+	GetParent()->GetGameObjectManager()->Add(*go);
 }
 
 bool BehaviorArmy::LegalSpawn(Vector2D pos)
 {
-	vector<GameObject*> unitGOs = GetParent()->GetObjectManager()->GetObjectsByName("Unit");
+	vector<GameObject*> unitGOs = GetParent()->GetGameObjectManager()->GetObjectsByName("Unit");
 	if (!GridManager::GetInstance().GetNode(pos)->open)
 		return false;
 	if (pos.x < 0 || pos.x >= tilemap->GetTilemapWidth() || pos.y < 0 || pos.y >= tilemap->GetTilemapHeight())
@@ -610,7 +610,7 @@ void BehaviorArmy::CalculateOffsets()
 	}
 }
 
-void BehaviorArmy::DrawPath() const
+void BehaviorArmy::DrawPath(Camera *cam) const
 {
 	for (SelectedUnit unit : selectedUnits)
 	{
@@ -620,7 +620,7 @@ void BehaviorArmy::DrawPath() const
 		targetT.SetScale(cursor.transform->GetScale() * 0.75);
 
 		targetT.SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(unit.unit->GetGridPos()));
-		cursor.sprite->Draw(targetT);
+		cursor.sprite->Draw(cam, targetT);
 
 		if (unit.path.size() == 0) continue;
 		Vector2D startPos = unit.path[0]->gridPos();
@@ -634,7 +634,7 @@ void BehaviorArmy::DrawPath() const
 		diamondT.SetScale({ pathScl.y, pathScl.y });
 		diamondT.SetTranslation(pos);
 		path.sprite->SetAlpha(1.0f);
-		path.sprite->Draw(diamondT);
+		path.sprite->Draw(cam, diamondT);
 
 		/*for (Node* node : unit.path)
 		{

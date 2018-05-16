@@ -6,6 +6,7 @@
 #include "Transform.h"
 #include "Trace.h"
 #include "LevelManager.h"
+#include "Camera.h"
 #include "Mesh.h"
 
 Sprite::Sprite() :
@@ -18,18 +19,18 @@ Component * Sprite::Clone() const
 	return new Sprite(*this);
 }
 
-void Sprite::Draw() const
+void Sprite::Draw(Camera *cam) const
 {
 	GameObject *parent_ = GetParent();
 	if (!parent_) return;
 	Transform *transform = (Transform*)parent_->GetComponent("Transform");
 	if (!transform) return;
 
-	Draw(*transform);
+	Draw(cam, *transform);
 }
 
-void Sprite::Draw(Transform &transform) const {
-	Component::Draw();
+void Sprite::Draw(Camera *cam, Transform &transform) const {
+	Component::Draw(cam);
 
 	if (!mesh) return;
 
@@ -41,10 +42,15 @@ void Sprite::Draw(Transform &transform) const {
 	} else {
 		AEGfxSetRenderMode(AE_GFX_RM_COLOR);
 	}
+	cam->SetViewport();
 	AEGfxSetTransparency(alpha);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	AEGfxSetBlendColor(color.r, color.g, color.b, color.a);
-	AEGfxSetTransform(transform.GetMatrix().m);
+	Transform *camTrs = cam->GetParent()->GetComponent<Transform>();
+	Matrix2D matrix = Matrix2D::ScalingMatrix(1.f/cam->GetSize().x, 1.f/cam->GetSize().y);
+	matrix *= Matrix2D().TranslationMatrix(-camTrs->GetTranslation().x, -camTrs->GetTranslation().y);
+	matrix *= transform.GetMatrix();
+	AEGfxSetTransform(matrix.m);
 	//AEGfxVertexList *newMesh = CutMesh(transform);
 	//if (newMesh) {
 	//	AEGfxMeshDraw(newMesh, AE_GFX_MDM_TRIANGLES);
@@ -103,12 +109,12 @@ void Sprite::Load(rapidjson::Value& obj)
 	if (obj.HasMember("SpriteSource") && obj["SpriteSource"].IsString())
 	{
 		// Add a sprite source by name.
-		spriteSource = LevelManager::GetLoadingLevel()->GetSpriteSource(obj["SpriteSource"].GetString());
+		spriteSource = GetParent()->GetLevelManager()->GetSpriteSource(obj["SpriteSource"].GetString());
 	}
 	else if (obj.HasMember("SpriteSource"))
 	{
 		// Create and add a sprite source.
-		SpriteSource* ss = new SpriteSource(0, 0, nullptr);
+		SpriteSource* ss = new SpriteSource(0, 0, nullptr, GetParent()->GetLevelManager());
 
 		rapidjson::Value& tmp = obj["SpriteSource"];
 
@@ -116,13 +122,13 @@ void Sprite::Load(rapidjson::Value& obj)
 		spriteSource = ss;
 
 		// Add the sprite source to the map.
-		LevelManager::GetLoadingLevel()->AddSpriteSource(tmp["Name"].GetString(), ss);
+		GetParent()->GetLevelManager()->AddSpriteSource(tmp["Name"].GetString(), ss);
 	}
 
 	if (obj.HasMember("Mesh") && obj["Mesh"].IsString())
 	{
 		// Add a mesh by name.
-		mesh = LevelManager::GetLoadingLevel()->GetMesh(obj["Mesh"].GetString());
+		mesh = GetParent()->GetLevelManager()->GetMesh(obj["Mesh"].GetString());
 	}
 	else if (obj.HasMember("Mesh"))
 	{
@@ -136,12 +142,12 @@ void Sprite::Load(rapidjson::Value& obj)
 		//meshUV = {tmp2[0].GetFloat(), tmp2[1].GetFloat()};
 
 		// Add the mesh to the map.
-		LevelManager::GetLoadingLevel()->AddMesh(tmp["Name"].GetString(), mesh);
+		GetParent()->GetLevelManager()->AddMesh(tmp["Name"].GetString(), mesh);
 	} else {
 		mesh = MeshCreateQuad(0.5f, 0.5f, 1.0f, 1.0f);
 		//meshHalfSize = { 0.5f, 0.5f };
 		//meshUV = { 1.0f, 1.0f };
-		LevelManager::GetLoadingLevel()->AddMesh("", mesh);
+		GetParent()->GetLevelManager()->AddMesh("", mesh);
 	}
 
 	if (obj.HasMember("Alpha") && obj["Alpha"].IsFloat())
@@ -156,52 +162,3 @@ void Sprite::Load(rapidjson::Value& obj)
 		color.a = obj["ModulateColor"][3].GetFloat();
 	}
 }
-
-Vector2D Sprite::topLeftBound = Vector2D(0, 0);
-Vector2D Sprite::bottomRightBound = Vector2D(0, 0);
-
-void Sprite::SetBounds(Vector2D topLeft, Vector2D bottomRight)
-{
-	topLeftBound = topLeft;
-	bottomRightBound = bottomRight;
-}
-
-/*AEGfxVertexList * Sprite::CutMesh(Transform &transform) const
-{
-	Vector2D pos = transform.GetScreenTranslation();
-	Vector2D scl = transform.GetScreenScale();
-	bool newMesh = false;
-	Vector2D cutMin = { -1, -1 };
-	Vector2D cutMax = { 1, 1 };
-	if (pos.x + scl.x / 2 >= bottomRightBound.x) {
-		//cutMax.x = (bottomRightBound.x - pos.x) / meshHalfSize.x;
-		newMesh = true;
-	}
-	if (pos.x - scl.x / 2 <= topLeftBound.x) {
-		//cutMin.x = (topLeftBound.x - pos.x) / meshHalfSize.x;
-		newMesh = true;
-	}
-	if (pos.y + scl.y / 2 >= topLeftBound.y) {
-		//cutMax.y = (topLeftBound.y - pos.y) / meshHalfSize.y;
-		newMesh = true;
-	}
-	if (pos.y - scl.y / 2 <= bottomRightBound.y) {
-		//cutMin.y = (bottomRightBound.y - pos.y) / meshHalfSize.y;
-		newMesh = true;
-	}
-
-	if (newMesh) {
-		AEGfxMeshStart();
-
-		AEGfxTriAdd(
-			cutMin.x * meshHalfSize.x, cutMin.y * meshHalfSize.y, 0xFFFFFFFF, (cutMin.x + 1) / 2 * meshUV.x, (cutMax.y + 1) / 2 * meshUV.y,
-			cutMax.x * meshHalfSize.x, cutMin.y * meshHalfSize.y, 0xFFFFFFFF, (cutMax.x + 1) / 2 * meshUV.x, (cutMax.y + 1) / 2 * meshUV.y,
-			cutMin.x * meshHalfSize.x, cutMax.y * meshHalfSize.y, 0xFFFFFFFF, (cutMin.x + 1) / 2 * meshUV.x, (cutMin.y + 1) / 2 * meshUV.y);
-		AEGfxTriAdd(
-			cutMax.x * meshHalfSize.x, cutMin.y * meshHalfSize.y, 0xFFFFFFFF, (cutMax.x + 1) / 2 * meshUV.x, (cutMax.y + 1) / 2 * meshUV.y,
-			cutMax.x * meshHalfSize.x, cutMax.y * meshHalfSize.y, 0xFFFFFFFF, (cutMax.x + 1) / 2 * meshUV.x, (cutMin.y + 1) / 2 * meshUV.y,
-			cutMin.x * meshHalfSize.x, cutMax.y * meshHalfSize.y, 0xFFFFFFFF, (cutMin.x + 1) / 2 * meshUV.x, (cutMin.y + 1) / 2 * meshUV.y);
-
-		return AEGfxMeshEnd();
-	} else return nullptr;
-}*/

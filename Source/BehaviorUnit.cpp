@@ -125,9 +125,9 @@ void BehaviorUnit::BuildArrays()
 		return;
 
 	// Build weapon array.
-	Weapons[cWeaponDrillsaw] = { "Drillsaw", cGroupMelee, 0.05f, 1, 10, GetParent()->GetObjectManager()->GetArchetype("ProjectileInvisible") };
-	Weapons[cWeaponHandcannon] = { "Handcannon", cGroupRanged, 0.2f, 3, 20, GetParent()->GetObjectManager()->GetArchetype("ProjectileLaser") };
-	Weapons[cWeaponBeamRifle] = { "Beam Rifle", cGroupLongRanged, 0.5f, 5, 30, GetParent()->GetObjectManager()->GetArchetype("ProjectileLaser") };
+	Weapons[cWeaponDrillsaw] = { "Drillsaw", cGroupMelee, 0.05f, 1, 10, GetParent()->GetGameObjectManager()->GetArchetype("ProjectileInvisible") };
+	Weapons[cWeaponHandcannon] = { "Handcannon", cGroupRanged, 0.2f, 3, 20, GetParent()->GetGameObjectManager()->GetArchetype("ProjectileLaser") };
+	Weapons[cWeaponBeamRifle] = { "Beam Rifle", cGroupLongRanged, 0.5f, 5, 30, GetParent()->GetGameObjectManager()->GetArchetype("ProjectileLaser") };
 
 	// Build equipment array.
 	Equips[cEquipNone] = { "null", 0, UseNone, 0.0f, 0.0f };

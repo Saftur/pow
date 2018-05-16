@@ -16,6 +16,7 @@
 #include "stdafx.h"
 #include "GameObject.h" 
 #include "AEEngine.h" 
+#include "Space.h"
 #include "GameObjectManager.h" 
 #include "LevelManager.h"
 #include "Vector2D.h"
@@ -50,7 +51,7 @@ void PopupMenu::DestroyMenu(BehaviorArmy::Side side)
 	//Destroy the menu for a given army if it exists.
 	for (unsigned i = 0; i < menus.size(); i++) {
 		if (menus[i]->side == side) {
-			LevelManager::UnloadLayer(menus[i]->menuLevelLayer);
+			Space::DeleteLayer(menus[i]->menuLevelLayer);
 			delete menus[i];
 			menus.erase(menus.begin() + i);
 		}
@@ -70,8 +71,8 @@ void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, float dt)
 {
 	//Update which button is currently being selected on the menu belonging to the given army.
 	PopupMenu* menu = GetMenu(side);
-	if (menu && LevelManager::GetLayer(menu->menuLevelLayer)) {
-		int buttons = LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectsByName("Button").size(); //Number of buttons in the menu.
+	if (menu && Space::GetLayer(menu->menuLevelLayer)) {
+		int buttons = Space::GetLayer(menu->menuLevelLayer)->GetGameObjectManager()->GetObjectsByName("Button").size(); //Number of buttons in the menu.
 		if (gamepad.GetButtonTriggered(MENU_LEFT) || AEInputCheckTriggered(VK_LEFT)) {
 			if (menu->selectedButton <= 0) menu->selectedButton = buttons - 1;
 			else menu->selectedButton--;
@@ -84,15 +85,15 @@ void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, float dt)
 		//Update the cursor to the correct position and size;
 		if (buttons > 0) {
 			//If the sprite isn't on the cursor yet, the menu needs to be configured for the correct team.
-			GameObject* cursor = LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectByName("Cursor");
+			GameObject* cursor = Space::GetLayer(menu->menuLevelLayer)->GetGameObjectManager()->GetObjectByName("Cursor");
 			if (!GetMenu(side)->configured) ConfigureMenu(side);
 
 			//Find the button that we have selected and update the cursor.
-			GameObject* selectedButton = LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectsByName("Button")[menu->selectedButton];
+			GameObject* selectedButton = Space::GetLayer(menu->menuLevelLayer)->GetGameObjectManager()->GetObjectsByName("Button")[menu->selectedButton];
 			Transform* selectedButtonTransform = (Transform*)selectedButton->GetComponent("Transform");
 			Transform* cursorTransform = (Transform*)cursor->GetComponent("Transform");
 			cursorTransform->SetScale(selectedButtonTransform->GetScale() * 1.1f);
-			cursorTransform->SetScreenTranslation(selectedButtonTransform->GetTranslation());
+			cursorTransform->SetWorldTranslation(selectedButtonTransform->GetTranslation());
 
 			//If we hit select, click the button and close the menu.	
 			if (gamepad.GetButtonTriggered(MENU_SELECT) || AEInputCheckTriggered(VK_RETURN)) {
@@ -108,7 +109,7 @@ void PopupMenu::Shutdown()
 {
 	//Destroy the menus and everything on them.
 	for (unsigned i = 0; i < menus.size(); i++) {
-		LevelManager::UnloadLayer(menus[i]->menuLevelLayer);
+		Space::DeleteLayer(menus[i]->menuLevelLayer);
 		delete menus[i];
 		menus.erase(menus.begin() + i);
 	}
@@ -126,18 +127,24 @@ PopupMenu::PopupMenu(BehaviorArmy::Side side, MenuType type) : side(side), type(
 	//Load the level for the correct type of level.
 	switch (type) {
 	case Building:
-		LevelManager::LoadLayer(LevelManager::GetLayerCount(), "BuildingMenu", true);
+		Space::LoadLayer(Space::GetLayerCount(), "BuildingMenu", true);
 		break;
 	case Unit:
 		break;
 	case Research:
-		LevelManager::LoadLayer(LevelManager::GetLayerCount(), "ResearchMenu", true);
+		Space::LoadLayer(Space::GetLayerCount(), "ResearchMenu", true);
 		break;
 	case CommandPost:
-		LevelManager::LoadLayer(LevelManager::GetLayerCount(), "CommandPostMenu", true);
+		Space::LoadLayer(Space::GetLayerCount(), "CommandPostMenu", true);
 		break;
 	}
-	menuLevelLayer = LevelManager::GetLayerCount() - 1;
+	Space::GetLayer(Space::GetLayerCount()-1)->GetLevelManager()->Update(0);
+	GameObject *camObj = Space::GetLayer(Space::GetLayerCount()-1)->GetGameObjectManager()->GetObjectByName("Camera");
+	if (camObj) {
+		if (side == BehaviorArmy::sRight)
+			camObj->GetComponent<Camera>()->ChangePos({0.5f, 0.0f});
+	}
+	menuLevelLayer = Space::GetLayerCount() - 1;
 }
 
 void PopupMenu::ConfigureMenu(BehaviorArmy::Side side, PopupMenu* menu) {
@@ -146,9 +153,9 @@ void PopupMenu::ConfigureMenu(BehaviorArmy::Side side, PopupMenu* menu) {
 	}
 	if (menu) {
 		menu->configured = true;
-		GameObject* cursor = LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectByName("Cursor");
+		GameObject* cursor = Space::GetLayer(menu->menuLevelLayer)->GetGameObjectManager()->GetObjectByName("Cursor");
 
-		vector<GameObject*> findArmy = LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
+		vector<GameObject*> findArmy = Space::GetLayer(0)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
 			BehaviorArmy* army = obj->GetComponent<BehaviorArmy>();
 			//If we found the army we want, set the menu's army equal to it.
 			if (army && army->GetSide() == side) {
@@ -157,7 +164,7 @@ void PopupMenu::ConfigureMenu(BehaviorArmy::Side side, PopupMenu* menu) {
 			return false;
 		});
 
-		(LevelManager::GetLayer(menu->menuLevelLayer)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
+		(Space::GetLayer(menu->menuLevelLayer)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
 			//Update the level to represent the correct team. (sLeft is Red team)
 			if (side == BehaviorArmy::Side::sLeft) {
 				((Sprite*)cursor->GetComponent("Sprite"))->SetModulateColor({ 1, 0, 0, 1 });

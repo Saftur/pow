@@ -66,15 +66,6 @@ public:
 	void Quit();
 
 private:
-	Vector2D* AddCamera(Vector2D screenPos, Vector2D topLeft, Vector2D bottomRight, Vector2D worldPos);
-
-	struct Camera {
-		Vector2D screenPos;
-		Vector2D topLeft;
-		Vector2D bottomRight;
-		Vector2D worldPos;
-	};
-
 	//------------------------------------------------------------------------------
 	// Private Variables:
 	//------------------------------------------------------------------------------
@@ -95,7 +86,5 @@ private:
 	bool hasPauseMenu = false;
 	bool paused = false; //Is the game paused?
 	bool switchPause = false;
-
-	vector<Camera> cameras;
 };
 /*----------------------------------------------------------------------------*/

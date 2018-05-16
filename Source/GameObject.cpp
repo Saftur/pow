@@ -1,17 +1,19 @@
 #include "stdafx.h"
 #include "GameObject.h"
 #include "Component.h"
+#include "Space.h"
 #include "LevelManager.h"
+#include "Camera.h"
 #include <string>
 #include "Trace.h"
 
-GameObject::GameObject(const char * name) :
-		name(name), isDestroyed(false), destroyNext(false), numComponents(0)
+GameObject::GameObject(const char * name, Space *space) :
+		name(name), isDestroyed(false), destroyNext(false), numComponents(0), space(space)
 {
 }
 
 GameObject::GameObject(const GameObject & other) :
-		name(other.name), isDestroyed(false), destroyNext(false), numComponents(0), levelManager(other.levelManager)
+		name(other.name), isDestroyed(false), destroyNext(false), numComponents(0), space(other.space)
 {
 	for (unsigned i = 0; i < other.numComponents; i++) {
 		AddComponent(other.components[i]->Clone());
@@ -113,10 +115,10 @@ void GameObject::Update(float dt)
 	}
 }
 
-void GameObject::Draw()
+void GameObject::Draw(Camera *cam)
 {
 	for (unsigned i = 0; i < numComponents; i++) {
-		components[i]->Draw();
+		components[i]->Draw(cam);
 	}
 }
 
@@ -128,17 +130,21 @@ void GameObject::Destroy()
 	}
 }
 
-GameObjectManager * GameObject::GetObjectManager() const
+Space * GameObject::GetSpace() const {
+	return space;
+}
+
+GameObjectManager * GameObject::GetGameObjectManager() const
 {
-	return levelManager->GetObjectManager();
+	return space->GetGameObjectManager();
 }
 
 LevelManager * GameObject::GetLevelManager() const
 {
-	return levelManager;
+	return space->GetLevelManager();
 }
 
-void GameObject::SetLevelManager(LevelManager * lm)
+/*void GameObject::SetLevelManager(LevelManager * lm)
 {
 	levelManager = lm;
-}
+}*/

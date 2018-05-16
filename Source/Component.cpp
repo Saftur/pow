@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Component.h"
+#include "Camera.h"
 #include "Trace.h"
 
 Component::Component(const char * name) : 
@@ -24,7 +25,7 @@ void Component::Update(float dt)
 	UNREFERENCED_PARAMETER(dt);
 }
 
-void Component::Draw() const
+void Component::Draw(Camera *cam) const
 {
 	Trace::GetInstance().GetStream() << "Component " << name << ": Draw" << std::endl;
 }

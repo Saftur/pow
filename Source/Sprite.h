@@ -59,8 +59,8 @@ public:
 	Component* Clone() const;
 
 	// Draw a sprite (Sprite can be textured or untextured).
-	void Draw() const;
-	void Draw(Transform &transform) const;
+	void Draw(Camera *cam) const;
+	void Draw(Camera *cam, Transform &transform) const;
 
 	// Adjust a sprite's alpha up/down.
 	// (NOTE: Make sure to clamp the resulting alpha value between 0.0f and 1.0f.)
@@ -103,8 +103,6 @@ public:
 	void Load(rapidjson::Value& obj);
 
 
-	static void SetBounds(Vector2D topLeft, Vector2D bottomRight);
-
 private:
 	// The frame currently being displayed (for sprite sheets).
 	unsigned int frameIndex;
@@ -124,8 +122,5 @@ private:
 	Color color;
 
 	//AEGfxVertexList* CutMesh(Transform &transform) const;
-
-	static Vector2D topLeftBound;
-	static Vector2D bottomRightBound;
 };
 /*----------------------------------------------------------------------------*/

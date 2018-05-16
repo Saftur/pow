@@ -14,7 +14,7 @@ Component * ColliderCircle::Clone() const
 	return new ColliderCircle(*this);
 }
 
-void ColliderCircle::Draw() const
+void ColliderCircle::Draw(Camera *cam) const
 {
 }
 

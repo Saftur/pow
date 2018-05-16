@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "BuildingNeoridiumMine.h"
+#include "Space.h"
 #include "GameObjectManager.h"
 #include "LevelManager.h"
 #include "GameObject.h"
@@ -33,7 +34,7 @@ void BuildingNeoridiumMine::BuildingUpdate(float dt){
 
 			//Find a random open node in the list of nearby nodes.
 			unsigned nodeID = rand() % nearbyNodes.size();
-			if (LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
+			if (Space::GetLayer(0)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
 				if (obj->GetComponent<Crystal>()) {
 					if (obj->GetComponent<Transform>()->GetTranslation() == GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID])) {
 						return true;
@@ -63,7 +64,7 @@ void BuildingNeoridiumMine::BuildingUpdate(float dt){
 			neoridium->AddComponent(sprite);
 			neoridium->AddComponent(neoridiumCrystal);
 
-			LevelManager::GetLayer(0)->GetObjectManager()->Add(*neoridium);
+			Space::GetLayer(0)->GetGameObjectManager()->Add(*neoridium);
 		}
 	}
 }

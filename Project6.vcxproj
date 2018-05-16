@@ -54,6 +54,7 @@
     <ClInclude Include="Source\BuildingTeleporter.h" />
     <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\ButtonEffects.h" />
+    <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\CompList.h" />
     <ClInclude Include="Source\BehaviorStub.h" />
     <ClInclude Include="Source\BehaviorUnit.h" />
@@ -83,6 +84,7 @@
     <ClInclude Include="Source\Rendertext.h" />
     <ClInclude Include="source\Serializable.h" />
     <ClInclude Include="source\SoundManager.h" />
+    <ClInclude Include="Source\Space.h" />
     <ClInclude Include="Source\Sprite.h" />
     <ClInclude Include="Source\SpriteSource.h" />
     <ClInclude Include="Source\stdafx.h" />
@@ -110,6 +112,7 @@
     <ClCompile Include="Source\BuildingTeleporter.cpp" />
     <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\ButtonEffects.cpp" />
+    <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\CompList.cpp" />
     <ClCompile Include="Source\BehaviorStub.cpp" />
     <ClCompile Include="Source\BehaviorUnit.cpp" />
@@ -139,6 +142,7 @@
     <ClCompile Include="Source\Rendertext.cpp" />
     <ClCompile Include="source\Serializable.cpp" />
     <ClCompile Include="source\SoundManager.cpp" />
+    <ClCompile Include="Source\Space.cpp" />
     <ClCompile Include="Source\Sprite.cpp" />
     <ClCompile Include="Source\SpriteSource.cpp" />
     <ClCompile Include="Source\stdafx.cpp">
@@ -156,8 +160,11 @@
     <None Include="Data\Army1.ini" />
     <None Include="Data\Army1Controls.json" />
     <None Include="Data\Army2.ini" />
+    <None Include="Data\Levels\BuildingMenu.json" />
+    <None Include="Data\Levels\CommandPostMenu.json" />
     <None Include="Data\Levels\DemoLevel.json" />
     <None Include="Data\Levels\PauseLevel.json" />
+    <None Include="Data\Levels\ResearchMenu.json" />
     <None Include="Data\Levels\StartLevel.json" />
     <None Include="fmodAPI\lib\fmod.dll" />
     <None Include="fmodAPI\lib\fmodL.dll" />
@@ -224,7 +231,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenGL32.lib;Xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy .\AE\lib\Alpha_Engine_D.dll "$(OutDir)" /Y
@@ -251,7 +258,7 @@ xcopy .\fmodAPI\lib\fmodL.dll "$(OutDir)" /Y</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenGL32.lib;Xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>

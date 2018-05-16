@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Building.h"
+#include "Space.h"
 #include "LevelManager.h"
 #include "GameObjectManager.h"
 #include "GameObject.h"
@@ -24,7 +25,7 @@ Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType spe
 	health(maxHealth), jaxiumDropAmount(jaxiumDropAmount), neoridiumDropAmount(neoridiumDropAmount)
 {
 	//Find the army that this building should belong to.
-	vector<GameObject*> objs = LevelManager::GetLayer(0)->GetObjectManager()->GetObjectsByName("Army");
+	vector<GameObject*> objs = Space::GetLayer(0)->GetGameObjectManager()->GetObjectsByName("Army");
 	for (unsigned i = 0; i < objs.size(); i++) {
 		BehaviorArmy* bArmy = (BehaviorArmy*)objs[i]->GetComponent("BehaviorArmy");
 		if (bArmy->GetSide() == side) {
@@ -121,7 +122,7 @@ void Building::Update(float dt)
 			jaxium->AddComponent(sprite);
 			jaxium->AddComponent(jaxiumCrystal);
 
-			LevelManager::GetLayer(0)->GetObjectManager()->Add(*jaxium);
+			Space::GetLayer(0)->GetGameObjectManager()->Add(*jaxium);
 		}
 		if (neoridiumDropAmount > 0) {
 			//Create a neoridium crystal on the node.
@@ -143,7 +144,7 @@ void Building::Update(float dt)
 			neoridium->AddComponent(sprite);
 			neoridium->AddComponent(neoridiumCrystal);
 
-			LevelManager::GetLayer(0)->GetObjectManager()->Add(*neoridium);
+			Space::GetLayer(0)->GetGameObjectManager()->Add(*neoridium);
 		}
 	}
 }

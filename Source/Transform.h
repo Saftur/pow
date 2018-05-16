@@ -57,42 +57,42 @@ public:
 	//	 A reference to the component's translation structure.
 	const Vector2D& GetTranslation() const;
 	const Vector2D GetWorldTranslation() const;
-	const Vector2D GetScreenTranslation() const;
+	//const Vector2D GetScreenTranslation() const;
 
 	// Get the rotation value of a transform component.
 	// Returns:
 	//	 The component's rotation value (in radians).
 	float GetRotation() const;
 	float GetWorldRotation() const;
-	float GetScreenRotation() const;
+	//float GetScreenRotation() const;
 
 	// Get the scale of a transform component.
 	// Returns:
 	//	 A reference to the component's scale structure.
 	const Vector2D& GetScale() const;
 	const Vector2D GetWorldScale() const;
-	const Vector2D GetScreenScale() const;
+	//const Vector2D GetScreenScale() const;
 
 	// Set the translation of a transform component.
 	// Params:
 	//	 translation = Reference to a translation vector.
 	void SetTranslation(const Vector2D& translation);
 	void SetWorldTranslation(const Vector2D& translation);
-	void SetScreenTranslation(const Vector2D& translation);
+	//void SetScreenTranslation(const Vector2D& translation);
 
 	// Set the rotation of a transform component.
 	// Params:
 	//	 rotation = The rotation value (in radians).
 	void SetRotation(float rotation);
 	void SetWorldRotation(float rotation);
-	void SetScreenRotation(float rotation);
+	//void SetScreenRotation(float rotation);
 
 	// Set the scale of a transform component.
 	// Params:
 	//	 translation = Reference to a scale vector.
 	void SetScale(const Vector2D& scale);
 	void SetWorldScale(const Vector2D& scale);
-	void SetScreenScale(const Vector2D& scale);
+	//void SetScreenScale(const Vector2D& scale);
 
 	void SetParent(Transform *transform);
 
@@ -101,11 +101,11 @@ public:
 	void Load(rapidjson::Value& obj);
 
 
-	static void SetCamTranslation(const Vector2D& translation);
+	/*static void SetCamTranslation(const Vector2D& translation);
 
 	static Vector2D GetCamTranslation();
 
-	static void SetCamIsDirty(bool isDirty);
+	static void SetCamIsDirty(bool isDirty);*/
 	
 private:
 	//------------------------------------------------------------------------------
@@ -133,8 +133,8 @@ private:
 	bool	isDirty;
 	bool followCamera;
 
-	static Vector2D camTranslation;
-	static Vector2D camScale;
-	static bool camIsDirty;
+	//static Vector2D camTranslation;
+	//static Vector2D camScale;
+	//static bool camIsDirty;
 };
 //------------------------------------------------------------------------------

@@ -43,7 +43,7 @@ public:
 	Component* Clone() const;
 
 	// Debug drawing for colliders.
-	void Draw() const;
+	void Draw(Camera *cam) const;
 
 	// Get the circle collider's radius.
 	// Returns:

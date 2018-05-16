@@ -17,7 +17,7 @@ public:
 	Tilemap();
 	~Tilemap();
 	Component* Clone() const;
-	void Draw() const;
+	void Draw(Camera *cam) const;
 	Vector2D GetPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile = nullptr) const;
 	Vector2D GetPosOnScreen(Vector2D tilePos) const;
 	Vector2D NormalizeMapPos(Vector2D tilePos) const;
