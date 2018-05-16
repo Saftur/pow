@@ -143,6 +143,7 @@ public:
 	vector<Node*> GetPath() const;
 
 	Vector2D GetGridPos() const;
+	void SetGridPos(Vector2D newPos);
 	Node* GetNode() const;
 
 	static vector<GameObject*> allUnits;

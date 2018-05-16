@@ -73,7 +73,7 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 					}
 				}
 				///TODO: Give the unit a path to the chosen node by the exit.
-				unitBehavior->StopPathfinding();
+				//unitBehavior->StopPathfinding();
 				if(pathNode) unitBehavior->SetPath(Pathfinder::FindPath(unitBehavior->GetNode(), pathNode));
 			}
 		}
