@@ -364,7 +364,7 @@ void BehaviorArmy::OnUpdate(float dt)
 					prevTarget = cursorNode;
 					for (SelectedUnit& unit : selectedUnits)
 					{
-						Vector2D pos = GridManager::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation() + unit.offset);
+						Vector2D pos = GridManager::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation()) + unit.offset;
 						unit.path = Pathfinder::FindPath(unit.unit->GetNode(), GridManager::GetInstance().GetNode((int)pos.x, (int)pos.y));
 					}
 				}
@@ -600,8 +600,7 @@ void BehaviorArmy::CalculateOffsets()
 	
 	for (SelectedUnit unit : selectedUnits)
 	{
-		midpoint.x += unit.unit->GetParent()->GetComponent<Transform>()->GetTranslation().x;
-		midpoint.y += unit.unit->GetParent()->GetComponent<Transform>()->GetTranslation().y;
+		midpoint += unit.unit->GetGridPos();
 	}
 
 	midpoint /= (float)selectedUnits.size();
@@ -609,61 +608,65 @@ void BehaviorArmy::CalculateOffsets()
 	// Use the calculated point to determine offsets for all selected units.
 	for (SelectedUnit unit : selectedUnits)
 	{
-		unit.offset = unit.unit->GetParent()->GetComponent<Transform>()->GetTranslation() - midpoint;
+		unit.offset = unit.unit->GetGridPos() - midpoint;
 	}
 }
 
 void BehaviorArmy::DrawPath(Camera *cam) const
 {
-	//Node* lastNode = nullptr;
-
 	for (SelectedUnit unit : selectedUnits)
 	{
-		/*for (Node* node : unit.path)
+		if (unit.path.size() == 0)
+			continue;
+
+		Node* lastNode = nullptr;
+		
+		Vector2D straightScale = Vector2D((float)GridManager::GetInstance().tileWidth, (float)GridManager::GetInstance().tileHeight * 0.5f);
+		//Vector2D diagonalScale = Vector2D()
+
+		Transform drawTrans = Transform();
+		drawTrans.SetScale({ straightScale.x * 1.25f, straightScale.y * 0.75f });
+		
+		Transform diamondT = Transform();
+		diamondT.SetRotation((float)M_PI / 4);
+		diamondT.SetScale({ straightScale.y * 0.75f, straightScale.y * 0.75f });
+		diamondT.SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(unit.path[0]->gridPos()));
+
+		for (Node* node : unit.path)
 		{
 			if (lastNode)
 			{
+				Vector2D subbed = lastNode->gridPos() - node->gridPos();
 				
+				float rot = atan2(-subbed.y, subbed.x);
+
+				drawTrans.SetRotation(rot);
+				drawTrans.SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(node->gridPos()).Midpoint(GridManager::GetInstance().ConvertToWorldPoint(lastNode->gridPos())));
+				
+				path.sprite->Draw(cam, drawTrans);
+
+				diamondT.SetRotation(rot + (float)M_PI / 4.f);
 			}
 
+			diamondT.SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(node->gridPos()));
+			path.sprite->Draw(cam, diamondT);
+
+			diamondT.SetRotation(diamondT.GetRotation() - (float)M_PI / 4.f);
+			path.sprite->Draw(cam, diamondT);
+
 			lastNode = node;
-		}*/
+		}
 
-		if (!path.transform || !path.sprite) continue;
+		Vector2D unitPos = unit.unit->GetGridPos();
+		Vector2D subbed = lastNode->gridPos() - unitPos;
 
-		Transform targetT = Transform();
-		targetT.SetScale(cursor.transform->GetScale() * 0.75);
+		float rot = atan2(-subbed.y, subbed.x);
 
-		targetT.SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(unit.unit->GetGridPos()));
-		cursor.sprite->Draw(cam, targetT);
+		drawTrans.SetRotation(rot);
 
-		if (unit.path.size() == 0) continue;
-		Vector2D startPos = unit.path[0]->gridPos();
+		drawTrans.SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(unitPos).Midpoint(GridManager::GetInstance().ConvertToWorldPoint(lastNode->gridPos())));
 
-		Vector2D pos = tilemap->GetPosOnScreen(startPos);
-		Vector2D invY = { 1, -1 };
-
-		Transform diamondT = Transform();
-		diamondT.SetRotation((float)M_PI / 4);
-		Vector2D pathScl = path.transform->GetScale();
-		diamondT.SetScale({ pathScl.y, pathScl.y });
-		diamondT.SetTranslation(pos);
-		path.sprite->SetAlpha(1.0f);
-		path.sprite->Draw(cam, diamondT);
-
-		/*for (Node* node : unit.path)
-		{
-			//node->gridPos = invY;
-			pos += tilemap->GetTileSize() * node->gridPos() / 2;
-			path.transform->SetTranslation(pos);
-			path.transform->SetRotation(node->gridPos.GetAngleRadians());
-			path.sprite->SetAlpha(0.5f);
-			path.sprite->Draw();
-			pos += tilemap->GetTileSize() * node->gridPos() / 2;
-			diamondT.SetTranslation(pos);
-			path.sprite->SetAlpha(1.0f);
-			path.sprite->Draw(diamondT);
-		}*/
+		path.sprite->Draw(cam, drawTrans);
 	}
 }
 
