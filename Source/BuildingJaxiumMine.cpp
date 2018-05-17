@@ -65,23 +65,9 @@ void BuildingJaxiumMine::BuildingUpdate(float dt){
 			remainingSpawnTime = Variance(crystalSpawnTime, crystalSpawnTimeVariance) / workers; //Reset the spawn timer.
 
 			//Create a jaxium crystal on the node.
-			GameObject *jaxium = new GameObject("Jaxium Crystal");
-			Transform* transform = new Transform();
-			transform->SetScale({ 25, 25 });
-			transform->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
-			jaxium->AddComponent(transform);
-
-			Crystal *jaxiumCrystal = new Crystal(Crystal::CrystalType::Jaxium, Variance(fundsPerCrystal, crystalWorthVariance));
-
-			Sprite *sprite = new Sprite();
-			jaxiumCrystal->texture = AEGfxTextureLoad("Data\\Assets\\Jaxium Crystal.png");
-			SpriteSource* spriteSource = new SpriteSource(1, 1, jaxiumCrystal->texture);
-			sprite->SetSpriteSource(spriteSource);
-			jaxiumCrystal->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
-			sprite->SetMesh(jaxiumCrystal->mesh);
-
-			jaxium->AddComponent(sprite);
-			jaxium->AddComponent(jaxiumCrystal);
+			GameObject* jaxium = new GameObject(*Space::GetLayer(0)->GetGameObjectManager()->GetArchetype("Jaxium Archetype"));
+			jaxium->AddComponent(new Crystal(Crystal::CrystalType::Jaxium, Variance(fundsPerCrystal, crystalWorthVariance)));
+			jaxium->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
 
 			Space::GetLayer(0)->GetGameObjectManager()->Add(*jaxium);
 		}

@@ -17,16 +17,6 @@ Crystal::Crystal(CrystalType type, float amount) : Component("Crystal"), type(ty
 {
 }
 
-Crystal::~Crystal()
-{
-	if(mesh) {
-		AEGfxMeshFree(mesh);
-		AEGfxTextureUnload(texture);
-		mesh = nullptr;
-		texture = nullptr;
-	}
-}
-
 Component * Crystal::Clone() const
 {
 	return new Crystal(*this);

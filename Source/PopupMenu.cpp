@@ -35,12 +35,22 @@
 
 vector<PopupMenu*> PopupMenu::menus;
 
+void PopupMenu::CreateMenu(BehaviorArmy::Side side, MenuType type)
+{
+	//Destroy the menu for a given army if it exists, then create a new menu.
+	if (Exists(side)) DestroyMenu(side);
+
+	PopupMenu* menu = new PopupMenu(side, type);
+	menus.push_back(menu);
+}
+
 void PopupMenu::CreateMenu(BehaviorArmy::Side side, MenuType type, Vector2D cursorMapPos, Vector2D cursorScreenPos)
 {
 	//Destroy the menu for a given army if it exists, then create a new menu.
 	if (Exists(side)) DestroyMenu(side);
 
 	PopupMenu* menu = new PopupMenu(side, type);
+	menu->overrideCursorPosition = true;
 	menu->armyCursorMapPos = cursorMapPos;
 	menu->armyCursorScreenPos = cursorScreenPos;
 	menus.push_back(menu);
@@ -67,7 +77,7 @@ bool PopupMenu::Exists(BehaviorArmy::Side side)
 	return false;
 }
 
-void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, float dt)
+void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, float dt, Vector2D cursorMapPos, Vector2D cursorScreenPos)
 {
 	//Update which button is currently being selected on the menu belonging to the given army.
 	PopupMenu* menu = GetMenu(side);
@@ -97,7 +107,9 @@ void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, float dt)
 
 			//If we hit select, click the button and close the menu.	
 			if (gamepad.GetButtonTriggered(MENU_SELECT) || AEInputCheckTriggered(VK_RETURN)) {
-				Button::ForceClick(*(Button*)selectedButton->GetComponent<Button>(), dt, 4, side, menu->armyCursorMapPos, menu->armyCursorScreenPos, menu->army);
+				if(menu->overrideCursorPosition) Button::ForceClick(*(Button*)selectedButton->GetComponent<Button>(), dt, 4, side, 
+					menu->armyCursorMapPos, menu->armyCursorScreenPos, menu->army);
+				else Button::ForceClick(*(Button*)selectedButton->GetComponent<Button>(), dt, 4, side, cursorMapPos, cursorScreenPos, menu->army);
 				PopupMenu::DestroyMenu(side);
 				return;
 			}

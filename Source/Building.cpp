@@ -104,45 +104,17 @@ void Building::Update(float dt)
 
 		if (jaxiumDropAmount > 0) {
 			//Create a jaxium crystal on the node.
-			GameObject *jaxium = new GameObject("Jaxium Crystal");
-			Transform* transform = new Transform();
-			transform->SetScale({ 25, 25 });
-			transform->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
-			jaxium->AddComponent(transform);
-
-			Crystal *jaxiumCrystal = new Crystal(Crystal::CrystalType::Jaxium, jaxiumDropAmount);
-
-			Sprite *sprite = new Sprite();
-			jaxiumCrystal->texture = AEGfxTextureLoad("Data\\Assets\\Jaxium Crystal.png");
-			SpriteSource* spriteSource = new SpriteSource(1, 1, jaxiumCrystal->texture);
-			sprite->SetSpriteSource(spriteSource);
-			jaxiumCrystal->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
-			sprite->SetMesh(jaxiumCrystal->mesh);
-
-			jaxium->AddComponent(sprite);
-			jaxium->AddComponent(jaxiumCrystal);
+			GameObject* jaxium = new GameObject(*Space::GetLayer(0)->GetGameObjectManager()->GetArchetype("Jaxium Archetype"));
+			jaxium->AddComponent(new Crystal(Crystal::CrystalType::Jaxium, jaxiumDropAmount));
+			jaxium->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
 
 			Space::GetLayer(0)->GetGameObjectManager()->Add(*jaxium);
 		}
 		if (neoridiumDropAmount > 0) {
 			//Create a neoridium crystal on the node.
-			GameObject *neoridium = new GameObject("Neoridium Crystal");
-			Transform* transform = new Transform();
-			transform->SetScale({ 25, 25 });
-			transform->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
-			neoridium->AddComponent(transform);
-
-			Crystal *neoridiumCrystal = new Crystal(Crystal::CrystalType::Neoridium, neoridiumDropAmount);
-
-			Sprite *sprite = new Sprite();
-			neoridiumCrystal->texture = AEGfxTextureLoad("Data\\Assets\\Neoridium Crystal.png");
-			SpriteSource* spriteSource = new SpriteSource(1, 1, neoridiumCrystal->texture);
-			sprite->SetSpriteSource(spriteSource);
-			neoridiumCrystal->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
-			sprite->SetMesh(neoridiumCrystal->mesh);
-
-			neoridium->AddComponent(sprite);
-			neoridium->AddComponent(neoridiumCrystal);
+			GameObject* neoridium = new GameObject(*Space::GetLayer(0)->GetGameObjectManager()->GetArchetype("Neoridium Archetype"));
+			neoridium->AddComponent(new Crystal(Crystal::CrystalType::Neoridium, neoridiumDropAmount));
+			neoridium->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
 
 			Space::GetLayer(0)->GetGameObjectManager()->Add(*neoridium);
 		}

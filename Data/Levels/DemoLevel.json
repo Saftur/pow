@@ -114,6 +114,42 @@
     ]
   },
   {
+    "Name": "Jaxium Archetype",
+    "Archetype": true,
+    "Transform": {
+      "Scale": [ 25, 25 ]
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "JaxiumSpriteSource",
+        "Texture": "Data\\Assets\\Jaxium Crystal.png",
+        "Cols": 1,
+        "Rows": 1
+      },
+      "Mesh": {
+        "Name": "CrystalMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      }
+    }
+  },
+  {
+    "Name": "Neoridium Archetype",
+    "Archetype": true,
+    "Transform": {
+      "Scale": [ 25, 25 ]
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "NeoridiumSpriteSource",
+        "Texture": "Data\\Assets\\Neoridium Crystal.png",
+        "Cols": 1,
+        "Rows": 1
+      },
+      "Mesh": "CrystalMesh"
+    }
+  },
+  {
     "Name": "Army",
     "BehaviorArmy": {
       "Name": "Army1",

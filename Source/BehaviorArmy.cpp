@@ -313,10 +313,9 @@ void BehaviorArmy::OnUpdate(float dt)
 
 		if (buildingMenu || (side == sRight && AEInputCheckTriggered('B'))) {
 			if (PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side);
-			else PopupMenu::CreateMenu(side, PopupMenu::MenuType::Building, tilemap->GetPosOnMap(cursPos),
-				tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
+			else PopupMenu::CreateMenu(side, PopupMenu::MenuType::Building);
 		}
-		if (PopupMenu::Exists(side)) PopupMenu::Update(side, *controls.gamepad, dt);
+		if (PopupMenu::Exists(side)) PopupMenu::Update(side, *controls.gamepad, dt, tilemap->GetPosOnMap(cursPos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
 		else {
 			// If the select button is pressed down this frame, set the select rectangle start positions.
 			if (controls.gamepad->GetButtonTriggered(SELECT) || AEInputCheckTriggered(VK_RETURN)) { ///TODDO: Remove AEInput check

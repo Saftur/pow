@@ -46,23 +46,9 @@ void BuildingNeoridiumMine::BuildingUpdate(float dt){
 			remainingSpawnTime = Variance(crystalSpawnTime, crystalSpawnTimeVariance) / workers; //Reset the spawn timer.
 
 			//Create a neoridium crystal on the node.
-			GameObject *neoridium = new GameObject("Neoridium Crystal");
-			Transform* transform = new Transform();
-			transform->SetScale({ 25, 25 });
-			transform->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
-			neoridium->AddComponent(transform);
-
-			Crystal *neoridiumCrystal = new Crystal(Crystal::CrystalType::Neoridium, Variance(fundsPerCrystal, crystalWorthVariance));
-
-			Sprite *sprite = new Sprite();
-			neoridiumCrystal->texture = AEGfxTextureLoad("Data\\Assets\\Neoridium Crystal.png");
-			SpriteSource* spriteSource = new SpriteSource(1, 1, neoridiumCrystal->texture);
-			sprite->SetSpriteSource(spriteSource);
-			neoridiumCrystal->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
-			sprite->SetMesh(neoridiumCrystal->mesh);
-
-			neoridium->AddComponent(sprite);
-			neoridium->AddComponent(neoridiumCrystal);
+			GameObject* neoridium = new GameObject(*Space::GetLayer(0)->GetGameObjectManager()->GetArchetype("Neoridium Archetype"));
+			neoridium->AddComponent(new Crystal(Crystal::CrystalType::Neoridium, Variance(fundsPerCrystal, crystalWorthVariance)));
+			neoridium->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
 
 			Space::GetLayer(0)->GetGameObjectManager()->Add(*neoridium);
 		}

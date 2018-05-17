@@ -46,7 +46,6 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 		}
 
 		GameObject* unit = GridManager::GetInstance().GetOccupant(mapPos);
-		BehaviorUnit* unitBehavior = unit->GetComponent<BehaviorUnit>();
 
 		if (lastTeleportedObject != unit) lastTeleportedObject = nullptr;
 		 
@@ -56,6 +55,7 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 
 			//Make sure that we arent teleporting the unit back and forth.
 			if (lastTeleportedObject != unit) {
+				BehaviorUnit* unitBehavior = unit->GetComponent<BehaviorUnit>();
 				//If the unit is currently running pathfinding to move somewhere, do not teleport it.
 				if (unitBehavior->GetPath().size()) return;
 

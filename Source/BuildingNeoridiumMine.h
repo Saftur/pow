@@ -48,7 +48,7 @@ private:
 	float crystalSpawnTime = 10; //How long it takes for a crystal to spawn. (HINT: This is divided by the number of workers).
 	float remainingSpawnTime = crystalSpawnTime; //How long until the next crystal will spawn.
 
-	float workers = 0; //How many units are working this mine.
+	float workers = 3; //How many units are working this mine.
 	float maxWorkers = 3; //The maximum number of workers on this mine.
 
 	float crystalWorthVariance = 0.5f; //The percentage that the value of each crystal can vary by.

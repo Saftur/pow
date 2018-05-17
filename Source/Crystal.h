@@ -35,19 +35,15 @@ public:
 	enum CrystalType { Jaxium, Neoridium };
 
 	Crystal(CrystalType type, float amount);
-	~Crystal();
 
 	virtual Component* Clone() const;
 
 	void Update(float dt); //Update the Crystal.
 
 	CrystalType type; //Building type.
-
-	AEGfxVertexList *mesh = nullptr; //Mesh for this Crystal.
-	AEGfxTexture *texture = nullptr; //Texture for this Crystal.
+	float crystalCount; //How many crystals this crystal contains.
 
 private:
-	float crystalCount; //How many crystals this crystal contains.
 };
 
 //------------------------------------------------------------------------------
