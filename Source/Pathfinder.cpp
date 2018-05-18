@@ -10,6 +10,14 @@ vector<Node*> Pathfinder::FindPath(Node * start, Node * end)
 	vector<GridManager::Node*> openNodes;
 	vector<GridManager::Node*> closedNodes;
 
+	for (int i = 0; i < GridManager::GetInstance().width; i++)
+	{
+		for (int j = 0; j < GridManager::GetInstance().height; j++)
+		{
+			GridManager::GetInstance().GetNode(i, j)->parent = nullptr;
+		}
+	}
+
 	openNodes.push_back(start);
 
 	while (!openNodes.empty())

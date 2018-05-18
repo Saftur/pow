@@ -248,7 +248,7 @@
       "Scale": [ 128, 16 ]
     },
     "Sprite": {
-      "Alpha": 0.5,
+      "Alpha": 1,
       "ModulateColor": [ 1, 0, 0, 1 ]
     }
   },
@@ -259,7 +259,7 @@
       "Scale": [ 128, 16 ]
     },
     "Sprite": {
-      "Alpha": 0.5,
+      "Alpha": 1,
       "ModulateColor": [ 0, 0, 1, 1 ]
     }
   },
