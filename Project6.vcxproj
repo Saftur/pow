@@ -52,6 +52,7 @@
     <ClInclude Include="Source\BuildingNeoridiumMine.h" />
     <ClInclude Include="Source\BuildingResearchCenter.h" />
     <ClInclude Include="Source\BuildingTeleporter.h" />
+    <ClInclude Include="Source\BuildingTurret.h" />
     <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\ButtonEffects.h" />
     <ClInclude Include="Source\Camera.h" />
@@ -110,6 +111,7 @@
     <ClCompile Include="Source\BuildingNeoridiumMine.cpp" />
     <ClCompile Include="Source\BuildingResearchCenter.cpp" />
     <ClCompile Include="Source\BuildingTeleporter.cpp" />
+    <ClCompile Include="Source\BuildingTurret.cpp" />
     <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\ButtonEffects.cpp" />
     <ClCompile Include="Source\Camera.cpp" />

@@ -363,7 +363,6 @@ void Button::ResearchTeleporterEffect(Button & button, float dt, int count, ...)
 	BuildingResearchCenter::Unlock(side, Building::BuildingType::Teleporter);
 }
 
-///TODO: Change so that they create the unit at the nearest available position to the command post. (This should still be the cursor position).
 void Button::CreateUnit1Effect(Button & button, float dt, int count, ...)
 {
 	va_list args;

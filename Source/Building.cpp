@@ -66,7 +66,7 @@ void Building::InitializeBuildings(BehaviorArmy::Side side)
 	buildingCost[Spaceport] = 350.0f;
 	buildingCost[VehicleDepot] = 300.0f;
 	buildingCost[Turret] = 200.0f;
-	buildingCost[Teleporter] = 0.0f;
+	buildingCost[Teleporter] = 250.0f;
 	buildingCost[CommandPost] = -0.0f;
 
 	//Initialize the number of teleporters each army has to 0.

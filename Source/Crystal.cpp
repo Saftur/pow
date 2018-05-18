@@ -24,18 +24,12 @@ Component * Crystal::Clone() const
 
 void Crystal::Update(float dt)
 {
-	///TODO: If a unit moves over this crystal, add either Jaxium or Neoridium to their army.
-	Space::GetLayer(0)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
-		if (obj->GetComponent<BehaviorUnit>()) {
-			if (GridManager::GetInstance().ConvertToGridPoint(obj->GetComponent<Transform>()->GetTranslation())
-				== GridManager::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation())) {
-
-				BehaviorArmy* army = obj->GetComponent<BehaviorUnit>()->GetArmy();
-				if (type == Jaxium) army->AddToFunds(crystalCount);
-				else if (type == Neoridium) BuildingNeoridiumMine::AddNeoridium(army->GetSide(), crystalCount);
-				GetParent()->Destroy();
-			}
-		}
-		return false;
-	});
+	//Give crystals to the unit that walks ontop of it.
+	GameObject* unit = GridManager::GetInstance().GetOccupant(GridManager::GetInstance().ConvertToGridPoint(GetParent()->GetComponent<Transform>()->GetTranslation()));
+	if (unit) {
+		BehaviorArmy* army = unit->GetComponent<BehaviorUnit>()->GetArmy();
+		if (type == Jaxium) army->AddToFunds(crystalCount);
+		else if (type == Neoridium) BuildingNeoridiumMine::AddNeoridium(army->GetSide(), crystalCount);
+		GetParent()->Destroy();
+	}
 }
