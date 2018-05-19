@@ -44,10 +44,6 @@ vector<Node*> Pathfinder::FindPath(Node * start, Node * end)
 		{
 			vector<Node*> path = Retrace(end);
 
-			if (path.size() > 0 && !end->open)
-				if (!path.empty())
-					path.pop_back();
-
 			return path;
 		}
 

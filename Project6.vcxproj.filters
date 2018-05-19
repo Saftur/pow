@@ -511,6 +511,15 @@
     <ClInclude Include="Source\Space.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="fmodAPI\inc\fmod_studio.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="fmodAPI\inc\fmod_studio.hpp">
+      <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="fmodAPI\inc\fmod_studio_common.h">
+      <Filter>fmod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fmodAPI\lib\fmod.dll">
@@ -545,6 +554,9 @@
     </None>
     <None Include="Data\Levels\BuildingMenu.json">
       <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="fmodAPI\inc\fmod_studio.cs">
+      <Filter>fmod</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

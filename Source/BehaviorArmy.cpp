@@ -622,7 +622,6 @@ void BehaviorArmy::DrawPath(Camera *cam) const
 		Node* lastNode = nullptr;
 		
 		Vector2D straightScale = Vector2D((float)GridManager::GetInstance().tileWidth, (float)GridManager::GetInstance().tileHeight * 0.5f);
-		//Vector2D diagonalScale = Vector2D()
 
 		Transform drawTrans = Transform();
 		drawTrans.SetScale({ straightScale.x * 1.25f, straightScale.y * 0.75f });

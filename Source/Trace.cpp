@@ -12,6 +12,7 @@
 #include "stdafx.h"
 #include <stdarg.h>
 #include "Trace.h"
+#include "AEEngine.h"
 
 //------------------------------------------------------------------------------
 // Public Functions:
@@ -37,6 +38,7 @@ void Trace::Init()
 		char errMsg[1024];
 		strerror_s(errMsg, _countof(errMsg), errno);
 		std::cout << "Trace::Init Error: File open failed: " << errMsg << std::endl;
+		AESysPrintf("Trace::Init Error: File open failed: %s\n", errMsg);
 		fileOpened = false;
 	}
 }

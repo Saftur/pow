@@ -9,7 +9,10 @@ Header file for sound controller
 ******************************************************************************/
 #pragma once
 
+#include <vector>
+
 #include "fmod.hpp"
+#include "fmod_studio.hpp"
 #define GLOBAL_SOUND_PATH "Assets\\SFX\\"
 
 typedef char* const Sound;
@@ -28,6 +31,19 @@ public:
 
 	// Shut down the SoundManager.
 	void Shutdown();
+
+	void CheckResult(FMOD_RESULT result);
+
+	// Creates an FMOD sound bank
+	// Params:
+	//   filename = Name of the FMOD bank file.
+	void AddBank(const std::string& filename);
+
+	// Starts an audio event with the given name.
+	// The event must be in one of the loaded banks.
+	// Params:
+	//   name = The name of the event that will be started.
+	FMOD::Studio::EventInstance* PlayEvent(const std::string& name);
 
 	// Adds a sound to the sound registry.
 	// Parameters:
@@ -59,6 +75,8 @@ public:
 	// Returns the SoundManager's system (the FMOD object which is responsible for all of the sound handling).
 	FMOD::System* GetSystem();
 
+	FMOD::Studio::System* GetStudio();
+
 private:
 	SoundManager();
 
@@ -82,5 +100,7 @@ private:
 	FMOD::Channel* musicChannel = NULL;
 	SoundList soundRegistry;
 
-	FMOD::System *system = NULL;
+	FMOD::Studio::System *studioSystem = nullptr;
+	std::vector<FMOD::Studio::Bank*> bankList;
 };
+std::ostream& operator<<(std::ostream& os, const FMOD_STUDIO_PARAMETER_DESCRIPTION& parameter);

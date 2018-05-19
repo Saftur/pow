@@ -1,221 +1,160 @@
 /*==============================================================================
-3D Example
-Copyright (c), Firelight Technologies Pty, Ltd 2004-2017.
+Event 3D Example
+Copyright (c), Firelight Technologies Pty, Ltd 2012-2017.
 
-This example shows how to basic 3D positioning of sounds.
+This example demonstrates how to position events in 3D for spatialization.
 ==============================================================================*/
+#include "fmod_studio.hpp"
 #include "fmod.hpp"
 #include "common.h"
 
-const int   INTERFACE_UPDATETIME = 50;      // 50ms update for interface
-const float DISTANCEFACTOR = 1.0f;          // Units per meter.  I.e feet would = 3.28.  centimeters would = 100.
+const int SCREEN_WIDTH = NUM_COLUMNS;
+const int SCREEN_HEIGHT = 16;
+
+int currentScreenPosition = -1;
+char screenBuffer[(SCREEN_WIDTH + 1) * SCREEN_HEIGHT + 1] = {0};
+
+void initializeScreenBuffer();
+void updateScreenPosition(const FMOD_VECTOR& worldPosition);
 
 int FMOD_Main()
 {
-    FMOD::System    *system;
-    FMOD::Sound     *sound1, *sound2, *sound3;
-    FMOD::Channel   *channel1 = 0, *channel2 = 0, *channel3 = 0;
-    FMOD_RESULT      result;
-    bool             listenerflag = true;
-    FMOD_VECTOR      listenerpos  = { 0.0f, 0.0f, -1.0f * DISTANCEFACTOR };
-    unsigned int     version;
-    void            *extradriverdata = 0;
+    void *extraDriverData = NULL;
+    Common_Init(&extraDriverData);
 
-    Common_Init(&extradriverdata);
+    FMOD::Studio::System* system = NULL;
+    ERRCHECK( FMOD::Studio::System::create(&system) );
 
-    /*
-        Create a System object and initialize.
-    */
-    result = FMOD::System_Create(&system);
-    ERRCHECK(result);
+    // The example Studio project is authored for 5.1 sound, so set up the system output mode to match
+    FMOD::System* lowLevelSystem = NULL;
+    ERRCHECK( system->getLowLevelSystem(&lowLevelSystem) );
+    ERRCHECK( lowLevelSystem->setSoftwareFormat(0, FMOD_SPEAKERMODE_5POINT1, 0) );
+
+    ERRCHECK( system->initialize(1024, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, extraDriverData) );
+
+    FMOD::Studio::Bank* masterBank = NULL;
+    ERRCHECK( system->loadBankFile(Common_MediaPath("Master Bank.bank"), FMOD_STUDIO_LOAD_BANK_NORMAL, &masterBank) );
+
+    FMOD::Studio::Bank* stringsBank = NULL;
+    ERRCHECK( system->loadBankFile(Common_MediaPath("Master Bank.strings.bank"), FMOD_STUDIO_LOAD_BANK_NORMAL, &stringsBank) );
+
+    FMOD::Studio::Bank* vehiclesBank = NULL;
+    ERRCHECK( system->loadBankFile(Common_MediaPath("Vehicles.bank"), FMOD_STUDIO_LOAD_BANK_NORMAL, &vehiclesBank) );
     
-    result = system->getVersion(&version);
-    ERRCHECK(result);
+    FMOD::Studio::EventDescription* eventDescription = NULL;
+    ERRCHECK( system->getEvent("event:/Vehicles/Basic Engine", &eventDescription) );
 
-    if (version < FMOD_VERSION)
-    {
-        Common_Fatal("FMOD lib version %08x doesn't match header version %08x", version, FMOD_VERSION);
-    }
+    FMOD::Studio::EventInstance* eventInstance = NULL;
+    ERRCHECK( eventDescription->createInstance(&eventInstance) );
+
+    ERRCHECK( eventInstance->setParameterValue("RPM", 650.0f) );
+    ERRCHECK( eventInstance->start() );
+
+    // Position the listener at the origin
+    FMOD_3D_ATTRIBUTES attributes = { { 0 } };
+    attributes.forward.z = 1.0f;
+    attributes.up.y = 1.0f;
+    ERRCHECK( system->setListenerAttributes(0, &attributes) );
+
+    // Position the event 2 units in front of the listener
+    attributes.position.z = 2.0f;
+    ERRCHECK( eventInstance->set3DAttributes(&attributes) );
     
-    result = system->init(100, FMOD_INIT_NORMAL, extradriverdata);
-    ERRCHECK(result);
-    
-    /*
-        Set the distance units. (meters/feet etc).
-    */
-    result = system->set3DSettings(1.0, DISTANCEFACTOR, 1.0f);
-    ERRCHECK(result);
+    initializeScreenBuffer();
 
-    /*
-        Load some sounds
-    */
-    result = system->createSound(Common_MediaPath("drumloop.wav"), FMOD_3D, 0, &sound1);
-    ERRCHECK(result);
-    result = sound1->set3DMinMaxDistance(0.5f * DISTANCEFACTOR, 5000.0f * DISTANCEFACTOR);
-    ERRCHECK(result);
-    result = sound1->setMode(FMOD_LOOP_NORMAL);
-    ERRCHECK(result);
-
-    result = system->createSound(Common_MediaPath("jaguar.wav"), FMOD_3D, 0, &sound2);
-    ERRCHECK(result);
-    result = sound2->set3DMinMaxDistance(0.5f * DISTANCEFACTOR, 5000.0f * DISTANCEFACTOR);
-    ERRCHECK(result);
-    result = sound2->setMode(FMOD_LOOP_NORMAL);
-    ERRCHECK(result);
-
-    result = system->createSound(Common_MediaPath("swish.wav"), FMOD_2D, 0, &sound3);
-    ERRCHECK(result);
-
-    /*
-        Play sounds at certain positions
-    */
-    {
-        FMOD_VECTOR pos = { -10.0f * DISTANCEFACTOR, 0.0f, 0.0f };
-        FMOD_VECTOR vel = {  0.0f, 0.0f, 0.0f };
-
-        result = system->playSound(sound1, 0, true, &channel1);
-        ERRCHECK(result);
-        result = channel1->set3DAttributes(&pos, &vel);
-        ERRCHECK(result);
-        result = channel1->setPaused(false);
-        ERRCHECK(result);
-    }
-
-    {
-        FMOD_VECTOR pos = { 15.0f * DISTANCEFACTOR, 0.0f, 0.0f };
-        FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
-
-        result = system->playSound(sound2, 0, true, &channel2);
-        ERRCHECK(result);
-        result = channel2->set3DAttributes(&pos, &vel);
-        ERRCHECK(result);
-        result = channel2->setPaused(false);
-        ERRCHECK(result);
-    }
-
-    /*
-        Main loop
-    */
     do
     {
         Common_Update();
-
-        if (Common_BtnPress(BTN_ACTION1))
+        
+        if (Common_BtnDown(BTN_LEFT))
         {
-            bool paused;
-            channel1->getPaused(&paused);
-            channel1->setPaused(!paused);
+            attributes.position.x -= 1.0f;
+            ERRCHECK( eventInstance->set3DAttributes(&attributes) );
+        }
+        
+        if (Common_BtnDown(BTN_RIGHT))
+        {
+            attributes.position.x += 1.0f;
+            ERRCHECK( eventInstance->set3DAttributes(&attributes) );
+        }
+        
+        if (Common_BtnDown(BTN_UP))
+        {
+            attributes.position.z += 1.0f;
+            ERRCHECK( eventInstance->set3DAttributes(&attributes) );
+        }
+        
+        if (Common_BtnDown(BTN_DOWN))
+        {
+            attributes.position.z -= 1.0f;
+            ERRCHECK( eventInstance->set3DAttributes(&attributes) );
         }
 
-        if (Common_BtnPress(BTN_ACTION2))
-        {
-            bool paused;
-            channel2->getPaused(&paused);
-            channel2->setPaused(!paused);
-        }
-
-        if (Common_BtnPress(BTN_ACTION3))
-        {
-            result = system->playSound(sound3, 0, false, &channel3);
-            ERRCHECK(result);
-        }
-
-        if (Common_BtnPress(BTN_MORE))
-        {
-            listenerflag = !listenerflag;
-        }
-
-        if (!listenerflag)
-        {
-            if (Common_BtnDown(BTN_LEFT))
-            {
-                listenerpos.x -= 1.0f * DISTANCEFACTOR;
-                if (listenerpos.x < -24 * DISTANCEFACTOR)
-                {
-                    listenerpos.x = -24 * DISTANCEFACTOR;
-                }
-            }
-
-            if (Common_BtnDown(BTN_RIGHT))
-            {
-                listenerpos.x += 1.0f * DISTANCEFACTOR;
-                if (listenerpos.x > 23 * DISTANCEFACTOR)
-                {
-                    listenerpos.x = 23 * DISTANCEFACTOR;
-                }
-            }
-        }
-
-        // ==========================================================================================
-        // UPDATE THE LISTENER
-        // ==========================================================================================
-        {
-            static float t = 0;
-            static FMOD_VECTOR lastpos = { 0.0f, 0.0f, 0.0f };
-            FMOD_VECTOR forward        = { 0.0f, 0.0f, 1.0f };
-            FMOD_VECTOR up             = { 0.0f, 1.0f, 0.0f };
-            FMOD_VECTOR vel;
-
-            if (listenerflag)
-            {
-                listenerpos.x = (float)sin(t * 0.05f) * 24.0f * DISTANCEFACTOR; // left right pingpong
-            }
-
-            // ********* NOTE ******* READ NEXT COMMENT!!!!!
-            // vel = how far we moved last FRAME (m/f), then time compensate it to SECONDS (m/s).
-            vel.x = (listenerpos.x - lastpos.x) * (1000 / INTERFACE_UPDATETIME);
-            vel.y = (listenerpos.y - lastpos.y) * (1000 / INTERFACE_UPDATETIME);
-            vel.z = (listenerpos.z - lastpos.z) * (1000 / INTERFACE_UPDATETIME);
-
-            // store pos for next time
-            lastpos = listenerpos;
-
-            result = system->set3DListenerAttributes(0, &listenerpos, &vel, &forward, &up);
-            ERRCHECK(result);
-
-            t += (30 * (1.0f / (float)INTERFACE_UPDATETIME));    // t is just a time value .. it increments in 30m/s steps in this example
-        }
-
-        result = system->update();
-        ERRCHECK(result);
-
-        // Create small visual display.
-        char s[80] = "|.............<1>......................<2>.......|";
-        s[(int)(listenerpos.x / DISTANCEFACTOR) + 25] = 'L';
-
+        ERRCHECK( system->update() );
+        
+        updateScreenPosition(attributes.position);
         Common_Draw("==================================================");
-        Common_Draw("3D Example.");
-        Common_Draw("Copyright (c) Firelight Technologies 2004-2017.");
+        Common_Draw("Event 3D Example.");
+        Common_Draw("Copyright (c) Firelight Technologies 2012-2017.");
         Common_Draw("==================================================");
-        Common_Draw("");
-        Common_Draw("Press %s to toggle sound 1 (16bit Mono 3D)", Common_BtnStr(BTN_ACTION1));
-        Common_Draw("Press %s to toggle sound 2 (8bit Mono 3D)", Common_BtnStr(BTN_ACTION2));
-        Common_Draw("Press %s to play a sound (16bit Stereo 2D)", Common_BtnStr(BTN_ACTION3));
-        Common_Draw("Press %s or %s to move listener in still mode", Common_BtnStr(BTN_LEFT), Common_BtnStr(BTN_RIGHT));
-        Common_Draw("Press %s to toggle listener auto movement", Common_BtnStr(BTN_MORE));
+        Common_Draw(screenBuffer);
+        Common_Draw("Use the arrow keys (%s, %s, %s, %s) to control the event position", 
+            Common_BtnStr(BTN_LEFT), Common_BtnStr(BTN_RIGHT), Common_BtnStr(BTN_UP), Common_BtnStr(BTN_DOWN));
         Common_Draw("Press %s to quit", Common_BtnStr(BTN_QUIT));
-        Common_Draw("");
-        Common_Draw(s);
 
-        Common_Sleep(INTERFACE_UPDATETIME - 1);
+        Common_Sleep(50);
     } while (!Common_BtnPress(BTN_QUIT));
 
-    /*
-        Shut down
-    */
-    result = sound1->release();
-    ERRCHECK(result);
-    result = sound2->release();
-    ERRCHECK(result);
-    result = sound3->release();
-    ERRCHECK(result);
-
-    result = system->close();
-    ERRCHECK(result);
-    result = system->release();
-    ERRCHECK(result);
+    ERRCHECK( system->release() );
 
     Common_Close();
 
     return 0;
+}
+
+void initializeScreenBuffer()
+{
+    memset(screenBuffer, ' ', sizeof(screenBuffer));
+
+    int idx = SCREEN_WIDTH;
+    for (int i = 0; i < SCREEN_HEIGHT; ++i)
+    {
+        screenBuffer[idx] = '\n';
+        idx += SCREEN_WIDTH + 1;
+    }
+
+    screenBuffer[(SCREEN_WIDTH + 1) * SCREEN_HEIGHT] = '\0';
+}
+
+int getCharacterIndex(const FMOD_VECTOR& position)
+{
+    int row = static_cast<int>(-position.z + (SCREEN_HEIGHT / 2));
+    int col = static_cast<int>(position.x + (SCREEN_WIDTH / 2));
+    
+    if (0 < row && row < SCREEN_HEIGHT && 0 < col && col < SCREEN_WIDTH)
+    {
+        return (row * (SCREEN_WIDTH + 1)) + col;
+    }
+    
+    return -1;
+}
+
+void updateScreenPosition(const FMOD_VECTOR& eventPosition)
+{
+    if (currentScreenPosition != -1)
+    {
+        screenBuffer[currentScreenPosition] = ' ';
+        currentScreenPosition = -1;
+    }
+
+    FMOD_VECTOR origin = {0};
+    int idx = getCharacterIndex(origin);
+    screenBuffer[idx] = '^';
+    
+    idx = getCharacterIndex(eventPosition);    
+    if (idx != -1)
+    {
+        screenBuffer[idx] = 'o';
+        currentScreenPosition = idx;
+    }
 }

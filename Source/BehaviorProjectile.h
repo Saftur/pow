@@ -39,6 +39,10 @@ enum ProjectileState
 class BehaviorProjectile : public Behavior
 {
 public:
+	enum ProjectileTypes {pTypeInvisible, pTypeLaser, pTypeMissile};
+
+	static GameObject* Projectiles[3];
+
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
@@ -50,7 +54,7 @@ public:
 
 	// Fire the projectile towards the given target vector at the given speed.
 	// Bullet will be assumed to have "missed" after lifetime seconds.
-	void Fire(Vector2D target, int damage, int range, float speed);
+	void Fire(Vector2D target, int damage, int range);
 
 private:
 	// Clone an advanced behavior and return a pointer to the cloned object.

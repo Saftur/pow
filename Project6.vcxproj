@@ -19,6 +19,9 @@
     <ClInclude Include="fmodAPI\inc\fmod_dsp_effects.h" />
     <ClInclude Include="fmodAPI\inc\fmod_errors.h" />
     <ClInclude Include="fmodAPI\inc\fmod_output.h" />
+    <ClInclude Include="fmodAPI\inc\fmod_studio.h" />
+    <ClInclude Include="fmodAPI\inc\fmod_studio.hpp" />
+    <ClInclude Include="fmodAPI\inc\fmod_studio_common.h" />
     <ClInclude Include="rapidjson\allocators.h" />
     <ClInclude Include="rapidjson\cursorstreamwrapper.h" />
     <ClInclude Include="rapidjson\document.h" />
@@ -166,6 +169,7 @@
     <None Include="Data\Levels\PauseLevel.json" />
     <None Include="Data\Levels\ResearchMenu.json" />
     <None Include="Data\Levels\StartLevel.json" />
+    <None Include="fmodAPI\inc\fmod_studio.cs" />
     <None Include="fmodAPI\lib\fmod.dll" />
     <None Include="fmodAPI\lib\fmodL.dll" />
   </ItemGroup>
@@ -231,12 +235,13 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenGL32.lib;Xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fmodL_vc.lib;fmodstudioL_vc.lib;OpenGL32.lib;Xinput9_1_0.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy .\AE\lib\Alpha_Engine_D.dll "$(OutDir)" /Y
 xcopy .\AE\lib\glew32.dll "$(OutDir)" /Y
-xcopy .\fmodAPI\lib\fmodL.dll "$(OutDir)" /Y</Command>
+xcopy .\fmodAPI\lib\fmodL.dll "$(OutDir)" /Y
+xcopy .\fmodAPI\lib\fmodstudioL.dll "$(OutDir)" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

@@ -16,6 +16,7 @@
 //------------------------------------------------------------------------------
 
 #include "Behavior.h"
+#include "BehaviorProjectile.h"
 #include <vector>
 #include "Pathfinder.h"
 
@@ -60,7 +61,7 @@ public:
 		float cooldown;
 		int range;
 		int damage;
-		GameObject* projectileArchetype;
+		BehaviorProjectile::ProjectileTypes projectileArchetype;
 		// TODO: Pointers for sounds & maybe art?
 	};
 
@@ -153,10 +154,7 @@ private:
 	// Private Functions:
 	//------------------------------------------------------------------------------
 
-	// Checks for enemies within a certain radius of the unit.
-	// Returns:
-	// A standard vector containing all of the found units.
-	vector<GameObject*> FindEnemiesInRange() const;
+	bool FindTarget(GameObject** enemy) const;
 
 	// Checks if the unit can target an enemy.
 	// Params:
@@ -166,13 +164,6 @@ private:
 	bool CanTarget(GameObject* enemy) const;
 
 	void UpdatePath();
-
-	// Checks if the unit can attack an enemy.
-	// Params:
-	//	enemy - the enemy we're checking.
-	// Returns:
-	// True if the unit can be attacked, false if not.
-	bool CheckAttack();
 
 	// Calculates velocity based off of movement speed, target pos, and current pos.
 	void CalculateVelocity();
@@ -228,8 +219,9 @@ private:
 	vector<Node*> path;
 	Node* currMoveTarget;
 	states prevState;
-	float stuckTimer;
+	float stuckTimer, attackTimer;
 	Vector2D gridPos;
+	bool isMoving = false;
 
 	BehaviorArmy* army;
 

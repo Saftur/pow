@@ -27,6 +27,8 @@
 
 enum states { cProjectileIdle, cProjectileMoving, cProjectileHit, cProjectileMiss };
 
+GameObject* BehaviorProjectile::Projectiles[3];
+
 //------------------------------------------------------------------------------
 // Public Consts:
 //------------------------------------------------------------------------------
@@ -116,18 +118,24 @@ void BehaviorProjectile::CollisionHandler(GameObject& projectile, GameObject& ot
 
 void BehaviorProjectile::Load(rapidjson::Value& obj)
 {
-	
+	if (obj.HasMember("Type") && obj["Type"].IsInt())
+	{
+		Projectiles[obj["Type"].GetInt()] = GetParent();
+	}
+	if (obj.HasMember("Speed") && obj["Speed"].IsFloat())
+	{
+		projectile.speed = obj["Speed"].GetFloat();
+	}
 }
 
 // Fire the projectile towards the given target vector at the given speed.
 // Bullet will be assumed to have "missed" after lifetime seconds.
-void BehaviorProjectile::Fire(Vector2D aTarget, int damage, int range, float speed)
+void BehaviorProjectile::Fire(Vector2D aTarget, int damage, int range)
 {
 	target = aTarget;
 	projectile.damage = damage;
-	projectile.speed = speed;
 
-	lifetime = range * speed;
+	lifetime = range * projectile.speed;
 	timer = 0;
 
 	SetNextState(cProjectileMoving);

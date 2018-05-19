@@ -22,6 +22,7 @@
 #include "Transform.h"
 #include "Sprite.h"
 #include "Button.h"
+#include "SoundManager.h"
 
 //------------------------------------------------------------------------------
 // Private Structures:
@@ -60,6 +61,7 @@ void Engine::Init(const char *startLevel)
 	// Initialize the game object manager.
 	//GameObjectManager::GetInstance().Init();
 	Button::ListEffects();
+	SoundManager::GetInstance().Init();
 
 	// Initialize the game state manager.
 	LevelManager::StaticInit();

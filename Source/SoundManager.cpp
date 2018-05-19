@@ -12,25 +12,12 @@ Implementation file for sound controller
 #include "SoundManager.h"
 #include <string>
 #include "Trace.h"
+#include "AEEngine.h"
 
 // Initialize the SoundManager.
 void SoundManager::Init()
 {
-	FMOD_RESULT result;
-
-	result = FMOD::System_Create(&system);
-
-	if (result != FMOD_OK)
-	{
-		Trace::GetInstance().GetStream() << "FMOD system initialization error! (" << result << ") " << std::endl;
-	}
-
-	result = system->init(512, FMOD_INIT_NORMAL, 0);
-
-	if (result != FMOD_OK)
-	{
-		Trace::GetInstance().GetStream() << "FMOD initialization error! (" << result << ") " << std::endl;
-	}
+	CheckResult(FMOD::Studio::System::create(&studioSystem));
 
 	soundRegistry = SoundList();
 
@@ -42,7 +29,24 @@ void SoundManager::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
 
-	system->update();
+	GetSystem()->update();
+}
+
+void SoundManager::CheckResult(FMOD_RESULT result)
+{
+	if (result != FMOD_OK)
+	{
+		Trace::GetInstance().GetStream() << "FMOD system initialization error! (" << result << ") " << std::endl;
+	}
+
+	result = studioSystem->initialize(512, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0);
+
+	if (result != FMOD_OK)
+	{
+		Trace::GetInstance().GetStream() << "FMOD initialization error! (" << result << ") " << std::endl;
+	}
+
+	assert(!result);
 }
 
 // Shut down the SoundManager.
@@ -60,14 +64,159 @@ void SoundManager::Shutdown()
 		}
 	}
 	soundRegistry.soundCount = 0;
-	system->close();
-	system->release();
+	studioSystem->release();
 }
 
 // Returns the SoundManager's system (the FMOD object which is responsible for all of the sound handling).
 FMOD::System* SoundManager::GetSystem()
 {
+	static FMOD::System* system;
+	CheckResult(studioSystem->getLowLevelSystem(&system));
+
 	return system;
+}
+
+FMOD::Studio::System* SoundManager::GetStudio()
+{
+	return studioSystem;
+}
+
+// All events start with "event:/"
+static const std::string eventPrefix = "event:/";
+static const std::string audioFilePath = "Data\\Assets\\SFX\\";
+static const std::string bankFilePath = "";
+static const int maxEventsInBank = 5;
+static const int maxNameLength = 20;
+
+// Starts an audio event with the given name.
+// The event must be in one of the loaded banks.
+// Params:
+//	 name = The name of the event that will be started.
+FMOD::Studio::EventInstance* SoundManager::PlayEvent(const std::string& name)
+{
+	// Construct full event path
+	std::string eventPath = eventPrefix + name;
+
+	// Find an event with the given name from the loaded banks.
+	FMOD::Studio::EventDescription* description;
+	studioSystem->getEvent(eventPath.c_str(), &description);
+
+	// Create an instance of the event to be played.
+	FMOD::Studio::EventInstance* instance;
+	description->createInstance(&instance);
+
+	// Start the event (plays sounds as appropriate given the default parameters settings)
+	instance->start();
+
+	// Destroy the event instance once it's finished.
+	instance->release();
+
+	// Return the event instance so the caller can use it to modify event parameters.
+	return instance;
+}
+
+// Creates an FMOD sound bank
+// Params:
+//   filename = Name of the FMOD bank file.
+void SoundManager::AddBank(const std::string& filename)
+{
+	// Load the FMOD bank file.
+	std::string fullPath = audioFilePath + bankFilePath + filename;
+	FMOD::Studio::Bank* bank;
+	studioSystem->loadBankFile(fullPath.c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &bank);
+	bankList.push_back(bank);
+
+#if _DEBUG
+	std::cout << "Loaded FMOD Bank \"" << filename << "\" successfully." << std::endl;
+	AESysPrintf("Loaded FMOD bank \"%s\" successfully.\n", filename.c_str());
+
+	// Determine number of events in bank
+	FMOD::Studio::EventDescription* events[maxEventsInBank];
+	int eventCount;
+	bank->getEventList(events, maxEventsInBank, &eventCount);
+	char eventPath[maxNameLength];
+	int nameSize;
+
+	// No events - no need to print any more info
+	if (eventCount == 0)
+	{
+		std::cout << std::endl;
+		return;
+	}
+
+	std::cout << "Events in bank:" << std::endl;
+	AESysPrintf("Events in bank:\n");
+	for (int i = 0; i < eventCount; ++i)
+	{
+		// Display each event
+		events[i]->getPath(eventPath, maxNameLength, &nameSize);
+		std::string eventName(eventPath);
+		eventName = eventName.substr(eventName.find("/") + 1, eventName.size());
+		std::cout << i << ": " << "\"" << eventName << "\"" << std::endl;
+		AESysPrintf("%d: \"%s\"\n", i, eventName.c_str());
+
+		// Determine number of parameters in event
+		int paramCount;
+		events[i]->getParameterCount(&paramCount);
+		std::cout << "Parameters for event:" << std::endl;
+		AESysPrintf("Parameters for event:\n");
+
+		for (int j = 0; j < paramCount; ++j)
+		{
+			// Display each event parameter
+			FMOD_STUDIO_PARAMETER_DESCRIPTION param;
+			events[i]->getParameterByIndex(j, &param);
+
+			std::cout << param << std::endl;
+		}
+	}
+
+	std::cout << std::endl;
+#endif
+}
+
+// Helper function for printing information about parameters associated with events
+std::ostream& operator<<(std::ostream& os, const FMOD_STUDIO_PARAMETER_DESCRIPTION& parameter)
+{
+	std::string msg = "  %s (%f by default, range of %d to %d)\n";
+
+	os << "  " << parameter.name << " (" << parameter.defaultvalue << " by default, range of "
+		<< parameter.minimum << " to " << parameter.maximum << ")" << std::endl;
+
+	AESysPrintf("  %s (%f by default, range of %d to %d)\n", parameter.name, parameter.defaultvalue, parameter.minimum, parameter.maximum);
+
+	std::string typeInfo;
+
+	switch (parameter.type)
+	{
+	case FMOD_STUDIO_PARAMETER_GAME_CONTROLLED:
+		typeInfo = "Controlled via the API using Studio::EventInstance::setParameterValue.";
+		break;
+	case FMOD_STUDIO_PARAMETER_AUTOMATIC_DISTANCE:
+		typeInfo = "Distance between the event and the listener.";
+		break;
+	case FMOD_STUDIO_PARAMETER_AUTOMATIC_EVENT_CONE_ANGLE:
+		typeInfo = "Angle between the event's forward vector and the vector pointing from the event to the listener (0 to 180 degrees).";
+		break;
+	case FMOD_STUDIO_PARAMETER_AUTOMATIC_EVENT_ORIENTATION:
+		typeInfo = "Horizontal angle between the event's forward vector and listener's forward vector (-180 to 180 degrees).";
+		break;
+	case FMOD_STUDIO_PARAMETER_AUTOMATIC_DIRECTION:
+		typeInfo = "Horizontal angle between the listener's forward vector and the vector pointing from the listener to the event (-180 to 180 degrees).";
+		break;
+	case FMOD_STUDIO_PARAMETER_AUTOMATIC_ELEVATION:
+		typeInfo = "Angle between the listener's XZ plane and the vector pointing from the listener to the event (-90 to 90 degrees).";
+		break;
+	case FMOD_STUDIO_PARAMETER_AUTOMATIC_LISTENER_ORIENTATION:
+		typeInfo = "Horizontal angle between the listener's forward vector and the global positive Z axis (-180 to 180 degrees).";
+		break;
+	}
+
+	os << "  " << typeInfo << std::endl;
+	AESysPrintf(typeInfo.c_str());
+	AESysPrintf("\n");
+
+	return os;
 }
 
 // Adds a sound to the sound registry.
@@ -83,7 +232,7 @@ void SoundManager::Add(Sound sound, const char* path)
 
 	tmp += sound;
 
-	system->createSound(tmp.c_str(), FMOD_DEFAULT, NULL, (&soundRegistry.soundList[soundRegistry.soundCount++]));
+	GetSystem()->createSound(tmp.c_str(), FMOD_DEFAULT, NULL, (&soundRegistry.soundList[soundRegistry.soundCount++]));
 }
 
 // Plays a sound.
@@ -95,7 +244,7 @@ void SoundManager::PlaySFX(Sound name, int loopCount, float volume)
 {
 	FMOD::Channel* channel;
 
-	system->playSound(getSound(name), NULL, false, &channel);
+	GetSystem()->playSound(getSound(name), NULL, false, &channel);
 	channel->setVolume(volume);
 	channel->setLoopCount(loopCount);
 }
@@ -109,7 +258,7 @@ void SoundManager::PlaySFX(Sound name, int loopCount, float volume)
 void SoundManager::SetMusic(Sound name, float volume, bool doTransition)
 {
 	UNREFERENCED_PARAMETER(doTransition);
-	system->playSound(getSound(name), NULL, false, &musicChannel);
+	GetSystem()->playSound(getSound(name), NULL, false, &musicChannel);
 	musicChannel->setVolume(volume);
 	musicChannel->setLoopCount(-1);
 }

@@ -212,7 +212,7 @@
       "Scale": [ 128, 16 ]
     },
     "Sprite": {
-      "Alpha": 1,
+      "Alpha": 0.25,
       "ModulateColor": [ 1, 0, 0, 1 ]
     }
   },
@@ -223,8 +223,51 @@
       "Scale": [ 128, 16 ]
     },
     "Sprite": {
-      "Alpha": 1,
+      "Alpha": 0.25,
       "ModulateColor": [ 0, 0, 1, 1 ]
+    }
+  },
+  {
+    "Name": "ProjectileInvisible",
+    "Archetype": true,
+    "Transform": {
+      "Scale": [ 32, 32 ]
+    },
+    "Sprite": {
+      "Alpha": 0.0,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "BehaviorProjectile ": {
+      "Type": 0,
+      "Speed":  10
+    }
+  },
+  {
+    "Name": "ProjectileLaser",
+    "Archetype": true,
+    "Transform": {
+      "Scale": [ 32, 32 ]
+    },
+    "Sprite": {
+      "Alpha": 1.0
+    },
+    "BehaviorProjectile ": {
+      "Type": 1,
+      "Speed": 3.5
+    }
+  },
+  {
+    "Name": "ProjectileMissile",
+    "Archetype": true,
+    "Transform": {
+      "Scale": [ 32, 32 ]
+    },
+    "Sprite": {
+      "Alpha": 1.0
+    },
+    "BehaviorProjectile ": {
+      "Type": 2,
+      "Speed": 2
     }
   },
   {
