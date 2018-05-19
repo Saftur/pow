@@ -32,6 +32,8 @@ public:
 	Component* Clone() const;
 
 	void BuildingUpdate(float dt); //Update the building.
+	
+	void OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos); //Open the upgrade window for the turret.
 
 private:
 	void AttackTarget(); //Attack the target unit.

@@ -387,21 +387,16 @@ void BehaviorArmy::OnUpdate(float dt)
 		if (PopupMenu::Exists(side)) PopupMenu::Update(side, *controls.gamepad, dt, tilemap->GetPosOnMap(cursPos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
 		else {
 			// If the select button is pressed down this frame, set the select rectangle start positions.
-			if (controls.gamepad->GetButtonTriggered(SELECT) || AEInputCheckTriggered(VK_RETURN)) { ///TODDO: Remove AEInput check
+			if (controls.gamepad->GetButtonTriggered(SELECT) || AEInputCheckTriggered(VK_RETURN)) { ///TODO: Remove AEInput check
 				rectStartPos = cursorNode;
 
 				//Check if we are trying to select a building, and open the menu associated with that building if we are.
-				Space::GetLayer(0)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
-					if (obj->GetComponent<Transform>() && obj->GetComponent<Transform>()->GetTranslation() == GridManager::GetInstance().ConvertToWorldPoint(cursorNode)) {
-						if (obj->GetComponent<BuildingResearchCenter>()) {
-							obj->GetComponent<BuildingResearchCenter>()->OpenMenu(tilemap->GetPosOnMap(cursPos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
-						}
-						if (obj->GetComponent<BuildingCommandPost>()) {
-							obj->GetComponent<BuildingCommandPost>()->OpenMenu(tilemap->GetPosOnMap(cursPos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
-						}
+				for (GameObject* building : Building::allBuildings) {
+					Transform *transform = building->GetComponent<Transform>();
+					if (transform && GridManager::GetInstance().ConvertToGridPoint(transform->GetTranslation()) == cursorNode->gridPos()) {
+						((Building*)building->GetComponent("Building"))->OpenMenu(tilemap->GetPosOnMap(cursPos), cursPos);
 					}
-					return false;
-				});
+				}
 			}
 		}
 

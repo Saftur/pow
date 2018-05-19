@@ -15,10 +15,12 @@
 #include "BuildingResearchCenter.h"
 #include "BuildingCommandPost.h"
 #include "BuildingTeleporter.h"
+#include <algorithm>
 
 map<BehaviorArmy::Side, bool[Building::BuildingType::BuildingCount]> Building::buildings;
 
 map<Building::BuildingType, float> Building::buildingCost;
+vector<GameObject*> Building::allBuildings;
 
 Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, float maxHealth, Vector2D pos, float jaxiumDropAmount, 
 	float neoridiumDropAmount) : Component("Building"), buildingType(type), specialtyType(specialtyType), buildTime(buildTime), mapPos(pos), side(side), maxHealth(maxHealth),
@@ -43,6 +45,7 @@ Building::~Building()
 {
 	if (texture) AEGfxTextureUnload(texture);
 	if (mesh) AEGfxMeshFree(mesh);
+	allBuildings.erase(std::remove(allBuildings.begin(), allBuildings.end(), GetParent()), allBuildings.end());
 }
 
 void Building::InitializeBuildings(BehaviorArmy::Side side)
@@ -66,7 +69,7 @@ void Building::InitializeBuildings(BehaviorArmy::Side side)
 	buildingCost[Spaceport] = 350.0f;
 	buildingCost[VehicleDepot] = 300.0f;
 	buildingCost[Turret] = 200.0f;
-	buildingCost[Teleporter] = 250.0f;
+	buildingCost[Teleporter] = 0.0f;
 	buildingCost[CommandPost] = -0.0f;
 
 	//Initialize the number of teleporters each army has to 0.
@@ -83,11 +86,13 @@ void Building::Update(float dt)
 		if (originalScale == Vector2D(0, 0)) {
 			originalScale = GetParent()->GetComponent<Transform>()->GetScale();
 			GetParent()->GetComponent<Transform>()->SetScale({ 0, 0 });
+			allBuildings.push_back(GetParent());
 		}
 		//Increase the size until it reaches the size that it should be. (Should occur when buildTimeRemaining = 0).
 		else {
 			Transform* transform = GetParent()->GetComponent<Transform>();
 			transform->SetScale(transform->GetScale() + Vector2D((originalScale.x / buildTime) * dt, (originalScale.y / buildTime) * dt));
+			if (transform->GetScale().x > originalScale.x || transform->GetScale().y > originalScale.y) transform->SetScale(originalScale);
 		}
 	}
 	else {

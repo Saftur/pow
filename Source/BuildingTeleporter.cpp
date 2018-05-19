@@ -57,10 +57,12 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 			if (lastTeleportedObject != unit) {
 				BehaviorUnit* unitBehavior = unit->GetComponent<BehaviorUnit>();
 				//If the unit is currently running pathfinding to move somewhere, do not teleport it.
-				if (unitBehavior->GetPath().size()) return;
+				if (unitBehavior->GetPath().size() > 0) return;
 
 				teleportationsAvailable--; //Lower the number of teleportations available.
-				exit->GetComponent<BuildingTeleporter>()->lastTeleportedObject = unit;
+				BuildingTeleporter* exitTeleporter = exit->GetComponent<BuildingTeleporter>();
+				exitTeleporter->teleportationsAvailable--;
+				exitTeleporter->lastTeleportedObject = unit;
 
 				//Move the unit to the other teleporter.
 				unit->GetComponent<Transform>()->SetTranslation(exit->GetComponent<Transform>()->GetTranslation());

@@ -63,6 +63,7 @@ public:
 	void Heal(float amount); //Increase the health of the building by X amount.
 
 	static map<BuildingType, float> buildingCost;
+	static vector<GameObject*> allBuildings;
 
 	BehaviorArmy *army; //Which army owns this building.
 	BehaviorArmy::Side side; //Which side is this army on.

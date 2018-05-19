@@ -149,6 +149,9 @@ PopupMenu::PopupMenu(BehaviorArmy::Side side, MenuType type) : side(side), type(
 	case CommandPost:
 		Space::LoadLayer(Space::GetLayerCount(), "CommandPostMenu", true);
 		break;
+	case Turret:
+		Space::LoadLayer(Space::GetLayerCount(), "TurretUpgradeMenu", true);
+		break;
 	}
 	Space::GetLayer(Space::GetLayerCount()-1)->GetLevelManager()->Update(0);
 	GameObject *camObj = Space::GetLayer(Space::GetLayerCount()-1)->GetGameObjectManager()->GetObjectByName("Camera");
@@ -178,15 +181,8 @@ void PopupMenu::ConfigureMenu(BehaviorArmy::Side side, PopupMenu* menu) {
 
 		(Space::GetLayer(menu->menuLevelLayer)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
 			//Update the level to represent the correct team. (sLeft is Red team)
-			if (side == BehaviorArmy::Side::sLeft) {
-				((Sprite*)cursor->GetComponent("Sprite"))->SetModulateColor({ 1, 0, 0, 1 });
-
-				Transform* t = (Transform*)obj->GetComponent("Transform");
-				t->SetTranslation(t->GetTranslation().operator+({ 0, 345 }));
-			}
-			else if(side == BehaviorArmy::Side::sRight) {
-				((Sprite*)cursor->GetComponent("Sprite"))->SetModulateColor({ 0, 0, 1, 1 });
-			}
+			if (side == BehaviorArmy::Side::sLeft) ((Sprite*)cursor->GetComponent("Sprite"))->SetModulateColor({ 1, 0, 0, 1 });
+			else if (side == BehaviorArmy::Side::sRight) ((Sprite*)cursor->GetComponent("Sprite"))->SetModulateColor({ 0, 0, 1, 1 });
 
 			Button* button = (Button*)obj->GetComponent("Button");
 			if (button) {

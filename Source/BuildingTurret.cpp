@@ -7,6 +7,7 @@
 #include "Space.h"
 #include "LevelManager.h"
 #include "GridManager.h"
+#include "PopupMenu.h"
 #include <vector>
 
 using std::vector;
@@ -24,6 +25,11 @@ void BuildingTurret::BuildingUpdate(float dt){
 	attackTimer -= dt;
 	if (!target) FindTarget();
 	else if (TargetWithinRange()) AttackTarget();
+}
+
+void BuildingTurret::OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos)
+{
+	PopupMenu::CreateMenu(side, PopupMenu::MenuType::Turret, cursorMapPos, cursorScreenPos);
 }
 
 void BuildingTurret::AttackTarget()

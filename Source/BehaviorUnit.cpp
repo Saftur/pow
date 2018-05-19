@@ -480,6 +480,8 @@ Vector2D BehaviorUnit::GetGridPos() const
 
 void BehaviorUnit::SetGridPos(Vector2D newPos)
 {
+	GridManager::GetInstance().SetNode(gridPos, true);
+	GridManager::GetInstance().SetNode(newPos, false);
 	gridPos = newPos;
 }
 
