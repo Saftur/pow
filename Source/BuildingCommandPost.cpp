@@ -1,3 +1,14 @@
+//------------------------------------------------------------------------------
+//
+// File Name:	BuildingCommandPost.cpp
+// Author(s):	Brand Knutson
+// Project:		MyGame
+// Course:		CS230S17
+//
+// Copyright © 2017 DigiPen (USA) Corporation.
+//
+//------------------------------------------------------------------------------
+
 #include "stdafx.h"
 #include "BuildingCommandPost.h"
 #include "GameObjectManager.h"

@@ -1,0 +1,56 @@
+[
+  {
+    "Type": "Mesh",
+    "Name": "ButtonMesh",
+    "HalfSize": [ 0.5, 0.5 ],
+    "UV": [ 1, 1 ]
+  },
+  {
+    "Type": "SpriteSource",
+    "Name": "Font",
+    "Texture": "Data\\Assets\\Comic Sans.png",
+    "Cols": 16,
+    "Rows": 6
+  },
+  {
+    "Type": "Mesh",
+    "Name": "TextMesh",
+    "HalfSize": [ 0.5, 0.5 ],
+    "UV": [ 0.0625, 0.1666666666667 ]
+  },
+  {
+    "Name": "Camera",
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 128, 128 ],
+      "Rotation": 0
+    },
+    "Camera": {
+      "ScreenPos": [ 0, 0 ],
+      "ScreenSize": [ 1, 1 ]
+    }
+  },
+  {
+    "Name": "WinText",
+    "Transform": {
+      "Translation": [ -160, 30 ],
+      "Scale": [ 200, 50 ],
+      "Rotation": 0
+    },
+    "Button": {
+      "ClickEffect": "CreateResearchCenter"
+    },
+    "Sprite": {
+      "Mesh": "ButtonMesh",
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
+      "ModulateColor": [ 0, 0, 1, 1 ],
+      "Text": "BLUE TEAM WINS!!!",
+      "Scale": [ 80, 120 ]
+    }
+  }
+]

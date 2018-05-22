@@ -1,3 +1,14 @@
+//------------------------------------------------------------------------------
+//
+// File Name:	BuildingTurret.cpp
+// Author(s):	Brand Knutson
+// Project:		MyGame
+// Course:		CS230S17
+//
+// Copyright © 2017 DigiPen (USA) Corporation.
+//
+//------------------------------------------------------------------------------
+
 #include "stdafx.h"
 #include "AEEngine.h"
 #include "SpriteSource.h"

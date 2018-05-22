@@ -1,3 +1,14 @@
+//------------------------------------------------------------------------------
+//
+// File Name:	BuildingNeoridiumMine.cpp
+// Author(s):	Brand Knutson
+// Project:		MyGame
+// Course:		CS230S17
+//
+// Copyright © 2017 DigiPen (USA) Corporation.
+//
+//------------------------------------------------------------------------------
+
 #include "stdafx.h"
 #include "BuildingNeoridiumMine.h"
 #include "Space.h"
