@@ -107,15 +107,22 @@ void BehaviorUnit::Init(Traits& theTraits, BehaviorArmy* theArmy)
 
 void BehaviorUnit::SetPath(std::vector<Node*> newPath)
 {
-	path = newPath;
-	currMoveTarget = GridManager::GetInstance().GetNode(gridPos);
-	
-	if (path.size() > 0)
-		targetPos = newPath[0]->gridPos();
-	else
-		targetPos = gridPos;
+	if (path.size() > 0 || currMoveTarget) {
+		changePath = true;
+		changedPath = newPath;
+	}
+	else {
+		path = newPath;
+		if (currMoveTarget) currMoveTarget->open = true;
+		currMoveTarget = GridManager::GetInstance().GetNode(gridPos);
 
-	SetNextState(cUnitMove);
+		if (path.size() > 0)
+			targetPos = newPath[0]->gridPos();
+		else
+			targetPos = gridPos;
+
+		SetNextState(cUnitMove);
+	}
 }
 
 void BehaviorUnit::BuildArrays()
@@ -203,6 +210,11 @@ void BehaviorUnit::OnUpdate(float dt)
 		if (lastMoveTarget.Distance(GetParent()->GetComponent<Transform>()->GetTranslation()) >= GridManager::GetInstance().tileWidth / 2)
 			GridManager::GetInstance().GetNode(GridManager::GetInstance().ConvertToGridPoint(lastMoveTarget))->open = true;
 
+		if (changePath) {
+			path = changedPath;
+			changePath = false;
+		}
+
 		// Are we there yet?
 		if (Vector2D::AlmostEquals(GetParent()->GetComponent<Transform>()->GetTranslation(), GridManager::GetInstance().ConvertToWorldPoint(currMoveTarget->gridPos()), 2.5f))
 		{
@@ -210,7 +222,7 @@ void BehaviorUnit::OnUpdate(float dt)
 				currMoveTarget->open = true;
 
 			// Do we have more movements to make?
-			if (path.empty() || !currMoveTarget->open)
+			if (path.empty())
 			{
 				//if (!currMoveTarget->open)
 					//UpdatePath();

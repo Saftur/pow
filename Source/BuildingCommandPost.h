@@ -33,6 +33,8 @@ class BuildingCommandPost : public Building
 public:
 
 	BuildingCommandPost(BehaviorArmy::Side side, Vector2D pos);
+	~BuildingCommandPost(); //Trigger the win/lose condition when the commandpost dies.
+
 	Component* Clone() const;
 
 	void BuildingUpdate(float dt); //Update the building.
@@ -40,7 +42,7 @@ public:
 	void OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos); //Open a menu for the research center.
 
 private:
-
+	static bool gameOver;
 };
 
 //------------------------------------------------------------------------------

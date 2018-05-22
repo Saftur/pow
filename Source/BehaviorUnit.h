@@ -231,6 +231,9 @@ private:
 	float stuckTimer;
 	Vector2D gridPos;
 
+	bool changePath = false;
+	vector<Node*> changedPath;
+
 	BehaviorArmy* army;
 
 	static Weapon Weapons[cNumWeapons];
