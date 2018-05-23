@@ -147,6 +147,9 @@ public:
 	void SetGridPos(Vector2D newPos);
 	Node* GetNode() const;
 
+	int GetHP() const;
+	void ModifyHP(int amt);
+
 	static vector<GameObject*> allUnits;
 
 private:
@@ -154,7 +157,7 @@ private:
 	// Private Functions:
 	//------------------------------------------------------------------------------
 
-	bool FindTarget(GameObject** enemy) const;
+	bool FindTarget(GameObject** enemy, Vector2D pos = { -1, -1 }) const;
 
 	// Checks if the unit can target an enemy.
 	// Params:

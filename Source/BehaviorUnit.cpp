@@ -25,6 +25,7 @@
 #include "GridManager.h"
 #include "Physics.h"
 #include "SoundManager.h"
+#include "ColliderCircle.h"
 
 //------------------------------------------------------------------------------
 // Enums:
@@ -42,12 +43,12 @@ vector<GameObject*> BehaviorUnit::allUnits;
 
 BehaviorUnit::BaseStats BehaviorUnit::defaultStats = 
 {
-100,		// Max HP.
+1000,		// Max HP.
 0,			// Defense
 5,			// Detection range.
 8,			// Disengagement range.
 3,			// Inventory size.
-1.0f		// Movement speed.
+10.0f		// Movement speed.
 };
 
 BehaviorUnit::Weapon BehaviorUnit::Weapons[cNumWeapons];
@@ -134,8 +135,8 @@ void BehaviorUnit::BuildArrays()
 
 	// Build weapon array.
 	Weapons[cWeaponDrillsaw] = { "Drillsaw", cGroupMelee, 0.05f, 1, 10, BehaviorProjectile::ProjectileTypes::pTypeInvisible };
-	Weapons[cWeaponHandcannon] = { "Handcannon", cGroupRanged, 0.2f, 3, 20, BehaviorProjectile::ProjectileTypes::pTypeLaser };
-	Weapons[cWeaponBeamRifle] = { "Beam Rifle", cGroupLongRanged, 0.5f, 5, 30, BehaviorProjectile::ProjectileTypes::pTypeMissile };
+	Weapons[cWeaponHandcannon] = { "Handcannon", cGroupRanged, 0.2f, 2, 20, BehaviorProjectile::ProjectileTypes::pTypeLaser };
+	Weapons[cWeaponBeamRifle] = { "Beam Rifle", cGroupLongRanged, 0.5f, 3, 30, BehaviorProjectile::ProjectileTypes::pTypeMissile };
 
 	// Build equipment array.
 	Equips[cEquipNone] = { "null", 0, UseNone, 0.0f, 0.0f };
@@ -167,8 +168,10 @@ void BehaviorUnit::OnEnter()
 	switch (GetCurrentState())
 	{
 	case cUnitError:
+		GetParent()->GetComponent<ColliderCircle>()->SetCollisionHandler(&CollisionHandler);
 		GridManager::GetInstance().GetNode(gridPos)->open = false;
 		allUnits.push_back(GetParent());
+		SetNextState(cUnitIdle);
 		break;
 	case cUnitIdle:
 		break;
@@ -198,15 +201,11 @@ void BehaviorUnit::OnEnter()
 //	 dt = Change in time (in seconds) since the last game loop.
 void BehaviorUnit::OnUpdate(float dt)
 {
-	// Were we attacked this frame?
-	if (stats.currHP < prevHP)
-	{
-		SetNextState(cUnitAttack);
-	}
-
 	switch (GetCurrentState())
 	{
 	case cUnitIdle:
+		if (FindTarget(&target))
+			SetNextState(cUnitAttack);
 		break;
 	case cUnitMove:
 		// Set target to null. This ensures that a direct move command from the player always overrides attack.
@@ -218,19 +217,25 @@ void BehaviorUnit::OnUpdate(float dt)
 		// Can we attack our target?
 		if (FindTarget(&target))
 		{
+			currMoveTarget = nullptr;
+			GetParent()->GetComponent<Physics>()->SetVelocity(Vector2D(0, 0));
 			isMoving = false;
 
 			// Can we shoot?
 			if (attackTimer <= 0.0f)
 			{
-				GameObject* projectile = GetParent()->GetGameObjectManager()->Add(*(BehaviorProjectile::Projectiles[Weapons[traits.weapon].projectileArchetype]));
+				GameObject* projectile = new GameObject(*BehaviorProjectile::Projectiles[Weapons[traits.weapon].projectileArchetype]);
+				projectile->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(gridPos));
+				projectile->GetComponent<BehaviorProjectile>()->Fire(army, GridManager::GetInstance().ConvertToWorldPoint(target->GetComponent<BehaviorUnit>()->GetGridPos()) - GridManager::GetInstance().ConvertToWorldPoint(gridPos), Weapons[traits.weapon].damage * traits.strength, stats.attackRange);
+				GetParent()->GetGameObjectManager()->Add(*projectile);
 				// TODO: Make sure this doesn't do shitloads of damage.
-				projectile->GetComponent<BehaviorProjectile>()->Fire(target->GetComponent<BehaviorUnit>()->GetGridPos(), Weapons[traits.weapon].damage * traits.strength, stats.attackRange);
 				attackTimer = Weapons[traits.weapon].cooldown;
 			}
 		}
 		else
 		{
+			if (isMoving)
+				break;
 			if (target)
 			{
 				// Give chase.
@@ -288,11 +293,12 @@ void BehaviorUnit::OnUpdate(float dt)
 
 			if (currMoveTarget && !currMoveTarget->open)
 			{
-				currMoveTarget = nullptr;
 				GetParent()->GetComponent<Physics>()->SetVelocity(Vector2D(0, 0));
 				isMoving = false;
 
 				GameObject* occupant = GridManager::GetInstance().GetOccupant(currMoveTarget);
+
+				currMoveTarget = nullptr;
 
 				if (occupant && occupant->GetComponent<BehaviorUnit>()->GetArmy() != army)
 					SetNextState(cUnitAttack);
@@ -392,7 +398,7 @@ void BehaviorUnit::UseEMP()
 }
 
 // Picks a unit to be our target. Returns true if enemy is found, false if not.
-bool BehaviorUnit::FindTarget(GameObject** enemy) const
+bool BehaviorUnit::FindTarget(GameObject** enemy, Vector2D pos) const
 {
 	if (*enemy)
 	{
@@ -411,7 +417,10 @@ bool BehaviorUnit::FindTarget(GameObject** enemy) const
 	}
 	else
 	{
-		Vector2D upperLeft = Vector2D(gridPos - Vector2D({ (float)stats.attackRange, (float)stats.attackRange }));
+		if (pos == Vector2D(-1, -1))
+			pos = gridPos;
+
+		Vector2D upperLeft = Vector2D(pos - Vector2D({ (float)stats.attackRange, (float)stats.attackRange }));
 
 		for (int x = (int)upperLeft.x; x < (int)upperLeft.x + 2 * stats.attackRange; x++)
 		{
@@ -419,18 +428,12 @@ bool BehaviorUnit::FindTarget(GameObject** enemy) const
 			{
 				GameObject* unit = GridManager::GetInstance().GetOccupant({ (float)x, (float)y });
 
-				if (unit)
+				if (unit && GridManager::GetInstance().IsWithinRange(pos, { (float)x, (float)y }, stats.attackRange) && unit->GetComponent<BehaviorUnit>()->GetArmy() != army)
 				{
-					if (GridManager::GetInstance().IsWithinRange(gridPos, { (float)x, (float)y }, stats.attackRange))
+					if (CanTarget(unit))
 					{
-						if (unit->GetComponent<BehaviorUnit>()->GetArmy() != army)
-						{
-							if (CanTarget(unit))
-							{
-								*enemy = unit;
-								return true;
-							}
-						}
+						*enemy = unit;
+						return true;
 					}
 				}
 			}
@@ -438,6 +441,21 @@ bool BehaviorUnit::FindTarget(GameObject** enemy) const
 	}
 
 	return false;
+}
+
+int BehaviorUnit::GetHP() const
+{
+	return stats.currHP;
+}
+
+void BehaviorUnit::ModifyHP(int amt)
+{
+	stats.currHP += amt;
+
+	if (stats.currHP > stats.maxHP)
+		stats.currHP = stats.maxHP;
+	else if (stats.currHP <= 0)
+		GetParent()->Destroy();
 }
 
 // Calculates velocity based off of movement speed, target pos, and current pos.

@@ -18,4 +18,5 @@ void CompList::List() {
 	LevelManager::AddComponentType("BehaviorUnit", new BehaviorUnit());
 	LevelManager::AddComponentType("Map", new Map());
 	LevelManager::AddComponentType("BehaviorTestBox", new BehaviorTestBox());
+	LevelManager::AddComponentType("BehaviorProjectile", new BehaviorProjectile());
 }

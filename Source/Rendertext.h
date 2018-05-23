@@ -34,6 +34,7 @@ public:
 	void SetText(const char* string); //Set the text.
 	void SetColor(Color color);
 	void SetScale(Vector2D textScale);
+	void SetOffset(Vector2D offset);
 
 	void Draw(Camera *cam) const; //Update the text on screen.
 
@@ -47,4 +48,6 @@ private:
 	AEGfxTexture* texture;			//Texture component for drawing the text.
 	SpriteSource* spritesource;		//Spritesource component for drawing the text.
 	Sprite *sprite;					//Sprite component for drawing the text.
+
+	Vector2D offset;
 };

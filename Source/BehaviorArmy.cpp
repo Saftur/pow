@@ -21,7 +21,6 @@
 #include "Space.h"
 #include "GameObjectManager.h"
 #include "Cursor.h"
-#include "BehaviorUnit.h"
 #include "Transform.h"
 #include "Trace.h"
 #include "Engine.h"
@@ -343,6 +342,15 @@ void BehaviorArmy::OnUpdate(float dt)
 			{
 				unit.unit->SetPath(unit.path);
 				unit.unit->SetNextState(BehaviorUnit::cUnitMove);
+			}
+			selectedUnits.clear();
+		}
+		if (controls.gamepad->GetButtonTriggered(TARGET))
+		{
+			for (SelectedUnit &unit : selectedUnits)
+			{
+				unit.unit->SetPath(unit.path);
+				unit.unit->SetNextState(BehaviorUnit::cUnitAttack);
 			}
 			selectedUnits.clear();
 		}

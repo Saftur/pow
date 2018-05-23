@@ -67,7 +67,7 @@ public:
 	static GameObject* CreateButton(const char* objName, const char* effectName, AEGfxVertexList* mesh,
 		Vector2D pos = { 0.0f, 0.0f }, Vector2D scale = { 100.0f, 50.0f },
 		const char* text = nullptr, Vector2D textScale = { 15, 15 }, Color color = { 0, 0, 0, 0 },
-		const char* font = "Assets\\Comic Sans.png");
+		const char* font = "Assets\\NewFont.png");
 	/*{
 		GameObject* button = new GameObject(objName);
 		Transform* transform = new Transform(pos.X(), pos.Y());

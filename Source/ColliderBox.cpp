@@ -21,6 +21,11 @@ void ColliderBox::Draw(Camera *cam) const
 {
 }
 
+void ColliderBox::Load(rapidjson::Value& obj)
+{
+	
+}
+
 bool ColliderBox::IsCollidingWith(const Collider & other) const
 {
 	UNREFERENCED_PARAMETER(other);

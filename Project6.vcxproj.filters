@@ -67,6 +67,9 @@
     <Filter Include="Engine\GameObjects\Buildings">
       <UniqueIdentifier>{a07c1ffc-9750-4c03-baba-0ba84c23acab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Control">
+      <UniqueIdentifier>{56c8ad49-83c8-4399-8ce2-7aa341c96c11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -457,9 +460,6 @@
     <ClInclude Include="Source\ComponentStub.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Controls.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Source\BehaviorArmy.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
@@ -519,6 +519,9 @@
     </ClInclude>
     <ClInclude Include="fmodAPI\inc\fmod_studio_common.h">
       <Filter>fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controls.h">
+      <Filter>Game\Control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

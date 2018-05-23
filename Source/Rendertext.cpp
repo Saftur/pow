@@ -22,7 +22,7 @@
 #include "rapidjson.h"
 #include "LevelManager.h"
 
-Text::Text(bool manualCreation, const char* text, const char* font, Color color, Vector2D textScale) : Component("Text") {
+Text::Text(bool manualCreation, const char* text, const char* font, Color color, Vector2D textScale) : Component("Text"), offset({ 0, 0 }) {
 	if (manualCreation) {
 		strcpy(string, text);
 		scale = textScale;
@@ -52,6 +52,11 @@ void Text::SetColor(Color color) {
 	sprite->SetModulateColor(color);
 }
 
+void Text::SetOffset(Vector2D theOffset)
+{
+	offset = theOffset;
+}
+
 void Text::SetScale(Vector2D textScale)
 {
 	scale = textScale;
@@ -62,13 +67,13 @@ void Text::Draw(Camera *cam) const {
 	Transform* transform = (Transform*)GetParent()->GetComponent("Transform");
 	Vector2D startPos = transform->GetTranslation();
 	Vector2D startScale = transform->GetScale();
-	transform->SetTranslation(transform->GetTranslation() + Vector2D(-startScale.x/2 + scale.x/2, 0));
+	transform->SetTranslation(transform->GetTranslation() + offset - Vector2D((scale.x * 0.6f * len) / 2, 0.0f));
 	transform->SetScale(scale);
 
 	
 	//Print each character in the string.
 	for (int i = 0; i < len; i++){
-		if (string[i] >= 32 && string[i] <= 125) sprite->SetFrame(string[i] - 32);
+		if (string[i] >= 32 && string[i] <= 125) sprite->SetFrame(string[i] - 31);
 		else sprite->SetFrame(0);
 		
 		sprite->Draw(cam, *transform);
@@ -121,6 +126,10 @@ void Text::Load(rapidjson::Value & obj)
 	strcpy(string, obj["Text"].GetString());
 	scale = Vector2D((float)obj["Scale"][0].GetInt(), (float)obj["Scale"][1].GetInt());
 
+	if (obj.HasMember("Offset"))
+	{
+		offset = Vector2D(obj["Offset"].GetArray()[0].GetFloat(), obj["Offset"].GetArray()[1].GetFloat());
+	}
 	/*alpha = obj["alpha"].getfloat();
 	frameindex = obj["frameindex"].getint();
 
