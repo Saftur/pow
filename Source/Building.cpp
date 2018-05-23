@@ -37,6 +37,10 @@ Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType spe
 	float neoridiumDropAmount) : Component("Building"), buildingType(type), specialtyType(specialtyType), buildTime(buildTime), mapPos(pos), side(side), maxHealth(maxHealth),
 	health(maxHealth), jaxiumDropAmount(jaxiumDropAmount), neoridiumDropAmount(neoridiumDropAmount)
 {
+	buildTimeRemaining = buildTime; //Set the delay until the building is finnished being built.
+	originalScale = { 0, 0 }; //Default to 0 so we can check if we set it yet or not on update when we actually have the transform component attatched.
+
+	/*
 	//Find the army that this building should belong to.
 	vector<GameObject*> objs = Space::GetLayer(0)->GetGameObjectManager()->GetObjectsByName("Army");
 	for (unsigned i = 0; i < objs.size(); i++) {
@@ -46,16 +50,12 @@ Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType spe
 			if (specialtyType != sCommandPost && !army->LegalSpawn(pos)) throw(0); //Throw an error if the slot is occupied.
 			if (type == Teleporter) if (!BuildingNeoridiumMine::TakeNeoridium(side, buildingCost[type])) throw(0);
 			else if (!army->TakeFromFunds(buildingCost[type])) throw(0); //Throw an error if we can't pay for the building. (This should never happen).
-			buildTimeRemaining = buildTime; //Set the delay until the building is finnished being built.
-			originalScale = { 0, 0 }; //Default to 0 so we can check if we set it yet or not on update when we actually have the transform component attatched.
 		}
-	}
+	}*/
 }
 
 Building::~Building()
 {
-	if (texture) AEGfxTextureUnload(texture);
-	if (mesh) AEGfxMeshFree(mesh);
 	allBuildings.erase(std::remove(allBuildings.begin(), allBuildings.end(), GetParent()), allBuildings.end());
 }
 
@@ -146,6 +146,17 @@ float Building::Variance(float value, float variance) {
 
 	if (rand() % 2) return value + value * change;
 	return value - value * change;
+}
+
+void Building::SetSide(BehaviorArmy::Side side)
+{
+	this->side = side;
+}
+
+void Building::SetPos(Vector2D pos)
+{
+	mapPos = pos;
+	GetParent()->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(pos));
 }
 
 void Building::Lock(BehaviorArmy::Side side, BuildingType type)

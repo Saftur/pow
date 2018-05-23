@@ -36,7 +36,7 @@ class Building : public Component
 {
 public:
 	enum BuildingType { JaxiumMine, NeoridiumMine, ResearchCenter, Spaceport, VehicleDepot, Turret, Teleporter, CommandPost, BuildingCount, Null = -1 };
-	enum SpecialtyType { Basic, Advanced, Special, sCommandPost };
+	enum SpecialtyType { Basic, Advanced, Special };
 	enum CostType { Jaxium, Neoridium };
 
 	Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, float maxHealth, Vector2D pos, float jaxiumDropAmount, float neoridiumDropAmount);
@@ -52,6 +52,9 @@ public:
 	virtual void OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos); //Open a menu for the building.
 
 	float Variance(float value, float variance); //Return a float = the value +- a percentage of it based on the variance.
+
+	void SetSide(BehaviorArmy::Side side); //Set the side of this building.
+	void SetPos(Vector2D pos); //Set the mapPos of the building.
 
 	static void Lock(BehaviorArmy::Side side, BuildingType type); //Lock the given building for the given army.
 	static void Unlock(BehaviorArmy::Side side, BuildingType type); //Unlock the given building for the given army.
@@ -71,9 +74,6 @@ public:
 	BuildingType buildingType; //Building type.
 	SpecialtyType specialtyType; //What kind of building is this.
 	float buildTime; //How long it takes to create this building in seconds.
-
-	AEGfxVertexList *mesh = nullptr; //Mesh for this building.
-	AEGfxTexture *texture = nullptr; //Texture for this building.
 
 	Vector2D mapPos; //The position of the building on the map.
 

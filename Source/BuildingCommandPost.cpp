@@ -20,7 +20,7 @@
 
 bool BuildingCommandPost::gameOver = false;
 
-BuildingCommandPost::BuildingCommandPost(BehaviorArmy::Side side, Vector2D pos) : Building(side, CommandPost, sCommandPost, 0.1f, 1000.0f, pos, 9999999, 9999999)
+BuildingCommandPost::BuildingCommandPost(BehaviorArmy::Side side, Vector2D pos) : Building(side, CommandPost, Basic, 0.1f, 1000.0f, pos, 9999999, 9999999)
 {
 
 }
@@ -33,6 +33,12 @@ BuildingCommandPost::~BuildingCommandPost()
 		if (side == BehaviorArmy::Side::sLeft) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideLeft");
 		if (side == BehaviorArmy::Side::sRight) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideRight");
 	}
+}
+
+void BuildingCommandPost::Load(rapidjson::Value & obj)
+{
+	SetSide((BehaviorArmy::Side)obj["Side"].GetInt());
+	SetPos({ obj["MapPos"][0].GetFloat(), obj["MapPos"][1].GetFloat() });
 }
 
 Component * BuildingCommandPost::Clone() const

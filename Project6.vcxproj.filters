@@ -64,7 +64,7 @@
     <Filter Include="Engine\GameObjects\Pathfinding">
       <UniqueIdentifier>{9b3ce7ad-4ba3-4916-820b-3743a8719c33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GameObjects\Buildings">
+    <Filter Include="Game\Buildings">
       <UniqueIdentifier>{a07c1ffc-9750-4c03-baba-0ba84c23acab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -209,28 +209,28 @@
       <Filter>Engine\GameObjects\Pathfinding</Filter>
     </ClCompile>
     <ClCompile Include="Source\Building.cpp">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClCompile>
     <ClCompile Include="Source\BuildingCommandPost.cpp">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClCompile>
     <ClCompile Include="Source\BuildingJaxiumMine.cpp">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClCompile>
     <ClCompile Include="Source\BuildingNeoridiumMine.cpp">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClCompile>
     <ClCompile Include="Source\BuildingResearchCenter.cpp">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClCompile>
     <ClCompile Include="Source\Button.cpp">
       <Filter>Engine\GameObjects\Button</Filter>
     </ClCompile>
     <ClCompile Include="Source\Crystal.cpp">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClCompile>
     <ClCompile Include="Source\BuildingTeleporter.cpp">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClCompile>
     <ClCompile Include="Source\Camera.cpp">
       <Filter>Engine\GameObjects\Graphics</Filter>
@@ -242,7 +242,7 @@
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\BuildingTurret.cpp">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -479,28 +479,28 @@
       <Filter>Engine\GameObjects\Pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="Source\Building.h">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClInclude>
     <ClInclude Include="Source\BuildingResearchCenter.h">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClInclude>
     <ClInclude Include="Source\BuildingCommandPost.h">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClInclude>
     <ClInclude Include="Source\BuildingJaxiumMine.h">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClInclude>
     <ClInclude Include="Source\BuildingNeoridiumMine.h">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClInclude>
     <ClInclude Include="Source\Button.h">
       <Filter>Engine\GameObjects\Button</Filter>
     </ClInclude>
     <ClInclude Include="Source\Crystal.h">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClInclude>
     <ClInclude Include="Source\BuildingTeleporter.h">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClInclude>
     <ClInclude Include="Source\Camera.h">
       <Filter>Engine\GameObjects\Graphics</Filter>
@@ -515,7 +515,7 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Source\BuildingTurret.h">
-      <Filter>Engine\GameObjects\Buildings</Filter>
+      <Filter>Game\Buildings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

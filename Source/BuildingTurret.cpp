@@ -57,7 +57,8 @@ void BuildingTurret::FaceTarget()
 {
 	Transform* myTransform = GetParent()->GetComponent<Transform>();
 	Vector2D direction = target->GetComponent<Transform>()->GetTranslation() - myTransform->GetTranslation();
-	myTransform->SetRotation(atan2(direction.y, direction.x));
+	float rot = atan2(direction.y, direction.x);
+	myTransform->SetRotation(rot);
 }
 
 void BuildingTurret::FindTarget()

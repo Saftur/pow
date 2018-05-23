@@ -59,6 +59,110 @@
     }
   },
   {
+    "Name": "JaxiumMineArchetype",
+	"Archetype": true,
+	"Transform": {
+	  "Scale": [ 64, 64 ]
+	},
+	"Sprite": {
+	  "SpriteSource": {
+	    "Name": "JaxiumMineSpriteSource",
+		"Texture": "Data\\Assets\\Isometric Jaxium Mine Team 1.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
+	  "Mesh": {
+	    "Name": "BuildingMesh",
+		"HalfSize": [ 0.5, 0.5 ],
+		"UV": [ 1, 1 ]
+	  },
+	  "Alpha": 1,
+	  "FrameIndex": 0,
+	  "ModulateColor": [ 0, 0, 0, 0]
+	},
+	"JaxiumMine": {}
+  },
+  {
+    "Name": "NeoridiumMineArchetype",
+	"Archetype": true,
+	"Transform": {
+	  "Scale": [ 64, 64 ]
+	},
+	"Sprite": {
+	  "SpriteSource": {
+	    "Name": "NeoridiumMineSpriteSource",
+		"Texture": "Data\\Assets\\NeoridiumMine.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
+	  "Mesh": "BuildingMesh",
+	  "Alpha": 1,
+	  "FrameIndex": 0,
+	  "ModulateColor": [ 0, 0, 0, 0]
+	},
+	"NeoridiumMine": {}
+  },
+  {
+    "Name": "ResearchCenterArchetype",
+	"Archetype": true,
+	"Transform": {
+	  "Scale": [ 64, 64 ]
+	},
+	"Sprite": {
+	  "SpriteSource": {
+	    "Name": "ResearchCenterSpriteSource",
+		"Texture": "Data\\Assets\\Research Center.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
+	  "Mesh": "BuildingMesh",
+	  "Alpha": 1,
+	  "FrameIndex": 0,
+	  "ModulateColor": [ 0, 0, 0, 0]
+	},
+	"ResearchCenter": {}
+  },
+  {
+    "Name": "TeleporterArchetype",
+	"Archetype": true,
+	"Transform": {
+	  "Scale": [ 64, 64 ]
+	},
+	"Sprite": {
+	  "SpriteSource": {
+	    "Name": "TeleporterSpriteSource",
+		"Texture": "Data\\Assets\\Teleporter.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
+	  "Mesh": "BuildingMesh",
+	  "Alpha": 1,
+	  "FrameIndex": 0,
+	  "ModulateColor": [ 0, 0, 0, 0]
+	},
+	"Teleporter": {}
+  },
+  {
+    "Name": "TurretArchetype",
+	"Archetype": true,
+	"Transform": {
+	  "Scale": [ 64, 64 ]
+	},
+	"Sprite": {
+	  "SpriteSource": {
+	    "Name": "TurretSpriteSource",
+		"Texture": "Data\\Assets\\Turret.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
+	  "Mesh": "BuildingMesh",
+	  "Alpha": 1,
+	  "FrameIndex": 0,
+	  "ModulateColor": [ 0, 0, 0, 0]
+	},
+	"Turret": {}
+  },
+  {
     "Name": "UnitArchetype",
     "Archetype": true,
     "Transform": {
@@ -178,6 +282,45 @@
       "Controls": "Army1Controls",
       "CursorName": "Cursor2"
     }
+  },
+  {
+    "Name": "CommandPostLeft",
+	"Transform": {
+	  "Scale": [ 64, 64 ]
+	},
+	"Sprite": {
+	  "SpriteSource": {
+	    "Name": "CommandPostSpriteSource",
+		"Texture": "Data\\Assets\\CommandPost.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
+	  "Mesh": "BuildingMesh",
+	  "Alpha": 1,
+	  "FrameIndex": 0,
+	  "ModulateColor": [ 0, 0, 0, 0]
+	},
+	"CommandPost": {
+	  "Side": 1,
+	  "MapPos": [ 2, 4 ]
+	}
+  },
+  {
+    "Name": "CommandPostRight",
+	"Transform": {
+	  "Scale": [ 64, 64 ]
+	},
+	"Sprite": {
+	  "SpriteSource": "CommandPostSpriteSource",
+	  "Mesh": "BuildingMesh",
+	  "Alpha": 1,
+	  "FrameIndex": 0,
+	  "ModulateColor": [ 0, 0, 0, 0]
+	},
+	"CommandPost": {
+	  "Side": 2,
+	  "MapPos": [ 9, 4 ]
+	}
   },
   {
     "Type": "Mesh",

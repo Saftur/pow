@@ -188,31 +188,12 @@ void Button::CreateJaxiumMineEffect(Button & button, float dt, int count, ...)
 	Vector2D screenPos = va_arg(args, Vector2D);
 	va_end(args);
 
-	BuildingJaxiumMine *mine;
+	GameObject mineObj = GameObject(*Space::GetLayer(0)->GetLevelManager()->GetGameObjectManager()->GetArchetype("JaxiumMineArchetype"));
+	BuildingJaxiumMine *mine = mineObj.GetComponent<BuildingJaxiumMine>();
+	mine->SetPos(mapPos);
+	mine->SetSide(side);
 
-	try {
-		mine = new BuildingJaxiumMine(side, mapPos);
-	}
-	catch (int) {
-		return;
-	}
-
-	GameObject *mineObj = new GameObject("Jaxium Mine");
-	Transform* transform = new Transform(screenPos.x, screenPos.y);
-	transform->SetScale({ 100, 100 });
-	mineObj->AddComponent(transform);
-
-	Sprite *sprite = new Sprite();
-	mine->texture = AEGfxTextureLoad("Data\\Assets\\Isometric Jaxium Mine Team 1.png");
-	SpriteSource* spriteSource = new SpriteSource(1, 1, mine->texture);
-	sprite->SetSpriteSource(spriteSource);
-	mine->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
-	sprite->SetMesh(mine->mesh);
-
-	mineObj->AddComponent(sprite);
-	mineObj->AddComponent(mine);
-
-	Space::GetLayer(0)->GetGameObjectManager()->Add(*mineObj);
+	Space::GetLayer(0)->GetGameObjectManager()->Add(mineObj);
 }
 
 void Button::CreateNeoridiumMineEffect(Button & button, float dt, int count, ...)
@@ -224,31 +205,12 @@ void Button::CreateNeoridiumMineEffect(Button & button, float dt, int count, ...
 	Vector2D screenPos = va_arg(args, Vector2D);
 	va_end(args);
 
-	BuildingNeoridiumMine *mine;
+	GameObject mineObj = GameObject(*Space::GetLayer(0)->GetLevelManager()->GetGameObjectManager()->GetArchetype("NeoridiumMineArchetype"));
+	BuildingNeoridiumMine *mine = mineObj.GetComponent<BuildingNeoridiumMine>();
+	mine->SetPos(mapPos);
+	mine->SetSide(side);
 
-	try {
-		mine = new BuildingNeoridiumMine(side, mapPos);
-	}
-	catch (int) {
-		return;
-	}
-
-	GameObject *mineObj = new GameObject("Neoridium Mine");
-	Transform* transform = new Transform(screenPos.x, screenPos.y);
-	transform->SetScale({ 100, 100 });
-	mineObj->AddComponent(transform);
-
-	Sprite *sprite = new Sprite();
-	mine->texture = AEGfxTextureLoad("");
-	SpriteSource* spriteSource = new SpriteSource(1, 1, mine->texture);
-sprite->SetSpriteSource(spriteSource);
-mine->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
-sprite->SetMesh(mine->mesh);
-
-mineObj->AddComponent(sprite);
-mineObj->AddComponent(mine);
-
-	Space::GetLayer(0)->GetGameObjectManager()->Add(*mineObj);
+	Space::GetLayer(0)->GetGameObjectManager()->Add(mineObj);
 }
 
 void Button::CreateResearchCenterEffect(Button & button, float dt, int count, ...)
@@ -260,31 +222,12 @@ void Button::CreateResearchCenterEffect(Button & button, float dt, int count, ..
 	Vector2D screenPos = va_arg(args, Vector2D);
 	va_end(args);
 
-	BuildingResearchCenter *researchCenter;
+	GameObject mineObj = GameObject(*Space::GetLayer(0)->GetLevelManager()->GetGameObjectManager()->GetArchetype("ResearchCenterArchetype"));
+	BuildingResearchCenter *mine = mineObj.GetComponent<BuildingResearchCenter>();
+	mine->SetPos(mapPos);
+	mine->SetSide(side);
 
-	try {
-		researchCenter = new BuildingResearchCenter(side, mapPos);
-	}
-	catch (int) {
-		return;
-	}
-
-	GameObject *researchCenterObj = new GameObject("Research Center");
-	Transform* transform = new Transform(screenPos.x, screenPos.y);
-	transform->SetScale({ 100, 100 });
-	researchCenterObj->AddComponent(transform);
-
-	Sprite *sprite = new Sprite();
-	researchCenter->texture = AEGfxTextureLoad("Data\\Assets\\Research Center.png");
-	SpriteSource* spriteSource = new SpriteSource(1, 1, researchCenter->texture);
-	sprite->SetSpriteSource(spriteSource);
-	researchCenter->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
-	sprite->SetMesh(researchCenter->mesh);
-
-	researchCenterObj->AddComponent(sprite);
-	researchCenterObj->AddComponent(researchCenter);
-
-	Space::GetLayer(0)->GetGameObjectManager()->Add(*researchCenterObj);
+	Space::GetLayer(0)->GetGameObjectManager()->Add(mineObj);
 }
 
 void Button::CreateTeleporterEffect(Button & button, float dt, int count, ...)
@@ -296,31 +239,12 @@ void Button::CreateTeleporterEffect(Button & button, float dt, int count, ...)
 	Vector2D screenPos = va_arg(args, Vector2D);
 	va_end(args);
 
-	BuildingTeleporter *teleporter;
+	GameObject mineObj = GameObject(*Space::GetLayer(0)->GetLevelManager()->GetGameObjectManager()->GetArchetype("TeleporterArchetype"));
+	BuildingTeleporter *mine = mineObj.GetComponent<BuildingTeleporter>();
+	mine->SetPos(mapPos);
+	mine->SetSide(side);
 
-	try {
-		teleporter = new BuildingTeleporter(side, mapPos);
-	}
-	catch (int) {
-		return;
-	}
-
-	GameObject *teleporterObj = new GameObject("Teleporter");
-	Transform* transform = new Transform(screenPos.x, screenPos.y);
-	transform->SetScale({ 100, 100 });
-	teleporterObj->AddComponent(transform);
-
-	Sprite *sprite = new Sprite();
-	teleporter->texture = AEGfxTextureLoad("Data\\Assets\\Teleporter.png");
-	SpriteSource* spriteSource = new SpriteSource(1, 1, teleporter->texture);
-	sprite->SetSpriteSource(spriteSource);
-	teleporter->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
-	sprite->SetMesh(teleporter->mesh);
-
-	teleporterObj->AddComponent(sprite);
-	teleporterObj->AddComponent(teleporter);
-
-	Space::GetLayer(0)->GetGameObjectManager()->Add(*teleporterObj);
+	Space::GetLayer(0)->GetGameObjectManager()->Add(mineObj);
 }
 
 void Button::ResearchSpaceportEffect(Button & button, float dt, int count, ...)

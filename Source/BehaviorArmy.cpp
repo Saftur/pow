@@ -252,30 +252,6 @@ void BehaviorArmy::OnEnter()
 			PushFrontLine({ (float)frontLine.pos, 0 });
 		}
 
-		Vector2D pos;
-		if (side == sLeft) pos = GridManager::GetInstance().ConvertToWorldPoint(GridManager::GetInstance().GetNode(2, 4));
-		if (side == sRight) pos = GridManager::GetInstance().ConvertToWorldPoint(GridManager::GetInstance().GetNode(10, 4));
-
-		BuildingCommandPost *commandPost;
-		commandPost = new BuildingCommandPost(side, pos);
-
-		GameObject *commandPostObj = new GameObject("Command Post");
-		Transform* transform = new Transform(pos.x, pos.y);
-		transform->SetScale({ 50, 50 });
-		commandPostObj->AddComponent(transform);
-
-		Sprite *sprite = new Sprite();
-		commandPost->texture = AEGfxTextureLoad("Data\\Assets\\Command Post.png");
-		SpriteSource* spriteSource = new SpriteSource(1, 1, commandPost->texture);
-		sprite->SetSpriteSource(spriteSource);
-		commandPost->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
-		sprite->SetMesh(commandPost->mesh);
-
-		commandPostObj->AddComponent(sprite);
-		commandPostObj->AddComponent(commandPost);
-
-		Space::GetLayer(0)->GetGameObjectManager()->Add(*commandPostObj);
-
 		break;
 	}
 }
@@ -311,71 +287,13 @@ void BehaviorArmy::OnUpdate(float dt)
 			}
 		}
 
-		///TODO: Remove both of these if statements and everything they contain.
 		if (controls.gamepad->GetButtonTriggered(Gamepad::bDpadDown)) {
-			Vector2D mapPos = GridManager::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation());
-			Vector2D screenPos = cursor.transform->GetTranslation();
+			GameObject turret = GameObject(*Space::GetLayer(0)->GetGameObjectManager()->GetArchetype("TurretArchetype"));
+			BuildingTurret *bTurret = turret.GetComponent<BuildingTurret>();
+			bTurret->SetSide(side);
+			bTurret->SetPos(cursorNode->gridPos());
 
-			BuildingTurret *mine;
-
-			try {
-				mine = new BuildingTurret(side, mapPos);
-			}
-			catch (int) {
-				return;
-			}
-
-			GameObject *mineObj = new GameObject("Turret");
-			Transform* transform = new Transform(screenPos.x, screenPos.y);
-			transform->SetScale({ 100, 100 });
-			mineObj->AddComponent(transform);
-
-			Sprite *sprite = new Sprite();
-			mine->texture = AEGfxTextureLoad("Data\\Assets\\Turret.png");
-			SpriteSource* spriteSource = new SpriteSource(1, 1, mine->texture);
-			sprite->SetSpriteSource(spriteSource);
-			mine->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
-			sprite->SetMesh(mine->mesh);
-
-			mineObj->AddComponent(sprite);
-			mineObj->AddComponent(mine);
-
-			Space::GetLayer(0)->GetGameObjectManager()->Add(*mineObj);
-		}
-		if (controls.gamepad->GetButtonTriggered(Gamepad::bDpadUp)) {
-			Vector2D screenPos = cursor.transform->GetTranslation();
-			screenPos.y -= 250;
-
-			for (unsigned i = 0; i < 100; i++) {
-				Vector2D mapPos = GridManager::GetInstance().ConvertToGridPoint(screenPos);
-				screenPos.y += 5;
-
-				BuildingTurret *mine;
-
-				try {
-					mine = new BuildingTurret(side, mapPos);
-				}
-				catch (int) {
-					return;
-				}
-
-				GameObject *mineObj = new GameObject("Turret");
-				Transform* transform = new Transform(screenPos.x, screenPos.y);
-				transform->SetScale({ 100, 100 });
-				mineObj->AddComponent(transform);
-
-				Sprite *sprite = new Sprite();
-				mine->texture = AEGfxTextureLoad("Data\\Assets\\Turret.png");
-				SpriteSource* spriteSource = new SpriteSource(1, 1, mine->texture);
-				sprite->SetSpriteSource(spriteSource);
-				mine->mesh = MeshCreateQuad(0.5, 0.5, 1, 1);
-				sprite->SetMesh(mine->mesh);
-
-				mineObj->AddComponent(sprite);
-				mineObj->AddComponent(mine);
-
-				Space::GetLayer(0)->GetGameObjectManager()->Add(*mineObj);
-			}
+			Space::GetLayer(0)->GetGameObjectManager()->Add(turret);
 		}
 
 		bool buildingMenu = controls.gamepad->GetButtonTriggered(BUILDING_MENU);

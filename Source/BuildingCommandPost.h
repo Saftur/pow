@@ -35,6 +35,8 @@ public:
 	BuildingCommandPost(BehaviorArmy::Side side, Vector2D pos);
 	~BuildingCommandPost(); //Trigger the win/lose condition when the commandpost dies.
 
+	void Load(rapidjson::Value & obj);
+
 	Component* Clone() const;
 
 	void BuildingUpdate(float dt); //Update the building.
