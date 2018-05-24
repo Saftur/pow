@@ -52,8 +52,8 @@
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
-    "Button": {
-      "ClickEffect": "CreateNeoridiumMine"
+    "CreateBuildingButton": {
+      "BuildingArchetype": "NeoridiumMineArchetype"
     },
     "Sprite": {
       "Mesh": {
@@ -88,8 +88,8 @@
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
-    "Button": {
-      "ClickEffect": "CreateResearchCenter"
+    "CreateBuildingButton": {
+      "BuildingArchetype": "ResearchCenterArchetype"
     },
     "Sprite": {
       "Mesh": "ButtonMesh",
@@ -105,15 +105,15 @@
     }
   },
   {
-	"Name": "Button",
-	"Transform": {
-	  "Translation": [ -120, -30 ],
-	  "Scale": [200, 50 ],
-	  "Rotation": 0
-	},
-	"Button": {
-	  "ClickEffect": "CreateJaxiumMine"
-	},
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ -120, -30 ],
+      "Scale": [200, 50 ],
+      "Rotation": 0
+    },
+    "CreateBuildingButton": {
+      "BuildingArchetype": "JaxiumMineArchetype"
+    },
     "Sprite": {
       "Mesh": "ButtonMesh",
       "Alpha": 1,
@@ -128,15 +128,15 @@
     }
   },
   {
-	"Name": "Button",
-	"Transform": {
-	  "Translation": [ 120, -30 ],
-	  "Scale": [200, 50 ],
-	  "Rotation": 0
-	},
-	"Button": {
-	  "ClickEffect": "CreateTeleporter"
-	},
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ 120, -30 ],
+      "Scale": [200, 50 ],
+      "Rotation": 0
+    },
+    "CreateBuildingButton": {
+      "BuildingArchetype": "TeleporterArchetype"
+    },
     "Sprite": {
       "Mesh": "ButtonMesh",
       "Alpha": 1,

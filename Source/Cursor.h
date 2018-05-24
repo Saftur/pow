@@ -46,7 +46,7 @@ public:
 
 	void Load(rapidjson::Value &obj);
 
-	void PostLoadInit();
+	void InstanceInit();
 
 	void Update(float dt);
 

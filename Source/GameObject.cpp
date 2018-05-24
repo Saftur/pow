@@ -101,9 +101,9 @@ bool GameObject::CheckDestroyNow()
 	return destroyNext;
 }
 
-void GameObject::PostLoadInit() {
+void GameObject::InstanceInit() {
 	for (unsigned i = 0; i < numComponents; i++) {
-		components[i]->PostLoadInit();
+		components[i]->InstanceInit();
 	}
 }
 

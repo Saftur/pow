@@ -64,11 +64,21 @@ public:
 	// Retrieves the component with the given name if it exists.
 	Component* GetComponent(const char* name) const;
 	template <typename T>
-	T *GetComponent() {
+	T *GetComponent() const {
 		unsigned hash = typeid(T).hash_code();
 		for (unsigned i = 0; i < numComponents; i++)
 			if (typeid(*components[i]).hash_code() == hash)
 				return static_cast<T*>(components[i]);
+		return nullptr;
+	}
+	template <typename T>
+	T *GetChildComponent() const {
+		T *child;
+		for (unsigned i = 0; i < numComponents; i++) {
+			child = dynamic_cast<T*>(components[i]);
+			if (child)
+				return child;
+		}
 		return nullptr;
 	}
 
@@ -97,7 +107,7 @@ public:
 	void SetDestroyNext();
 	bool CheckDestroyNow();
 
-	void PostLoadInit();
+	void InstanceInit();
 
 	// Update any components attached to the game object.
 	// (Hint: You will need to call Update on the Animation and Physics components.)

@@ -20,9 +20,12 @@
 #include "Space.h"
 #include "Tilemap.h"
 #include "Rendertext.h"
-#include "Button.h"
 #include "CompList.h"
 #include "Mesh.h"
+
+#include "Button.h"
+#include "RestartButton.h"
+#include "QuitButton.h"
 
 using namespace std;
 using namespace rapidjson;
@@ -45,13 +48,11 @@ void LevelManager::StaticInit()
 	AddComponentType("Camera", new Camera());
 	AddComponentType("Tilemap", new Tilemap());
 	AddComponentType("Text", new Text());
-	AddComponentType("Button", new Button());
-	CompList::List();
-}
 
-void LevelManager::Init(const char *name)
-{
-	SetNextLevel(name);
+	AddComponentType("RestartButton", new RestartButton());
+	AddComponentType("QuitButton", new QuitButton());
+
+	CompList::List();
 }
 
 void LevelManager::Update(float dt)
@@ -94,10 +95,11 @@ void LevelManager::StaticShutdown() {
 	components.clear();
 }
 
-void LevelManager::SetNextLevel(const char *name) {
+void LevelManager::SetNextLevel(const char *name, map<string, void*> loadVars) {
 	if (!name) return;
 	nextLevel = name;
 	levelStatus = lsLevelChange;
+	this->loadVars = loadVars;
 }
 
 void LevelManager::Restart()
@@ -130,7 +132,7 @@ bool LevelManager::LevelExists(const char * name)
 	} else return false;
 }
 
-void LevelManager::Load(const char* name)
+void LevelManager::Load(const char* name, map<string, void*> loadVars)
 {
 	// Create the path string.
 	string path = "Data\\Levels\\";
@@ -155,15 +157,15 @@ void LevelManager::Load(const char* name)
 
 	stateNext = LOADING;
 
+	if (this->loadVars.size() == 0)
+		this->loadVars = loadVars;
+
 	loadingLevelManager = this;
 	id = 0;
 	while (stateNext != IDLE)
 		loadObject(levelDoc);
 
-	GetGameObjectManager()->GetObjectsWithFilter([](GameObject *obj) {
-		obj->PostLoadInit();
-		return false;
-	});
+	this->loadVars.clear();
 }
 
 void LevelManager::loadObject(Document& levelDoc)
@@ -276,6 +278,12 @@ AEGfxTexture* LevelManager::GetTexture(const char* name)
 SpriteSource* LevelManager::GetSpriteSource(const char* name)
 {
 	return spriteSources.count(name) > 0 ? spriteSources.at(name) : nullptr;
+}
+
+void * LevelManager::GetLoadVar(const char * name) {
+	if (loadVars.count(name) > 0)
+		return loadVars[name];
+	else return nullptr;
 }
 
 Component * LevelManager::GetComponentType(const char * name)

@@ -18,7 +18,7 @@ void BuildingCommandPost::BuildingUpdate(float dt)
 {
 }
 
-void BuildingCommandPost::OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos)
+void BuildingCommandPost::OpenMenu(Node *cursorMapPos, Vector2D cursorScreenPos)
 {
-	PopupMenu::CreateMenu(side, PopupMenu::MenuType::CommandPost, cursorMapPos, cursorScreenPos);
+	PopupMenu::CreateMenu(army, PopupMenu::MenuType::CommandPost, cursorMapPos, cursorScreenPos);
 }

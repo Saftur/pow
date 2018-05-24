@@ -29,17 +29,16 @@ public:
 	};
 
 	static void StaticInit();
-	void Init(const char *name);
 	void Update(float dt);
 	void Shutdown();
 	static void StaticShutdown();
 
-	void SetNextLevel(const char *name);
+	void SetNextLevel(const char *name, map<string, void*> loadVars = {});
 	void Restart();
 	void Quit();
 
 	static bool LevelExists(const char *name);
-	void Load(const char* name);
+	void Load(const char* name, map<string, void*> loadVars = {});
 
 	LevelStatus GetLevelStatus() const;
 	bool IsRunning();
@@ -51,6 +50,8 @@ public:
 	AEGfxVertexList* GetMesh(const char* name);
 	AEGfxTexture* GetTexture(const char* name);
 	SpriteSource* GetSpriteSource(const char* name);
+
+	void *GetLoadVar(const char *name);
 
 	static Component *GetComponentType(const char* name);
 	static void AddComponentType(const char* name, Component* component);
@@ -79,6 +80,8 @@ private:
 	map<string, AEGfxTexture*> textures;
 	map<string, AEGfxVertexList*> meshes;
 	map<string, SpriteSource*> spriteSources;
+
+	map<string, void*> loadVars;
 
 	Space *space;
 

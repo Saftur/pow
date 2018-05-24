@@ -22,9 +22,9 @@ void BuildingResearchCenter::BuildingUpdate(float dt)
 {
 }
 
-void BuildingResearchCenter::OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos)
+void BuildingResearchCenter::OpenMenu(Node *cursorMapPos, Vector2D cursorScreenPos)
 {
-	PopupMenu::CreateMenu(side, PopupMenu::MenuType::Research, cursorMapPos, cursorScreenPos);
+	PopupMenu::CreateMenu(army, PopupMenu::MenuType::Research, cursorMapPos, cursorScreenPos);
 }
 
 void BuildingResearchCenter::Unlock(BehaviorArmy::Side side, Building::BuildingType type)

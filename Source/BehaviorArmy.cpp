@@ -313,7 +313,7 @@ void BehaviorArmy::OnUpdate(float dt)
 
 		if (buildingMenu || (side == sRight && AEInputCheckTriggered('B'))) {
 			if (PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side);
-			else PopupMenu::CreateMenu(side, PopupMenu::MenuType::Building, tilemap->GetPosOnMap(cursPos),
+			else PopupMenu::CreateMenu(this, PopupMenu::MenuType::Building, cursorNode,
 				tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
 		}
 		if (PopupMenu::Exists(side)) PopupMenu::Update(side, *controls.gamepad, dt);
@@ -326,10 +326,10 @@ void BehaviorArmy::OnUpdate(float dt)
 				Space::GetLayer(0)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
 					if (obj->GetComponent<Transform>() && obj->GetComponent<Transform>()->GetTranslation() == GridManager::GetInstance().ConvertToWorldPoint(cursorNode)) {
 						if (obj->GetComponent<BuildingResearchCenter>()) {
-							obj->GetComponent<BuildingResearchCenter>()->OpenMenu(tilemap->GetPosOnMap(cursPos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
+							obj->GetComponent<BuildingResearchCenter>()->OpenMenu(cursorNode, tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
 						}
 						if (obj->GetComponent<BuildingCommandPost>()) {
-							obj->GetComponent<BuildingCommandPost>()->OpenMenu(tilemap->GetPosOnMap(cursPos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
+							obj->GetComponent<BuildingCommandPost>()->OpenMenu(cursorNode, tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
 						}
 					}
 					return false;

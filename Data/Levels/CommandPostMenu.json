@@ -52,8 +52,8 @@
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
-    "Button": {
-      "ClickEffect": "CreateUnit1"
+    "CreateUnitButton": {
+      "UnitName": "Unit1"
     },
     "Sprite": {
       "Mesh": {
@@ -88,8 +88,8 @@
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
-    "Button": {
-      "ClickEffect": "CreateUnit2"
+    "CreateUnitButton": {
+      "UnitName": "Unit2"
     },
     "Sprite": {
       "Mesh": {
@@ -124,8 +124,8 @@
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
-    "Button": {
-      "ClickEffect": "CreateUnit3"
+    "CreateUnitButton": {
+      "UnitName": "Unit3"
     },
     "Sprite": {
       "Mesh": {
@@ -160,8 +160,8 @@
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
-    "Button": {
-      "ClickEffect": "CreateUnit4"
+    "CreateUnitButton": {
+      "UnitName": "Unit4"
     },
     "Sprite": {
       "Mesh": {

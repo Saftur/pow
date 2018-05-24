@@ -50,7 +50,7 @@ void Cursor::Load(rapidjson::Value & obj) {
 		moveSpeed = tmp->GetFloat();
 }
 
-void Cursor::PostLoadInit() {
+void Cursor::InstanceInit() {
 	transform = GetParent()->GetComponent<Transform>();
 	tilemap = GetParent()->GetGameObjectManager()->GetObjectByName("Tilemap")->GetComponent<Tilemap>();
 }

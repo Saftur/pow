@@ -38,7 +38,7 @@ public:
 
 	void BuildingUpdate(float dt); //Update the building.
 
-	void OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos); //Open a menu for the research center.
+	void OpenMenu(Node *cursorMapPos, Vector2D cursorScreenPos); //Open a menu for the research center.
 
 	static void Unlock(BehaviorArmy::Side side, Building::BuildingType type); //Research the building.
 

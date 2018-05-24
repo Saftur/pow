@@ -16,7 +16,7 @@ Component * Component::Clone() const {
 	return nullptr;
 }
 
-void Component::PostLoadInit() {
+void Component::InstanceInit() {
 }
 
 void Component::Update(float dt)

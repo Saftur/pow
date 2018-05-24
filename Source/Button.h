@@ -54,102 +54,22 @@ public:
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
-
-	// Allocate a new Button component.
-	Button();
-	Button(const char *effectName);
-
-	void SetEffect(const char *effectName);
-
-	void Load(rapidjson::Value& obj);
-
-	//template <typename T>
-	static GameObject* CreateButton(const char* objName, const char* effectName, AEGfxVertexList* mesh,
-		Vector2D pos = { 0.0f, 0.0f }, Vector2D scale = { 100.0f, 50.0f },
-		const char* text = nullptr, Vector2D textScale = { 15, 15 }, Color color = { 0, 0, 0, 0 },
-		const char* font = "Assets\\Comic Sans.png");
-	/*{
-		GameObject* button = new GameObject(objName);
-		Transform* transform = new Transform(pos.X(), pos.Y());
-		transform->SetFollowCamera(false);
-		transform->SetScale(scale);
-		button->AddComponent(transform);
-		Sprite* sprite = new Sprite();
-		sprite->SetMesh(mesh);
-		sprite->SetMeshHalfSize({ 0.5f, 0.5f });
-		sprite->SetMeshUV({ 1.0f, 1.0f });
-		button->AddComponent(sprite);
-		if(text) {
-			Text* textObj = new Text(true, text, font, color, textScale);
-			button->AddComponent((Component*)textObj);
-		}
-
-		T* buttonType = new T();
-		button->AddComponent((Component*)buttonType);
-		return button;
-	}*/
-
-	static void Shutdown();
-	
-	static void ListEffects();
-	static void AddClickEffect(const char *name, void(*effectFunc)(Button&,float, int, ...), Building::BuildingType type = Building::BuildingType::Null, 
-		BuildingResearchCenter::Research search = BuildingResearchCenter::Research::Null);
-	static void (*GetClickEffect(const char *name))(Button&,float, int, ...);
-
-	static void ForceClick(Button& button, float dt, unsigned count = 0, ...);
-
-	static map<string, Building::BuildingType> buildingType; //Type of building this is, paired with the name of the effect.
-	static map<string, BuildingResearchCenter::Research> researchType; //Type of research that is being conducted, paired with the name of the effect.
-	string effectName; //The name of the effect on this building.
-
-	bool active = true; //Is this button active.
-
-private:
-	//------------------------------------------------------------------------------
-	// Private Functions:
-	//------------------------------------------------------------------------------
-
-	// Clone an advanced behavior and return a pointer to the cloned object.
-	// Returns:
-	//   A pointer to a dynamically allocated clone of the advanced behavior.
-	virtual Component* Clone() const;
+	Button(const char *name);
 
 	//Check if the button is being pressed
 	void Update(float dt);
-
-	//Update anything on the button that needs updating.
-	//virtual void OnUpdate(float dt);
-
-	//What happens when a button is clicked.
-	//virtual void ClickEffect(float dt) = 0;
-	void(*ClickEffect)(Button& button, float dt, int count, ...);
-
-	static map<string, void(*)(Button&,float, int, ...)> clickEffects;
-
-	// Click effects
-	static void RestartEffect(Button &button, float dt, int count = 0, ...);
-	static void QuitEffect(Button &button, float dt, int count = 0, ...);
-	// End click effects
-
-	//Building Buttons
-	static void CreateJaxiumMineEffect(Button &button, float dt, int count = 0, ...);
-	static void CreateNeoridiumMineEffect(Button &button, float dt, int count = 0, ...);
-	static void CreateResearchCenterEffect(Button &button, float dt, int count = 0, ...);
-	static void CreateTeleporterEffect(Button &button, float dt, int count = 0, ...);
-
-	//Research Buttons
-	static void ResearchSpaceportEffect(Button &button, float dt, int count = 0, ...);
-	static void ResearchVehicleDepotEffect(Button &button, float dt, int count = 0, ...);
-	static void ResearchTurretEffect(Button &button, float dt, int count = 0, ...);
-	static void ResearchTeleporterEffect(Button &button, float dt, int count = 0, ...);
 	
-	//Create Unit Buttons
-	static void CreateUnit1Effect(Button &button, float dt, int count = 0, ...);
-	static void CreateUnit2Effect(Button &button, float dt, int count = 0, ...);
-	static void CreateUnit3Effect(Button &button, float dt, int count = 0, ...);
-	static void CreateUnit4Effect(Button &button, float dt, int count = 0, ...);
+	virtual void Click(float dt) = 0;
 
-	static vector<AEGfxTexture*> textures;
+	void SetActive(bool isActive);
+	bool GetActive() const;
+
+private:
+	bool active = true; //Is this button active.
+
+	//------------------------------------------------------------------------------
+	// Private Functions:
+	//------------------------------------------------------------------------------
 };
 
 //------------------------------------------------------------------------------

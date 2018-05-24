@@ -44,6 +44,8 @@ public:
 	//	 y = Initial world position on the y-axis.
 	Transform(float x, float y);
 
+	Transform(Vector2D pos, Vector2D scale = {0.f,0.f}, float rot = 0.f);
+
 	// Clones the transform component, returning a dynamically allocated copy.
 	Component* Clone() const;
 

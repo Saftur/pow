@@ -62,11 +62,15 @@ void Space::DelCamera(Camera * cam) {
 }
 
 Space * Space::LoadLayer(unsigned layer, const char* name, bool updateLower, bool drawLower) {
+	return LoadLayer(layer, name, {}, updateLower, drawLower);
+}
+
+Space * Space::LoadLayer(unsigned layer, const char * name, map<string, void*> loadVars, bool updateLower, bool drawLower) {
 	if (layer >= MAX_LAYERS) return nullptr;
 	if (layers[layer]) DeleteLayer(layer);
 	layers[layer] = new Space(layer, updateLower, drawLower);// = new LevelManager();
 	//layers[layer]->objectManager = GameObjectManager::InitLayer(layer, updateLower, drawLower);
-	layers[layer]->levelManager.Init(name);
+	layers[layer]->levelManager.SetNextLevel(name, loadVars);
 
 	if (!updateLower && layer > firstUpdated)
 		firstUpdated = layer;
