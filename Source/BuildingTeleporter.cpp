@@ -25,7 +25,7 @@ using std::vector;
 
 map<BehaviorArmy::Side, unsigned> BuildingTeleporter::teleporters;
 
-BuildingTeleporter::BuildingTeleporter(BehaviorArmy::Side side, Vector2D pos) : Building(side, Teleporter, Special, 0.0f, 250.0f, pos, 0, 50)
+BuildingTeleporter::BuildingTeleporter(BehaviorArmy::Side side, Vector2D pos) : Building(side, Teleporter, Special, 0.25f, 250.0f, pos, 0, 50)
 {
 	if (teleporters[side] >= 2) throw(0);
 	teleporters[side]++;

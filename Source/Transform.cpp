@@ -13,6 +13,10 @@ Transform::Transform(float x, float y) :
 {
 }
 
+Transform::Transform(Vector2D pos, Vector2D scale, float rot) :
+		Component("Transform"), translation(pos), scale(scale), rotation(rotation), isDirty(true), followCamera(true) {
+}
+
 Component * Transform::Clone() const
 {
 	return new Transform(*this);

@@ -52,8 +52,8 @@
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
-    "Button": {
-      "ClickEffect": "ResearchSpaceport"
+    "ResearchButton": {
+      "ResearchType": "Spaceport"
     },
     "Sprite": {
       "Mesh": {
@@ -88,8 +88,8 @@
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
-    "Button": {
-      "ClickEffect": "ResearchVehicleDepot"
+    "ResearchButton": {
+      "ResearchType": "VehicleDepot"
     },
     "Sprite": {
       "Mesh": {
@@ -105,7 +105,7 @@
         "Name": "Font",
         "Texture": "Data\\Assets\\NewFont.png",
         "Cols": 8,
-        "Rows": 
+        "Rows": 8
       },
       "Mesh": {
         "Name": "TextMesh",
@@ -124,8 +124,8 @@
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
-    "Button": {
-      "ClickEffect": "ResearchTurret"
+    "ResearchButton": {
+      "ResearchType": "Turret"
     },
     "Sprite": {
       "Mesh": {
@@ -160,8 +160,8 @@
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
-    "Button": {
-      "ClickEffect": "ResearchTeleporter"
+    "ResearchButton": {
+      "ResearchType": "Teleporter"
     },
     "Sprite": {
       "Mesh": {

@@ -39,9 +39,11 @@ public:
 
 	Component* Clone() const;
 
+	void OnDestroy();
+
 	void BuildingUpdate(float dt); //Update the building.
 
-	void OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos); //Open a menu for the research center.
+	void OpenMenu(); //Open a menu for the research center.
 
 private:
 	static bool gameOver;

@@ -36,6 +36,7 @@ public:
 
 	static bool TakeNeoridium(BehaviorArmy::Side side, float amount); //Take neoridium from the given army if it has enough to give it.
 	static void AddNeoridium(BehaviorArmy::Side side, float amount); //Give neoridium to the given army.
+	static float GetNeoridium(BehaviorArmy::Side side); //Get current of neoridium owned by given army.
 
 	bool AddWorker(); //Add a worker to the mine if there arent already too many workers.
 	bool RemoveWorker(); //Remove a worker from the mine if there is at least one worker.

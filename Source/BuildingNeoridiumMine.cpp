@@ -80,6 +80,10 @@ void BuildingNeoridiumMine::AddNeoridium(BehaviorArmy::Side side, float amount)
 	neoridium[side] += amount;
 }
 
+float BuildingNeoridiumMine::GetNeoridium(BehaviorArmy::Side side) {
+	return neoridium[side];
+}
+
 bool BuildingNeoridiumMine::AddWorker()
 {
 	if (workers < 3) {

@@ -57,7 +57,6 @@
     <ClInclude Include="Source\BuildingTeleporter.h" />
     <ClInclude Include="Source\BuildingTurret.h" />
     <ClInclude Include="Source\Button.h" />
-    <ClInclude Include="Source\ButtonEffects.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\CompList.h" />
     <ClInclude Include="Source\BehaviorStub.h" />
@@ -69,6 +68,9 @@
     <ClInclude Include="Source\ComponentStub.h" />
     <ClInclude Include="Source\ControlList.h" />
     <ClInclude Include="Source\Controls.h" />
+    <ClInclude Include="Source\ArmyButton.h" />
+    <ClInclude Include="Source\CreateBuildingButton.h" />
+    <ClInclude Include="Source\CreateUnitButton.h" />
     <ClInclude Include="Source\Crystal.h" />
     <ClInclude Include="Source\Cursor.h" />
     <ClInclude Include="Source\Engine.h" />
@@ -84,8 +86,11 @@
     <ClInclude Include="source\Pathfinder.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\PopupMenu.h" />
+    <ClInclude Include="Source\QuitButton.h" />
     <ClInclude Include="Source\Random.h" />
     <ClInclude Include="Source\Rendertext.h" />
+    <ClInclude Include="Source\ResearchButton.h" />
+    <ClInclude Include="Source\RestartButton.h" />
     <ClInclude Include="source\Serializable.h" />
     <ClInclude Include="source\SoundManager.h" />
     <ClInclude Include="Source\Space.h" />
@@ -116,7 +121,6 @@
     <ClCompile Include="Source\BuildingTeleporter.cpp" />
     <ClCompile Include="Source\BuildingTurret.cpp" />
     <ClCompile Include="Source\Button.cpp" />
-    <ClCompile Include="Source\ButtonEffects.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\CompList.cpp" />
     <ClCompile Include="Source\BehaviorStub.cpp" />
@@ -127,6 +131,9 @@
     <ClCompile Include="Source\Component.cpp" />
     <ClCompile Include="Source\ComponentStub.cpp" />
     <ClCompile Include="Source\ControlList.cpp" />
+    <ClCompile Include="Source\ArmyButton.cpp" />
+    <ClCompile Include="Source\CreateBuildingButton.cpp" />
+    <ClCompile Include="Source\CreateUnitButton.cpp" />
     <ClCompile Include="Source\Crystal.cpp" />
     <ClCompile Include="Source\Cursor.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
@@ -143,8 +150,11 @@
     <ClCompile Include="Source\Pathfinder.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\PopupMenu.cpp" />
+    <ClCompile Include="Source\QuitButton.cpp" />
     <ClCompile Include="Source\Random.cpp" />
     <ClCompile Include="Source\Rendertext.cpp" />
+    <ClCompile Include="Source\ResearchButton.cpp" />
+    <ClCompile Include="Source\RestartButton.cpp" />
     <ClCompile Include="source\Serializable.cpp" />
     <ClCompile Include="source\SoundManager.cpp" />
     <ClCompile Include="Source\Space.cpp" />

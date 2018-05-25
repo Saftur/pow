@@ -73,12 +73,14 @@ public:
 	void Shutdown(void);
 
 	// Add a game object to the active game object list.
-	// (Hint: This function and the GameObjectManagerAddArchetype functions require
-	//    the same code.  Consider creating a single function that adds an object
-	//	  to a list that is passed as a parameter.)
 	// Params:
 	//	 gameObject = Reference to the game object to be added to the list.
 	GameObject* Add(GameObject& gameObject);
+	// Add a game object to the active game object list.
+	// This function clones the passed GameObject before adding it
+	// Params:
+	//	 gameObject = Reference to the game object to be added to the list.
+	GameObject* AddNew(GameObject& gameObject);
 
 	// Add a game object to the game object archetype list.
 	// (Hint: This function and the GameObjectManagerAdd functions require

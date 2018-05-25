@@ -39,9 +39,9 @@ void BuildingTurret::BuildingUpdate(float dt){
 	else if (TargetWithinRange()) AttackTarget();
 }
 
-void BuildingTurret::OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos)
+void BuildingTurret::OpenMenu()
 {
-	PopupMenu::CreateMenu(side, PopupMenu::MenuType::Turret, cursorMapPos, cursorScreenPos);
+	PopupMenu::CreateMenu(army, PopupMenu::MenuType::Turret, GridManager::GetInstance().GetNode(mapPos));
 }
 
 void BuildingTurret::AttackTarget()
@@ -50,10 +50,10 @@ void BuildingTurret::AttackTarget()
 	if (attackTimer <= 0) {
 		attackTimer = 1 / attackSpeed;
 
-		GameObject projectile = GameObject(*BehaviorProjectile::Projectiles[BehaviorProjectile::ProjectileTypes::pTypeLaser]);
-		projectile.GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(mapPos));
-		projectile.GetComponent<BehaviorProjectile>()->Fire(army, targetDirection, (int)damage, range);
-		Space::GetLayer(0)->GetGameObjectManager()->Add(projectile);
+		GameObject *projectile = new GameObject(*BehaviorProjectile::Projectiles[BehaviorProjectile::ProjectileTypes::pTypeLaser]);
+		projectile->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(mapPos));
+		projectile->GetComponent<BehaviorProjectile>()->Fire(army, targetDirection, (int)damage, range);
+		Space::GetLayer(0)->GetGameObjectManager()->Add(*projectile);
 	}
 }
 

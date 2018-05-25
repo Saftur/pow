@@ -49,16 +49,23 @@ public:
 	void Update(float dt); //Update the generic building.
 	virtual void BuildingUpdate(float dt) = 0; //Run the specific update on the building.
 
-	virtual void OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos); //Open a menu for the building.
+	virtual void OpenMenu(); //Open a menu for the building.
 
 	float Variance(float value, float variance); //Return a float = the value +- a percentage of it based on the variance.
 
+	void SetArmy(BehaviorArmy *army);
 	void SetSide(BehaviorArmy::Side side); //Set the side of this building.
 	void SetPos(Vector2D pos); //Set the mapPos of the building.
+	Vector2D GetPos() const;
 
 	static void Lock(BehaviorArmy::Side side, BuildingType type); //Lock the given building for the given army.
 	static void Unlock(BehaviorArmy::Side side, BuildingType type); //Unlock the given building for the given army.
 	static bool IsUnlocked(BehaviorArmy::Side side, BuildingType type); //Checks if the given building for the given army is unlocked.
+	static bool CanBuy(BehaviorArmy *army, BuildingType type);
+	
+	bool IsUnlocked(); //Checks if this building is unlocked
+	bool CanBuy(); //Checks if this building can be bought (also calls IsUnlocked())
+	bool Buy(); //Buys this building
 
 	void SetHealth(float amount); //Set the building's health to some value.
 	float GetHealth(); //Return the amount of health the building has.

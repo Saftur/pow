@@ -64,6 +64,9 @@
     <Filter Include="Engine\GameObjects\Pathfinding">
       <UniqueIdentifier>{9b3ce7ad-4ba3-4916-820b-3743a8719c33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Buttons">
+      <UniqueIdentifier>{855420d7-5d4a-417b-b6c0-08388fe5a3cc}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game\Buildings">
       <UniqueIdentifier>{a07c1ffc-9750-4c03-baba-0ba84c23acab}</UniqueIdentifier>
     </Filter>
@@ -169,9 +172,6 @@
     <ClCompile Include="Source\Gamepad.cpp">
       <Filter>Engine\Control</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ButtonEffects.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ControlList.cpp">
       <Filter>Engine\Control</Filter>
     </ClCompile>
@@ -243,6 +243,24 @@
     </ClCompile>
     <ClCompile Include="Source\Space.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RestartButton.cpp">
+      <Filter>Engine\GameObjects\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\QuitButton.cpp">
+      <Filter>Engine\GameObjects\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ArmyButton.cpp">
+      <Filter>Game\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CreateBuildingButton.cpp">
+      <Filter>Game\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ResearchButton.cpp">
+      <Filter>Game\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CreateUnitButton.cpp">
+      <Filter>Game\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="Source\BuildingTurret.cpp">
       <Filter>Game\Buildings</Filter>
@@ -436,9 +454,6 @@
     <ClInclude Include="Source\Gamepad.h">
       <Filter>Engine\Control</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ButtonEffects.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ControlList.h">
       <Filter>Engine\Control</Filter>
     </ClInclude>
@@ -513,6 +528,24 @@
     </ClInclude>
     <ClInclude Include="Source\Space.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RestartButton.h">
+      <Filter>Engine\GameObjects\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\QuitButton.h">
+      <Filter>Engine\GameObjects\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ArmyButton.h">
+      <Filter>Game\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CreateBuildingButton.h">
+      <Filter>Game\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResearchButton.h">
+      <Filter>Game\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CreateUnitButton.h">
+      <Filter>Game\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="fmodAPI\inc\fmod_studio.h">
       <Filter>fmod</Filter>

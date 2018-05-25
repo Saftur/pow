@@ -33,9 +33,9 @@ void BuildingResearchCenter::BuildingUpdate(float dt)
 {
 }
 
-void BuildingResearchCenter::OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos)
+void BuildingResearchCenter::OpenMenu()
 {
-	PopupMenu::CreateMenu(side, PopupMenu::MenuType::Research, cursorMapPos, cursorScreenPos);
+	PopupMenu::CreateMenu(army, PopupMenu::MenuType::Research, GridManager::GetInstance().GetNode(mapPos));
 }
 
 void BuildingResearchCenter::Unlock(BehaviorArmy::Side side, Building::BuildingType type)

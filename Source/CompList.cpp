@@ -14,10 +14,13 @@
 #include "BuildingTeleporter.h"
 #include "BuildingTurret.h"
 
+#include "CreateBuildingButton.h"
+#include "ResearchButton.h"
+#include "CreateUnitButton.h"
+
 
 void CompList::List() {
 	// Use for every new Behavior:
-	//LevelManager::GetInstance().AddComponentType();
 	LevelManager::AddComponentType("Cursor", new Cursor());
 	LevelManager::AddComponentType("BehaviorArmy", new BehaviorArmy());
 	LevelManager::AddComponentType("BehaviorUnit", new BehaviorUnit());
@@ -32,4 +35,9 @@ void CompList::List() {
 	LevelManager::AddComponentType("ResearchCenter", new BuildingResearchCenter(BehaviorArmy::Side::sIllegal, { -1, -1 }));
 	LevelManager::AddComponentType("Teleporter", new BuildingTeleporter(BehaviorArmy::Side::sIllegal, { -1, -1 }));
 	LevelManager::AddComponentType("Turret", new BuildingTurret(BehaviorArmy::Side::sIllegal, { -1, -1 }));
+
+	// Buttons
+	LevelManager::AddComponentType("CreateBuildingButton", new CreateBuildingButton());
+	LevelManager::AddComponentType("ResearchButton", new ResearchButton());
+	LevelManager::AddComponentType("CreateUnitButton", new CreateUnitButton());
 }

@@ -31,7 +31,7 @@ void Camera::Load(rapidjson::Value & obj) {
 	}
 }
 
-void Camera::PostLoadInit() {
+void Camera::InstanceInit() {
 	GetParent()->GetSpace()->AddCamera(this);
 }
 

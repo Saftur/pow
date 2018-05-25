@@ -24,6 +24,7 @@ public:
 	void DelCamera(Camera *cam);
 
 	static Space *LoadLayer(unsigned layer, const char* name, bool updateLower=false, bool drawLower=true);
+	static Space *LoadLayer(unsigned layer, const char* name, map<string, void*> loadVars = {}, bool updateLower=false, bool drawLower=true);
 	static Space *GetLayer(unsigned layer);
 	static void DeleteLayer(unsigned layer);
 	static void ShutdownLayers();

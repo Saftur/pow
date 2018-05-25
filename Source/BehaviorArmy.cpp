@@ -291,68 +291,70 @@ void BehaviorArmy::OnUpdate(float dt)
 
 		if (buildingMenu || (side == sRight && AEInputCheckTriggered('B'))) {
 			if (PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side);
-			else PopupMenu::CreateMenu(side, PopupMenu::MenuType::Building);
+			else PopupMenu::CreateMenu(this, PopupMenu::MenuType::Building);
 		}
-		if (PopupMenu::Exists(side)) PopupMenu::Update(side, *controls.gamepad, dt, tilemap->GetPosOnMap(cursPos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
+		if (PopupMenu::Exists(side)) PopupMenu::Update(side, *controls.gamepad, dt, cursorNode);
 		else {
 			// If the select button is pressed down this frame, set the select rectangle start positions.
 			if (controls.gamepad->GetButtonTriggered(BTN_SELECT) || AEInputCheckTriggered(VK_RETURN)) { ///TODDO: Remove AEInput check
 				rectStartPos = cursorNode;
-
-				//Check if we are trying to select a building, and open the menu associated with that building if we are.
-				for (GameObject* building : Building::allBuildings) {
-					Transform *transform = building->GetComponent<Transform>();
-					if (transform && GridManager::GetInstance().ConvertToGridPoint(transform->GetTranslation()) == cursorNode->gridPos()) {
-						((Building*)building->GetComponent("Building"))->OpenMenu(tilemap->GetPosOnMap(cursPos), cursPos);
+			}
+			if (controls.gamepad->GetButtonReleased(BTN_SELECT)) {
+				if (rectStartPos == rectEndPos) {
+					//Check if we are trying to select a building, and open the menu associated with that building if we are.
+					for (GameObject* building : Building::allBuildings) {
+						Transform *transform = building->GetComponent<Transform>();
+						if (transform && GridManager::GetInstance().ConvertToGridPoint(transform->GetTranslation()) == cursorNode->gridPos()) {
+							((Building*)building->GetComponent("Building"))->OpenMenu();
+						}
 					}
 				}
-			}
-		}
 
-		// If the move button is down, set the path for all selected units.
-		if (controls.gamepad->GetButtonTriggered(BTN_MOVE)) {
-			for (SelectedUnit &unit : selectedUnits)
-			{
-				unit.unit->SetPath(unit.path);
-				unit.unit->SetNextState(BehaviorUnit::cUnitMove);
+				CalculateOffsets();
+				rectEndPos = nullptr;
 			}
-			selectedUnits.clear();
-		}
-		if (controls.gamepad->GetButtonTriggered(BTN_TARGET))
-		{
-			for (SelectedUnit &unit : selectedUnits)
-			{
-				unit.unit->SetPath(unit.path);
-				unit.unit->SetNextState(BehaviorUnit::cUnitAttack);
-			}
-			selectedUnits.clear();
-		}
-		if (controls.gamepad->GetButtonReleased(BTN_SELECT)) {
-			CalculateOffsets();
-			rectEndPos = nullptr;
-		}
 
-		// Are we selecting units?
-		if (controls.gamepad->GetButton(BTN_SELECT)) {
-			if (cursorNode != rectEndPos) {
-				rectEndPos = cursorNode;
-				SelectUnits();
+			// If the move button is down, set the path for all selected units.
+			if (controls.gamepad->GetButtonTriggered(BTN_MOVE)) {
+				for (SelectedUnit &unit : selectedUnits)
+				{
+					unit.unit->SetPath(unit.path);
+					unit.unit->SetNextState(BehaviorUnit::cUnitMove);
+				}
+				selectedUnits.clear();
 			}
-		} else {
-			if (selectedUnits.size() > 0)
+			if (controls.gamepad->GetButtonTriggered(BTN_TARGET))
 			{
-				if (cursorNode != prevTarget) {
-					prevTarget = cursorNode;
-					FindPath();
+				for (SelectedUnit &unit : selectedUnits)
+				{
+					unit.unit->SetPath(unit.path);
+					unit.unit->SetNextState(BehaviorUnit::cUnitAttack);
+				}
+				selectedUnits.clear();
+			}
+
+			// Are we selecting units?
+			if (controls.gamepad->GetButton(BTN_SELECT)) {
+				if (cursorNode != rectEndPos) {
+					rectEndPos = cursorNode;
+					SelectUnits();
+				}
+			} else {
+				if (selectedUnits.size() > 0)
+				{
+					if (cursorNode != prevTarget) {
+						prevTarget = cursorNode;
+						FindPath();
+					}
+				}
+				else
+				{
+					if (controls.gamepad->GetButtonTriggered(BTN_SPAWNUNIT))
+						CreateUnit("Unit1", cursorNode->gridPos());
 				}
 			}
-			else
-			{
-				if (controls.gamepad->GetButtonTriggered(BTN_SPAWNUNIT))
-					CreateUnit("Unit1", cursorNode->gridPos());
-			}
+			break;
 		}
-		break;
 	}
 }
 
@@ -578,6 +580,13 @@ void BehaviorArmy::SelectUnits()
 
 void BehaviorArmy::FindPath()
 {
+	Vector2D cursorGridPos = GridManager::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation());
+	bool useOffset = true;
+	for (GameObject *buildingObj : Building::allBuildings) {
+		Building *building = buildingObj->GetChildComponent<Building>();
+		if (building->buildingType == Building::Teleporter && building->GetPos() == cursorGridPos)
+			useOffset = false;
+	}
 	for (unsigned i = 0; i < selectedUnits.size(); i++)
 	{
 		SelectedUnit* unit = &selectedUnits[i];
@@ -589,7 +598,7 @@ void BehaviorArmy::FindPath()
 			continue;
 		}
 
-		Vector2D pos = GridManager::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation()) + unit->offset;
+		Vector2D pos = useOffset ? cursorGridPos + unit->offset : cursorGridPos;
 		 
 		if (pos.x < 0)
 			pos.x = 0;

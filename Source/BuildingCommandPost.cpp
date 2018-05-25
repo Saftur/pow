@@ -27,12 +27,6 @@ BuildingCommandPost::BuildingCommandPost(BehaviorArmy::Side side, Vector2D pos) 
 
 BuildingCommandPost::~BuildingCommandPost()
 {
-	if (!gameOver) {
-		gameOver = true;
-		for (unsigned i = 1; i < MAX_LAYERS; i++) Space::DeleteLayer(i);
-		if (side == BehaviorArmy::Side::sLeft) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideLeft");
-		if (side == BehaviorArmy::Side::sRight) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideRight");
-	}
 }
 
 void BuildingCommandPost::Load(rapidjson::Value & obj)
@@ -46,12 +40,22 @@ Component * BuildingCommandPost::Clone() const
 	return new BuildingCommandPost(*this);
 }
 
+void BuildingCommandPost::OnDestroy() {
+	// TODO Move to "TakeDamage" function, once implemented
+	/*if (!gameOver) {
+		gameOver = true;
+		for (unsigned i = 1; i < MAX_LAYERS; i++) Space::DeleteLayer(i);
+		if (side == BehaviorArmy::Side::sLeft) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideLeft");
+		if (side == BehaviorArmy::Side::sRight) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideRight");
+	}*/
+}
+
 void BuildingCommandPost::BuildingUpdate(float dt)
 {
 	if (AEInputCheckTriggered('V') && side == BehaviorArmy::Side::sLeft) GetParent()->Destroy();
 }
 
-void BuildingCommandPost::OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos)
+void BuildingCommandPost::OpenMenu()
 {
-	PopupMenu::CreateMenu(side, PopupMenu::MenuType::CommandPost, cursorMapPos, cursorScreenPos);
+	PopupMenu::CreateMenu(army, PopupMenu::MenuType::CommandPost, GridManager::GetInstance().GetNode(mapPos));
 }

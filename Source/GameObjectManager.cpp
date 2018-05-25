@@ -70,13 +70,19 @@ void GameObjectManager::Shutdown(void)
 		activeList.clear();
 	if (!archetypes.empty())
 		archetypes.clear();
-	Button::Shutdown();
 }
 
-GameObject* GameObjectManager::Add(GameObject & gameObject)
+GameObject * GameObjectManager::Add(GameObject & gameObject) {
+	activeList.push_back(&gameObject);
+	gameObject.InstanceInit();
+	return &gameObject;
+}
+
+GameObject* GameObjectManager::AddNew(GameObject & gameObject)
 {
 	GameObject *newObject = new GameObject(gameObject);
 	activeList.push_back(newObject);
+	newObject->InstanceInit();
 	return newObject;
 }
 

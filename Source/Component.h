@@ -47,7 +47,7 @@ public:
 	// Clones the component, returning a dynamically allocated copy.
 	virtual Component* Clone() const = 0;
 
-	virtual void PostLoadInit();
+	virtual void InstanceInit();
 
 	// Logic update for this component.
 	virtual void Update(float dt);

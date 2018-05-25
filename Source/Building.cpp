@@ -48,7 +48,7 @@ Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType spe
 		if (bArmy->GetSide() == side) {
 			army = bArmy;
 			if (specialtyType != sCommandPost && !army->LegalSpawn(pos)) throw(0); //Throw an error if the slot is occupied.
-			if (type == Teleporter) if (!BuildingNeoridiumMine::TakeNeoridium(side, buildingCost[type])) throw(0);
+			if (type == Teleporter) { if (!BuildingNeoridiumMine::TakeNeoridium(side, buildingCost[type])) throw(0); }
 			else if (!army->TakeFromFunds(buildingCost[type])) throw(0); //Throw an error if we can't pay for the building. (This should never happen).
 		}
 	}*/
@@ -137,7 +137,7 @@ void Building::Update(float dt)
 	}
 }
 
-void Building::OpenMenu(Vector2D cursorMapPos, Vector2D cursorScreenPos)
+void Building::OpenMenu()
 {
 }
 
@@ -148,15 +148,32 @@ float Building::Variance(float value, float variance) {
 	return value - value * change;
 }
 
+void Building::SetArmy(BehaviorArmy * army) {
+	this->army = army;
+	this->side = army->GetSide();
+}
+
 void Building::SetSide(BehaviorArmy::Side side)
 {
 	this->side = side;
+	//Find the army that this building should belong to.
+	vector<GameObject*> objs = Space::GetLayer(0)->GetGameObjectManager()->GetObjectsByName("Army");
+	for (unsigned i = 0; i < objs.size(); i++) {
+		BehaviorArmy* bArmy = (BehaviorArmy*)objs[i]->GetComponent("BehaviorArmy");
+		if (bArmy->GetSide() == side) {
+			army = bArmy;
+		}
+	}
 }
 
 void Building::SetPos(Vector2D pos)
 {
 	mapPos = pos;
 	GetParent()->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(pos));
+}
+
+Vector2D Building::GetPos() const {
+	return mapPos;
 }
 
 void Building::Lock(BehaviorArmy::Side side, BuildingType type)
@@ -172,6 +189,31 @@ void Building::Unlock(BehaviorArmy::Side side, BuildingType type)
 bool Building::IsUnlocked(BehaviorArmy::Side side, BuildingType type)
 {
 	return buildings[side][type];
+}
+
+bool Building::CanBuy(BehaviorArmy *army, BuildingType type) {
+	if (!IsUnlocked(army->GetSide(), type))
+		return false;
+	if (type == Teleporter) {
+		return BuildingNeoridiumMine::GetNeoridium(army->GetSide()) >= Building::buildingCost[type];
+	}
+	else return army->GetFunds() >= Building::buildingCost[type];
+}
+
+bool Building::IsUnlocked() {
+	return Building::IsUnlocked(side, buildingType);
+}
+
+bool Building::CanBuy() {
+	return Building::CanBuy(army, buildingType);
+}
+
+bool Building::Buy() {
+	if (buildingType == Building::Teleporter) {
+		if (BuildingNeoridiumMine::TakeNeoridium(side, Building::buildingCost[buildingType])) return true;
+	}
+	else if (army->TakeFromFunds(Building::buildingCost[buildingType])) return true; //Throw an error if we can't pay for the building. (This should never happen).
+	return false;
 }
 
 void Building::SetHealth(float amount)
