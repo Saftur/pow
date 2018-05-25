@@ -8,6 +8,7 @@
 #define SELECT Gamepad::bRTrigger
 #define MOVE Gamepad::bA
 #define SPAWNUNIT Gamepad::bX
+#define TARGET Gamepad::bB
 
 #define SELECT_BUILDING Gamepad::bY
 #define BUILDING_MENU Gamepad::bRShoulder

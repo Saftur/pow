@@ -15,8 +15,10 @@
 // Include Files:
 //------------------------------------------------------------------------------
 
-#include "Behavior.h"
 #include "Vector2D.h"
+#include "Behavior.h"
+
+typedef class BehaviorArmy BehaviorArmy;
 
 //------------------------------------------------------------------------------
 
@@ -39,6 +41,10 @@ enum ProjectileState
 class BehaviorProjectile : public Behavior
 {
 public:
+	enum ProjectileTypes {pTypeInvisible, pTypeLaser, pTypeMissile};
+
+	static GameObject* Projectiles[3];
+
 	//------------------------------------------------------------------------------
 	// Public Functions:
 	//------------------------------------------------------------------------------
@@ -50,7 +56,7 @@ public:
 
 	// Fire the projectile towards the given target vector at the given speed.
 	// Bullet will be assumed to have "missed" after lifetime seconds.
-	void Fire(Vector2D target, int damage, int range, float speed);
+	void Fire(BehaviorArmy* army, Vector2D target, int damage, int range);
 
 private:
 	// Clone an advanced behavior and return a pointer to the cloned object.
@@ -82,6 +88,8 @@ private:
 	//	 other = The object the asteroid is colliding with.
 	static void CollisionHandler(GameObject& projectile, GameObject& other);
 
+	BehaviorArmy* GetArmy();
+
 	void Load(rapidjson::Value& obj);
 
 	//------------------------------------------------------------------------------
@@ -96,9 +104,9 @@ private:
 		// TODO: Sound pointers and such
 	} projectile;
 
+	BehaviorArmy* army;
 	Vector2D target;
 	float lifetime; // Range * speed
-	float timer;
 };
 
 //------------------------------------------------------------------------------

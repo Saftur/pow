@@ -19,6 +19,7 @@
 #include "LevelManager.h"
 #include "GridManager.h"
 #include "PopupMenu.h"
+#include "BehaviorProjectile.h"
 #include <vector>
 
 using std::vector;
@@ -49,15 +50,18 @@ void BuildingTurret::AttackTarget()
 	if (attackTimer <= 0) {
 		attackTimer = 1 / attackSpeed;
 
-		///TODO: Deal damage to the target.
+		GameObject projectile = GameObject(*BehaviorProjectile::Projectiles[BehaviorProjectile::ProjectileTypes::pTypeLaser]);
+		projectile.GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(mapPos));
+		projectile.GetComponent<BehaviorProjectile>()->Fire(army, targetDirection, (int)damage, range);
+		Space::GetLayer(0)->GetGameObjectManager()->Add(projectile);
 	}
 }
 
 void BuildingTurret::FaceTarget()
 {
 	Transform* myTransform = GetParent()->GetComponent<Transform>();
-	Vector2D direction = target->GetComponent<Transform>()->GetTranslation() - myTransform->GetTranslation();
-	float rot = atan2(direction.y, direction.x);
+	targetDirection = target->GetComponent<Transform>()->GetTranslation() - myTransform->GetTranslation();
+	float rot = atan2(targetDirection.y, targetDirection.x);
 	myTransform->SetRotation(rot);
 }
 
@@ -82,6 +86,11 @@ void BuildingTurret::FindTarget()
 
 bool BuildingTurret::TargetWithinRange()
 {
+	if (target->IsDestroyed()) {
+		target = nullptr;
+		return false;
+	}
+
 	bool isWithinRange = GridManager::GetInstance().IsWithinRange(mapPos, target->GetComponent<BehaviorUnit>()->GetGridPos(), range);
 	if (!isWithinRange) target = nullptr;
 	return isWithinRange;

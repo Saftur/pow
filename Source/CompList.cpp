@@ -23,7 +23,8 @@ void CompList::List() {
 	LevelManager::AddComponentType("BehaviorUnit", new BehaviorUnit());
 	LevelManager::AddComponentType("Map", new Map());
 	LevelManager::AddComponentType("BehaviorTestBox", new BehaviorTestBox());
-
+	LevelManager::AddComponentType("BehaviorProjectile", new BehaviorProjectile());
+	
 	//Building components.
 	LevelManager::AddComponentType("CommandPost", new BuildingCommandPost(BehaviorArmy::Side::sIllegal, { -1, -1 }));
 	LevelManager::AddComponentType("JaxiumMine", new BuildingJaxiumMine(BehaviorArmy::Side::sIllegal, { -1, -1 }));

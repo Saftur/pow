@@ -20,12 +20,17 @@
 #include "BehaviorProjectile.h"
 #include "Physics.h"
 #include "GameObjectManager.h"
+#include "BehaviorUnit.h"
+#include "ColliderCircle.h"
+#include "BehaviorArmy.h"
 
 //------------------------------------------------------------------------------
 // Enums:
 //------------------------------------------------------------------------------
 
 enum states { cProjectileIdle, cProjectileMoving, cProjectileHit, cProjectileMiss };
+
+GameObject* BehaviorProjectile::Projectiles[3];
 
 //------------------------------------------------------------------------------
 // Public Consts:
@@ -46,7 +51,6 @@ BehaviorProjectile::BehaviorProjectile() :
 		Behavior("BehaviorProjectile")
 {
 	SetCurrentState(cBehaviorInvalid);
-	SetNextState(cProjectileIdle);
 }
 
 // Clone an advanced behavior and return a pointer to the cloned object.
@@ -69,6 +73,7 @@ void BehaviorProjectile::OnEnter()
 	switch (GetCurrentState())
 	{
 	case cProjectileIdle:
+		
 		break;
 	}
 }
@@ -83,16 +88,20 @@ void BehaviorProjectile::OnUpdate(float dt)
 	switch (GetCurrentState())
 	{
 	case cProjectileIdle:
+		SetNextState(cProjectileMoving);
 		break;
 	case cProjectileMoving:
+		GetParent()->GetComponent<ColliderCircle>()->SetCollisionHandler(&CollisionHandler);
 		GetParent()->GetComponent<Physics>()->SetVelocity(target * projectile.speed);
-		timer += dt;
+		lifetime -= dt;
 
-		if (timer >= lifetime)
+		if (lifetime <= 0)
 		{
 			SetNextState(cProjectileMiss);
 		}
 		break;
+	case cProjectileMiss:
+		GetParent()->Destroy();
 	}
 }
 
@@ -110,25 +119,46 @@ void BehaviorProjectile::OnExit()
 //	 other = The object the asteroid is colliding with.
 void BehaviorProjectile::CollisionHandler(GameObject& projectile, GameObject& other)
 {
-	UNREFERENCED_PARAMETER(projectile);
-	UNREFERENCED_PARAMETER(other);
+	if (other.GetComponent<BehaviorUnit>() && other.GetComponent<BehaviorUnit>()->GetArmy() != projectile.GetComponent<BehaviorProjectile>()->GetArmy())
+	{
+		other.GetComponent<BehaviorUnit>()->ModifyHP(-projectile.GetComponent<BehaviorProjectile>()->projectile.damage);
+		projectile.Destroy();
+	}
+}
+
+BehaviorArmy * BehaviorProjectile::GetArmy()
+{
+	return army;
 }
 
 void BehaviorProjectile::Load(rapidjson::Value& obj)
 {
-	
+	if (obj.HasMember("Type") && obj["Type"].IsInt())
+	{
+		Projectiles[obj["Type"].GetInt()] = GetParent();
+	}
+	if (obj.HasMember("Speed") && obj["Speed"].IsFloat())
+	{
+		projectile.speed = obj["Speed"].GetFloat();
+	}
 }
 
 // Fire the projectile towards the given target vector at the given speed.
 // Bullet will be assumed to have "missed" after lifetime seconds.
-void BehaviorProjectile::Fire(Vector2D aTarget, int damage, int range, float speed)
+void BehaviorProjectile::Fire(BehaviorArmy* aArmy, Vector2D aTarget, int damage, int range)
 {
+	GetParent()->GetComponent<Transform>()->SetRotation(atan2(aTarget.y, aTarget.x));
+	army = aArmy;
+	aTarget = aTarget.Normalized();
 	target = aTarget;
 	projectile.damage = damage;
-	projectile.speed = speed;
 
-	lifetime = range * speed;
-	timer = 0;
+	float height = (float)GridManager::GetInstance().tileHeight;
+	float width = (float)GridManager::GetInstance().tileWidth;
+	Vector2D distance = aTarget * (range * sqrtf(height * height + width * width));
+	float d = sqrtf(distance.x * distance.x + distance.y * distance.y);
+
+	lifetime = d/projectile.speed;
 
 	SetNextState(cProjectileMoving);
 }

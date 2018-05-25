@@ -8,15 +8,15 @@
   {
     "Type": "SpriteSource",
     "Name": "Font",
-    "Texture": "Data\\Assets\\Comic Sans.png",
-    "Cols": 16,
-    "Rows": 6
+    "Texture": "Data\\Assets\\NewFont.png",
+    "Cols": 8,
+    "Rows": 8
   },
   {
     "Type": "Mesh",
     "Name": "TextMesh",
     "HalfSize": [ 0.5, 0.5 ],
-    "UV": [ 0.0625, 0.1666666666667 ]
+    "UV": [ 0.125, 0.125 ]
   },
   {
     "Name": "Tilemap",
@@ -190,12 +190,28 @@
       "SpriteNum": 1
     },
     "Physics": {},
-    "Collider": {
-      "Type": "Box",
-      "Radius": 1.0
+    "ColliderCircle": {
+      "Radius": 32.0
     },
     "BehaviorUnit": {
 
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Data\\Assets\\NewFont.png",
+        "Cols": 8,
+        "Rows": 8
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.125, 0.125 ]
+      },
+      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "Text": "Unit",
+      "Scale": [ 18, 23 ],
+      "Offset":  [ 0, 25 ]
     },
     "Extras": [
       {
@@ -391,7 +407,7 @@
       "Scale": [ 128, 16 ]
     },
     "Sprite": {
-      "Alpha": 1,
+      "Alpha": 0.25,
       "ModulateColor": [ 1, 0, 0, 1 ]
     }
   },
@@ -402,8 +418,63 @@
       "Scale": [ 128, 16 ]
     },
     "Sprite": {
-      "Alpha": 1,
+      "Alpha": 0.25,
       "ModulateColor": [ 0, 0, 1, 1 ]
+    }
+  },
+  {
+    "Name": "ProjectileInvisible",
+    "Archetype": true,
+    "Transform": {
+      "Scale": [ 32, 32 ]
+    },
+    "Sprite": {
+      "Alpha": 0.0,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+	"Physics" : {},
+	"ColliderCircle" : {
+		"Radius": 16.0
+	},
+    "BehaviorProjectile": {
+      "Type": 0,
+      "Speed":  1000.0
+    }
+  },
+  {
+    "Name": "ProjectileLaser",
+    "Archetype": true,
+    "Transform": {
+      "Scale": [ 32, 32 ]
+    },
+    "Sprite": {
+      "Alpha": 1.0
+    },
+	"Physics" : {},
+	"ColliderCircle" : {
+		"Radius": 16.0
+	},
+    "BehaviorProjectile": {
+      "Type": 1,
+      "Speed": 500.0
+    }
+  },
+  {
+    "Name": "ProjectileMissile",
+    "Archetype": true,
+    "Transform": {
+      "Scale": [ 32, 32 ]
+    },
+    "Sprite": {
+      "Alpha": 1.0
+    },
+	"Physics" : {},
+	"ColliderCircle" : {
+		"Radius": 26.0
+	},
+    "BehaviorProjectile": {
+      "Type": 2,
+      "Speed": 250.0
     }
   },
   {

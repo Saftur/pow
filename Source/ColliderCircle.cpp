@@ -31,7 +31,8 @@ void ColliderCircle::SetRadius(float radius_)
 bool ColliderCircle::IsCollidingWith(const Collider & other) const
 {
 	GameObject *parent_ = GetParent(), *otherParent = other.GetParent();
-	if (!parent_ || !otherParent) return false;
+	if (!parent_ || !otherParent) 
+		return false;
 	Transform *tr1 = (Transform*)parent_->GetComponent("Transform");
 	Transform *tr2 = (Transform*)otherParent->GetComponent("Transform");
 	if (!tr1 || !tr2) return false;
