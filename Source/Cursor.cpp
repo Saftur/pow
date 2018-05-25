@@ -60,7 +60,7 @@ void Cursor::Update(float dt) {
 	Vector2D pos = transform->GetTranslation();
 	Vector2D scl = transform->GetScale();
 
-	Vector2D move = {gamepad->GetAxis(CURSOR_X), gamepad->GetAxis(CURSOR_Y)};
+	Vector2D move = {gamepad->GetAxis(AXS_CURSOR_X), gamepad->GetAxis(AXS_CURSOR_Y)};
 
 	//Temporary keyboard controls.
 	if (AEInputCheckCurr(VK_UP)) move.y += 0.5;

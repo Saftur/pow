@@ -56,7 +56,7 @@ public:
 
 	// Fire the projectile towards the given target vector at the given speed.
 	// Bullet will be assumed to have "missed" after lifetime seconds.
-	void Fire(BehaviorArmy* army, Vector2D target, int damage, int range);
+	void Fire(BehaviorArmy* army, Vector2D direction, int damage, int range);
 
 private:
 	// Clone an advanced behavior and return a pointer to the cloned object.

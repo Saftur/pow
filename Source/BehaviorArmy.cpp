@@ -33,6 +33,7 @@
 #include "SpriteSource.h"
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include "LevelManager.h"
 using std::ifstream;
 using std::stringstream;
@@ -286,16 +287,7 @@ void BehaviorArmy::OnUpdate(float dt)
 			}
 		}
 
-		if (controls.gamepad->GetButtonTriggered(Gamepad::bDpadDown)) {
-			GameObject turret = GameObject(*Space::GetLayer(0)->GetGameObjectManager()->GetArchetype("TurretArchetype"));
-			BuildingTurret *bTurret = turret.GetComponent<BuildingTurret>();
-			bTurret->SetSide(side);
-			bTurret->SetPos(cursorNode->gridPos());
-
-			Space::GetLayer(0)->GetGameObjectManager()->Add(turret);
-		}
-
-		bool buildingMenu = controls.gamepad->GetButtonTriggered(BUILDING_MENU);
+		bool buildingMenu = controls.gamepad->GetButtonTriggered(BTN_BUILDING_MENU);
 
 		if (buildingMenu || (side == sRight && AEInputCheckTriggered('B'))) {
 			if (PopupMenu::Exists(side)) PopupMenu::DestroyMenu(side);
@@ -304,7 +296,7 @@ void BehaviorArmy::OnUpdate(float dt)
 		if (PopupMenu::Exists(side)) PopupMenu::Update(side, *controls.gamepad, dt, tilemap->GetPosOnMap(cursPos), tilemap->GetPosOnScreen(tilemap->GetPosOnMap(cursPos)));
 		else {
 			// If the select button is pressed down this frame, set the select rectangle start positions.
-			if (controls.gamepad->GetButtonTriggered(SELECT) || AEInputCheckTriggered(VK_RETURN)) { ///TODO: Remove AEInput check
+			if (controls.gamepad->GetButtonTriggered(BTN_SELECT) || AEInputCheckTriggered(VK_RETURN)) { ///TODDO: Remove AEInput check
 				rectStartPos = cursorNode;
 
 				//Check if we are trying to select a building, and open the menu associated with that building if we are.
@@ -318,7 +310,7 @@ void BehaviorArmy::OnUpdate(float dt)
 		}
 
 		// If the move button is down, set the path for all selected units.
-		if (controls.gamepad->GetButtonTriggered(MOVE)) {
+		if (controls.gamepad->GetButtonTriggered(BTN_MOVE)) {
 			for (SelectedUnit &unit : selectedUnits)
 			{
 				unit.unit->SetPath(unit.path);
@@ -326,7 +318,7 @@ void BehaviorArmy::OnUpdate(float dt)
 			}
 			selectedUnits.clear();
 		}
-		if (controls.gamepad->GetButtonTriggered(TARGET))
+		if (controls.gamepad->GetButtonTriggered(BTN_TARGET))
 		{
 			for (SelectedUnit &unit : selectedUnits)
 			{
@@ -335,13 +327,13 @@ void BehaviorArmy::OnUpdate(float dt)
 			}
 			selectedUnits.clear();
 		}
-		if (controls.gamepad->GetButtonReleased(SELECT)) {
+		if (controls.gamepad->GetButtonReleased(BTN_SELECT)) {
 			CalculateOffsets();
 			rectEndPos = nullptr;
 		}
 
 		// Are we selecting units?
-		if (controls.gamepad->GetButton(SELECT)) {
+		if (controls.gamepad->GetButton(BTN_SELECT)) {
 			if (cursorNode != rectEndPos) {
 				rectEndPos = cursorNode;
 				SelectUnits();
@@ -351,21 +343,25 @@ void BehaviorArmy::OnUpdate(float dt)
 			{
 				if (cursorNode != prevTarget) {
 					prevTarget = cursorNode;
-					for (SelectedUnit& unit : selectedUnits)
-					{
-						Vector2D pos = GridManager::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation()) + unit.offset;
-						unit.path = Pathfinder::FindPath(unit.unit->GetNode(), GridManager::GetInstance().GetNode((int)pos.x, (int)pos.y));
-					}
+					FindPath();
 				}
 			}
 			else
 			{
-				if (controls.gamepad->GetButtonTriggered(SPAWNUNIT))
+				if (controls.gamepad->GetButtonTriggered(BTN_SPAWNUNIT))
 					CreateUnit("Unit1", cursorNode->gridPos());
 			}
 		}
 		break;
 	}
+}
+
+bool BehaviorArmy::SelectedUnit::operator==(const SelectedUnit &other)
+{
+	if (unit == other.unit)
+		return true;
+
+	return false;
 }
 
 void BehaviorArmy::OnExit()
@@ -580,24 +576,77 @@ void BehaviorArmy::SelectUnits()
 	}
 }
 
+void BehaviorArmy::FindPath()
+{
+	for (unsigned i = 0; i < selectedUnits.size(); i++)
+	{
+		SelectedUnit* unit = &selectedUnits[i];
+
+		if (unit->unit->GetParent()->IsDestroyed())
+		{
+			selectedUnits.erase(std::remove(selectedUnits.begin(), selectedUnits.end(), *unit));
+			i--;
+			continue;
+		}
+
+		Vector2D pos = GridManager::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation()) + unit->offset;
+		 
+		if (pos.x < 0)
+			pos.x = 0;
+		if (pos.y < 0)
+			pos.y = 0;
+		if (pos.x >= GridManager::GetInstance().width)
+			pos.x = (float)GridManager::GetInstance().width - 1;
+		if (pos.y >= GridManager::GetInstance().height)
+			pos.y = (float)GridManager::GetInstance().height - 1;
+
+		unit->path = Pathfinder::FindPath(unit->unit->GetNode(), GridManager::GetInstance().GetNode((int)pos.x, (int)pos.y));
+	}
+}
+
 // Function is used to figure out the midpoint of all selected units, then determines the offset for each unit from this point.
 // Allows for the offset to be used when determining target position.
 void BehaviorArmy::CalculateOffsets()
 {
 	// Figure out the mean point of all selected units.
-	Vector2D midpoint;
+	Vector2D min, max;
+	min = { -1.f,-1.f };
 	
-	for (SelectedUnit unit : selectedUnits)
+	for (SelectedUnit& unit : selectedUnits)
 	{
-		midpoint += unit.unit->GetGridPos();
+		Vector2D pos = unit.unit->GetGridPos();
+		if ((unsigned)pos.x < (unsigned)min.x)
+			min.x = pos.x;
+		if (pos.x > max.x)
+			max.x = pos.x;
+		if ((unsigned)pos.y < (unsigned)min.y)
+			min.y = pos.y;
+		if (pos.y > max.y)
+			max.y = pos.y;
 	}
 
-	midpoint /= (float)selectedUnits.size();
+	Vector2D midpoint = min.Midpoint(max);
+	midpoint.x = ceil(midpoint.x);
+	midpoint.y = ceil(midpoint.y);
+
+	SelectedUnit* closest = nullptr;
+	float closestDist = -1.f;
+
+	for (SelectedUnit& unit : selectedUnits)
+	{
+		float newDist = unit.unit->GetGridPos().Distance(midpoint);
+
+		if (!closest || newDist < closestDist)
+		{
+			closest = &unit;
+			closestDist = newDist;
+		}
+	}
 
 	// Use the calculated point to determine offsets for all selected units.
-	for (SelectedUnit unit : selectedUnits)
+	for (SelectedUnit& unit : selectedUnits)
 	{
-		unit.offset = unit.unit->GetGridPos() - midpoint;
+		unit.offset = unit.unit->GetGridPos() - closest->unit->GetGridPos();
 	}
 }
 

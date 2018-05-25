@@ -67,14 +67,14 @@
     "Text": {
       "SpriteSource": {
         "Name": "Font",
-        "Texture": "Data\\Assets\\Comic Sans.png",
-        "Cols": 16,
-        "Rows": 6
+        "Texture": "Data\\Assets\\NewFont.png",
+        "Cols": 8,
+        "Rows": 8
       },
       "Mesh": {
         "Name": "TextMesh",
         "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 0.0625, 0.1666666666667 ]
+        "UV": [ 0.125, 0.125 ]
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Create Unit 1",
@@ -103,14 +103,14 @@
     "Text": {
       "SpriteSource": {
         "Name": "Font",
-        "Texture": "Data\\Assets\\Comic Sans.png",
-        "Cols": 16,
-        "Rows": 6
+        "Texture": "Data\\Assets\\NewFont.png",
+        "Cols": 8,
+        "Rows": 8
       },
       "Mesh": {
         "Name": "TextMesh",
         "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 0.0625, 0.1666666666667 ]
+        "UV": [ 0.125, 0.125 ]
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Create Unit 2",
@@ -139,14 +139,14 @@
     "Text": {
       "SpriteSource": {
         "Name": "Font",
-        "Texture": "Data\\Assets\\Comic Sans.png",
-        "Cols": 16,
-        "Rows": 6
+        "Texture": "Data\\Assets\\NewFont.png",
+        "Cols": 8,
+        "Rows": 8
       },
       "Mesh": {
         "Name": "TextMesh",
         "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 0.0625, 0.1666666666667 ]
+        "UV": [ 0.125, 0.125 ]
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Create Unit 3",
@@ -175,14 +175,14 @@
     "Text": {
       "SpriteSource": {
         "Name": "Font",
-        "Texture": "Data\\Assets\\Comic Sans.png",
-        "Cols": 16,
-        "Rows": 6
+        "Texture": "Data\\Assets\\NewFont.png",
+        "Cols": 8,
+        "Rows": 8
       },
       "Mesh": {
         "Name": "TextMesh",
         "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 0.0625, 0.1666666666667 ]
+        "UV": [ 0.125, 0.125 ]
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Create Unit 4",
