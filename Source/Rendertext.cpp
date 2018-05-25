@@ -70,17 +70,17 @@ void Text::Draw(Camera *cam) const {
 	transform->SetTranslation(transform->GetTranslation() + offset - Vector2D((scale.x * 0.6f * len) / 2, 0.0f));
 	transform->SetScale(scale);
 
-	
 	//Print each character in the string.
 	for (int i = 0; i < len; i++){
-		if (string[i] >= 32 && string[i] <= 125) sprite->SetFrame(string[i] - 31);
+
+		if (string[i] == 32) sprite->SetFrame(0);
+		else if (string[i] >= 32 && string[i] <= 96) sprite->SetFrame(string[i] - 31);
+		else if (string[i] >= 97 && string[i] <= 122) sprite->SetFrame(string[i] - 63);
 		else sprite->SetFrame(0);
 		
 		sprite->Draw(cam, *transform);
 
-		const char c = string[i];
-		if(c == 'i' || c == '!' || c == '\'' || c == '`' || c == ':' || c == ';') transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x/8, 0.0f));
-		else transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x * 0.6f, 0.0f));
+		transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x * 0.6f, 0.0f));
 	}
 
 	transform->SetTranslation(startPos);

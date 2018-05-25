@@ -155,6 +155,7 @@ private:
 	//  curspos  = Position of cursor
 	//  deselect = Deselect instead
 	void SelectUnits();
+	void FindPath();
 	// Draw the currently editing path
 	void DrawPath(Camera *cam) const;
 
@@ -236,6 +237,7 @@ private:
 		BehaviorUnit* unit;	// The unit
 		vector<Node*> path;	// The unit's path
 		Vector2D offset;	// An offset from the move target
+		bool operator==(const SelectedUnit &other);
 	};
 
 	// Editing data

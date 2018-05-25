@@ -73,11 +73,11 @@ void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, float dt)
 	PopupMenu* menu = GetMenu(side);
 	if (menu && Space::GetLayer(menu->menuLevelLayer)) {
 		int buttons = Space::GetLayer(menu->menuLevelLayer)->GetGameObjectManager()->GetObjectsByName("Button").size(); //Number of buttons in the menu.
-		if (gamepad.GetButtonTriggered(MENU_LEFT) || AEInputCheckTriggered(VK_LEFT)) {
+		if (gamepad.GetButtonTriggered(BTN_MENU_LEFT) || AEInputCheckTriggered(VK_LEFT)) {
 			if (menu->selectedButton <= 0) menu->selectedButton = buttons - 1;
 			else menu->selectedButton--;
 		}
-		else if (gamepad.GetButtonTriggered(MENU_RIGHT)) {
+		else if (gamepad.GetButtonTriggered(BTN_MENU_RIGHT)) {
 			if (menu->selectedButton >= buttons - 1) menu->selectedButton = 0;
 			else menu->selectedButton++;
 		}
@@ -96,7 +96,7 @@ void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, float dt)
 			cursorTransform->SetWorldTranslation(selectedButtonTransform->GetTranslation());
 
 			//If we hit select, click the button and close the menu.	
-			if (gamepad.GetButtonTriggered(MENU_SELECT) || AEInputCheckTriggered(VK_RETURN)) {
+			if (gamepad.GetButtonTriggered(BTN_MENU_SELECT) || AEInputCheckTriggered(VK_RETURN)) {
 				Button::ForceClick(*(Button*)selectedButton->GetComponent<Button>(), dt, 4, side, menu->armyCursorMapPos, menu->armyCursorScreenPos, menu->army);
 				PopupMenu::DestroyMenu(side);
 				return;

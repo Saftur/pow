@@ -43,7 +43,7 @@ vector<GameObject*> BehaviorUnit::allUnits;
 
 BehaviorUnit::BaseStats BehaviorUnit::defaultStats = 
 {
-1000,		// Max HP.
+500,		// Max HP.
 0,			// Defense
 5,			// Detection range.
 8,			// Disengagement range.
@@ -79,7 +79,7 @@ void BehaviorUnit::Init(Traits& theTraits, BehaviorArmy* theArmy)
 	traits = theTraits;
 
 	stats.attackRange = Weapons[traits.weapon].range;
-	stats.maxHP = (int)(defaultStats.maxHP + 0.05f * traits.strength + 0.15f * traits.defense);
+	stats.maxHP = (int)(defaultStats.maxHP * (0.05f * traits.strength + 0.15f * traits.defense));
 	stats.currHP = stats.maxHP;
 	stats.inventorySize = (int)(defaultStats.inventorySize + 0.5f * traits.strength + 0.5f * traits.agility);
 	stats.detectRange = defaultStats.detectRange;
