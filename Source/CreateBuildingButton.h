@@ -20,4 +20,5 @@ public:
 private:
 	string archetypeName;
 	GameObject *buildingArchetype;
+	Building::BuildingType buildingType;
 };

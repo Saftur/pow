@@ -28,6 +28,7 @@
 #include "Building.h"
 #include "BuildingResearchCenter.h"
 #include "BuildingCommandPost.h"
+#include "BuildingNeoridiumMine.h"
 #include "Controls.h"
 #include "Mesh.h"
 #include "SpriteSource.h"
@@ -241,10 +242,16 @@ void BehaviorArmy::OnEnter()
 		case sLeft:
 			frontLine.start = frontLine.start < 0 ? 0 : frontLine.start;
 			cursor.transform->SetTranslation(tilemap->GetPosOnScreen({ 0, 0 }));
+
+			neoridiumFundsDisplay = GetParent()->GetGameObjectManager()->GetObjectByName("LeftNeoridiumDisplay");
+			UpdateNeoridiumFundsText();
 			break;
 		case sRight:
 			frontLine.start = frontLine.start < 0 ? tilemap->GetTilemapWidth() - 1 : frontLine.start;
 			cursor.transform->SetTranslation(tilemap->GetPosOnScreen({ (float)tilemap->GetTilemapWidth() - 1, 0 }));
+
+			neoridiumFundsDisplay = GetParent()->GetGameObjectManager()->GetObjectByName("RightNeoridiumDisplay");
+			UpdateNeoridiumFundsText();
 			break;
 		}
 		frontLine.pos = frontLine.start;
@@ -543,6 +550,11 @@ bool BehaviorArmy::LegalSpawn(Vector2D pos)
 	return BehindFrontLine(pos);
 }
 
+void BehaviorArmy::UpdateNeoridiumFundsText()
+{
+	if(neoridiumFundsDisplay) neoridiumFundsDisplay->GetComponent<Text>()->SetText(("Neoridium: " + std::to_string((int)BuildingNeoridiumMine::GetNeoridium(side))).c_str());
+}
+
 bool BehaviorArmy::BehindFrontLine(Vector2D pos)
 {
 	switch (side) {
@@ -728,7 +740,7 @@ BehaviorUnit::Traits BehaviorArmy::GetUnitData(const char * name_) const
 void BehaviorArmy::UpdateFundsText()
 {
 	if (funds.text) {
-		funds.text->SetText(std::to_string((unsigned)funds.amount).c_str());
+		funds.text->SetText(("Jaxium: " + std::to_string((unsigned)funds.amount)).c_str());
 	}
 }
 

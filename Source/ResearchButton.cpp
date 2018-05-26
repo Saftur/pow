@@ -30,4 +30,6 @@ void ResearchButton::ClickEffect(float dt) {
 	else if (researchType == "Teleporter") {
 		BuildingResearchCenter::Unlock(army->GetSide(), Building::BuildingType::Teleporter);
 	}
+
+	army->UpdateNeoridiumFundsText();
 }

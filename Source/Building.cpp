@@ -210,6 +210,7 @@ bool Building::CanBuy() {
 
 bool Building::Buy() {
 	if (buildingType == Building::Teleporter) {
+		army->UpdateNeoridiumFundsText();
 		if (BuildingNeoridiumMine::TakeNeoridium(side, Building::buildingCost[buildingType])) return true;
 	}
 	else if (army->TakeFromFunds(Building::buildingCost[buildingType])) return true; //Throw an error if we can't pay for the building. (This should never happen).

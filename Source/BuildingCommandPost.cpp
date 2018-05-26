@@ -41,18 +41,18 @@ Component * BuildingCommandPost::Clone() const
 }
 
 void BuildingCommandPost::OnDestroy() {
-	// TODO Move to "TakeDamage" function, once implemented
-	/*if (!gameOver) {
-		gameOver = true;
-		for (unsigned i = 1; i < MAX_LAYERS; i++) Space::DeleteLayer(i);
-		if (side == BehaviorArmy::Side::sLeft) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideLeft");
-		if (side == BehaviorArmy::Side::sRight) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideRight");
-	}*/
 }
 
 void BuildingCommandPost::BuildingUpdate(float dt)
 {
-	if (AEInputCheckTriggered('V') && side == BehaviorArmy::Side::sLeft) GetParent()->Destroy();
+	if (GetHealth() <= 0) {
+		if (!gameOver) {
+			gameOver = true;
+			for (unsigned i = 1; i < MAX_LAYERS; i++) Space::DeleteLayer(i);
+			if (side == BehaviorArmy::Side::sLeft) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideRight");
+			if (side == BehaviorArmy::Side::sRight) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideLeft");
+		}
+	}
 }
 
 void BuildingCommandPost::OpenMenu()

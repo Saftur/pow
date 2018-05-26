@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GridManager.h"
 #include "BehaviorUnit.h"
+#include "Building.h"
 #pragma once
 
 using Node = GridManager::Node;
@@ -167,6 +168,9 @@ GameObject * GridManager::GetOccupant(Vector2D node) const
 	{
 		if (unit->GetComponent<BehaviorUnit>()->GetGridPos() == node)
 			return unit;
+	}
+	for (GameObject* building : Building::allBuildings) {
+		if (building->GetChildComponent<Building>()->mapPos == node) return building;
 	}
 
 	return nullptr;

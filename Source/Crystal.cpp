@@ -40,7 +40,10 @@ void Crystal::Update(float dt)
 	if (unit) {
 		BehaviorArmy* army = unit->GetComponent<BehaviorUnit>()->GetArmy();
 		if (type == Jaxium) army->AddToFunds(crystalCount);
-		else if (type == Neoridium) BuildingNeoridiumMine::AddNeoridium(army->GetSide(), crystalCount);
+		else if (type == Neoridium) {
+			BuildingNeoridiumMine::AddNeoridium(army->GetSide(), crystalCount);
+			army->UpdateNeoridiumFundsText();
+		}
 		GetParent()->Destroy();
 	}
 }

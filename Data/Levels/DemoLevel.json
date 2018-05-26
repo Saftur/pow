@@ -80,6 +80,9 @@
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
 	},
+	"ColliderCircle" : {
+		"Radius": 32.0
+	},
 	"JaxiumMine": {}
   },
   {
@@ -99,6 +102,9 @@
 	  "Alpha": 1,
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
+	},
+	"ColliderCircle" : {
+		"Radius": 32.0
 	},
 	"NeoridiumMine": {}
   },
@@ -120,6 +126,9 @@
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
 	},
+	"ColliderCircle" : {
+		"Radius": 32.0
+	},
 	"ResearchCenter": {}
   },
   {
@@ -140,6 +149,9 @@
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
 	},
+	"ColliderCircle" : {
+		"Radius": 32.0
+	},
 	"Teleporter": {}
   },
   {
@@ -159,6 +171,9 @@
 	  "Alpha": 1,
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
+	},
+	"ColliderCircle" : {
+		"Radius": 32.0
 	},
 	"Turret": {}
   },
@@ -242,7 +257,7 @@
     "Sprite": {
       "SpriteSource": {
         "Name": "JaxiumSpriteSource",
-        "Texture": "Data\\Assets\\Jaxium Crystal.png",
+        "Texture": "Data\\Assets\\Jaxium.png",
         "Cols": 1,
         "Rows": 1
       },
@@ -262,7 +277,7 @@
     "Sprite": {
       "SpriteSource": {
         "Name": "NeoridiumSpriteSource",
-        "Texture": "Data\\Assets\\Neoridium Crystal.png",
+        "Texture": "Data\\Assets\\Neoridium.png",
         "Cols": 1,
         "Rows": 1
       },
@@ -316,6 +331,9 @@
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
 	},
+	"ColliderCircle" : {
+		"Radius": 32.0
+	},
 	"CommandPost": {
 	  "Side": 1,
 	  "MapPos": [ 2, 4 ]
@@ -332,6 +350,9 @@
 	  "Alpha": 1,
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
+	},
+	"ColliderCircle" : {
+		"Radius": 32.0
 	},
 	"CommandPost": {
 	  "Side": 2,
@@ -373,7 +394,7 @@
   {
     "Name": "FundsDisplay1",
     "Transform": {
-      "Translation": [ -339, 264 ],
+      "Translation": [ -339, 280 ],
       "Scale": [ 100, 50 ],
       "Rotation": 0
     },
@@ -388,7 +409,37 @@
   {
     "Name": "FundsDisplay2",
     "Transform": {
-      "Translation": [ 339, 264 ],
+      "Translation": [ 339, 280 ],
+      "Scale": [ 100, 50 ],
+      "Rotation": 0
+    },
+    "Text": {
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
+      "ModulateColor": [ 1, 0, 0, 1 ],
+      "Text": "",
+      "Scale": [ 30, 30 ]
+    }
+  },
+  {
+    "Name": "LeftNeoridiumDisplay",
+    "Transform": {
+      "Translation": [ -339, 250 ],
+      "Scale": [ 100, 50 ],
+      "Rotation": 0
+    },
+    "Text": {
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
+      "ModulateColor": [ 1, 0, 0, 1 ],
+      "Text": "",
+      "Scale": [ 30, 30 ]
+    }
+  },
+  {
+    "Name": "RightNeoridiumDisplay",
+    "Transform": {
+      "Translation": [ 339, 250 ],
       "Scale": [ 100, 50 ],
       "Rotation": 0
     },
