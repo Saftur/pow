@@ -162,12 +162,11 @@ void PopupMenu::ConfigureMenu() {
 		((Sprite*)cursor->GetComponent("Sprite"))->SetModulateColor({ 0, 0, 1, 1 });
 	}
 
-	(Space::GetLayer(side)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
+	Space::GetLayer(side)->GetGameObjectManager()->ForEachObject([&](GameObject* obj) {
 		//Update the level to represent the correct team. (sLeft is Red team)
 		if (side == BehaviorArmy::Side::sLeft) {
 			Transform* t = (Transform*)obj->GetComponent("Transform");
 			t->SetTranslation(t->GetTranslation() + Vector2D( 0, 345 ));
 		}
-		return false;
-	}));
+	});
 }

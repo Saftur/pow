@@ -3,10 +3,12 @@
 #include "CompList.h"
 #include "LevelManager.h"
 #include "Cursor.h"
+#include "MenuCursor.h"
 #include "BehaviorArmy.h"
 #include "BehaviorUnit.h"
 #include "Map.h"
 #include "BehaviorTestBox.h"
+
 #include "BuildingCommandPost.h"
 #include "BuildingJaxiumMine.h"
 #include "BuildingNeoridiumMine.h"
@@ -22,6 +24,7 @@
 void CompList::List() {
 	// Use for every new Behavior:
 	LevelManager::AddComponentType("Cursor", new Cursor());
+	LevelManager::AddComponentType("MenuCursor", new MenuCursor());
 	LevelManager::AddComponentType("BehaviorArmy", new BehaviorArmy());
 	LevelManager::AddComponentType("BehaviorUnit", new BehaviorUnit());
 	LevelManager::AddComponentType("Map", new Map());

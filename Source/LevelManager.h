@@ -33,12 +33,12 @@ public:
 	void Shutdown();
 	static void StaticShutdown();
 
-	void SetNextLevel(const char *name, map<string, void*> loadVars = {});
+	void SetNextLevel(string name, map<string, void*> loadVars = {});
 	void Restart();
 	void Quit();
 
 	static bool LevelExists(const char *name);
-	void Load(const char* name, map<string, void*> loadVars = {});
+	void Load(string name, map<string, void*> loadVars = {});
 
 	LevelStatus GetLevelStatus() const;
 	bool IsRunning();
@@ -74,8 +74,8 @@ private:
 	unsigned int id = 0;
 
 	LevelStatus levelStatus = lsLevelUpdate;
-	const char *currLevel = "";
-	const char *nextLevel = "";
+	string currLevel = "";
+	string nextLevel = "";
 
 	map<string, AEGfxTexture*> textures;
 	map<string, AEGfxVertexList*> meshes;

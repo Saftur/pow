@@ -104,7 +104,7 @@ float Vector2D::GetAngleDegrees() const
 
 float Vector2D::GetAngleRadians() const
 {
-	return (x == 0 ? (float)M_PI / 2 : atanf(y/x)) + (y < 0 ? (float)M_PI : 0);
+	return atan2(y, x);
 }
 
 // Calculates the distance between two vectors.

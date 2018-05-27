@@ -64,14 +64,14 @@ void BuildingJaxiumMine::BuildingUpdate(float dt){
 
 			//Find a random open node in the list of nearby nodes.
 			unsigned nodeID = rand() % nearbyNodes.size();
-			if (Space::GetLayer(0)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
+			if (Space::GetLayer(0)->GetGameObjectManager()->CountObjectsWithFilter([&](GameObject* obj) {
 				if (obj->GetComponent<Crystal>()) {
 					if (obj->GetComponent<Transform>()->GetTranslation() == GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID])) {
 						return true;
 					}
 				}
 				return false;
-			}).size() > 0) return;
+			}) > 0) return;
 
 			remainingSpawnTime = Variance(crystalSpawnTime, crystalSpawnTimeVariance) / workers; //Reset the spawn timer.
 

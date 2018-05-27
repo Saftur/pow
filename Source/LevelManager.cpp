@@ -24,6 +24,7 @@
 #include "Mesh.h"
 
 #include "Button.h"
+#include "ChangeLevelButton.h"
 #include "RestartButton.h"
 #include "QuitButton.h"
 
@@ -49,6 +50,7 @@ void LevelManager::StaticInit()
 	AddComponentType("Tilemap", new Tilemap());
 	AddComponentType("Text", new Text());
 
+	AddComponentType("ChangeLevelButton", new ChangeLevelButton());
 	AddComponentType("RestartButton", new RestartButton());
 	AddComponentType("QuitButton", new QuitButton());
 
@@ -95,8 +97,7 @@ void LevelManager::StaticShutdown() {
 	components.clear();
 }
 
-void LevelManager::SetNextLevel(const char *name, map<string, void*> loadVars) {
-	if (!name) return;
+void LevelManager::SetNextLevel(string name, map<string, void*> loadVars) {
 	nextLevel = name;
 	levelStatus = lsLevelChange;
 	this->loadVars = loadVars;
@@ -132,7 +133,7 @@ bool LevelManager::LevelExists(const char * name)
 	} else return false;
 }
 
-void LevelManager::Load(const char* name, map<string, void*> loadVars)
+void LevelManager::Load(string name, map<string, void*> loadVars)
 {
 	// Create the path string.
 	string path = "Data\\Levels\\";
@@ -164,6 +165,10 @@ void LevelManager::Load(const char* name, map<string, void*> loadVars)
 	id = 0;
 	while (stateNext != IDLE)
 		loadObject(levelDoc);
+
+	GetGameObjectManager()->ForEachObject([](GameObject *obj) {
+		obj->InstanceInit();
+	});
 
 	this->loadVars.clear();
 }
@@ -221,7 +226,7 @@ void LevelManager::loadObject(Document& levelDoc)
 
 		if (archetype)
 			GetGameObjectManager()->AddArchetype(*go);
-		else GetGameObjectManager()->Add(*go);
+		else GetGameObjectManager()->Add(*go, false);
 	}
 		break;
 	case otSpriteSource: {

@@ -58,6 +58,7 @@
     <ClInclude Include="Source\BuildingTurret.h" />
     <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\ChangeLevelButton.h" />
     <ClInclude Include="Source\CompList.h" />
     <ClInclude Include="Source\BehaviorStub.h" />
     <ClInclude Include="Source\BehaviorUnit.h" />
@@ -82,6 +83,7 @@
     <ClInclude Include="Source\LevelManager.h" />
     <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\Matrix2D.h" />
+    <ClInclude Include="Source\MenuCursor.h" />
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="source\Pathfinder.h" />
     <ClInclude Include="Source\Physics.h" />
@@ -122,6 +124,7 @@
     <ClCompile Include="Source\BuildingTurret.cpp" />
     <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\ChangeLevelButton.cpp" />
     <ClCompile Include="Source\CompList.cpp" />
     <ClCompile Include="Source\BehaviorStub.cpp" />
     <ClCompile Include="Source\BehaviorUnit.cpp" />
@@ -146,6 +149,7 @@
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Map.cpp" />
     <ClCompile Include="Source\Matrix2D.cpp" />
+    <ClCompile Include="Source\MenuCursor.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\Pathfinder.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
@@ -178,6 +182,7 @@
     <None Include="Data\Levels\BuildingMenu.json" />
     <None Include="Data\Levels\CommandPostMenu.json" />
     <None Include="Data\Levels\DemoLevel.json" />
+    <None Include="Data\Levels\MainMenuLevel.json" />
     <None Include="Data\Levels\PauseLevel.json" />
     <None Include="Data\Levels\ResearchMenu.json" />
     <None Include="Data\Levels\StartLevel.json" />

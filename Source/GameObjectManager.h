@@ -75,12 +75,12 @@ public:
 	// Add a game object to the active game object list.
 	// Params:
 	//	 gameObject = Reference to the game object to be added to the list.
-	GameObject* Add(GameObject& gameObject);
+	GameObject* Add(GameObject& gameObject, bool callInstanceInit=true);
 	// Add a game object to the active game object list.
 	// This function clones the passed GameObject before adding it
 	// Params:
 	//	 gameObject = Reference to the game object to be added to the list.
-	GameObject* AddNew(GameObject& gameObject);
+	GameObject* AddNew(GameObject& gameObject, bool callInstanceInit=true);
 
 	// Add a game object to the game object archetype list.
 	// (Hint: This function and the GameObjectManagerAdd functions require
@@ -111,6 +111,21 @@ public:
 			if (filter(gameObject))
 				objects.push_back(gameObject);
 		return objects;
+	}
+
+	template<typename Func>
+	size_t CountObjectsWithFilter(Func filter) {
+		size_t count = 0;
+		for (GameObject *gameObject : activeList)
+			if (filter(gameObject))
+				count++;
+		return count;
+	}
+
+	template<typename Func>
+	void ForEachObject(Func func) {
+		for (GameObject *gameObject : activeList)
+			func(gameObject);
 	}
 	
 	// Returns a pointer to the first game object archetype matching the specified name.

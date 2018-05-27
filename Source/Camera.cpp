@@ -22,12 +22,18 @@ void Camera::Load(rapidjson::Value & obj) {
 			pos.x = (*tmp)[0].GetFloat();
 		if ((*tmp)[1].IsNumber())
 			pos.y = (*tmp)[1].GetFloat();
+	} else {
+		pos.x = 0.f;
+		pos.y = 0.f;
 	}
 	if (obj.HasMember("ScreenSize") && (tmp = &obj["ScreenSize"])->IsArray() && tmp->Size() == 2) {
 		if ((*tmp)[0].IsNumber())
 			size.x = (*tmp)[0].GetFloat();
 		if ((*tmp)[1].IsNumber())
 			size.y = (*tmp)[1].GetFloat();
+	} else {
+		size.x = 1.f;
+		size.y = 1.f;
 	}
 }
 

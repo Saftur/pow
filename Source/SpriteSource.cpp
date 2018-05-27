@@ -110,8 +110,12 @@ void SpriteSource::Load(rapidjson::Value& obj)
 	{
 		tex = AEGfxTextureLoad(obj["Texture"].GetString());
 
-		numCols = obj["Cols"].GetInt();
-		numRows = obj["Rows"].GetInt();
+		if (obj.HasMember("Cols"))
+			numCols = obj["Cols"].GetInt();
+		else numCols = 1;
+		if (obj.HasMember("Rows"))
+			numRows = obj["Rows"].GetInt();
+		else numRows = 1;
 
 		// Add the texture to the map.
 		levelManager->AddTexture(obj["Name"].GetString(), tex);

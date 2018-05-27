@@ -72,17 +72,19 @@ void GameObjectManager::Shutdown(void)
 		archetypes.clear();
 }
 
-GameObject * GameObjectManager::Add(GameObject & gameObject) {
+GameObject * GameObjectManager::Add(GameObject & gameObject, bool callInstanceInit) {
 	activeList.push_back(&gameObject);
-	gameObject.InstanceInit();
+	if (callInstanceInit)
+		gameObject.InstanceInit();
 	return &gameObject;
 }
 
-GameObject* GameObjectManager::AddNew(GameObject & gameObject)
+GameObject* GameObjectManager::AddNew(GameObject & gameObject, bool callInstanceInit)
 {
 	GameObject *newObject = new GameObject(gameObject);
 	activeList.push_back(newObject);
-	newObject->InstanceInit();
+	if (callInstanceInit)
+		newObject->InstanceInit();
 	return newObject;
 }
 

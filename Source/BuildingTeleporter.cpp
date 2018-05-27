@@ -98,12 +98,12 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 
 bool BuildingTeleporter::SetExit()
 {
-	return (Space::GetLayer(0)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject *obj) {
+	return (Space::GetLayer(0)->GetGameObjectManager()->CountObjectsWithFilter([&](GameObject *obj) {
 		BuildingTeleporter *teleporter = obj->GetComponent<BuildingTeleporter>();
 		if (teleporter && teleporter != this && teleporter->side == side) {
 			exit = obj;
 			return true;
 		}
 		return false;
-	})).size();
+	}));
 }

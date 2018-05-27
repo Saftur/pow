@@ -14,4 +14,6 @@
 #define BTN_BUILDING_MENU Gamepad::bRShoulder
 #define BTN_MENU_LEFT Gamepad::bDpadLeft
 #define BTN_MENU_RIGHT Gamepad::bDpadRight
+#define BTN_MENU_UP Gamepad::bDpadUp
+#define BTN_MENU_DOWN Gamepad::bDpadDown
 #define BTN_MENU_SELECT Gamepad::bA

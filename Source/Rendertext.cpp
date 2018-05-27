@@ -64,7 +64,7 @@ void Text::SetScale(Vector2D textScale)
 
 void Text::Draw(Camera *cam) const {
 	int len = (int)strlen(string);
-	Transform* transform = (Transform*)GetParent()->GetComponent("Transform");
+	Transform* transform = GetParent()->GetComponent<Transform>();
 	Vector2D startPos = transform->GetTranslation();
 	Vector2D startScale = transform->GetScale();
 	transform->SetTranslation(transform->GetTranslation() + offset - Vector2D((scale.x * 0.6f * len) / 2, 0.0f));

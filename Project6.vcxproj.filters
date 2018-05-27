@@ -265,6 +265,12 @@
     <ClCompile Include="Source\BuildingTurret.cpp">
       <Filter>Game\Buildings</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ChangeLevelButton.cpp">
+      <Filter>Engine\GameObjects\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MenuCursor.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h">
@@ -562,6 +568,12 @@
     <ClInclude Include="Source\BuildingTurret.h">
       <Filter>Game\Buildings</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ChangeLevelButton.h">
+      <Filter>Engine\GameObjects\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MenuCursor.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fmodAPI\lib\fmod.dll">
@@ -599,6 +611,9 @@
     </None>
     <None Include="fmodAPI\inc\fmod_studio.cs">
       <Filter>fmod</Filter>
+    </None>
+    <None Include="Data\Levels\MainMenuLevel.json">
+      <Filter>Game\Levels</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
