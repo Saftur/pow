@@ -56,6 +56,8 @@ public:
 	//------------------------------------------------------------------------------
 	Button(const char *name);
 
+	void Load(rapidjson::Value &obj);
+
 	//Check if the button is being pressed
 	void Update(float dt);
 	
@@ -67,6 +69,7 @@ public:
 
 private:
 	bool active = true; //Is this button active.
+	bool clickable = true; //Is this button clickable
 
 	//------------------------------------------------------------------------------
 	// Private Functions:

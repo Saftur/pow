@@ -23,7 +23,7 @@ void Sprite::Draw(Camera *cam) const
 {
 	GameObject *parent_ = GetParent();
 	if (!parent_) return;
-	Transform *transform = (Transform*)parent_->GetComponent("Transform");
+	Transform *transform = parent_->GetComponent<Transform>();
 	if (!transform) return;
 
 	Draw(cam, *transform);

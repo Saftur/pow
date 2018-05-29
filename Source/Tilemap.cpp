@@ -83,7 +83,7 @@ Component * Tilemap::Clone() const
 
 void Tilemap::Draw(Camera *cam) const
 {
-	Transform *parentTR = GetParent() ? (Transform*)GetParent()->GetComponent("Transform") : nullptr;
+	Transform *parentTR = GetParent() ? GetParent()->GetComponent<Transform>() : nullptr;
 	for (int y = 0; y < tilemapHeight; y++)
 	{
 		for (int x = 0; x < tilemapWidth; x++)

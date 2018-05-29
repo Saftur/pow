@@ -7,6 +7,7 @@ ChangeLevelButton::ChangeLevelButton() : Button("ChangeLevelButton") {
 }
 
 void ChangeLevelButton::Load(rapidjson::Value & obj) {
+	Button::Load(obj);
 	rapidjson::Value *tmp;
 
 	if (obj.HasMember("Level") && (tmp = &obj["Level"])->IsString()) {

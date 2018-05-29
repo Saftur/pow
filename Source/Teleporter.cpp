@@ -7,7 +7,7 @@
 
 void TeleporterUpdateObject(GameObject & gameObject)
 {
-	Transform *tr = (Transform*)gameObject.GetComponent("Transform");
+	Transform *tr = gameObject.GetComponent<Transform>();
 	if (!tr) return;
 
 	f32 maxX = AEGfxGetWinMaxX();

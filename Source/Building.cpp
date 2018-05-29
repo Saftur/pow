@@ -159,7 +159,7 @@ void Building::SetSide(BehaviorArmy::Side side)
 	//Find the army that this building should belong to.
 	vector<GameObject*> objs = Space::GetLayer(0)->GetGameObjectManager()->GetObjectsByName("Army");
 	for (unsigned i = 0; i < objs.size(); i++) {
-		BehaviorArmy* bArmy = (BehaviorArmy*)objs[i]->GetComponent("BehaviorArmy");
+		BehaviorArmy* bArmy = objs[i]->GetComponent<BehaviorArmy>();
 		if (bArmy->GetSide() == side) {
 			army = bArmy;
 		}

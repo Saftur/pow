@@ -52,7 +52,7 @@ void Physics::Update(float dt)
 {
 	GameObject *parent_ = GetParent();
 	if (!parent_) return;
-	Transform *transform = (Transform*)parent_->GetComponent("Transform");
+	Transform *transform = parent_->GetComponent<Transform>();
 	if (!transform) return;
 	oldTranslation = transform->GetTranslation();
 	velocity += acceleration * dt;

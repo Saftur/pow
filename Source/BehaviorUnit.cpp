@@ -463,6 +463,7 @@ int BehaviorUnit::GetHP() const
 
 void BehaviorUnit::ModifyHP(int amt)
 {
+	if (stats.currHP <= 0) return;
 	stats.currHP += amt;
 
 	if (stats.currHP > stats.maxHP)

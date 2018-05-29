@@ -28,7 +28,7 @@ void Collider::Draw(Camera *cam) const
 void Collider::SetParent(GameObject * object)
 {
 	Component::SetParent(object);
-	transform.SetParent((Transform*)GetParent()->GetComponent("Transform"));
+	transform.SetParent(GetParent()->GetComponent<Transform>());
 }
 
 void Collider::CheckCollision(const Collider & other)

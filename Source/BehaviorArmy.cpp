@@ -299,18 +299,43 @@ void BehaviorArmy::OnUpdate(float dt)
 			if (controls.gamepad->GetButtonTriggered(BTN_SELECT) || AEInputCheckTriggered(VK_RETURN)) { ///TODDO: Remove AEInput check
 				rectStartPos = cursorNode;
 			}
-			if (controls.gamepad->GetButtonReleased(BTN_SELECT)) {
-				if (rectStartPos == rectEndPos) {
+
+			// Are we selecting units?
+			if (controls.gamepad->GetButton(BTN_SELECT) || AEInputCheckCurr(VK_RETURN) && rectStartPos) {
+				if (cursorNode != rectEndPos) {
+					rectEndPos = cursorNode;
+					SelectUnits();
+				}
+			} else {
+				if (selectedUnits.size() > 0)
+				{
+					if (cursorNode != prevTarget) {
+						prevTarget = cursorNode;
+						FindPath();
+					}
+				}
+				else
+				{
+					if (controls.gamepad->GetButtonTriggered(BTN_SPAWNUNIT))
+						CreateUnit("Unit1", cursorNode->gridPos());
+				}
+			}
+
+			if (controls.gamepad->GetButtonReleased(BTN_SELECT) || AEInputCheckReleased(VK_RETURN)) {
+				if (rectStartPos && rectStartPos == rectEndPos) {
 					//Check if we are trying to select a building, and open the menu associated with that building if we are.
 					for (GameObject* building : Building::allBuildings) {
+						Building *buildingComp = building->GetChildComponent<Building>();
+						if (buildingComp->army != this) continue;
 						Transform *transform = building->GetComponent<Transform>();
 						if (transform && GridManager::GetInstance().ConvertToGridPoint(transform->GetTranslation()) == cursorNode->gridPos()) {
-							((Building*)building->GetComponent("Building"))->OpenMenu();
+							buildingComp->OpenMenu();
 						}
 					}
 				}
 
 				CalculateOffsets();
+				rectStartPos = nullptr;
 				rectEndPos = nullptr;
 			}
 
@@ -332,29 +357,9 @@ void BehaviorArmy::OnUpdate(float dt)
 				}
 				selectedUnits.clear();
 			}
-
-			// Are we selecting units?
-			if (controls.gamepad->GetButton(BTN_SELECT)) {
-				if (cursorNode != rectEndPos) {
-					rectEndPos = cursorNode;
-					SelectUnits();
-				}
-			} else {
-				if (selectedUnits.size() > 0)
-				{
-					if (cursorNode != prevTarget) {
-						prevTarget = cursorNode;
-						FindPath();
-					}
-				}
-				else
-				{
-					if (controls.gamepad->GetButtonTriggered(BTN_SPAWNUNIT))
-						CreateUnit("Unit1", cursorNode->gridPos());
-				}
-			}
-			break;
 		}
+
+		break;
 	}
 }
 

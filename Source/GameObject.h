@@ -32,6 +32,9 @@ typedef class GameObjectManager GameObjectManager;
 typedef class Component Component;
 typedef class Camera Camera;
 
+typedef class Transform Transform;
+typedef class Collider Collider;
+
 //------------------------------------------------------------------------------
 // Public Structures:
 //------------------------------------------------------------------------------
@@ -62,7 +65,6 @@ public:
 	void AddComponent(Component* component);
 
 	// Retrieves the component with the given name if it exists.
-	Component* GetComponent(const char* name) const;
 	template <typename T>
 	T *GetComponent() const {
 		unsigned hash = typeid(T).hash_code();
@@ -70,6 +72,14 @@ public:
 			if (typeid(*components[i]).hash_code() == hash)
 				return static_cast<T*>(components[i]);
 		return nullptr;
+	}
+	template <>
+	Transform *GetComponent<Transform>() const {
+		return transform;
+	}
+	template <>
+	Collider *GetComponent<Collider>() const {
+		return collider;
 	}
 	template <typename T>
 	T *GetChildComponent() const {
@@ -152,7 +162,12 @@ private:
 	bool destroyNext;
 
 	Space *space;
-	//LevelManager *levelManager;
+
+	// Shortcut Component pointers
+	//  Adding a Transform or Collider will set these
+	//  Getting a Transform or Collider will return these
+	Transform *transform;
+	Collider *collider;
 };
 
 //------------------------------------------------------------------------------

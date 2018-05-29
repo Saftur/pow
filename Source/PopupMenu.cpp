@@ -91,8 +91,8 @@ void PopupMenu::Update(BehaviorArmy::Side side, Gamepad gamepad, float dt, Node 
 
 			//Find the button that we have selected and update the cursor.
 			GameObject* selectedButton = Space::GetLayer(menu->side)->GetGameObjectManager()->GetObjectsByName("Button")[menu->selectedButton];
-			Transform* selectedButtonTransform = (Transform*)selectedButton->GetComponent("Transform");
-			Transform* cursorTransform = (Transform*)cursor->GetComponent("Transform");
+			Transform* selectedButtonTransform = selectedButton->GetComponent<Transform>();
+			Transform* cursorTransform = cursor->GetComponent<Transform>();
 			ArmyButton* button = selectedButton->GetChildComponent<ArmyButton>();
 			cursorTransform->SetScale(selectedButtonTransform->GetScale() * 1.1f);
 			cursorTransform->SetWorldTranslation(selectedButtonTransform->GetTranslation());
@@ -156,16 +156,16 @@ void PopupMenu::ConfigureMenu() {
 	GameObject* cursor = Space::GetLayer(side)->GetGameObjectManager()->GetObjectByName("Cursor");
 
 	if (side == BehaviorArmy::Side::sLeft) {
-		((Sprite*)cursor->GetComponent("Sprite"))->SetModulateColor({ 1, 0, 0, 1 });
+		cursor->GetComponent<Sprite>()->SetModulateColor({ 1, 0, 0, 1 });
 	}
 	else if(side == BehaviorArmy::Side::sRight) {
-		((Sprite*)cursor->GetComponent("Sprite"))->SetModulateColor({ 0, 0, 1, 1 });
+		cursor->GetComponent<Sprite>()->SetModulateColor({ 0, 0, 1, 1 });
 	}
 
 	Space::GetLayer(side)->GetGameObjectManager()->ForEachObject([&](GameObject* obj) {
 		//Update the level to represent the correct team. (sLeft is Red team)
 		if (side == BehaviorArmy::Side::sLeft) {
-			Transform* t = (Transform*)obj->GetComponent("Transform");
+			Transform* t = obj->GetComponent<Transform>();
 			t->SetTranslation(t->GetTranslation() + Vector2D( 0, 345 ));
 		}
 	});

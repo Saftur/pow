@@ -37,12 +37,12 @@ void GameObjectManager::CheckCollisions()
 	for (unsigned i = 0; i < activeList.size(); i++) {
 		if (activeList[i]->IsDestroyed())
 			continue;
-		collider1 = (Collider*)activeList[i]->GetComponent("Collider");
+		collider1 = activeList[i]->GetComponent<Collider>();
 		if (!collider1) continue;
 		for (unsigned j = i + 1; j < activeList.size(); j++) {
 			if (activeList[j]->IsDestroyed())
 				continue;
-			collider2 = (Collider*)activeList[j]->GetComponent("Collider");
+			collider2 = activeList[j]->GetComponent<Collider>();
 			if (!collider2) continue;
 			collider1->CheckCollision(*collider2);
 		}

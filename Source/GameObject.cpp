@@ -7,6 +7,9 @@
 #include <string>
 #include "Trace.h"
 
+#include "Transform.h"
+#include "Collider.h"
+
 GameObject::GameObject(const char * name, Space *space) :
 		name(name), isDestroyed(false), destroyNext(false), numComponents(0), space(space)
 {
@@ -32,18 +35,11 @@ void GameObject::AddComponent(Component * component)
 	if (numComponents < maxNumComponents) {
 		components[numComponents++] = component;
 		component->SetParent(this);
+		if (!transform && dynamic_cast<Transform*>(component))
+			transform = (Transform*)component;
+		if (!collider && dynamic_cast<Collider*>(component))
+			collider = (Collider*)component;
 	}
-}
-
-Component * GameObject::GetComponent(const char * name_) const
-{
-	for (unsigned i = 0; i < numComponents; i++) {
-		Component * c = components[i];
-		if (strcmp(c->GetName(), name_) == 0) {
-			return c;
-		}
-	}
-	return nullptr;
 }
 
 Component * GameObject::GetComponent(const char * name_, int number) const
