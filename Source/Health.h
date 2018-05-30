@@ -49,7 +49,7 @@ public:
 
 	void Initialize(const int& max);
 
-	unsigned GetHP() const;
+	int GetHP() const;
 	void UpdateHP(const int& amount);
 	void InstanceInit();
 	

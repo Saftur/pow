@@ -39,10 +39,11 @@ public:
 	enum SpecialtyType { Basic, Advanced, Special };
 	enum CostType { Jaxium, Neoridium };
 
-	Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, float maxHealth, Vector2D pos, float jaxiumDropAmount, float neoridiumDropAmount);
+	Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, Vector2D pos, float jaxiumDropAmount, float neoridiumDropAmount);
 	~Building();
 
 	virtual Component* Clone() const = 0;
+	void OnDestroy();
 
 	static void InitializeBuildings(BehaviorArmy::Side side); //Initialize the buildings for the given army.
 
@@ -67,11 +68,6 @@ public:
 	bool CanBuy(); //Checks if this building can be bought (also calls IsUnlocked())
 	bool Buy(); //Buys this building
 
-	void SetHealth(float amount); //Set the building's health to some value.
-	float GetHealth(); //Return the amount of health the building has.
-	void Damage(float amount); //Lower the health of the building by X amount.
-	void Heal(float amount); //Increase the health of the building by X amount.
-
 	static map<BuildingType, float> buildingCost;
 	static vector<GameObject*> allBuildings;
 
@@ -92,9 +88,6 @@ private:
 	float buildTimeRemaining; //How long until the building will be finnished creating.
 
 	Vector2D originalScale; //The original scale of the building, used to play a temporary building "animation".
-
-	float maxHealth; //The maximum health of the building.
-	float health; //The health of the building.
 
 	float jaxiumDropAmount; //The amount of Jaxium to drop on death.
 	float neoridiumDropAmount; //The amount of Neoridium to drop on death.

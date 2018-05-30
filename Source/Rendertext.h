@@ -25,8 +25,7 @@ typedef class Vector2D Vector2D;
 
 class Text : public Component {
 public:
-	Text(bool manualCreation = false, const char* text = "", const char* font = "Assets\\NewFont.png",
-		Color color = { 0, 0, 0, 0 }, Vector2D textScale = { 15, 15 });
+	Text();
 
 	Text(const Text &other);
 
@@ -46,9 +45,6 @@ private:
 	char string[512];
 	Vector2D scale;
 	
-	AEGfxVertexList* mesh;			//Mesh component for drawing the text.
-	AEGfxTexture* texture;			//Texture component for drawing the text.
-	SpriteSource* spritesource;		//Spritesource component for drawing the text.
 	Sprite *sprite;					//Sprite component for drawing the text.
 
 	Vector2D offset;

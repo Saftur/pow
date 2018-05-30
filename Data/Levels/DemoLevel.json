@@ -83,7 +83,11 @@
 	"ColliderCircle" : {
 		"Radius": 32.0
 	},
-	"JaxiumMine": {}
+	"JaxiumMine": {},
+    "Health": {
+      "MaxHP": 1000,
+      "Offset": [ 0, 30 ]
+    }
   },
   {
     "Name": "NeoridiumMineArchetype",
@@ -106,7 +110,11 @@
 	"ColliderCircle" : {
 		"Radius": 32.0
 	},
-	"NeoridiumMine": {}
+	"NeoridiumMine": {},
+    "Health": {
+      "MaxHP": 1000,
+      "Offset": [ 0, 30 ]
+    }
   },
   {
     "Name": "ResearchCenterArchetype",
@@ -129,7 +137,11 @@
 	"ColliderCircle" : {
 		"Radius": 32.0
 	},
-	"ResearchCenter": {}
+	"ResearchCenter": {},
+    "Health": {
+      "MaxHP": 1000,
+      "Offset": [ 0, 30 ]
+    }
   },
   {
     "Name": "TeleporterArchetype",
@@ -152,7 +164,11 @@
 	"ColliderCircle" : {
 		"Radius": 32.0
 	},
-	"Teleporter": {}
+	"Teleporter": {},
+    "Health": {
+      "MaxHP": 250,
+      "Offset": [ 0, 30 ]
+    }
   },
   {
     "Name": "TurretArchetype",
@@ -175,7 +191,11 @@
 	"ColliderCircle" : {
 		"Radius": 32.0
 	},
-	"Turret": {}
+	"Turret": {},
+    "Health": {
+      "MaxHP": 250,
+      "Offset": [ 0, 30 ]
+    }
   },
   {
     "Name": "UnitArchetype",
@@ -338,6 +358,10 @@
 	"ColliderCircle" : {
 		"Radius": 32.0
 	},
+    "Health": {
+      "MaxHP": 1000,
+      "Offset": [ 0, 30 ]
+    },
 	"CommandPost": {
 	  "Side": 1,
 	  "MapPos": [ 2, 4 ]
@@ -358,6 +382,10 @@
 	"ColliderCircle" : {
 		"Radius": 32.0
 	},
+    "Health": {
+      "MaxHP": 1000,
+      "Offset": [ 0, 30 ]
+    },
 	"CommandPost": {
 	  "Side": 2,
 	  "MapPos": [ 9, 4 ]

@@ -90,7 +90,7 @@ void Health::Initialize(const int & max)
 	hp = max;
 }
 
-unsigned Health::GetHP() const
+int Health::GetHP() const
 {
 	return hp;
 }

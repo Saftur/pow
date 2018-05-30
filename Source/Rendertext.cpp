@@ -21,36 +21,18 @@
 #include <cctype>
 #include "rapidjson.h"
 #include "LevelManager.h"
+#include "Space.h"
 
-Text::Text(bool manualCreation, const char* text, const char* font, Color color, Vector2D textScale) : Component("Text"), offset({ 0, 0 }) {
-	if (manualCreation) {
-		strcpy(string, text);
-		scale = textScale;
-
-		mesh = MeshCreateQuad(0.5f, 0.5f, 0.0625f, 0.16666667f);
-		texture = AEGfxTextureLoad(font);
-		spritesource = new SpriteSource(16, 6, texture);
-
-		sprite = new Sprite();
-		sprite->SetMesh(mesh);
-		//sprite->SetMeshHalfSize({ 0.5f, 0.5f });
-		//sprite->SetMeshUV({ 0.0625f, 0.16666667f });
-		sprite->SetSpriteSource(spritesource);
-		sprite->SetModulateColor(color);
-	}
+Text::Text() : Component("Text"), offset({ 0, 0 }) {
 }
 
 Text::Text(const Text & other) : Component("Text")
 {
 	strcpy(string, other.string);
 	scale = other.scale;
+	offset = other.offset;
 
-	mesh = other.mesh;
-	texture = other.texture;
-	sprite = (Sprite*)other.sprite->Clone();
-	spritesource = new SpriteSource(*other.spritesource);
-	sprite->SetSpriteSource(spritesource);
-	sprite->SetMesh(mesh);
+	if(other.sprite) sprite = (Sprite*)other.sprite->Clone();
 }
 
 Component* Text::Clone() const{
@@ -133,6 +115,7 @@ void Text::Load(rapidjson::Value & obj)
 	sprite = new Sprite();
 	sprite->SetParent(GetParent());
 	sprite->Load(obj);
+
 	//sprite->SetMesh(mesh);
 	//sprite->SetSpriteSource(spritesource);
 

@@ -24,7 +24,7 @@
 
 using std::vector;
 
-BuildingTurret::BuildingTurret(BehaviorArmy::Side side, Vector2D pos) : Building(side, Turret, Special, 3.5f, 250.0f, pos, 50, 0)
+BuildingTurret::BuildingTurret(BehaviorArmy::Side side, Vector2D pos) : Building(side, Turret, Special, 3.5f, pos, 50, 0)
 {
 }
 

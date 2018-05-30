@@ -33,9 +33,8 @@ map<BehaviorArmy::Side, bool[Building::BuildingType::BuildingCount]> Building::b
 map<Building::BuildingType, float> Building::buildingCost;
 vector<GameObject*> Building::allBuildings;
 
-Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, float maxHealth, Vector2D pos, float jaxiumDropAmount, 
-	float neoridiumDropAmount) : Component("Building"), buildingType(type), specialtyType(specialtyType), buildTime(buildTime), mapPos(pos), side(side), maxHealth(maxHealth),
-	health(maxHealth), jaxiumDropAmount(jaxiumDropAmount), neoridiumDropAmount(neoridiumDropAmount)
+Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, Vector2D pos, float jaxiumDropAmount, 
+	float neoridiumDropAmount) : Component("Building"), buildingType(type), specialtyType(specialtyType), buildTime(buildTime), mapPos(pos), side(side), jaxiumDropAmount(jaxiumDropAmount), neoridiumDropAmount(neoridiumDropAmount)
 {
 	buildTimeRemaining = buildTime; //Set the delay until the building is finnished being built.
 	originalScale = { 0, 0 }; //Default to 0 so we can check if we set it yet or not on update when we actually have the transform component attatched.
@@ -44,6 +43,30 @@ Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType spe
 Building::~Building()
 {
 	allBuildings.erase(std::remove(allBuildings.begin(), allBuildings.end(), GetParent()), allBuildings.end());
+}
+
+void Building::OnDestroy()
+{
+	//Drop some money.
+	vector<GridManager::Node*> nearbyNodes = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y)); //Find all neaby nodes.
+	unsigned nodeID = rand() % nearbyNodes.size(); //Pick a random node out of the list of nearby nodes.
+
+	if (jaxiumDropAmount > 0) {
+		//Create a jaxium crystal on the node.
+		GameObject* jaxium = new GameObject(*Space::GetLayer(0)->GetGameObjectManager()->GetArchetype("Jaxium Archetype"));
+		jaxium->AddComponent(new Crystal(Crystal::CrystalType::Jaxium, jaxiumDropAmount));
+		jaxium->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
+
+		Space::GetLayer(0)->GetGameObjectManager()->Add(*jaxium);
+	}
+	if (neoridiumDropAmount > 0) {
+		//Create a neoridium crystal on the node.
+		GameObject* neoridium = new GameObject(*Space::GetLayer(0)->GetGameObjectManager()->GetArchetype("Neoridium Archetype"));
+		neoridium->AddComponent(new Crystal(Crystal::CrystalType::Neoridium, neoridiumDropAmount));
+		neoridium->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
+
+		Space::GetLayer(0)->GetGameObjectManager()->Add(*neoridium);
+	}
 }
 
 void Building::InitializeBuildings(BehaviorArmy::Side side)
@@ -96,32 +119,6 @@ void Building::Update(float dt)
 	}
 	else {
 		BuildingUpdate(dt); //Update the building.
-	}
-
-	//Destroy the building and drop some money if it's health drops below 0.
-	if (health <= 0) {
-		GetParent()->Destroy();
-
-		//Drop some money.
-		vector<GridManager::Node*> nearbyNodes = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y)); //Find all neaby nodes.
-		unsigned nodeID = rand() % nearbyNodes.size(); //Pick a random node out of the list of nearby nodes.
-
-		if (jaxiumDropAmount > 0) {
-			//Create a jaxium crystal on the node.
-			GameObject* jaxium = new GameObject(*Space::GetLayer(0)->GetGameObjectManager()->GetArchetype("Jaxium Archetype"));
-			jaxium->AddComponent(new Crystal(Crystal::CrystalType::Jaxium, jaxiumDropAmount));
-			jaxium->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
-
-			Space::GetLayer(0)->GetGameObjectManager()->Add(*jaxium);
-		}
-		if (neoridiumDropAmount > 0) {
-			//Create a neoridium crystal on the node.
-			GameObject* neoridium = new GameObject(*Space::GetLayer(0)->GetGameObjectManager()->GetArchetype("Neoridium Archetype"));
-			neoridium->AddComponent(new Crystal(Crystal::CrystalType::Neoridium, neoridiumDropAmount));
-			neoridium->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID]));
-
-			Space::GetLayer(0)->GetGameObjectManager()->Add(*neoridium);
-		}
 	}
 }
 
@@ -203,24 +200,4 @@ bool Building::Buy() {
 	}
 	else if (army->TakeFromFunds(Building::buildingCost[buildingType])) return true; //Throw an error if we can't pay for the building. (This should never happen).
 	return false;
-}
-
-void Building::SetHealth(float amount)
-{
-	health = amount < maxHealth ? amount : maxHealth;
-}
-
-float Building::GetHealth()
-{
-	return health;
-}
-
-void Building::Damage(float amount)
-{
-	health -= amount;
-}
-
-void Building::Heal(float amount)
-{
-	health = (health + amount) < maxHealth ? (health + amount) : maxHealth;
 }
