@@ -319,7 +319,16 @@ void BehaviorUnit::OnUpdate(float dt)
 
 				currMoveTarget = nullptr;
 
-				if (occupant && occupant->GetComponent<BehaviorUnit>()->GetArmy() != army)
+				BehaviorArmy *oArmy = nullptr;
+				if (occupant) {
+					BehaviorUnit *bUnit = occupant->GetComponent<BehaviorUnit>();
+					Building *bBuilding = occupant->GetChildComponent<Building>();
+
+					if (bUnit) oArmy = bUnit->GetArmy();
+					else if (bBuilding) oArmy = bBuilding->army;
+				}
+
+				if (occupant && oArmy != army)
 					SetNextState(cUnitAttack);
 				else if (!path.empty())
 					UpdatePath();

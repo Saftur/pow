@@ -28,6 +28,8 @@ public:
 	Text(bool manualCreation = false, const char* text = "", const char* font = "Assets\\NewFont.png",
 		Color color = { 0, 0, 0, 0 }, Vector2D textScale = { 15, 15 });
 
+	Text(const Text &other);
+
 	// Clones the component, returning a dynamically allocated copy.
 	Component* Clone() const;
 

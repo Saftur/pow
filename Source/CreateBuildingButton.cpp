@@ -8,6 +8,7 @@
 #include "BuildingNeoridiumMine.h"
 #include "BuildingResearchCenter.h"
 #include "BuildingTeleporter.h"
+#include "BuildingTurret.h"
 
 CreateBuildingButton::CreateBuildingButton() : ArmyButton("CreateBuildingButton") {
 }

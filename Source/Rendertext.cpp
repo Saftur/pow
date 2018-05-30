@@ -40,6 +40,19 @@ Text::Text(bool manualCreation, const char* text, const char* font, Color color,
 	}
 }
 
+Text::Text(const Text & other) : Component("Text")
+{
+	strcpy(string, other.string);
+	scale = other.scale;
+
+	mesh = other.mesh;
+	texture = other.texture;
+	sprite = (Sprite*)other.sprite->Clone();
+	spritesource = new SpriteSource(*other.spritesource);
+	sprite->SetSpriteSource(spritesource);
+	sprite->SetMesh(mesh);
+}
+
 Component* Text::Clone() const{
 	return new Text(*this);
 }

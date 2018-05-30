@@ -3,7 +3,7 @@
     "Name": "Background",
     "Transform": {
       "Translation": [ 0, 0 ],
-      "Scale": [ 500, 150 ],
+      "Scale": [ 500, 275 ],
       "Rotation": 0
     },
     "Sprite": {
@@ -23,8 +23,8 @@
       "Scale": [ 1, 1 ]
     },
     "Camera": {
-      "ScreenPos": [ 0, 0.75 ],
-      "ScreenSize": [ 0.5, 0.25 ]
+      "ScreenPos": [ 0, 0.625 ],
+      "ScreenSize": [ 0.5, 0.5 ]
     }
   },
   {
@@ -147,6 +147,29 @@
       "Mesh": "TextMesh",
       "ModulateColor": [ 0, 0, 0, 1 ],
       "Text": "Create Teleporter",
+      "Scale": [ 20, 25 ]
+    }
+  },
+  {
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ -120, -90 ],
+      "Scale": [200, 50 ],
+      "Rotation": 0
+    },
+    "CreateBuildingButton": {
+      "BuildingArchetype": "TurretArchetype"
+    },
+    "Sprite": {
+      "Mesh": "ButtonMesh",
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
+      "ModulateColor": [ 0, 0, 0, 1 ],
+      "Text": "Create Turret",
       "Scale": [ 20, 25 ]
     }
   }

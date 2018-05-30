@@ -39,19 +39,6 @@ Building::Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType spe
 {
 	buildTimeRemaining = buildTime; //Set the delay until the building is finnished being built.
 	originalScale = { 0, 0 }; //Default to 0 so we can check if we set it yet or not on update when we actually have the transform component attatched.
-
-	/*
-	//Find the army that this building should belong to.
-	vector<GameObject*> objs = Space::GetLayer(0)->GetGameObjectManager()->GetObjectsByName("Army");
-	for (unsigned i = 0; i < objs.size(); i++) {
-		BehaviorArmy* bArmy = (BehaviorArmy*)objs[i]->GetComponent("BehaviorArmy");
-		if (bArmy->GetSide() == side) {
-			army = bArmy;
-			if (specialtyType != sCommandPost && !army->LegalSpawn(pos)) throw(0); //Throw an error if the slot is occupied.
-			if (type == Teleporter) { if (!BuildingNeoridiumMine::TakeNeoridium(side, buildingCost[type])) throw(0); }
-			else if (!army->TakeFromFunds(buildingCost[type])) throw(0); //Throw an error if we can't pay for the building. (This should never happen).
-		}
-	}*/
 }
 
 Building::~Building()
@@ -70,6 +57,7 @@ void Building::InitializeBuildings(BehaviorArmy::Side side)
 	///TODO: Remove further unlocks, their only purpose is for testing.
 	Unlock(side, NeoridiumMine); //Get's unlocked when you first build a Research Center.
 	Unlock(side, Teleporter);
+	Unlock(side, Turret);
 
 	BuildingNeoridiumMine::neoridium[side] = 0.0f; //Intitialize the amount of Neoridium each player has to 0.
 
