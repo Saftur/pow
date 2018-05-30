@@ -23,6 +23,7 @@
 #include "BehaviorUnit.h"
 #include "ColliderCircle.h"
 #include "BehaviorArmy.h"
+#include "Health.h"
 
 //------------------------------------------------------------------------------
 // Enums:
@@ -119,9 +120,9 @@ void BehaviorProjectile::OnExit()
 //	 other = The object the asteroid is colliding with.
 void BehaviorProjectile::CollisionHandler(GameObject& projectile, GameObject& other)
 {
-	if (other.GetComponent<BehaviorUnit>() && other.GetComponent<BehaviorUnit>()->GetArmy() != projectile.GetComponent<BehaviorProjectile>()->GetArmy())
+	if (other.GetComponent<Health>() && other.GetComponent<BehaviorUnit>()->GetArmy() != projectile.GetComponent<BehaviorProjectile>()->GetArmy())
 	{
-		other.GetComponent<BehaviorUnit>()->ModifyHP(-projectile.GetComponent<BehaviorProjectile>()->projectile.damage);
+		other.GetComponent<Health>()->UpdateHP(-projectile.GetComponent<BehaviorProjectile>()->projectile.damage);
 		projectile.Destroy();
 	}
 }

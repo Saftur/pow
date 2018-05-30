@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Health.h"
 #include "CompList.h"
 #include "LevelManager.h"
 #include "Cursor.h"
@@ -40,4 +41,6 @@ void CompList::List() {
 	LevelManager::AddComponentType("CreateBuildingButton", new CreateBuildingButton());
 	LevelManager::AddComponentType("ResearchButton", new ResearchButton());
 	LevelManager::AddComponentType("CreateUnitButton", new CreateUnitButton());
+
+	LevelManager::AddComponentType("Health", new Health());
 }
