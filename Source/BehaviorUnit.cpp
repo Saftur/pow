@@ -26,6 +26,9 @@
 #include "Physics.h"
 #include "SoundManager.h"
 #include "ColliderCircle.h"
+#include "Health.h"
+#include "Rendertext.h"
+#include "BehaviorArmy.h"
 #include "Building.h"
 
 //------------------------------------------------------------------------------
@@ -76,6 +79,12 @@ void BehaviorUnit::Init(Traits& theTraits, BehaviorArmy* theArmy)
 	// Build the static arrays if they haven't already been built.
 	BuildArrays();
 
+	Text* name = GetParent()->GetComponent<Text>();
+	name->SetText(theTraits.name.c_str());
+	
+	if (theArmy->GetSide() == BehaviorArmy::Side::sRight)
+		name->SetColor({ 0.f, 0.f, 1.f, 1.f });
+
 	// Initialize this unit's traits.
 	traits = theTraits;
 
@@ -105,7 +114,7 @@ void BehaviorUnit::Init(Traits& theTraits, BehaviorArmy* theArmy)
 		stats.inventorySize += 2;
 	}
 
-	
+	GetParent()->GetComponent<Health>()->Initialize(stats.maxHP);
 }
 
 void BehaviorUnit::SetPath(std::vector<Node*> newPath)
@@ -381,7 +390,8 @@ void BehaviorUnit::OnExit()
 
 void BehaviorUnit::OnDestroy()
 {
-	allUnits.erase(std::find(allUnits.begin(), allUnits.end(), GetParent()));
+	if (std::find(allUnits.begin(), allUnits.end(), GetParent()) != allUnits.end())
+		allUnits.erase(std::find(allUnits.begin(), allUnits.end(), GetParent()));
 	GridManager::GetInstance().SetNode(gridPos, true);
 }
 
@@ -487,12 +497,7 @@ int BehaviorUnit::GetHP() const
 
 void BehaviorUnit::ModifyHP(int amt)
 {
-	stats.currHP += amt;
-
-	if (stats.currHP > stats.maxHP)
-		stats.currHP = stats.maxHP;
-	else if (stats.currHP <= 0)
-		GetParent()->Destroy();
+	GetParent()->GetComponent<Health>()->UpdateHP(amt);
 }
 
 // Calculates velocity based off of movement speed, target pos, and current pos.

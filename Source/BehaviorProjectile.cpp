@@ -24,6 +24,7 @@
 #include "ColliderCircle.h"
 #include "BehaviorArmy.h"
 #include "Building.h"
+#include "Health.h"
 
 //------------------------------------------------------------------------------
 // Enums:
@@ -121,16 +122,11 @@ void BehaviorProjectile::OnExit()
 void BehaviorProjectile::CollisionHandler(GameObject& projectile, GameObject& other)
 {
 	BehaviorUnit* bUnit = other.GetComponent<BehaviorUnit>();
-	BehaviorProjectile* bProjectile = projectile.GetComponent<BehaviorProjectile>();
-	if (bUnit && bUnit->GetArmy() != projectile.GetComponent<BehaviorProjectile>()->GetArmy())
-	{
-		bUnit->ModifyHP(-projectile.GetComponent<BehaviorProjectile>()->projectile.damage);
-		projectile.Destroy();
-	}
-
 	Building* building = other.GetChildComponent<Building>();
-	if (building && building->army != bProjectile->GetArmy()) {
-		building->Damage((float)bProjectile->projectile.damage);
+	BehaviorProjectile* bProjectile = projectile.GetComponent<BehaviorProjectile>();
+	if ((bUnit && bUnit->GetArmy() != bProjectile->GetArmy()) || (building && building->army != bProjectile->GetArmy()))
+	{
+		other.GetComponent<Health>()->UpdateHP(-bProjectile->projectile.damage);
 		projectile.Destroy();
 	}
 }

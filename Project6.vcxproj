@@ -65,6 +65,7 @@
     <ClInclude Include="Source\ColliderBox.h" />
     <ClInclude Include="Source\ColliderCircle.h" />
     <ClInclude Include="Source\Component.h" />
+    <ClInclude Include="Source\Health.h" />
     <ClInclude Include="Source\ComponentStub.h" />
     <ClInclude Include="Source\ControlList.h" />
     <ClInclude Include="Source\Controls.h" />
@@ -129,6 +130,7 @@
     <ClCompile Include="Source\ColliderBox.cpp" />
     <ClCompile Include="Source\ColliderCircle.cpp" />
     <ClCompile Include="Source\Component.cpp" />
+    <ClCompile Include="Source\Health.cpp" />
     <ClCompile Include="Source\ComponentStub.cpp" />
     <ClCompile Include="Source\ControlList.cpp" />
     <ClCompile Include="Source\ArmyButton.cpp" />

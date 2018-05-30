@@ -226,7 +226,11 @@
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Unit",
       "Scale": [ 18, 23 ],
-      "Offset":  [ 0, 25 ]
+      "Offset": [ 0, -25 ]
+    },
+    "Health": {
+      "MaxHP": 100,
+      "Offset": [ 0, 30 ]
     },
     "Extras": [
       {

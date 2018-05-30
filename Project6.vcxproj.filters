@@ -265,6 +265,9 @@
     <ClCompile Include="Source\BuildingTurret.cpp">
       <Filter>Game\Buildings</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Health.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h">
@@ -561,6 +564,9 @@
     </ClInclude>
     <ClInclude Include="Source\BuildingTurret.h">
       <Filter>Game\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Health.h">
+      <Filter>Game\Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

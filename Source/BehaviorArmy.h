@@ -157,7 +157,7 @@ private:
 	//  curspos  = Position of cursor
 	//  deselect = Deselect instead
 	void SelectUnits();
-	void FindPath();
+	void FindPath(bool doOffset = true);
 	// Draw the currently editing path
 	void DrawPath(Camera *cam) const;
 

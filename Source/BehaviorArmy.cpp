@@ -339,6 +339,17 @@ void BehaviorArmy::OnUpdate(float dt)
 				}
 				selectedUnits.clear();
 			}
+			if (controls.gamepad->GetButtonTriggered(BTN_GROUP))
+			{
+				FindPath(false);
+
+				for (SelectedUnit &unit : selectedUnits)
+				{
+					unit.unit->SetPath(unit.path);
+					unit.unit->SetNextState(BehaviorUnit::cUnitMove);
+				}
+				selectedUnits.clear();
+			}
 
 			// Are we selecting units?
 			if (controls.gamepad->GetButton(BTN_SELECT)) {
@@ -590,14 +601,13 @@ void BehaviorArmy::SelectUnits()
 	}
 }
 
-void BehaviorArmy::FindPath()
+void BehaviorArmy::FindPath(bool doOffset)
 {
 	Vector2D cursorGridPos = GridManager::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation());
-	bool useOffset = true;
 	for (GameObject *buildingObj : Building::allBuildings) {
 		Building *building = buildingObj->GetChildComponent<Building>();
 		if (building->buildingType == Building::Teleporter && building->GetPos() == cursorGridPos)
-			useOffset = false;
+			doOffset = false;
 	}
 	for (unsigned i = 0; i < selectedUnits.size(); i++)
 	{
@@ -610,7 +620,7 @@ void BehaviorArmy::FindPath()
 			continue;
 		}
 
-		Vector2D pos = useOffset ? cursorGridPos + unit->offset : cursorGridPos;
+		Vector2D pos = doOffset ? cursorGridPos + unit->offset : cursorGridPos;
 		 
 		if (pos.x < 0)
 			pos.x = 0;
