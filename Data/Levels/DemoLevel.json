@@ -21,13 +21,13 @@
   {
     "Name": "Tilemap",
     "Tilemap": {
-      "SpritesheetFilename": "Data\\Assets\\tilemap.png",
+      "SpritesheetFilename": "Data\\Assets\\Tilemap2.png",
       "TilemapFilename": "Data\\Tilemap1.txt",
       "OnScreenOffsetY": 28,
-      "OnScreenWidth": 768,
-      "OnScreenHeight": 512,
-      "SpritesheetWidth": 1,
-      "SpritesheetHeight": 1
+      "OnScreenWidth": 1024,
+      "OnScreenHeight": 768,
+      "SpritesheetWidth": 4,
+      "SpritesheetHeight": 4
     }
   },
   {
@@ -193,7 +193,7 @@
 	},
 	"Turret": {},
     "Health": {
-      "MaxHP": 250,
+      "MaxHP": 500,
       "Offset": [ 0, 30 ]
     }
   },
@@ -426,7 +426,7 @@
   {
     "Name": "FundsDisplay1",
     "Transform": {
-      "Translation": [ -339, 280 ],
+      "Translation": [ -339, 400 ],
       "Scale": [ 100, 50 ],
       "Rotation": 0
     },
@@ -441,7 +441,7 @@
   {
     "Name": "FundsDisplay2",
     "Transform": {
-      "Translation": [ 339, 280 ],
+      "Translation": [ 339, 400 ],
       "Scale": [ 100, 50 ],
       "Rotation": 0
     },
@@ -456,7 +456,7 @@
   {
     "Name": "LeftNeoridiumDisplay",
     "Transform": {
-      "Translation": [ -339, 250 ],
+      "Translation": [ -339, 370 ],
       "Scale": [ 100, 50 ],
       "Rotation": 0
     },
@@ -471,7 +471,7 @@
   {
     "Name": "RightNeoridiumDisplay",
     "Transform": {
-      "Translation": [ 339, 250 ],
+      "Translation": [ 339, 370 ],
       "Scale": [ 100, 50 ],
       "Rotation": 0
     },

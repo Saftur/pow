@@ -393,6 +393,7 @@ void BehaviorUnit::OnDestroy()
 	if (std::find(allUnits.begin(), allUnits.end(), GetParent()) != allUnits.end())
 		allUnits.erase(std::find(allUnits.begin(), allUnits.end(), GetParent()));
 	GridManager::GetInstance().SetNode(gridPos, true);
+	if(currMoveTarget) GridManager::GetInstance().SetNode(currMoveTarget, true);
 }
 
 // The collision handling function for Units.

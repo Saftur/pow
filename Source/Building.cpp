@@ -21,12 +21,14 @@
 #include "Mesh.h"
 #include "Crystal.h"
 #include <time.h>
+#include "Health.h"
 
 #include "BuildingNeoridiumMine.h"
 #include "BuildingResearchCenter.h"
 #include "BuildingCommandPost.h"
 #include "BuildingTeleporter.h"
 #include <algorithm>
+#include "PopupMenu.h"
 
 map<BehaviorArmy::Side, bool[Building::BuildingType::BuildingCount]> Building::buildings;
 
@@ -124,6 +126,7 @@ void Building::Update(float dt)
 
 void Building::OpenMenu()
 {
+	PopupMenu::CreateMenu(army, PopupMenu::MenuType::SellBuilding, GridManager::GetInstance().GetNode(mapPos));
 }
 
 float Building::Variance(float value, float variance) {
@@ -200,4 +203,24 @@ bool Building::Buy() {
 	}
 	else if (army->TakeFromFunds(Building::buildingCost[buildingType])) return true; //Throw an error if we can't pay for the building. (This should never happen).
 	return false;
+}
+
+void Building::Sell()
+{
+	Health *health = GetParent()->GetComponent<Health>();
+	float healthPercent = (float)health->GetHP() / (float)health->GetMaxHP();
+
+	if (buildingType == Building::Teleporter) {
+		BuildingNeoridiumMine::AddNeoridium(side, buildingCost[buildingType] * 0.75f * healthPercent);
+		army->UpdateNeoridiumFundsText();
+	}
+	else {
+		army->AddToFunds(buildingCost[buildingType] * 0.75f * healthPercent);
+	}
+
+	if (GetParent()->GetComponent<BuildingCommandPost>()) health->UpdateHP(-health->GetHP());
+	
+	jaxiumDropAmount = 0;
+	neoridiumDropAmount = 0;
+	GetParent()->Destroy();
 }

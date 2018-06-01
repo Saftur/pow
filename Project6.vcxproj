@@ -92,6 +92,7 @@
     <ClInclude Include="Source\Rendertext.h" />
     <ClInclude Include="Source\ResearchButton.h" />
     <ClInclude Include="Source\RestartButton.h" />
+    <ClInclude Include="Source\SellBuildingButton.h" />
     <ClInclude Include="source\Serializable.h" />
     <ClInclude Include="source\SoundManager.h" />
     <ClInclude Include="Source\Space.h" />
@@ -105,6 +106,7 @@
     <ClInclude Include="Source\Tilemap.h" />
     <ClInclude Include="Source\Trace.h" />
     <ClInclude Include="Source\Transform.h" />
+    <ClInclude Include="Source\TurretUpgradeButton.h" />
     <ClInclude Include="Source\Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +159,7 @@
     <ClCompile Include="Source\Rendertext.cpp" />
     <ClCompile Include="Source\ResearchButton.cpp" />
     <ClCompile Include="Source\RestartButton.cpp" />
+    <ClCompile Include="Source\SellBuildingButton.cpp" />
     <ClCompile Include="source\Serializable.cpp" />
     <ClCompile Include="source\SoundManager.cpp" />
     <ClCompile Include="Source\Space.cpp" />
@@ -171,6 +174,7 @@
     <ClCompile Include="Source\Tilemap.cpp" />
     <ClCompile Include="Source\Trace.cpp" />
     <ClCompile Include="Source\Transform.cpp" />
+    <ClCompile Include="Source\TurretUgradeButton.cpp" />
     <ClCompile Include="Source\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>

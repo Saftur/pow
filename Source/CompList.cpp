@@ -18,6 +18,8 @@
 #include "CreateBuildingButton.h"
 #include "ResearchButton.h"
 #include "CreateUnitButton.h"
+#include "TurretUpgradeButton.h"
+#include "SellBuildingButton.h"
 
 
 void CompList::List() {
@@ -40,7 +42,9 @@ void CompList::List() {
 	// Buttons
 	LevelManager::AddComponentType("CreateBuildingButton", new CreateBuildingButton());
 	LevelManager::AddComponentType("ResearchButton", new ResearchButton());
+	LevelManager::AddComponentType("TurretUpgradeButton", new TurretUpgradeButton());
 	LevelManager::AddComponentType("CreateUnitButton", new CreateUnitButton());
+	LevelManager::AddComponentType("SellBuildingButton", new SellBuildingButton());
 
 	LevelManager::AddComponentType("Health", new Health());
 }

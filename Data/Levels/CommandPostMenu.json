@@ -3,7 +3,7 @@
     "Name": "Background",
     "Transform": {
       "Translation": [ 0, 0 ],
-      "Scale": [ 500, 150 ],
+      "Scale": [ 500, 275 ],
       "Rotation": 0
     },
     "Sprite": {
@@ -23,8 +23,8 @@
       "Scale": [ 1, 1 ]
     },
     "Camera": {
-      "ScreenPos": [ 0, 0.75 ],
-      "ScreenSize": [ 0.5, 0.25 ]
+      "ScreenPos": [ 0, 0.625 ],
+      "ScreenSize": [ 0.5, 0.5 ]
     }
   },
   {
@@ -187,6 +187,40 @@
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Create Unit 4",
       "Scale": [ 17, 22 ]
+    }
+  },
+  {
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ -120, -90 ],
+      "Scale": [ 200, 50 ],
+      "Rotation": 0
+    },
+    "SellBuildingButton": {},
+    "Sprite": {
+      "Mesh": {
+        "Name": "ButtonMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Data\\Assets\\NewFont.png",
+        "Cols": 8,
+        "Rows": 8
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.125, 0.125 ]
+      },
+      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "Text": "Surrender",
+      "Scale": [ 20, 25 ]
     }
   }
 ]

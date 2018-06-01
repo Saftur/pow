@@ -31,7 +31,7 @@ typedef class Sprite Sprite;
 class PopupMenu
 {
 public:
-	enum MenuType { Building, Unit, Research, CommandPost, Turret };
+	enum MenuType { Building, Unit, Research, CommandPost, Turret, SellBuilding };
 
 	static void CreateMenu(BehaviorArmy *army, MenuType type, Node *buildingMapPos = nullptr); //Create a menu for the given army.
 	static void DestroyMenu(BehaviorArmy::Side side); //Destroy a menu for the given army.
@@ -42,7 +42,7 @@ public:
 private:
 	static vector<PopupMenu*> menus; //Vector of currently existing menus.
 
-	PopupMenu(BehaviorArmy *army, MenuType type); //Private constructor to prevent class from being instantiated outside of given parameters.
+	PopupMenu(BehaviorArmy *army, MenuType type, Node *buildingMapPos); //Private constructor to prevent class from being instantiated outside of given parameters.
 	void ConfigureMenu(); //Configure the menu to represent the correct team.
 	static PopupMenu* GetMenu(BehaviorArmy::Side side); //Return the menu belonging to the given army.
 

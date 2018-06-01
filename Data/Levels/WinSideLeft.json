@@ -49,7 +49,7 @@
       "SpriteSource": "Font",
       "Mesh": "TextMesh",
       "ModulateColor": [ 1, 0, 0, 1 ],
-      "Text": "RED TEAM WINS!!!",
+      "Text": "RED TEAM WINS",
       "Scale": [ 80, 120 ]
     }
   }

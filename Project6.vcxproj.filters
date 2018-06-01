@@ -268,6 +268,12 @@
     <ClCompile Include="Source\Health.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
+    <ClCompile Include="Source\TurretUgradeButton.cpp">
+      <Filter>Game\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SellBuildingButton.cpp">
+      <Filter>Game\Buttons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h">
@@ -567,6 +573,12 @@
     </ClInclude>
     <ClInclude Include="Source\Health.h">
       <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TurretUpgradeButton.h">
+      <Filter>Game\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SellBuildingButton.h">
+      <Filter>Game\Buttons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

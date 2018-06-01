@@ -44,6 +44,22 @@ void BuildingTurret::OpenMenu()
 	PopupMenu::CreateMenu(army, PopupMenu::MenuType::Turret, GridManager::GetInstance().GetNode(mapPos));
 }
 
+void BuildingTurret::Upgrade(UpgradeType type)
+{
+	upgradeCost *= 1.5;
+	switch (type) {
+	case Damage:
+		damage += 25;
+		break;
+	case Range:
+		range++;
+		break;
+	case AttackSpeed:
+		attackSpeed++;
+		break;
+	}
+}
+
 void BuildingTurret::AttackTarget()
 {
 	FaceTarget();

@@ -67,6 +67,7 @@ public:
 	bool IsUnlocked(); //Checks if this building is unlocked
 	bool CanBuy(); //Checks if this building can be bought (also calls IsUnlocked())
 	bool Buy(); //Buys this building
+	void Sell(); //Sells this building.
 
 	static map<BuildingType, float> buildingCost;
 	static vector<GameObject*> allBuildings;
