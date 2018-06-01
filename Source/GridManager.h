@@ -12,6 +12,7 @@ public:
 	struct Node
 	{
 		int x, y;
+		int height;
 		int hVal, gVal;
 		bool open;
 		Node* parent;

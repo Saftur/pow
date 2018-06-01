@@ -48,7 +48,7 @@ private:
 	int tileWidth, tileHeight; // on-screen size of tiles
 	int *tilemap;         // 2d array of tile nums
 	int tilemapWidth, tilemapHeight; // width/height of tilemap
-	bool *collisionMap;   // 2d array of colliding sprites
+	int *collisionMap;   // 2d array of colliding sprites
 
 	Sprite* sprite;
 	SpriteSource* spriteSource;

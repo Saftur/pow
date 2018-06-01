@@ -100,8 +100,7 @@ private:
 	{
 		int damage;
 		float speed;
-
-		// TODO: Sound pointers and such
+		std::string sound;
 	} projectile;
 
 	BehaviorArmy* army;

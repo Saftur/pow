@@ -18,7 +18,7 @@ Implementation file for sound controller
 void SoundManager::Init()
 {
 	CheckResult(FMOD::Studio::System::create(&studioSystem));
-
+	CheckResult(studioSystem->initialize(64, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0));
 	soundRegistry = SoundList();
 
 	soundRegistry.maxSounds = SoundListSize;
@@ -39,13 +39,6 @@ void SoundManager::CheckResult(FMOD_RESULT result)
 		Trace::GetInstance().GetStream() << "FMOD system initialization error! (" << result << ") " << std::endl;
 	}
 
-	result = studioSystem->initialize(512, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0);
-
-	if (result != FMOD_OK)
-	{
-		Trace::GetInstance().GetStream() << "FMOD initialization error! (" << result << ") " << std::endl;
-	}
-
 	assert(!result);
 }
 
@@ -57,14 +50,14 @@ void SoundManager::Shutdown()
 		if (soundRegistry.soundList[i])
 		{
 			//delete(soundRegistry.soundList[i]);
-			soundRegistry.soundList[i]->release();
+			CheckResult(soundRegistry.soundList[i]->release());
 
 			//soundRegistry.soundList[i] = NULL;
 			//soundRegistry.soundCount--;
 		}
 	}
 	soundRegistry.soundCount = 0;
-	studioSystem->release();
+	CheckResult(studioSystem->release());
 }
 
 // Returns the SoundManager's system (the FMOD object which is responsible for all of the sound handling).
@@ -99,17 +92,17 @@ FMOD::Studio::EventInstance* SoundManager::PlayEvent(const std::string& name)
 
 	// Find an event with the given name from the loaded banks.
 	FMOD::Studio::EventDescription* description;
-	studioSystem->getEvent(eventPath.c_str(), &description);
+	CheckResult(studioSystem->getEvent(eventPath.c_str(), &description));
 
 	// Create an instance of the event to be played.
 	FMOD::Studio::EventInstance* instance;
-	description->createInstance(&instance);
+	CheckResult(description->createInstance(&instance));
 
 	// Start the event (plays sounds as appropriate given the default parameters settings)
-	instance->start();
+	CheckResult(instance->start());
 
 	// Destroy the event instance once it's finished.
-	instance->release();
+	CheckResult(instance->release());
 
 	// Return the event instance so the caller can use it to modify event parameters.
 	return instance;
@@ -123,7 +116,7 @@ void SoundManager::AddBank(const std::string& filename)
 	// Load the FMOD bank file.
 	std::string fullPath = audioFilePath + bankFilePath + filename;
 	FMOD::Studio::Bank* bank;
-	studioSystem->loadBankFile(fullPath.c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &bank);
+	CheckResult(studioSystem->loadBankFile(fullPath.c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &bank));
 	bankList.push_back(bank);
 
 #if _DEBUG

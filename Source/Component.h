@@ -11,6 +11,7 @@
 
 #pragma once
 #include "Serializable.h"
+#undef PlaySound
 
 //------------------------------------------------------------------------------
 // Include Files:
@@ -59,6 +60,8 @@ public:
 
 	// Retrieve component's parent object (if any).
 	GameObject* GetParent() const;
+
+	void PlaySound(std::string cueName) const;
 
 	// Set component's parent object/owner.
 	virtual void SetParent(GameObject* object);

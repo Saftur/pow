@@ -74,8 +74,9 @@ void BehaviorProjectile::OnEnter()
 {
 	switch (GetCurrentState())
 	{
-	case cProjectileIdle:
-		
+	case cProjectileMoving:
+
+		PlaySound(projectile.sound);
 		break;
 	}
 }
@@ -145,6 +146,10 @@ void BehaviorProjectile::Load(rapidjson::Value& obj)
 	if (obj.HasMember("Speed") && obj["Speed"].IsFloat())
 	{
 		projectile.speed = obj["Speed"].GetFloat();
+	}
+	if (obj.HasMember("Sound") && obj["Sound"].IsString())
+	{
+		projectile.sound = obj["Sound"].GetString();
 	}
 }
 

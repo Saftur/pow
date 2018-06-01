@@ -18,6 +18,7 @@
 #include "Camera.h"
 #include "GameObjectManager.h"
 #include "Space.h"
+#include "SoundManager.h"
 #include "Tilemap.h"
 #include "Rendertext.h"
 #include "CompList.h"
@@ -190,6 +191,8 @@ void LevelManager::loadObject(Document& levelDoc)
 			type = otSpriteSource;
 		else if (strcmp(v["Type"].GetString(), "Mesh") == 0)
 			type = otMesh;
+		else if (strcmp(v["Type"].GetString(), "Bank") == 0)
+			type = otBank;
 	}
 	switch (type) {
 	case otGameObject: {
@@ -245,6 +248,8 @@ void LevelManager::loadObject(Document& levelDoc)
 		AddMesh(v["Name"].GetString(), mesh);
 	}
 		break;
+	case otBank:
+		SoundManager::GetInstance().AddBank(v["Bank"].GetString());
 	}
 
 	id++;
