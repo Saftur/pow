@@ -49,6 +49,8 @@ Building::~Building()
 
 void Building::OnDestroy()
 {
+	GridManager::GetInstance().SetNode(mapPos, true);
+
 	//Drop some money.
 	vector<GridManager::Node*> nearbyNodes = GridManager::GetInstance().GetNeighbors(GridManager::GetInstance().GetNode((int)mapPos.x, (int)mapPos.y)); //Find all neaby nodes.
 	unsigned nodeID = rand() % nearbyNodes.size(); //Pick a random node out of the list of nearby nodes.
@@ -108,6 +110,7 @@ void Building::Update(float dt)
 
 		//If we havent set the original scale, set it now and then set the scale to 0.
 		if (originalScale == Vector2D(0, 0)) {
+			if(buildingType != Teleporter) GridManager::GetInstance().SetNode(mapPos, false);
 			originalScale = GetParent()->GetComponent<Transform>()->GetScale();
 			GetParent()->GetComponent<Transform>()->SetScale({ 0, 0 });
 			allBuildings.push_back(GetParent());

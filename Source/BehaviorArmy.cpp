@@ -529,7 +529,7 @@ void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos)
 	if (!LegalSpawn(startPos)) return;
 	funds.amount -= unitData.GetCost();
 	UpdateFundsText();
-	GameObject *go = GetParent()->GetGameObjectManager()->GetArchetype("UnitArchetype");
+	GameObject *go = GetParent()->GetGameObjectManager()->GetArchetype(unitData.name.c_str());
 	if (!go) {
 		Trace::GetInstance().GetStream() << "No Unit archetype found" << std::endl;
 		return;

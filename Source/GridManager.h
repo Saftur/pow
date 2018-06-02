@@ -53,6 +53,7 @@ public:
 	int GetDistanceBetween(int x1, int y1, int x2, int y2) const;
 	int GetDistanceBetween(const Vector2D& pos1, const Vector2D& pos2) const;
 
+	///TODO: Templatize this to make it search for an occupant with the given component.
 	GameObject* GetOccupant(Node* node) const;
 	GameObject* GetOccupant(Vector2D node) const;
 	GameObject* GetOccupant(int x, int y) const;

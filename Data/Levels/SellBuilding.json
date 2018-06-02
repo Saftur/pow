@@ -3,7 +3,7 @@
     "Name": "Background",
     "Transform": {
       "Translation": [ 0, 0 ],
-      "Scale": [ 500, 275 ],
+      "Scale": [ 500, 100 ],
       "Rotation": 0
     },
     "Sprite": {
@@ -23,7 +23,7 @@
       "Scale": [ 1, 1 ]
     },
     "Camera": {
-      "ScreenPos": [ 0.1, 0.75 ],
+      "ScreenPos": [ 0.05, 0.05 ],
       "ScreenSize": [ 0.25, 0.125 ]
     }
   },
@@ -54,6 +54,12 @@
     },
     "SellBuildingButton": {},
     "Sprite": {
+	  "SpriteSource": {
+	    "Name": "ButtonSpriteSource",
+		"Texture": "Data\\Assets\\A Box for Decoration.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
       "Mesh": {
         "Name": "ButtonMesh",
         "HalfSize": [ 0.5, 0.5 ],
@@ -76,7 +82,7 @@
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Sell",
-      "Scale": [ 15, 20 ]
+      "Scale": [ 14, 18 ]
     }
   }
 ]

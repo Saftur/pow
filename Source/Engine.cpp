@@ -79,8 +79,8 @@ void Engine::Update(float dt)
 	if (switchPause) {
 		if (hasPauseMenu) {
 			if (paused)
-				Space::LoadLayer(3, "PauseLevel", false, true);
-			else Space::DeleteLayer(3);
+				Space::LoadLayer(9, "PauseLevel", false, true);
+			else Space::DeleteLayer(9);
 		}
 		switchPause = false;
 	}

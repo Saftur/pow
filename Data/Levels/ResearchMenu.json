@@ -2,8 +2,8 @@
   {
     "Name": "Background",
     "Transform": {
-      "Translation": [ 0, 0 ],
-      "Scale": [ 500, 275 ],
+      "Translation": [ 0, -55 ],
+      "Scale": [ 500, 150 ],
       "Rotation": 0
     },
     "Sprite": {
@@ -23,7 +23,7 @@
       "Scale": [ 1, 1 ]
     },
     "Camera": {
-      "ScreenPos": [ 0, 0.625 ],
+      "ScreenPos": [ 0, 0 ],
       "ScreenSize": [ 0.5, 0.5 ]
     }
   },
@@ -48,78 +48,6 @@
   {
     "Name": "Button",
     "Transform": {
-      "Translation": [ -120, 30 ],
-      "Scale": [ 200, 50 ],
-      "Rotation": 0
-    },
-    "ResearchButton": {
-      "ResearchType": "Spaceport"
-    },
-    "Sprite": {
-      "Mesh": {
-        "Name": "ButtonMesh",
-        "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 1, 1 ]
-      },
-      "Alpha": 1,
-      "ModulateColor": [ 0, 0, 0, 0 ]
-    },
-    "Text": {
-      "SpriteSource": {
-        "Name": "Font",
-        "Texture": "Data\\Assets\\NewFont.png",
-        "Cols": 8,
-        "Rows": 8
-      },
-      "Mesh": {
-        "Name": "TextMesh",
-        "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 0.125, 0.125 ]
-      },
-      "ModulateColor": [ 1, 0.2, 0, 1 ],
-      "Text": "Research Spaceport",
-      "Scale": [ 18, 23 ]
-    }
-  },
-  {
-    "Name": "Button",
-    "Transform": {
-      "Translation": [ 120, 30 ],
-      "Scale": [ 200, 50 ],
-      "Rotation": 0
-    },
-    "ResearchButton": {
-      "ResearchType": "VehicleDepot"
-    },
-    "Sprite": {
-      "Mesh": {
-        "Name": "ButtonMesh",
-        "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 1, 1 ]
-      },
-      "Alpha": 1,
-      "ModulateColor": [ 0, 0, 0, 0 ]
-    },
-    "Text": {
-      "SpriteSource": {
-        "Name": "Font",
-        "Texture": "Data\\Assets\\NewFont.png",
-        "Cols": 8,
-        "Rows": 8
-      },
-      "Mesh": {
-        "Name": "TextMesh",
-        "HalfSize": [ 0.5, 0.5 ],
-        "UV": [ 0.125, 0.125 ]
-      },
-      "ModulateColor": [ 1, 0.2, 0, 1 ],
-      "Text": "Research Vehicle Depot",
-      "Scale": [ 15, 20 ]
-    }
-  },
-  {
-    "Name": "Button",
-    "Transform": {
       "Translation": [ -120, -30 ],
       "Scale": [ 200, 50 ],
       "Rotation": 0
@@ -128,6 +56,12 @@
       "ResearchType": "Turret"
     },
     "Sprite": {
+	  "SpriteSource": {
+	    "Name": "ButtonSpriteSource",
+		"Texture": "Data\\Assets\\A Box for Decoration.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
       "Mesh": {
         "Name": "ButtonMesh",
         "HalfSize": [ 0.5, 0.5 ],
@@ -150,7 +84,7 @@
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Research Turret",
-      "Scale": [ 20, 25 ]
+      "Scale": [ 14, 18 ]
     }
   },
   {
@@ -164,6 +98,12 @@
       "ResearchType": "Teleporter"
     },
     "Sprite": {
+	  "SpriteSource": {
+	    "Name": "ButtonSpriteSource",
+		"Texture": "Data\\Assets\\A Box for Decoration.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
       "Mesh": {
         "Name": "ButtonMesh",
         "HalfSize": [ 0.5, 0.5 ],
@@ -186,7 +126,7 @@
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Research Teleporter",
-      "Scale": [ 17, 22 ]
+      "Scale": [ 14, 18 ]
     }
   },
   {
@@ -198,6 +138,12 @@
     },
     "SellBuildingButton": {},
     "Sprite": {
+	  "SpriteSource": {
+	    "Name": "ButtonSpriteSource",
+		"Texture": "Data\\Assets\\A Box for Decoration.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
       "Mesh": {
         "Name": "ButtonMesh",
         "HalfSize": [ 0.5, 0.5 ],
@@ -220,7 +166,7 @@
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Sell",
-      "Scale": [ 15, 20 ]
+      "Scale": [ 14, 18 ]
     }
   }
 ]

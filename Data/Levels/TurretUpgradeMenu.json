@@ -23,7 +23,7 @@
       "Scale": [ 1, 1 ]
     },
     "Camera": {
-      "ScreenPos": [ 0, 0.75 ],
+      "ScreenPos": [ 0, 0.05 ],
       "ScreenSize": [ 0.5, 0.25 ]
     }
   },
@@ -56,6 +56,12 @@
       "UpgradeType": "Damage"
     },
     "Sprite": {
+	  "SpriteSource": {
+	    "Name": "ButtonSpriteSource",
+		"Texture": "Data\\Assets\\A Box for Decoration.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
       "Mesh": {
         "Name": "ButtonMesh",
         "HalfSize": [ 0.5, 0.5 ],
@@ -78,7 +84,7 @@
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Upgrade Damage",
-      "Scale": [ 18, 23 ]
+      "Scale": [ 14, 18 ]
     }
   },
   {
@@ -92,6 +98,12 @@
       "UpgradeType": "Range"
     },
     "Sprite": {
+	  "SpriteSource": {
+	    "Name": "ButtonSpriteSource",
+		"Texture": "Data\\Assets\\A Box for Decoration.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
       "Mesh": {
         "Name": "ButtonMesh",
         "HalfSize": [ 0.5, 0.5 ],
@@ -114,7 +126,7 @@
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Upgrade Range",
-      "Scale": [ 18, 23 ]
+      "Scale": [ 14, 18 ]
     }
   },
   {
@@ -128,6 +140,12 @@
       "UpgradeType": "AttackSpeed"
     },
     "Sprite": {
+	  "SpriteSource": {
+	    "Name": "ButtonSpriteSource",
+		"Texture": "Data\\Assets\\A Box for Decoration.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
       "Mesh": {
         "Name": "ButtonMesh",
         "HalfSize": [ 0.5, 0.5 ],
@@ -150,7 +168,7 @@
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Upgrade AttackSpeed",
-      "Scale": [ 18, 23 ]
+      "Scale": [ 14, 18 ]
     }
   },
   {
@@ -162,6 +180,12 @@
     },
     "SellBuildingButton": {},
     "Sprite": {
+	  "SpriteSource": {
+	    "Name": "ButtonSpriteSource",
+		"Texture": "Data\\Assets\\A Box for Decoration.png",
+		"Cols": 1,
+		"Rows": 1
+	  },
       "Mesh": {
         "Name": "ButtonMesh",
         "HalfSize": [ 0.5, 0.5 ],
@@ -184,7 +208,7 @@
       },
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Sell",
-      "Scale": [ 18, 23 ]
+      "Scale": [ 14, 18 ]
     }
   }
 ]

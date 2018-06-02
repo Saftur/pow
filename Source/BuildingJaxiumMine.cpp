@@ -64,6 +64,7 @@ void BuildingJaxiumMine::BuildingUpdate(float dt){
 
 			//Find a random open node in the list of nearby nodes.
 			unsigned nodeID = rand() % nearbyNodes.size();
+			if (GridManager::GetInstance().GetOccupant(nearbyNodes[nodeID])->GetChildComponent<Building>()) return; //Make sure there isn't a building there.
 			if (Space::GetLayer(0)->GetGameObjectManager()->GetObjectsWithFilter([&](GameObject* obj) {
 				if (obj->GetComponent<Crystal>()) {
 					if (obj->GetComponent<Transform>()->GetTranslation() == GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID])) {
