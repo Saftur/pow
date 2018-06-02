@@ -204,7 +204,7 @@ private:
 	Tilemap *tilemap;
 
 	// Front line data
-	struct {
+	struct FrontLine{
 		// Current position of front line
 		int pos;
 		// Start position of front line
@@ -213,7 +213,9 @@ private:
 		string dispObjName;
 		// Pointer to Transform component of front line display object
 		Transform *transform;
-	} frontLine;
+	};
+
+	static FrontLine frontLine;
 
 	// Controls data
 	struct {
@@ -265,6 +267,10 @@ private:
 	} path;
 
 	void CalculateOffsets();
+
+	const BehaviorArmy* otherArmy;
+	int furthestX; // X pos of furthest unit
+	int sideMod; // Multiplier for checking POS. -1 for blue, since they move left, 1 for red, since they move right.
 };
 
 //------------------------------------------------------------------------------

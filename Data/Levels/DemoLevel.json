@@ -345,7 +345,7 @@
     "BehaviorArmy": {
       "Name": "Army2",
       "Side": "Right",
-      "FrontLineName": "FrontLine2",
+      "FrontLineName": "FrontLine1",
       "FrontLineStart": 5,
       "FundsDisplayName": "FundsDisplay2",
       "StartFunds": 1000,
@@ -418,26 +418,13 @@
     "Name": "FrontLine1",
     "Transform": {
       "Translation": [ 0, 0 ],
-      "Scale": [ 16, 512 ],
+      "Scale": [ 16, 1152 ],
       "Rotation": 0
     },
     "Sprite": {
       "Mesh": "FrontLineMesh",
       "Alpha": 0.5,
-      "ModulateColor": [ 0.654902, 0, 0, 1 ]
-    }
-  },
-  {
-    "Name": "FrontLine2",
-    "Transform": {
-      "Translation": [ 0, 0 ],
-      "Scale": [ 16, 512 ],
-      "Rotation": 0
-    },
-    "Sprite": {
-      "Mesh": "FrontLineMesh",
-      "Alpha": 0.5,
-      "ModulateColor": [ 0, 0, 1, 1 ]
+      "ModulateColor": [ 0.1, 0.1, 0.1, 1 ]
     }
   },
   {
@@ -508,7 +495,7 @@
     },
     "Sprite": {
       "Alpha": 0.25,
-      "ModulateColor": [ 0.65490196, 0.133333333, 0.231372549, 1 ]
+      "ModulateColor": [ 0.65234375, 0.13671875, 0.234375, 1 ]
     }
   },
   {
