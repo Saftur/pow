@@ -19,6 +19,6 @@ Component * SellBuildingButton::Clone() const {
 }
 
 void SellBuildingButton::ClickEffect(float dt) {
-	GameObject *obj = GridManager::GetInstance().GetOccupant(node);
+	GameObject *obj = GridManager::GetInstance().GetOccupant<Building>(node);
 	if (obj) obj->GetChildComponent<Building>()->Sell();
 }

@@ -30,6 +30,7 @@
 #include "Rendertext.h"
 #include "BehaviorArmy.h"
 #include "Building.h"
+#include "Space.h"
 
 //------------------------------------------------------------------------------
 // Enums:
@@ -119,6 +120,16 @@ void BehaviorUnit::Init(Traits& theTraits, BehaviorArmy* theArmy)
 
 void BehaviorUnit::SetPath(std::vector<Node*> newPath)
 {
+	//If we are actually building something, we do not want to be able to move.
+	if (isBuilding) return;
+
+	//If we are moving to build something, stop trying to build it.
+	if (buildingArchetype) {
+		buildingArchetype = nullptr;
+		GridManager::GetInstance().SetNode(buildingPos, true);
+		buildingPos = nullptr;
+	}
+
 	changePath = false;
 	if (isMoving) {
 		changePath = true;
@@ -336,6 +347,27 @@ void BehaviorUnit::OnUpdate(float dt)
 					if (bUnit) oArmy = bUnit->GetArmy();
 					else if (bBuilding) oArmy = bBuilding->army;
 				}
+				else {
+					//Check if we are trying to build something there.
+					if (buildingArchetype) {
+						GridManager::GetInstance().SetNode(buildingPos, true);
+						if (army->LegalSpawn(buildingPos->gridPos())) {
+							isBuilding = true;
+
+							GameObject *newBuilding = new GameObject(*buildingArchetype);
+							Building *building = newBuilding->GetChildComponent<Building>();
+							building->SetPos(buildingPos->gridPos());
+							building->SetArmy(army);
+							building->Buy();
+							Space::GetLayer(0)->GetGameObjectManager()->Add(*newBuilding);
+
+							buildingArchetype = nullptr;
+							buildingPos = nullptr;
+
+							return;
+						}
+					}
+				}
 
 				if (occupant && oArmy != army)
 					SetNextState(cUnitAttack);
@@ -504,6 +536,14 @@ void BehaviorUnit::ModifyHP(int amt)
 bool BehaviorUnit::IsMoving() const
 {
 	return isMoving;
+}
+
+void BehaviorUnit::BuildBuilding(GameObject * archetype, Node * pos)
+{
+	SetPath(Pathfinder::FindPath(GridManager::GetInstance().GetNode(gridPos), pos));
+	GridManager::GetInstance().SetNode(pos, false);
+	buildingArchetype = archetype;
+	buildingPos = pos;
 }
 
 // Calculates velocity based off of movement speed, target pos, and current pos.

@@ -152,6 +152,11 @@ public:
 
 	bool IsMoving() const;
 
+	void BuildBuilding(GameObject *archetype, Node *pos); //Tell the unit to build a new building.
+	GameObject *buildingArchetype; //The archetype of the building we are currently trying to build. nullptr if we are not building.
+	Node *buildingPos; //The position of the building we are trying to build. nullptr if we are not building.
+	bool isBuilding = false; //If we made it to the spot and are actively building the building.
+
 	static vector<GameObject*> allUnits;
 
 private:

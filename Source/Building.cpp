@@ -100,6 +100,12 @@ void Building::InitializeBuildings(BehaviorArmy::Side side)
 
 void Building::Update(float dt)
 {
+	//Destroy this building if the unit building it got destroyed.
+	if (builder && builder->IsDestroyed()) {
+		builder = nullptr;
+		GetParent()->Destroy();
+	}
+
 	//If the building hasn't finnished being built yet, don't update it.
 	if (buildTimeRemaining > 0) {
 		buildTimeRemaining -= dt; //Lower the time until the building is finnished being built.
@@ -119,6 +125,12 @@ void Building::Update(float dt)
 		}
 	}
 	else {
+		//Make sure that the unit who built this building can move again.
+		if (builder) {
+			builder->GetComponent<BehaviorUnit>()->isBuilding = false;
+			builder = nullptr;
+		}
+
 		BuildingUpdate(dt); //Update the building.
 	}
 }

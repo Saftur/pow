@@ -41,12 +41,24 @@ void CreateBuildingButton::Update(float dt) {
 }
 
 void CreateBuildingButton::ClickEffect(float dt) {
-	if (army->LegalSpawn(mapPos->gridPos())) {
-		GameObject *newBuilding = new GameObject(*buildingArchetype);
-		Building *building = newBuilding->GetChildComponent<Building>();
-		building->SetPos(mapPos->gridPos());
-		building->SetArmy(army);
-		building->Buy();
-		Space::GetLayer(0)->GetGameObjectManager()->Add(*newBuilding);
+	GameObject* closestUnit = nullptr;
+	int closestDistance = 999;
+
+	//Find the closest engineer to this position.
+	for (GameObject* unit : BehaviorUnit::allUnits) {
+		BehaviorUnit* behavior = unit->GetComponent<BehaviorUnit>();
+
+		if (behavior->traits.ability == Ability::cAbilityEngineer) {
+			int distance = GridManager::GetInstance().GetDistanceBetween(mapPos->gridPos(), behavior->GetGridPos());
+			if (distance < closestDistance) {
+				if (behavior->GetArmy()->GetSide() == army->GetSide()) {
+					closestDistance = distance;
+					closestUnit = unit;
+				}
+			}
+		}
 	}
+
+	//If we found an engineer, send them to build the building.
+	if (closestUnit) closestUnit->GetComponent<BehaviorUnit>()->BuildBuilding(buildingArchetype, mapPos);
 }

@@ -77,6 +77,8 @@ public:
 	BehaviorArmy *army; //Which army owns this building.
 	BehaviorArmy::Side side; //Which side is this army on.
 
+	GameObject *builder; //The unit that is building this building.
+
 	BuildingType buildingType; //Building type.
 	SpecialtyType specialtyType; //What kind of building is this.
 	float buildTime; //How long it takes to create this building in seconds.
