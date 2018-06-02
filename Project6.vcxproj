@@ -186,7 +186,10 @@
     <None Include="Data\Levels\DemoLevel.json" />
     <None Include="Data\Levels\PauseLevel.json" />
     <None Include="Data\Levels\ResearchMenu.json" />
-    <None Include="Data\Levels\StartLevel.json" />
+    <None Include="Data\Levels\SellBuilding.json" />
+    <None Include="Data\Levels\TurretUpgradeMenu.json" />
+    <None Include="Data\Levels\WinSideLeft.json" />
+    <None Include="Data\Levels\WinSideRight.json" />
     <None Include="fmodAPI\inc\fmod_studio.cs" />
     <None Include="fmodAPI\lib\fmod.dll" />
     <None Include="fmodAPI\lib\fmodL.dll" />

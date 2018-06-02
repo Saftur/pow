@@ -53,10 +53,31 @@ public:
 	int GetDistanceBetween(int x1, int y1, int x2, int y2) const;
 	int GetDistanceBetween(const Vector2D& pos1, const Vector2D& pos2) const;
 
-	///TODO: Templatize this to make it search for an occupant with the given component.
-	GameObject* GetOccupant(Node* node) const;
-	GameObject* GetOccupant(Vector2D node) const;
-	GameObject* GetOccupant(int x, int y) const;
+	template <typename T = BehaviorUnit>
+	GameObject* GetOccupant(Node* node) const {
+		return GetOccupant<T>(node->gridPos());
+	}
+
+	template <typename T = BehaviorUnit>
+	GameObject* GetOccupant(Vector2D node) const {
+		for (GameObject* unit : BehaviorUnit::allUnits)
+		{
+			T *unitBehavior = unit->GetComponent<T>();
+			if (unitBehavior && unitBehavior->GetGridPos() == node)
+				return unit;
+		}
+		for (GameObject* building : Building::allBuildings) {
+			T *buildingBehavior = building->GetChildComponent<T>();
+			if (buildingBehavior && buildingBehavior->GetGridPos() == node) return building;
+		}
+
+		return nullptr;
+	}
+
+	template <typename T = BehaviorUnit>
+	GameObject* GetOccupant(int x, int y) const {
+		return GetOccupant<T>(Vector2D((float)x, (float)y));
+	}
 
 	bool IsWithinRange(Node* center, Node* target, int range) const;
 	bool IsWithinRange(const Vector2D& center, const Vector2D& target, int range) const;

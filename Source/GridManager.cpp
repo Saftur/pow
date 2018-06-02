@@ -157,30 +157,6 @@ int GridManager::GetDistanceBetween(const Vector2D& pos1, const Vector2D& pos2) 
 	return (int)pos1.Distance(pos2);
 }
 
-GameObject * GridManager::GetOccupant(Node * node) const
-{
-	return GetOccupant(node->gridPos());
-}
-
-GameObject * GridManager::GetOccupant(Vector2D node) const
-{
-	for (GameObject* unit : BehaviorUnit::allUnits)
-	{
-		if (unit->GetComponent<BehaviorUnit>()->GetGridPos() == node)
-			return unit;
-	}
-	for (GameObject* building : Building::allBuildings) {
-		if (building->GetChildComponent<Building>()->mapPos == node) return building;
-	}
-
-	return nullptr;
-}
-
-GameObject * GridManager::GetOccupant(int x, int y) const
-{
-	return GetOccupant(Vector2D((float)x, (float)y));
-}
-
 bool GridManager::IsWithinRange(Node * center, Node * target, int range) const
 {
 	return IsWithinRange(center->gridPos(), target->gridPos(), range);

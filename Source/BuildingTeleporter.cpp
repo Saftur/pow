@@ -52,6 +52,7 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 	}
 	else if (exit) {
 		if (teleportationsAvailable <= 0) {
+			ClearDrops();
 			GetParent()->Destroy();
 			return;
 		}
@@ -69,7 +70,10 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 				if (lastTeleportedObject != unit) {
 					BehaviorUnit* unitBehavior = unit->GetComponent<BehaviorUnit>();
 					//If the unit is currently running pathfinding to move somewhere, do not teleport it.
-					if (unitBehavior->GetPath().size() > 0) return;
+					if (unitBehavior->IsMoving()) {
+						lastTeleportedObject = unit;
+						return;
+					}
 
 					teleportationsAvailable--; //Lower the number of teleportations available.
 					BuildingTeleporter* exitTeleporter = exit->GetComponent<BuildingTeleporter>();

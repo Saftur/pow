@@ -150,6 +150,8 @@ public:
 	int GetHP() const;
 	void ModifyHP(int amt);
 
+	bool IsMoving() const;
+
 	static vector<GameObject*> allUnits;
 
 private:

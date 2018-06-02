@@ -57,7 +57,7 @@ public:
 	void SetArmy(BehaviorArmy *army);
 	void SetSide(BehaviorArmy::Side side); //Set the side of this building.
 	void SetPos(Vector2D pos); //Set the mapPos of the building.
-	Vector2D GetPos() const;
+	Vector2D GetGridPos() const;
 
 	static void Lock(BehaviorArmy::Side side, BuildingType type); //Lock the given building for the given army.
 	static void Unlock(BehaviorArmy::Side side, BuildingType type); //Unlock the given building for the given army.
@@ -68,6 +68,8 @@ public:
 	bool CanBuy(); //Checks if this building can be bought (also calls IsUnlocked())
 	bool Buy(); //Buys this building
 	void Sell(); //Sells this building.
+
+	void ClearDrops(); //Sets the neoridium and jaxium drop amounts to 0.
 
 	static map<BuildingType, float> buildingCost;
 	static vector<GameObject*> allBuildings;

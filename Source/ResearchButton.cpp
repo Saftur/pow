@@ -9,7 +9,9 @@ void ResearchButton::Load(rapidjson::Value & obj) {
 	rapidjson::Value *tmp;
 
 	if (obj.HasMember("ResearchType") && (tmp = &obj["ResearchType"])->IsString()) {
-		researchType = tmp->GetString();
+		string type = tmp->GetString();
+		if (type == "Turret") researchType = BuildingResearchCenter::Research::Turret;
+		else if (type == "Teleporter") researchType = BuildingResearchCenter::Research::Teleporter;
 	}
 }
 
@@ -17,19 +19,13 @@ Component * ResearchButton::Clone() const {
 	return new ResearchButton(*this);
 }
 
+void ResearchButton::Update(float dt)
+{
+	SetActive(BuildingResearchCenter::CanUnlock(army->GetSide(), researchType));
+}
+
 void ResearchButton::ClickEffect(float dt) {
-	if (researchType == "Spaceport") {
-		BuildingResearchCenter::Unlock(army->GetSide(), Building::BuildingType::Spaceport);
-	}
-	else if (researchType == "VehicleDepot") {
-		BuildingResearchCenter::Unlock(army->GetSide(), Building::BuildingType::VehicleDepot);
-	}
-	else if (researchType == "Turret") {
-		BuildingResearchCenter::Unlock(army->GetSide(), Building::BuildingType::Turret);
-	}
-	else if (researchType == "Teleporter") {
-		BuildingResearchCenter::Unlock(army->GetSide(), Building::BuildingType::Teleporter);
-	}
+	BuildingResearchCenter::Unlock(army->GetSide(), (Building::BuildingType)researchType);
 
 	army->UpdateNeoridiumFundsText();
 }

@@ -8,8 +8,10 @@ public:
 	void Load(rapidjson::Value &obj);
 	Component *Clone() const;
 
+	void Update(float dt);
+
 	void ClickEffect(float dt);
 
 private:
-	string researchType;
+	BuildingResearchCenter::Research researchType;
 };

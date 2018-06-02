@@ -606,7 +606,7 @@ void BehaviorArmy::FindPath(bool doOffset)
 	Vector2D cursorGridPos = GridManager::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation());
 	for (GameObject *buildingObj : Building::allBuildings) {
 		Building *building = buildingObj->GetChildComponent<Building>();
-		if (building->buildingType == Building::Teleporter && building->GetPos() == cursorGridPos)
+		if (building->buildingType == Building::Teleporter && building->GetGridPos() == cursorGridPos)
 			doOffset = false;
 	}
 	for (unsigned i = 0; i < selectedUnits.size(); i++)

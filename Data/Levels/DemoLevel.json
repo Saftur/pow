@@ -548,7 +548,7 @@
 	"Sprite": {
 	  "SpriteSource": {
 	    "Name": "CommandPostSpriteSource",
-		"Texture": "Data\\Assets\\CommandPost.png",
+		"Texture": "Data\\Assets\\Command center.png",
 		"Cols": 1,
 		"Rows": 1
 	  },

@@ -81,10 +81,6 @@ void Building::InitializeBuildings(BehaviorArmy::Side side)
 	for (int i = 0; i < BuildingCount; i++) Lock(side, (BuildingType)i); //Lock all of the buildings.
 	Unlock(side, JaxiumMine);
 	Unlock(side, ResearchCenter);
-	///TODO: Remove further unlocks, their only purpose is for testing.
-	Unlock(side, NeoridiumMine); //Get's unlocked when you first build a Research Center.
-	Unlock(side, Teleporter);
-	Unlock(side, Turret);
 
 	BuildingNeoridiumMine::neoridium[side] = 0.0f; //Intitialize the amount of Neoridium each player has to 0.
 
@@ -95,7 +91,7 @@ void Building::InitializeBuildings(BehaviorArmy::Side side)
 	buildingCost[Spaceport] = 350.0f;
 	buildingCost[VehicleDepot] = 300.0f;
 	buildingCost[Turret] = 200.0f;
-	buildingCost[Teleporter] = 0.0f;
+	buildingCost[Teleporter] = 150.0f;
 	buildingCost[CommandPost] = -0.0f;
 
 	//Initialize the number of teleporters each army has to 0.
@@ -163,7 +159,7 @@ void Building::SetPos(Vector2D pos)
 	GetParent()->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(pos));
 }
 
-Vector2D Building::GetPos() const {
+Vector2D Building::GetGridPos() const {
 	return mapPos;
 }
 
@@ -223,7 +219,12 @@ void Building::Sell()
 
 	if (GetParent()->GetComponent<BuildingCommandPost>()) health->UpdateHP(-health->GetHP());
 	
-	jaxiumDropAmount = 0;
-	neoridiumDropAmount = 0;
+	ClearDrops();
 	GetParent()->Destroy();
+}
+
+void Building::ClearDrops()
+{
+	neoridiumDropAmount = 0;
+	jaxiumDropAmount = 0;
 }

@@ -501,6 +501,11 @@ void BehaviorUnit::ModifyHP(int amt)
 	GetParent()->GetComponent<Health>()->UpdateHP(amt);
 }
 
+bool BehaviorUnit::IsMoving() const
+{
+	return isMoving;
+}
+
 // Calculates velocity based off of movement speed, target pos, and current pos.
 void BehaviorUnit::CalculateVelocity()
 {

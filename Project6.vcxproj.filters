@@ -594,9 +594,6 @@
     <None Include="Data\Levels\PauseLevel.json">
       <Filter>Game\Levels</Filter>
     </None>
-    <None Include="Data\Levels\StartLevel.json">
-      <Filter>Game\Levels</Filter>
-    </None>
     <None Include="Data\Army1.ini">
       <Filter>Game\Armies</Filter>
     </None>
@@ -617,6 +614,18 @@
     </None>
     <None Include="fmodAPI\inc\fmod_studio.cs">
       <Filter>fmod</Filter>
+    </None>
+    <None Include="Data\Levels\TurretUpgradeMenu.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\WinSideLeft.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\WinSideRight.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\SellBuilding.json">
+      <Filter>Game\Levels</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
