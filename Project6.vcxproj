@@ -310,19 +310,21 @@ xcopy .\fmodAPI\lib\fmodstudioL.dll "$(OutDir)" /Y</Command>
       <CompileAs>CompileAsCpp</CompileAs>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(SolutionDir)rapidjson/include/</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4127;4100;4706</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4100;4706;4458</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>OpenGL32.lib;Xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fmod_vc.lib;fmodstudio_vc.lib;OpenGL32.lib;Xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy .\AE\lib\Alpha_Engine.dll "$(OutDir)" /Y
-xcopy .\AE\lib\glew32.dll "$(OutDir)" /Y</Command>
+xcopy .\AE\lib\glew32.dll "$(OutDir)" /Y
+xcopy .\fmodAPI\lib\fmod.dll "$(OutDir)" /Y
+xcopy .\fmodAPI\lib\fmodstudio.dll "$(OutDir)" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
