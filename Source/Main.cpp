@@ -45,7 +45,8 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 		lastTime = currentTime;
 
 		// Update the game engine.
-		Engine::GetInstance().Update(AEInputCheckCurr(' ') ? dt * 10 : dt);
+		//Engine::GetInstance().Update(AEInputCheckCurr(' ') ? dt * 10 : dt);
+		Engine::GetInstance().Update(dt);
 	}
 
 	// Shutdown the game engine.

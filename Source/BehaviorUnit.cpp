@@ -321,6 +321,14 @@ void BehaviorUnit::OnUpdate(float dt)
 			if (currMoveTarget)
 				currMoveTarget->open = true;
 
+			GridManager::GetInstance().GetNode(gridPos)->open = true;
+
+			// Update our target.
+			gridPos = currMoveTarget->gridPos();
+			GetParent()->GetComponent<Transform>()->SetTranslation(targetPos);
+
+			lastMoveTarget = GridManager::GetInstance().ConvertToWorldPoint(currMoveTarget);
+
 			// Do we have more movements to make?
 			if (path.empty())
 			{
@@ -329,14 +337,6 @@ void BehaviorUnit::OnUpdate(float dt)
 				isMoving = false;
 				return;
 			}
-
-			GridManager::GetInstance().GetNode(gridPos)->open = true;
-
-			// Update our target.
-			gridPos = currMoveTarget->gridPos();
-			GetParent()->GetComponent<Transform>()->SetTranslation(targetPos);
-
-			lastMoveTarget = GridManager::GetInstance().ConvertToWorldPoint(currMoveTarget);
 
 			currMoveTarget = *(path.end() - 1);
 
