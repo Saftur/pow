@@ -13,20 +13,59 @@
     "UV": [ 0.125, 0.125 ]
   },
   {
+    "Type": "SpriteSource",
+    "Name": "CursorSpriteSource",
+    "Texture": "Data\\Assets\\cursor.png",
+    "Cols": 1,
+    "Rows": 1
+  },
+  {
+    "Type": "Mesh",
+    "Name": "BasicMesh",
+    "HalfSize": [ 0.5, 0.5 ],
+    "UV": [ 1, 1 ]
+  },
+  {
     "Name": "Camera",
     "Transform": {
       "Translation": [ 0, 0 ],
       "Scale": [ 1, 1 ]
     },
     "Camera": {
-      "ScreenPos": [ 0, 0.9 ],
-      "ScreenSize": [ 0.25, 0.1 ]
+      "ScreenPos": [ 0, 0 ],
+      "ScreenSize": [ 0.5, 1 ]
+    }
+  },
+  {
+    "Name": "Cursor",
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 128, 128 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": "CursorSpriteSource",
+      "Mesh": "BasicMesh",
+      "Alpha": 0.5,
+      "ModulateColor": [ 1, 0, 0, 1 ]
+    }
+  },
+  {
+    "Name": "Separator",
+    "Transform": {
+      "Translation": [ 300, 0 ],
+      "Scale": [ 10, 600 ]
+    },
+    "Sprite": {
+      "Mesh": "BasicMesh",
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 1 ]
     }
   },
   {
     "Name": "FundsDisplay1",
     "Transform": {
-      "Translation": [ 0, 10 ],
+      "Translation": [ -175, 275 ],
       "Scale": [ 100, 50 ],
       "Rotation": 0
     },
@@ -42,7 +81,7 @@
   {
     "Name": "FundsDisplay2",
     "Transform": {
-      "Translation": [ 0, 10 ],
+      "Translation": [ -175, 275 ],
       "Scale": [ 100, 50 ],
       "Rotation": 0
     },
@@ -58,7 +97,7 @@
   {
     "Name": "LeftNeoridiumDisplay",
     "Transform": {
-      "Translation": [ 0, -10 ],
+      "Translation": [ 175, 275 ],
       "Scale": [ 100, 50 ],
       "Rotation": 0
     },
@@ -74,7 +113,7 @@
   {
     "Name": "RightNeoridiumDisplay",
     "Transform": {
-      "Translation": [ 0, -10 ],
+      "Translation": [ 175, 275 ],
       "Scale": [ 100, 50 ],
       "Rotation": 0
     },

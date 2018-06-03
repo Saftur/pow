@@ -236,6 +236,10 @@ void Building::Sell()
 	GetParent()->Destroy();
 }
 
+bool Building::IsBuilt() {
+	return buildTimeRemaining <= 0;
+}
+
 void Building::ClearDrops()
 {
 	neoridiumDropAmount = 0;

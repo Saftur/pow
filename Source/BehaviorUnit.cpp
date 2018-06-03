@@ -301,8 +301,17 @@ void BehaviorUnit::OnUpdate(float dt)
 		if (lastMoveTarget.Distance(GetParent()->GetComponent<Transform>()->GetTranslation()) >= GridManager::GetInstance().tileWidth / 2)
 			GridManager::GetInstance().GetNode(GridManager::GetInstance().ConvertToGridPoint(lastMoveTarget))->open = true;
 
-		// Are we there yet?
-		if (Vector2D::AlmostEquals(GetParent()->GetComponent<Transform>()->GetTranslation(), GridManager::GetInstance().ConvertToWorldPoint(currMoveTarget->gridPos()), 2.5f))
+		Vector2D vel = GetParent()->GetComponent<Physics>()->GetVelocity();
+		// Get a vector of the "direction" of unit velocity
+		// 1 means up or right, -1 means down or left, 0 means no direction
+		Vector2D dir;
+		dir.x = vel.x > 0 ? 1.f : (vel.x < 0 ? -1.f : 0.f);
+		dir.y = vel.y > 0 ? 1.f : (vel.y < 0 ? -1.f : 0.f);
+
+		Vector2D currentPos = GetParent()->GetComponent<Transform>()->GetTranslation();
+		Vector2D targetPos = GridManager::GetInstance().ConvertToWorldPoint(currMoveTarget->gridPos());
+		// Check if moved past target position
+		if (currentPos.x * dir.x >= targetPos.x * dir.x && currentPos.y * dir.y >= targetPos.y * dir.y)
 		{
 			if (changePath) {
 				path = changedPath;
@@ -325,7 +334,7 @@ void BehaviorUnit::OnUpdate(float dt)
 
 			// Update our target.
 			gridPos = currMoveTarget->gridPos();
-			GetParent()->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(gridPos));
+			GetParent()->GetComponent<Transform>()->SetTranslation(targetPos);
 
 			lastMoveTarget = GridManager::GetInstance().ConvertToWorldPoint(currMoveTarget);
 

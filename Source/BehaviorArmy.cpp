@@ -202,10 +202,25 @@ void BehaviorArmy::OnEnter()
 		hudSpace = Space::LoadLayer(side+2, "HUDLevel", true, true);
 		hudSpace->GetLevelManager()->Update(0);
 
+		// Move camera depending on army
 		GameObject *camObj = hudSpace->GetGameObjectManager()->GetObjectByName("Camera");
 		if (camObj) {
 			if (side == BehaviorArmy::sRight)
-				camObj->GetComponent<Camera>()->ChangePos({0.75f, 0.0f});
+				camObj->GetComponent<Camera>()->ChangePos({0.5f, 0.0f});
+		}
+
+		// Change HUDLevel cursor color
+		GameObject *hudCursorObj = hudSpace->GetGameObjectManager()->GetObjectByName("Cursor");
+		if (hudCursorObj) {
+			if (side == BehaviorArmy::sRight)
+				hudCursorObj->GetComponent<Sprite>()->SetModulateColor({0.f, 0.f, 1.f, 1.f});
+		}
+
+		// Move screen separator depending on army
+		GameObject *separatorObj = hudSpace->GetGameObjectManager()->GetObjectByName("Separator");
+		if (separatorObj) {
+			if (side == BehaviorArmy::sRight)
+				separatorObj->GetComponent<Transform>()->SetTranslation({-300, 0});
 		}
 
 		// Initialize tilemap
@@ -347,6 +362,7 @@ void BehaviorArmy::OnUpdate(float dt)
 					for (GameObject* building : Building::allBuildings) {
 						Building *buildingComp = building->GetChildComponent<Building>();
 						if (buildingComp->army != this) continue;
+						if (!buildingComp->IsBuilt()) continue;
 						Transform *transform = building->GetComponent<Transform>();
 						if (transform && GridManager::GetInstance().ConvertToGridPoint(transform->GetTranslation()) == cursorNode->gridPos()) {
 							buildingComp->OpenMenu();

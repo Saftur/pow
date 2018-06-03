@@ -69,6 +69,8 @@ public:
 	bool Buy(); //Buys this building
 	void Sell(); //Sells this building.
 
+	bool IsBuilt(); //Checks if this building is done building
+
 	void ClearDrops(); //Sets the neoridium and jaxium drop amounts to 0.
 
 	static map<BuildingType, float> buildingCost;

@@ -727,6 +727,7 @@
       "Rotation": 0
     },
     "Sprite": {
+      "Active": false,
       "SpriteSource": "CursorSpriteSource",
       "Mesh": "CursorMesh",
       "Alpha": 0.5,
@@ -748,6 +749,7 @@
       "Rotation": 0
     },
     "Sprite": {
+      "Active": false,
       "SpriteSource": "CursorSpriteSource",
       "Mesh": "CursorMesh",
       "Alpha": 0.5,
