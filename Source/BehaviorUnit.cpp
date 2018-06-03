@@ -51,8 +51,18 @@ BehaviorUnit::BaseStats BehaviorUnit::defaultStats =
 10.0f		// Movement speed.
 };
 
-BehaviorUnit::Weapon BehaviorUnit::Weapons[cNumWeapons];
-BehaviorUnit::Equipment BehaviorUnit::Equips[cNumEquips];
+BehaviorUnit::Weapon BehaviorUnit::Weapons[cNumWeapons] = {
+	{ "Drillsaw", cGroupMelee, 0.05f, 1, 10, BehaviorProjectile::ProjectileTypes::pTypeInvisible },
+	{ "Handcannon", cGroupRanged, 0.2f, 2, 20, BehaviorProjectile::ProjectileTypes::pTypeLaser },
+	{ "Beam Rifle", cGroupLongRanged, 0.5f, 3, 30, BehaviorProjectile::ProjectileTypes::pTypeMissile }
+};
+string BehaviorUnit::AbilityNames[cNumAbilities] = {"None", "Technician", "Engineer", "Scientist"};
+BehaviorUnit::Equipment BehaviorUnit::Equips[cNumEquips] = {
+	{ "null", 0, UseNone, 0.0f, 0.0f },
+	{ "Diamondium Armor", -1, UseArmor, 0.0f, 0.0f },
+	{ "Strobebang", 5, UseStrobebang, 1.0f, 30.0f },
+	{ "EMP", 5, UseEMP, 1.0f, 30.0f }
+};
 
 //------------------------------------------------------------------------------
 // Public Functions:
@@ -131,8 +141,10 @@ void BehaviorUnit::SetPath(std::vector<Node*> newPath)
 void BehaviorUnit::BuildArrays()
 {
 	// Prevent duplicate initialization.
-	if (Weapons[0].name == "Drillsaw")
+	static bool done = false;
+	if (done)
 		return;
+	done = true;
 
 	///////////////////////////////////////////////////////////////
 	// TEST CODE
@@ -140,17 +152,6 @@ void BehaviorUnit::BuildArrays()
 	SoundManager::GetInstance().AddBank("Master Bank.bank");
 	SoundManager::GetInstance().PlayEvent("Level Music");
 	///////////////////////////////////////////////////////////////
-
-	// Build weapon array.
-	Weapons[cWeaponDrillsaw] = { "Drillsaw", cGroupMelee, 0.05f, 1, 10, BehaviorProjectile::ProjectileTypes::pTypeInvisible };
-	Weapons[cWeaponHandcannon] = { "Handcannon", cGroupRanged, 0.2f, 2, 20, BehaviorProjectile::ProjectileTypes::pTypeLaser };
-	Weapons[cWeaponBeamRifle] = { "Beam Rifle", cGroupLongRanged, 0.5f, 3, 30, BehaviorProjectile::ProjectileTypes::pTypeMissile };
-
-	// Build equipment array.
-	Equips[cEquipNone] = { "null", 0, UseNone, 0.0f, 0.0f };
-	Equips[cEquipArmor] = { "Diamondium Armor", -1, UseArmor, 0.0f, 0.0f };
-	Equips[cEquipStrobebang] = { "Strobebang", 5, UseStrobebang, 1.0f, 30.0f };
-	Equips[cEquipEMP] = { "EMP", 5, UseEMP, 1.0f, 30.0f };
 }
 
 // Clone an advanced behavior and return a pointer to the cloned object.

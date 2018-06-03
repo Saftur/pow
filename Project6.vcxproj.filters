@@ -73,6 +73,15 @@
     <Filter Include="Game\Control">
       <UniqueIdentifier>{56c8ad49-83c8-4399-8ce2-7aa341c96c11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Buttons\GameButtons">
+      <UniqueIdentifier>{a82f3f35-59a4-47f6-8e7b-a8be248f7e35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Buttons\NonGameButtons">
+      <UniqueIdentifier>{6b38de7d-6ebb-4a7b-ad5c-6c32175b59c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\MainLoops">
+      <UniqueIdentifier>{ddae13fd-0fea-4956-a6ed-bc64a9d0b999}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
@@ -250,18 +259,6 @@
     <ClCompile Include="Source\QuitButton.cpp">
       <Filter>Engine\GameObjects\Button</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ArmyButton.cpp">
-      <Filter>Game\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CreateBuildingButton.cpp">
-      <Filter>Game\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ResearchButton.cpp">
-      <Filter>Game\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CreateUnitButton.cpp">
-      <Filter>Game\Buttons</Filter>
-    </ClCompile>
     <ClCompile Include="Source\BuildingTurret.cpp">
       <Filter>Game\Buildings</Filter>
     </ClCompile>
@@ -269,6 +266,51 @@
       <Filter>Engine\GameObjects\Button</Filter>
     </ClCompile>
     <ClCompile Include="Source\MenuCursor.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ArmyButton.cpp">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CreateBuildingButton.cpp">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CreateUnitButton.cpp">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ResearchButton.cpp">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NewUnitButton.cpp">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ArmyTraits.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TextBox.cpp">
+      <Filter>Engine\GameObjects\RenderText</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ChangeStatButton.cpp">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LoadArmyButton.cpp">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SaveArmyButton.cpp">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CustomizationMain.cpp">
+      <Filter>Game\MainLoops</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rect.cpp">
+      <Filter>Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ChangeWeaponAbilityButton.cpp">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CustomPointCounter.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CostDisplay.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
   </ItemGroup>
@@ -541,18 +583,6 @@
     <ClInclude Include="Source\QuitButton.h">
       <Filter>Engine\GameObjects\Button</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ArmyButton.h">
-      <Filter>Game\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CreateBuildingButton.h">
-      <Filter>Game\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ResearchButton.h">
-      <Filter>Game\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CreateUnitButton.h">
-      <Filter>Game\Buttons</Filter>
-    </ClInclude>
     <ClInclude Include="fmodAPI\inc\fmod_studio.h">
       <Filter>fmod</Filter>
     </ClInclude>
@@ -572,6 +602,51 @@
       <Filter>Engine\GameObjects\Button</Filter>
     </ClInclude>
     <ClInclude Include="Source\MenuCursor.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ArmyButton.h">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CreateBuildingButton.h">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CreateUnitButton.h">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResearchButton.h">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\NewUnitButton.h">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ArmyTraits.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TextBox.h">
+      <Filter>Engine\GameObjects\RenderText</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ChangeStatButton.h">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LoadArmyButton.h">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SaveArmyButton.h">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CustomizationMain.h">
+      <Filter>Game\MainLoops</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rect.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ChangeWeaponAbilityButton.h">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CustomPointCounter.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CostDisplay.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
@@ -612,7 +687,10 @@
     <None Include="fmodAPI\inc\fmod_studio.cs">
       <Filter>fmod</Filter>
     </None>
-    <None Include="Data\Levels\MainMenuLevel.json">
+    <None Include="Data\Levels\CustomizationMenu.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\MainMenu.json">
       <Filter>Game\Levels</Filter>
     </None>
   </ItemGroup>

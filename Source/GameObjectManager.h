@@ -81,6 +81,8 @@ public:
 	// Params:
 	//	 gameObject = Reference to the game object to be added to the list.
 	GameObject* AddNew(GameObject& gameObject, bool callInstanceInit=true);
+	GameObject* AddNew(const char *archetypeName, bool callInstanceInit=true);
+	GameObject* AddNew(string archetypeName, bool callInstanceInit=true);
 
 	// Add a game object to the game object archetype list.
 	// (Hint: This function and the GameObjectManagerAdd functions require

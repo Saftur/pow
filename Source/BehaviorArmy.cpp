@@ -375,7 +375,6 @@ void BehaviorArmy::OnExit()
 {
 	switch (GetCurrentState()) {
 	case cArmyNormal:
-		unitTypes.clear();
 		break;
 	}
 }
@@ -410,7 +409,7 @@ void BehaviorArmy::Draw(Camera *cam) const
 void BehaviorArmy::Load(rapidjson::Value & obj)
 {
 	if (obj.HasMember("Name") && obj["Name"].IsString()) {
-		string path = "data\\";
+		/*string path = "data\\";
 		path += obj["Name"].GetString();
 		path += ".ini";
 
@@ -435,7 +434,9 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 			reader >> unit.item2;
 
 			unitTypes.push_back(unit);
-		}
+		}*/
+		armyTraits.SetArmyFile(obj["Name"].GetString());
+		armyTraits.LoadArmyFile();
 	}
 	if (obj.HasMember("Side") && obj["Side"].IsString()) {
 		if (strcmp(obj["Side"].GetString(), "Left") == 0) {
@@ -723,11 +724,7 @@ void BehaviorArmy::DrawPath(Camera *cam) const
 
 BehaviorUnit::Traits BehaviorArmy::GetUnitData(const char * name_) const
 {
-	for (BehaviorUnit::Traits unit : unitTypes) {
-		if (strcmp(name_, unit.name.c_str()) == 0)
-			return unit;
-	}
-	return BehaviorUnit::Traits({ -1 });
+	return armyTraits.GetUnitData(name_);
 }
 
 void BehaviorArmy::UpdateFundsText()

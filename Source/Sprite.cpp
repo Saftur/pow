@@ -10,7 +10,7 @@
 #include "Mesh.h"
 
 Sprite::Sprite() :
-		Component("Sprite"), alpha(1), color({ 0, 0, 0, 0 }), frameIndex(0)
+		Component("Sprite"), active(true), alpha(1), color({ 0, 0, 0, 0 }), frameIndex(0)
 {
 }
 
@@ -30,6 +30,8 @@ void Sprite::Draw(Camera *cam) const
 }
 
 void Sprite::Draw(Camera *cam, Transform &transform) const {
+	if (!active) return;
+
 	Component::Draw(cam);
 
 	if (!mesh) return;
@@ -57,6 +59,14 @@ void Sprite::Draw(Camera *cam, Transform &transform) const {
 	//	AEGfxMeshFree(newMesh);
 	//} else AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 	AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+}
+
+bool Sprite::GetActive() const {
+	return active;
+}
+
+void Sprite::SetActive(bool active) {
+	this->active = active;
 }
 
 void Sprite::AdjustAlpha(float alphaAdjust)
@@ -104,8 +114,15 @@ void Sprite::SetModulateColor(Color color_)
 	this->color = color_;
 }
 
+Color Sprite::GetModulateColor() const {
+	return color;
+}
+
 void Sprite::Load(rapidjson::Value& obj)
 {
+	if (obj.HasMember("Active") && obj["Active"].IsFalse())
+		active = false;
+
 	if (obj.HasMember("SpriteSource") && obj["SpriteSource"].IsString())
 	{
 		// Add a sprite source by name.

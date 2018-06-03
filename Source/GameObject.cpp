@@ -72,9 +72,13 @@ const char * GameObject::GetName() const
 	return name.c_str();
 }
 
-void GameObject::SetName(const char * name_)
+void GameObject::SetName(const char * name)
 {
-	name = name_;
+	this->name = name;
+}
+
+void GameObject::SetName(string name) {
+	this->name = name;
 }
 
 bool GameObject::IsNamed(const char * name_) const

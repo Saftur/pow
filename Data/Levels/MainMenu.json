@@ -85,6 +85,30 @@
       "Scale": [ 200, 50 ],
       "Rotation": 0
     },
+    "ChangeLevelButton": {
+      "Level": "CustomizationMenu"
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "CustomButton",
+        "Texture": "Data\\Assets\\Buttons\\Customize.png"
+      },
+      "Mesh": {
+        "Name": "ButtonMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    }
+  },
+  {
+    "Name": "Button",
+    "Transform": {
+      "Translation": [ 0, -90 ],
+      "Scale": [ 200, 50 ],
+      "Rotation": 0
+    },
     "QuitButton": {
     },
     "Sprite": {

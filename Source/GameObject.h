@@ -101,6 +101,7 @@ public:
 	const char* GetName() const;
 
 	void SetName(const char *name);
+	void SetName(string name);
 
 	// Check to see if the name of an object equals a given string.
 	// Params:

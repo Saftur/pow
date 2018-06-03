@@ -83,6 +83,8 @@ void MenuCursor::Update(float dt) {
 		GetParent()->GetGameObjectManager()->ForEachObject([&](GameObject *obj) {
 			if (!obj->GetChildComponent<Button>() || obj == selectedButton)
 				return;
+			if (obj->GetComponent<Sprite>() && !obj->GetComponent<Sprite>()->GetActive())
+				return;
 			Transform *objTrs = obj->GetComponent<Transform>();
 			Vector2D objPos = objTrs->GetTranslation();
 			Vector2D diff = (objPos - currentPos);

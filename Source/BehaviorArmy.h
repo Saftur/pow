@@ -28,6 +28,7 @@ using std::string;
 #include "ControlList.h"
 #include "GridManager.h"
 #include "BehaviorUnit.h"
+#include "ArmyTraits.h"
 
 typedef class Sprite Sprite;
 
@@ -178,7 +179,7 @@ private:
 
 
 	// List of unit types
-	vector<BehaviorUnit::Traits> unitTypes;
+	ArmyTraits armyTraits;
 	// Side of army
 	Side side;
 	// Number of units alive from army

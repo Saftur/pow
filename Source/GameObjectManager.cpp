@@ -88,6 +88,14 @@ GameObject* GameObjectManager::AddNew(GameObject & gameObject, bool callInstance
 	return newObject;
 }
 
+GameObject * GameObjectManager::AddNew(const char * archetypeName, bool callInstanceInit) {
+	return AddNew(*GetArchetype(archetypeName), callInstanceInit);
+}
+
+GameObject * GameObjectManager::AddNew(string archetypeName, bool callInstanceInit) {
+	return AddNew(archetypeName.c_str(), callInstanceInit);
+}
+
 void GameObjectManager::AddArchetype(GameObject & gameObject)
 {
 	archetypes.push_back(&gameObject);

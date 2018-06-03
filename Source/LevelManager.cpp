@@ -20,6 +20,7 @@
 #include "Space.h"
 #include "Tilemap.h"
 #include "Rendertext.h"
+#include "TextBox.h"
 #include "CompList.h"
 #include "Mesh.h"
 
@@ -49,6 +50,7 @@ void LevelManager::StaticInit()
 	AddComponentType("Camera", new Camera());
 	AddComponentType("Tilemap", new Tilemap());
 	AddComponentType("Text", new Text());
+	AddComponentType("TextBox", new TextBox());
 
 	AddComponentType("ChangeLevelButton", new ChangeLevelButton());
 	AddComponentType("RestartButton", new RestartButton());

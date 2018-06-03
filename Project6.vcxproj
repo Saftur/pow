@@ -45,6 +45,7 @@
     <ClInclude Include="Source\Animation.h" />
     <ClInclude Include="Source\AnimationFrame.h" />
     <ClInclude Include="Source\AnimationSequence.h" />
+    <ClInclude Include="Source\ArmyTraits.h" />
     <ClInclude Include="Source\Behavior.h" />
     <ClInclude Include="Source\BehaviorArmy.h" />
     <ClInclude Include="Source\BehaviorProjectile.h" />
@@ -59,6 +60,8 @@
     <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\ChangeLevelButton.h" />
+    <ClInclude Include="Source\ChangeStatButton.h" />
+    <ClInclude Include="Source\ChangeWeaponAbilityButton.h" />
     <ClInclude Include="Source\CompList.h" />
     <ClInclude Include="Source\BehaviorStub.h" />
     <ClInclude Include="Source\BehaviorUnit.h" />
@@ -70,10 +73,13 @@
     <ClInclude Include="Source\ControlList.h" />
     <ClInclude Include="Source\Controls.h" />
     <ClInclude Include="Source\ArmyButton.h" />
+    <ClInclude Include="Source\CostDisplay.h" />
     <ClInclude Include="Source\CreateBuildingButton.h" />
     <ClInclude Include="Source\CreateUnitButton.h" />
     <ClInclude Include="Source\Crystal.h" />
     <ClInclude Include="Source\Cursor.h" />
+    <ClInclude Include="Source\CustomizationMain.h" />
+    <ClInclude Include="Source\CustomPointCounter.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\GameObjectManager.h" />
@@ -81,18 +87,22 @@
     <ClInclude Include="source\GridManager.h" />
     <ClInclude Include="Source\Intersection2D.h" />
     <ClInclude Include="Source\LevelManager.h" />
+    <ClInclude Include="Source\LoadArmyButton.h" />
     <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\Matrix2D.h" />
     <ClInclude Include="Source\MenuCursor.h" />
     <ClInclude Include="Source\Mesh.h" />
+    <ClInclude Include="Source\NewUnitButton.h" />
     <ClInclude Include="source\Pathfinder.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\PopupMenu.h" />
     <ClInclude Include="Source\QuitButton.h" />
     <ClInclude Include="Source\Random.h" />
+    <ClInclude Include="Source\Rect.h" />
     <ClInclude Include="Source\Rendertext.h" />
     <ClInclude Include="Source\ResearchButton.h" />
     <ClInclude Include="Source\RestartButton.h" />
+    <ClInclude Include="Source\SaveArmyButton.h" />
     <ClInclude Include="source\Serializable.h" />
     <ClInclude Include="source\SoundManager.h" />
     <ClInclude Include="Source\Space.h" />
@@ -103,6 +113,7 @@
     <ClInclude Include="Source\System.h" />
     <ClInclude Include="Source\targetver.h" />
     <ClInclude Include="Source\Teleporter.h" />
+    <ClInclude Include="Source\TextBox.h" />
     <ClInclude Include="Source\Tilemap.h" />
     <ClInclude Include="Source\Trace.h" />
     <ClInclude Include="Source\Transform.h" />
@@ -111,6 +122,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Animation.cpp" />
     <ClCompile Include="Source\AnimationSequence.cpp" />
+    <ClCompile Include="Source\ArmyTraits.cpp" />
     <ClCompile Include="Source\Behavior.cpp" />
     <ClCompile Include="Source\BehaviorArmy.cpp" />
     <ClCompile Include="Source\BehaviorProjectile.cpp" />
@@ -125,6 +137,8 @@
     <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\ChangeLevelButton.cpp" />
+    <ClCompile Include="Source\ChangeStatButton.cpp" />
+    <ClCompile Include="Source\ChangeWeaponAbilityButton.cpp" />
     <ClCompile Include="Source\CompList.cpp" />
     <ClCompile Include="Source\BehaviorStub.cpp" />
     <ClCompile Include="Source\BehaviorUnit.cpp" />
@@ -135,10 +149,13 @@
     <ClCompile Include="Source\ComponentStub.cpp" />
     <ClCompile Include="Source\ControlList.cpp" />
     <ClCompile Include="Source\ArmyButton.cpp" />
+    <ClCompile Include="Source\CostDisplay.cpp" />
     <ClCompile Include="Source\CreateBuildingButton.cpp" />
     <ClCompile Include="Source\CreateUnitButton.cpp" />
     <ClCompile Include="Source\Crystal.cpp" />
     <ClCompile Include="Source\Cursor.cpp" />
+    <ClCompile Include="Source\CustomizationMain.cpp" />
+    <ClCompile Include="Source\CustomPointCounter.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\GameObjectManager.cpp" />
@@ -146,19 +163,23 @@
     <ClCompile Include="source\GridManager.cpp" />
     <ClCompile Include="Source\Intersection2D.cpp" />
     <ClCompile Include="Source\LevelManager.cpp" />
+    <ClCompile Include="Source\LoadArmyButton.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Map.cpp" />
     <ClCompile Include="Source\Matrix2D.cpp" />
     <ClCompile Include="Source\MenuCursor.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
+    <ClCompile Include="Source\NewUnitButton.cpp" />
     <ClCompile Include="Source\Pathfinder.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\PopupMenu.cpp" />
     <ClCompile Include="Source\QuitButton.cpp" />
     <ClCompile Include="Source\Random.cpp" />
+    <ClCompile Include="Source\Rect.cpp" />
     <ClCompile Include="Source\Rendertext.cpp" />
     <ClCompile Include="Source\ResearchButton.cpp" />
     <ClCompile Include="Source\RestartButton.cpp" />
+    <ClCompile Include="Source\SaveArmyButton.cpp" />
     <ClCompile Include="source\Serializable.cpp" />
     <ClCompile Include="source\SoundManager.cpp" />
     <ClCompile Include="Source\Space.cpp" />
@@ -170,6 +191,7 @@
     </ClCompile>
     <ClCompile Include="Source\System.cpp" />
     <ClCompile Include="Source\Teleporter.cpp" />
+    <ClCompile Include="Source\TextBox.cpp" />
     <ClCompile Include="Source\Tilemap.cpp" />
     <ClCompile Include="Source\Trace.cpp" />
     <ClCompile Include="Source\Transform.cpp" />
@@ -181,8 +203,9 @@
     <None Include="Data\Army2.ini" />
     <None Include="Data\Levels\BuildingMenu.json" />
     <None Include="Data\Levels\CommandPostMenu.json" />
+    <None Include="Data\Levels\CustomizationMenu.json" />
     <None Include="Data\Levels\DemoLevel.json" />
-    <None Include="Data\Levels\MainMenuLevel.json" />
+    <None Include="Data\Levels\MainMenu.json" />
     <None Include="Data\Levels\PauseLevel.json" />
     <None Include="Data\Levels\ResearchMenu.json" />
     <None Include="Data\Levels\StartLevel.json" />

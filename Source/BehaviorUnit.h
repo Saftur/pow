@@ -37,9 +37,9 @@ enum UnitState
 
 enum SpecialtyType { Basic, Advanced, Special };
 
-enum WeaponType { cWeaponDrillsaw = 0, cWeaponHandcannon = 1, cWeaponBeamRifle = 2, cNumWeapons = 3 };
+enum WeaponType { cWeaponDrillsaw, cWeaponHandcannon, cWeaponBeamRifle, cNumWeapons };
 enum EquipmentType { cEquipNone, cEquipArmor, cEquipStrobebang, cEquipEMP, cNumEquips };
-enum Ability { cAbilityNone = 0, cAbilityTechnician = 1, cAbilityEngineer = 2, cAbilityScientist = 3 };
+enum Ability { cAbilityNone, cAbilityTechnician, cAbilityEngineer, cAbilityScientist, cNumAbilities };
 enum AttackGroup { cGroupAircraft, cGroupInfantry, cGroupArtillary };
 enum WeaponGroup { cGroupMelee, cGroupRanged, cGroupLongRanged };
 
@@ -152,6 +152,10 @@ public:
 
 	static vector<GameObject*> allUnits;
 
+	static Weapon Weapons[cNumWeapons];
+	static string AbilityNames[cNumAbilities];
+	static Equipment Equips[cNumEquips];
+
 private:
 	//------------------------------------------------------------------------------
 	// Private Functions:
@@ -230,9 +234,6 @@ private:
 	vector<Node*> changedPath;
 
 	BehaviorArmy* army;
-
-	static Weapon Weapons[cNumWeapons];
-	static Equipment Equips[cNumEquips];
 };
 
 //------------------------------------------------------------------------------

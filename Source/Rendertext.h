@@ -12,6 +12,9 @@
 
 #pragma once
 
+#include <string>
+using std::string;
+
 #include "Sprite.h"
 #include "Vector2D.h"
 #include "Component.h"
@@ -31,17 +34,27 @@ public:
 	// Clones the component, returning a dynamically allocated copy.
 	Component* Clone() const;
 
-	void SetText(const char* string); //Set the text.
+	void SetActive(bool active);
+	void SetText(const char* text); //Set the text.
+	void SetText(string text); //Set the text.
 	void SetColor(Color color);
 	void SetScale(Vector2D textScale);
 	void SetOffset(Vector2D offset);
+
+	bool GetActive() const;
+	string GetText() const;
+	Color GetColor() const;
+	Vector2D GetScale() const;
+	Vector2D GetOffset() const;
 
 	void Draw(Camera *cam) const; //Update the text on screen.
 
 	void Load(rapidjson::Value& obj);
 
-private:
-	char string[512];
+protected:
+	bool active;
+
+	string str;
 	Vector2D scale;
 	
 	AEGfxVertexList* mesh;			//Mesh component for drawing the text.

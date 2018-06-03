@@ -62,6 +62,9 @@ public:
 	void Draw(Camera *cam) const;
 	void Draw(Camera *cam, Transform &transform) const;
 
+	bool GetActive() const;
+	void SetActive(bool active);
+
 	// Adjust a sprite's alpha up/down.
 	// (NOTE: Make sure to clamp the resulting alpha value between 0.0f and 1.0f.)
 	// Params:
@@ -99,11 +102,14 @@ public:
 	// Params:
 	//	 color = A new color for the sprite.
 	void SetModulateColor(Color color);
+	Color GetModulateColor() const;
 
 	void Load(rapidjson::Value& obj);
 
 
 private:
+	bool active;
+
 	// The frame currently being displayed (for sprite sheets).
 	unsigned int frameIndex;
 
