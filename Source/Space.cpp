@@ -6,7 +6,7 @@ unsigned Space::firstDrawn = 0;
 unsigned Space::numLayers = 0;
 Space *Space::layers[];
 
-Space::Space(unsigned layerNum, bool updateLower, bool drawLower) : layerNum(layerNum), levelManager(this), gameObjectManager(this) {
+Space::Space(unsigned layerNum, bool updateLower, bool drawLower) : layerNum(layerNum), levelManager(this), gameObjectManager(this), updateLower(updateLower), drawLower(drawLower) {
 }
 
 void Space::Update(float dt) {
@@ -92,11 +92,15 @@ void Space::DeleteLayer(unsigned layer) {
 		do {
 			firstUpdated--;
 		} while (firstUpdated < MAX_LAYERS && (!layers[firstUpdated] || layers[firstUpdated]->updateLower));
+		if (firstUpdated > MAX_LAYERS)
+			firstUpdated = 0;
 	}
 	if (firstDrawn > 0 && firstDrawn == layer && !layers[layer]->updateLower) {
 		do {
 			firstDrawn--;
 		} while (firstDrawn < MAX_LAYERS && (!layers[firstDrawn] || layers[firstDrawn]->updateLower));
+		if (firstDrawn > MAX_LAYERS)
+			firstDrawn = 0;
 	}
 
 	layers[layer]->levelManager.Shutdown();

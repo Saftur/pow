@@ -42,16 +42,18 @@ public:
 	//  parent = The object that owns this behavior.
 	Health();
 
+	void Load(rapidjson::Value& obj);
+	void InstanceInit();
+
+	void OnDestroy();
+
 	void Update(float dt);
 	void Draw(Camera* cam) const;
-
-	void Load(rapidjson::Value& obj);
 
 	void Initialize(const int& max);
 
 	int GetHP() const;
 	void UpdateHP(const int& amount);
-	void InstanceInit();
 	
 	unsigned GetMaxHP() const;
 	

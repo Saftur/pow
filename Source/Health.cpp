@@ -46,6 +46,35 @@ Health::Health() : Component("Health")
 {
 }
 
+void Health::Load(rapidjson::Value & obj)
+{
+	assert(obj.HasMember("MaxHP"));
+
+	maxHP = obj["MaxHP"].GetInt();
+	hp = maxHP;
+
+	if (obj.HasMember("Offset"))
+		offset = { (float)obj["Offset"].GetArray()[0].GetInt(), (float)obj["Offset"].GetArray()[1].GetInt() };
+	else
+		offset = { 0, 0 };
+
+	scale = Vector2D(10.f, 1.f) * GetParent()->GetComponent<Transform>()->GetScale() / 10.f;
+}
+
+void Health::InstanceInit()
+{
+	if (instances == 0)
+	{
+		bar->SetMesh(GetParent()->GetLevelManager()->GetMesh("ButtonMesh"));
+	}
+
+	instances++;
+}
+
+void Health::OnDestroy() {
+	instances--;
+}
+
 void Health::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
@@ -69,21 +98,6 @@ void Health::Draw(Camera* cam) const
 	bar->Draw(cam, barTrans);
 }
 
-void Health::Load(rapidjson::Value & obj)
-{
-	assert(obj.HasMember("MaxHP"));
-
-	maxHP = obj["MaxHP"].GetInt();
-	hp = maxHP;
-
-	if (obj.HasMember("Offset"))
-		offset = { (float)obj["Offset"].GetArray()[0].GetInt(), (float)obj["Offset"].GetArray()[1].GetInt() };
-	else
-		offset = { 0, 0 };
-
-	scale = Vector2D(10.f, 1.f) * GetParent()->GetComponent<Transform>()->GetScale() / 10.f;
-}
-
 void Health::Initialize(const int & max)
 {
 	maxHP = max;
@@ -103,16 +117,6 @@ void Health::UpdateHP(const int& amount)
 		hp = maxHP;
 	else if (hp < 0)
 		GetParent()->Destroy();
-}
-
-void Health::InstanceInit()
-{
-	if (instances == 0)
-	{
-		bar->SetMesh(GetParent()->GetLevelManager()->GetMesh("ButtonMesh"));
-	}
-
-	instances++;
 }
 
 unsigned Health::GetMaxHP() const
