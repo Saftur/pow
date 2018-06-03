@@ -57,9 +57,9 @@ BehaviorUnit::BaseStats BehaviorUnit::defaultStats =
 };
 
 BehaviorUnit::Weapon BehaviorUnit::Weapons[cNumWeapons] = {
-	{ "Drillsaw", cGroupMelee, 0.05f, 1, 10, BehaviorProjectile::ProjectileTypes::pTypeInvisible },
-	{ "Handcannon", cGroupRanged, 0.2f, 2, 20, BehaviorProjectile::ProjectileTypes::pTypeLaser },
-	{ "Beam Rifle", cGroupLongRanged, 0.5f, 3, 30, BehaviorProjectile::ProjectileTypes::pTypeMissile }
+	{ "Drillsaw", cGroupMelee, 0.05f, 1, 2, BehaviorProjectile::ProjectileTypes::pTypeInvisible },
+	{ "Handcannon", cGroupRanged, 0.25f, 2, 10, BehaviorProjectile::ProjectileTypes::pTypeLaser },
+	{ "Beam Rifle", cGroupLongRanged, 0.5f, 3, 8, BehaviorProjectile::ProjectileTypes::pTypeMissile }
 };
 string BehaviorUnit::AbilityNames[cNumAbilities] = {"None", "Technician", "Engineer", "Scientist"};
 BehaviorUnit::Equipment BehaviorUnit::Equips[cNumEquips] = {
@@ -100,11 +100,11 @@ void BehaviorUnit::Init(Traits& theTraits, BehaviorArmy* theArmy)
 	traits = theTraits;
 
 	stats.attackRange = Weapons[traits.weapon].range;
-	stats.maxHP = (int)(defaultStats.maxHP * (0.05f * traits.strength + 0.15f * traits.defense));
+	stats.maxHP = (int)(defaultStats.maxHP * (1.f + 0.05f * traits.defense));
 	stats.currHP = stats.maxHP;
 	stats.inventorySize = (int)(defaultStats.inventorySize + 0.5f * traits.strength + 0.5f * traits.agility);
 	stats.detectRange = defaultStats.detectRange;
-	stats.defense = (int)(defaultStats.defense + 0.05f * traits.defense);
+	stats.defense = 0.032f * (float)traits.defense;
 
 	// If there's armor, apply an HP boost. If there's an empty slot, give an inventory size boost.
 	if (Equips[traits.item1].name == Equips[cEquipArmor].name)
@@ -260,8 +260,10 @@ void BehaviorUnit::OnUpdate(float dt)
 				BehaviorUnit* bUnit = target->GetComponent<BehaviorUnit>();
 				Building* building = target->GetChildComponent<Building>();
 
-				if(bUnit) projectile->GetComponent<BehaviorProjectile>()->Fire(army, GridManager::GetInstance().ConvertToWorldPoint(bUnit->GetGridPos()) - GridManager::GetInstance().ConvertToWorldPoint(gridPos), Weapons[traits.weapon].damage * traits.strength, stats.attackRange);
-				else if(building) projectile->GetComponent<BehaviorProjectile>()->Fire(army, GridManager::GetInstance().ConvertToWorldPoint(building->mapPos) - GridManager::GetInstance().ConvertToWorldPoint(gridPos), Weapons[traits.weapon].damage * traits.strength, stats.attackRange);
+				int bonus = (traits.weapon == cWeaponDrillsaw ? 0 : 1) * (GridManager::GetInstance().GetNode(gridPos)->highGround ? 1 : 0);
+
+				if(bUnit) projectile->GetComponent<BehaviorProjectile>()->Fire(army, GridManager::GetInstance().ConvertToWorldPoint(bUnit->GetGridPos()) - GridManager::GetInstance().ConvertToWorldPoint(gridPos), Weapons[traits.weapon].damage * traits.strength, stats.attackRange + bonus);
+				else if(building) projectile->GetComponent<BehaviorProjectile>()->Fire(army, GridManager::GetInstance().ConvertToWorldPoint(building->mapPos) - GridManager::GetInstance().ConvertToWorldPoint(gridPos), Weapons[traits.weapon].damage * traits.strength, stats.attackRange + bonus);
 				GetParent()->GetGameObjectManager()->Add(*projectile);
 				// TODO: Make sure this doesn't do shitloads of damage.
 				attackTimer = Weapons[traits.weapon].cooldown;
@@ -541,6 +543,10 @@ int BehaviorUnit::GetHP() const
 
 void BehaviorUnit::ModifyHP(int amt)
 {
+	// Ignore (traits.Defense)% of incoming damage.
+	if (amt < 0)
+		amt = (int)((float)amt * (1.f - stats.defense));
+
 	if (stats.currHP <= 0) return;
 	stats.currHP += amt;
 	GetParent()->GetComponent<Health>()->UpdateHP(amt);
@@ -569,7 +575,7 @@ void BehaviorUnit::CalculateVelocity()
 	dir.y *= -1;
 
 	// Set velocity.
-	GetParent()->GetComponent<Physics>()->SetVelocity(dir * (defaultStats.speed * traits.agility));
+	GetParent()->GetComponent<Physics>()->SetVelocity(dir * (defaultStats.speed * (traits.agility + 1)));
 }
 
 // Checks if the unit can target an enemy (using AttackGroups).
@@ -610,7 +616,10 @@ bool BehaviorUnit::CanTarget(GameObject* enemy) const
 
 unsigned BehaviorUnit::Traits::GetCost()
 {
-	return 7;
+	// Should be a value [10, 100]. 100 - 10 (base cost) = 90 / 25 (20 pts max, plus 5 if no ability) = 3.6.
+	// Therefore, returns 10 + (sum of the traits) * 3.6.
+	int numTraits = strength + agility + defense + (ability > 0 ? 5 : 0);
+	return (unsigned)(10.f + (float)numTraits * 3.6f);
 }
 
 void BehaviorUnit::Attack()

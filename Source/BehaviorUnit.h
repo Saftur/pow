@@ -214,7 +214,7 @@ private:
 	{
 		int maxHP;
 		int currHP;
-		int defense;
+		float defense;
 		int detectRange; // increase on high ground
 		int attackRange; // increase on high ground
 		int inventorySize;

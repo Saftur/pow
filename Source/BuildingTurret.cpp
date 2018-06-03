@@ -68,7 +68,7 @@ void BuildingTurret::AttackTarget()
 
 		GameObject *projectile = new GameObject(*BehaviorProjectile::Projectiles[BehaviorProjectile::ProjectileTypes::pTypeLaser]);
 		projectile->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(mapPos));
-		projectile->GetComponent<BehaviorProjectile>()->Fire(army, targetDirection, (int)damage, range);
+		projectile->GetComponent<BehaviorProjectile>()->Fire(army, targetDirection, (int)damage, range + (GridManager::GetInstance().GetNode(GetGridPos())->highGround ? 1 : 0));
 		Space::GetLayer(0)->GetGameObjectManager()->Add(*projectile);
 	}
 }

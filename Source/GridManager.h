@@ -13,7 +13,7 @@ public:
 	{
 		int x, y;
 		int hVal, gVal;
-		bool open;
+		bool open, highGround = false;
 		Node* parent;
 
 		int fVal() const;
