@@ -630,66 +630,6 @@
     }
   },
   {
-    "Name": "FundsDisplay1",
-    "Transform": {
-      "Translation": [ -339, 400 ],
-      "Scale": [ 100, 50 ],
-      "Rotation": 0
-    },
-    "Text": {
-      "SpriteSource": "Font",
-      "Mesh": "TextMesh",
-      "ModulateColor": [ 1, 0, 0, 1 ],
-      "Text": "",
-      "Scale": [ 30, 30 ]
-    }
-  },
-  {
-    "Name": "FundsDisplay2",
-    "Transform": {
-      "Translation": [ 339, 400 ],
-      "Scale": [ 100, 50 ],
-      "Rotation": 0
-    },
-    "Text": {
-      "SpriteSource": "Font",
-      "Mesh": "TextMesh",
-      "ModulateColor": [ 1, 0, 0, 1 ],
-      "Text": "",
-      "Scale": [ 30, 30 ]
-    }
-  },
-  {
-    "Name": "LeftNeoridiumDisplay",
-    "Transform": {
-      "Translation": [ -339, 370 ],
-      "Scale": [ 100, 50 ],
-      "Rotation": 0
-    },
-    "Text": {
-      "SpriteSource": "Font",
-      "Mesh": "TextMesh",
-      "ModulateColor": [ 1, 0, 0, 1 ],
-      "Text": "",
-      "Scale": [ 30, 30 ]
-    }
-  },
-  {
-    "Name": "RightNeoridiumDisplay",
-    "Transform": {
-      "Translation": [ 339, 370 ],
-      "Scale": [ 100, 50 ],
-      "Rotation": 0
-    },
-    "Text": {
-      "SpriteSource": "Font",
-      "Mesh": "TextMesh",
-      "ModulateColor": [ 1, 0, 0, 1 ],
-      "Text": "",
-      "Scale": [ 30, 30 ]
-    }
-  },
-  {
     "Name": "PathLine1",
     "Archetype": true,
     "Transform": {

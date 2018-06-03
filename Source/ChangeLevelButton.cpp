@@ -23,8 +23,10 @@ Component * ChangeLevelButton::Clone() const {
 }
 
 void ChangeLevelButton::ClickEffect(float dt) {
-	LevelManager *lm = layerNum >= 0 ? Space::GetLayer(layerNum)->GetLevelManager() : GetParent()->GetLevelManager();
+	LevelManager *lm = layerNum >= 0 ? (Space::GetLayer(layerNum) ? Space::GetLayer(layerNum)->GetLevelManager() : nullptr) : GetParent()->GetLevelManager();
 	if (lm) {
-		lm->SetNextLevel(levelName);
+		if (levelName.size() > 0)
+			lm->SetNextLevel(levelName);
+		else lm->Quit();
 	}
 }

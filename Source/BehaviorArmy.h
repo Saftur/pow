@@ -187,6 +187,9 @@ private:
 	// Number of units alive from army
 	unsigned numUnits;
 
+	// Space containing this army's hud level
+	Space *hudSpace;
+
 	// Funds data
 	struct {
 		// Current funds

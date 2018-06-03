@@ -215,6 +215,7 @@
     <None Include="Data\Levels\CommandPostMenu.json" />
     <None Include="Data\Levels\CustomizationMenu.json" />
     <None Include="Data\Levels\DemoLevel.json" />
+    <None Include="Data\Levels\HUDLevel.json" />
     <None Include="Data\Levels\MainMenu.json" />
     <None Include="Data\Levels\PauseLevel.json" />
     <None Include="Data\Levels\ResearchMenu.json" />

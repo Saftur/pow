@@ -102,6 +102,7 @@ void Building::Update(float dt)
 {
 	//Destroy this building if the unit building it got destroyed.
 	if (builder && builder->IsDestroyed()) {
+		builder->GetComponent<BehaviorUnit>()->isBuilding = false;
 		builder = nullptr;
 		GetParent()->Destroy();
 	}

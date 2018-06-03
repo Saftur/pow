@@ -62,7 +62,7 @@
         "HalfSize": [ 0.5, 0.5 ],
         "UV": [ 0.125, 0.125 ]
       },
-      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "ModulateColor": [ 0, 0, 0, 1 ],
       "Text": "Resume Game",
       "Scale": [ 18, 23 ]
     }
@@ -103,10 +103,80 @@
         "HalfSize": [ 0.5, 0.5 ],
         "UV": [ 0.125, 0.125 ]
       },
-      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "ModulateColor": [ 0, 0, 0, 1 ],
       "Text": "Restart Game",
       "Scale": [ 18, 23 ]
     }
+  },
+  {
+    "Name": "Menu Button",
+    "Transform": {
+      "Translation": [ 0, -150 ],
+      "Scale": [ 200, 50 ],
+      "Rotation": 0
+    },
+    "ChangeLevelButton": {
+      "Layer": 0,
+      "Level": "MainMenu"
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "ButtonSpriteSource",
+        "Texture": "Data\\Assets\\A Box for Decoration.png",
+        "Cols": 1,
+        "Rows": 1
+      },
+      "Mesh": {
+        "Name": "ButtonMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Data\\Assets\\NewFont.png",
+        "Cols": 8,
+        "Rows": 8
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.125, 0.125 ]
+      },
+      "ModulateColor": [ 0, 0, 0, 1 ],
+      "Text": "Menu",
+      "Scale": [ 18, 23 ]
+    },
+    "Extras": [
+      {
+        "CompType": "ChangeLevelButton",
+        "Layer": 1,
+        "Level": ""
+      },
+      {
+        "CompType": "ChangeLevelButton",
+        "Layer": 2,
+        "Level": ""
+      },
+      {
+        "CompType": "ChangeLevelButton",
+        "Layer": 3,
+        "Level": ""
+      },
+      {
+        "CompType": "ChangeLevelButton",
+        "Layer": 4,
+        "Level": ""
+      },
+      {
+        "CompType": "ChangeLevelButton",
+        "Layer": 9,
+        "Level": ""
+      }
+    ]
   },
   {
     "Name": "Quit Button",

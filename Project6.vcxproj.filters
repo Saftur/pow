@@ -732,6 +732,9 @@
     <None Include="Data\Levels\SellBuilding.json">
       <Filter>Game\Levels</Filter>
     </None>
+    <None Include="Data\Levels\HUDLevel.json">
+      <Filter>Game\Levels</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Library Include="fmodAPI\lib\fmod_vc.lib">

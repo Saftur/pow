@@ -37,6 +37,7 @@ Component* Text::Clone() const{
 
 void Text::SetActive(bool active) {
 	this->active = active;
+	sprite->SetActive(active);
 }
 
 void Text::SetText(const char* text) {

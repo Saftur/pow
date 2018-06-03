@@ -198,6 +198,16 @@ void BehaviorArmy::OnEnter()
 	switch (GetCurrentState())
 	{
 	case cArmyNormal:
+		// Load hud level
+		hudSpace = Space::LoadLayer(side+2, "HUDLevel", true, true);
+		hudSpace->GetLevelManager()->Update(0);
+
+		GameObject *camObj = hudSpace->GetGameObjectManager()->GetObjectByName("Camera");
+		if (camObj) {
+			if (side == BehaviorArmy::sRight)
+				camObj->GetComponent<Camera>()->ChangePos({0.75f, 0.0f});
+		}
+
 		// Initialize tilemap
 		tilemap = GetParent()->GetGameObjectManager()->GetObjectByName("Tilemap")->GetComponent<Tilemap>();
 
@@ -210,11 +220,12 @@ void BehaviorArmy::OnEnter()
 			frontLine.transform = nullptr;
 
 		// Initialize the funds struct.
-		GameObject *fundsTextObj = GetParent()->GetGameObjectManager()->GetObjectByName(funds.dispObjName.c_str());
+		GameObject *fundsTextObj = hudSpace->GetGameObjectManager()->GetObjectByName(funds.dispObjName.c_str());
 
-		if (fundsTextObj) 
+		if (fundsTextObj) {
 			funds.text = fundsTextObj->GetComponent<Text>();
-		else 
+			funds.text->SetActive(true);
+		} else
 			funds.text = nullptr;
 
 		funds.amount = (float)funds.startAmount;
@@ -243,14 +254,16 @@ void BehaviorArmy::OnEnter()
 			frontLine.start = frontLine.start < 0 ? 0 : frontLine.start;
 			cursor.transform->SetTranslation(tilemap->GetPosOnScreen({ 0, 0 }));
 
-			neoridiumFundsDisplay = GetParent()->GetGameObjectManager()->GetObjectByName("LeftNeoridiumDisplay");
+			neoridiumFundsDisplay = hudSpace->GetGameObjectManager()->GetObjectByName("LeftNeoridiumDisplay");
+			neoridiumFundsDisplay->GetComponent<Text>()->SetActive(true);
 			UpdateNeoridiumFundsText();
 			break;
 		case sRight:
 			frontLine.start = frontLine.start < 0 ? tilemap->GetTilemapWidth() - 1 : frontLine.start;
 			cursor.transform->SetTranslation(tilemap->GetPosOnScreen({ (float)tilemap->GetTilemapWidth() - 1, 0 }));
 
-			neoridiumFundsDisplay = GetParent()->GetGameObjectManager()->GetObjectByName("RightNeoridiumDisplay");
+			neoridiumFundsDisplay = hudSpace->GetGameObjectManager()->GetObjectByName("RightNeoridiumDisplay");
+			neoridiumFundsDisplay->GetComponent<Text>()->SetActive(true);
 			UpdateNeoridiumFundsText();
 			break;
 		}

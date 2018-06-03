@@ -360,6 +360,7 @@ void BehaviorUnit::OnUpdate(float dt)
 							building->SetPos(buildingPos->gridPos());
 							building->SetArmy(army);
 							building->Buy();
+							building->builder = GetParent();
 							Space::GetLayer(0)->GetGameObjectManager()->Add(*newBuilding);
 
 							buildingArchetype = nullptr;
