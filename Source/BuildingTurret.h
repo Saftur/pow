@@ -28,12 +28,18 @@ typedef class GameObject GameObject;
 class BuildingTurret : public Building
 {
 public:
+	enum UpgradeType { Damage, Range, AttackSpeed};
+
 	BuildingTurret(BehaviorArmy::Side side, Vector2D pos);
 	Component* Clone() const;
 
 	void BuildingUpdate(float dt); //Update the building.
 	
 	void OpenMenu(); //Open the upgrade window for the turret.
+
+	void Upgrade(UpgradeType type); //Upgrade the turret.
+
+	float upgradeCost = 100; //How much it costs to upgrade this turret.
 
 private:
 	void AttackTarget(); //Attack the target unit.
@@ -43,9 +49,9 @@ private:
 
 	GameObject* target = nullptr; //The unit that the turret is targeting.
 	Vector2D targetDirection; //The direction vector to the target.
-	int range = 5; //The range that the turret can shoot.
+	int range = 4; //The range that the turret can shoot.
 
-	float damage = 100; //How much damage this turret deals.
+	float damage = 50; //How much damage this turret deals.
 	float attackSpeed = 3; //How many times per second this turret attacks.
 	float attackTimer = 1 / attackSpeed; //Timer used to time attacks.
 };

@@ -15,12 +15,11 @@
 #include "LevelManager.h"
 #include "BuildingNeoridiumMine.h"
 #include "Space.h"
+#include "Health.h"
 
 #include "AEEngine.h"
 
-bool BuildingCommandPost::gameOver = false;
-
-BuildingCommandPost::BuildingCommandPost(BehaviorArmy::Side side, Vector2D pos) : Building(side, CommandPost, Basic, 0.1f, 1000.0f, pos, 9999999, 9999999)
+BuildingCommandPost::BuildingCommandPost(BehaviorArmy::Side side, Vector2D pos) : Building(side, CommandPost, Basic, 0.1f, pos, 9999999, 9999999)
 {
 
 }
@@ -41,18 +40,15 @@ Component * BuildingCommandPost::Clone() const
 }
 
 void BuildingCommandPost::OnDestroy() {
-	// TODO Move to "TakeDamage" function, once implemented
-	/*if (!gameOver) {
-		gameOver = true;
+	if (GetParent()->GetComponent<Health>()->GetHP() <= 0) {
 		for (unsigned i = 1; i < MAX_LAYERS; i++) Space::DeleteLayer(i);
-		if (side == BehaviorArmy::Side::sLeft) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideLeft");
-		if (side == BehaviorArmy::Side::sRight) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideRight");
-	}*/
+		if (side == BehaviorArmy::Side::sLeft) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideRight");
+		if (side == BehaviorArmy::Side::sRight) Space::GetLayer(0)->GetLevelManager()->SetNextLevel("WinSideLeft");
+	}
 }
 
 void BuildingCommandPost::BuildingUpdate(float dt)
 {
-	if (AEInputCheckTriggered('V') && side == BehaviorArmy::Side::sLeft) GetParent()->Destroy();
 }
 
 void BuildingCommandPost::OpenMenu()

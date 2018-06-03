@@ -19,9 +19,9 @@ map<BehaviorArmy::Side, map<BuildingResearchCenter::Research, bool>> BuildingRes
 
 map<BuildingResearchCenter::Research, float> BuildingResearchCenter::researchCost;
 
-BuildingResearchCenter::BuildingResearchCenter(BehaviorArmy::Side side, Vector2D pos) : Building(side, ResearchCenter, Basic, 3.5f, 1000.0f, pos, 0, 50)
+BuildingResearchCenter::BuildingResearchCenter(BehaviorArmy::Side side, Vector2D pos) : Building(side, ResearchCenter, Basic, 3.5f, pos, 0, 50)
 {
-	if (!IsUnlocked(side, NeoridiumMine)) Unlock(side, NeoridiumMine);
+	
 }
 
 Component * BuildingResearchCenter::Clone() const
@@ -31,6 +31,7 @@ Component * BuildingResearchCenter::Clone() const
 
 void BuildingResearchCenter::BuildingUpdate(float dt)
 {
+	if (!IsUnlocked(side, NeoridiumMine)) Unlock(side, NeoridiumMine);
 }
 
 void BuildingResearchCenter::OpenMenu()
@@ -54,4 +55,9 @@ void BuildingResearchCenter::InitializeResearchCost()
 float BuildingResearchCenter::GetCost(Research search)
 {
 	return researchCost[search];
+}
+
+bool BuildingResearchCenter::CanUnlock(BehaviorArmy::Side side, Research search)
+{
+	return BuildingNeoridiumMine::GetNeoridium(side) >= researchCost[search];
 }

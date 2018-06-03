@@ -28,6 +28,7 @@
 #include "Building.h"
 #include "BuildingResearchCenter.h"
 #include "BuildingCommandPost.h"
+#include "BuildingNeoridiumMine.h"
 #include "Controls.h"
 #include "Mesh.h"
 #include "SpriteSource.h"
@@ -241,10 +242,16 @@ void BehaviorArmy::OnEnter()
 		case sLeft:
 			frontLine.start = frontLine.start < 0 ? 0 : frontLine.start;
 			cursor.transform->SetTranslation(tilemap->GetPosOnScreen({ 0, 0 }));
+
+			neoridiumFundsDisplay = GetParent()->GetGameObjectManager()->GetObjectByName("LeftNeoridiumDisplay");
+			UpdateNeoridiumFundsText();
 			break;
 		case sRight:
 			frontLine.start = frontLine.start < 0 ? tilemap->GetTilemapWidth() - 1 : frontLine.start;
 			cursor.transform->SetTranslation(tilemap->GetPosOnScreen({ (float)tilemap->GetTilemapWidth() - 1, 0 }));
+
+			neoridiumFundsDisplay = GetParent()->GetGameObjectManager()->GetObjectByName("RightNeoridiumDisplay");
+			UpdateNeoridiumFundsText();
 			break;
 		}
 		frontLine.pos = frontLine.start;
@@ -357,6 +364,39 @@ void BehaviorArmy::OnUpdate(float dt)
 				}
 				selectedUnits.clear();
 			}
+			if (controls.gamepad->GetButtonTriggered(BTN_GROUP))
+			{
+				FindPath(false);
+
+				for (SelectedUnit &unit : selectedUnits)
+				{
+					unit.unit->SetPath(unit.path);
+					unit.unit->SetNextState(BehaviorUnit::cUnitMove);
+				}
+				selectedUnits.clear();
+			}
+
+			// Are we selecting units?
+			if (controls.gamepad->GetButton(BTN_SELECT)) {
+				if (cursorNode != rectEndPos) {
+					rectEndPos = cursorNode;
+					SelectUnits();
+				}
+			} else {
+				if (selectedUnits.size() > 0)
+				{
+					if (cursorNode != prevTarget) {
+						prevTarget = cursorNode;
+						FindPath();
+					}
+				}
+				else
+				{
+					if (controls.gamepad->GetButtonTriggered(BTN_SPAWNUNIT))
+						CreateUnit("Unit1", cursorNode->gridPos());
+				}
+			}
+			break;
 		}
 
 		break;
@@ -381,6 +421,7 @@ void BehaviorArmy::OnExit()
 
 void BehaviorArmy::Draw(Camera *cam) const
 {
+	if (!frontLine.transform) return;
 	Transform territoryTransform(0, 0);
 	Vector2D flTrs = frontLine.transform->GetTranslation();
 	Vector2D flScl = frontLine.transform->GetScale();
@@ -517,7 +558,7 @@ void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos)
 	if (!LegalSpawn(startPos)) return;
 	funds.amount -= unitData.GetCost();
 	UpdateFundsText();
-	GameObject *go = GetParent()->GetGameObjectManager()->GetArchetype("UnitArchetype");
+	GameObject *go = GetParent()->GetGameObjectManager()->GetArchetype(unitData.name.c_str());
 	if (!go) {
 		Trace::GetInstance().GetStream() << "No Unit archetype found" << std::endl;
 		return;
@@ -547,6 +588,11 @@ bool BehaviorArmy::LegalSpawn(Vector2D pos)
 	if (pos.x < 0 || pos.x >= tilemap->GetTilemapWidth() || pos.y < 0 || pos.y >= tilemap->GetTilemapHeight())
 		return false;
 	return BehindFrontLine(pos);
+}
+
+void BehaviorArmy::UpdateNeoridiumFundsText()
+{
+	if(neoridiumFundsDisplay) neoridiumFundsDisplay->GetComponent<Text>()->SetText(("Neoridium: " + std::to_string((int)BuildingNeoridiumMine::GetNeoridium(side))).c_str());
 }
 
 bool BehaviorArmy::BehindFrontLine(Vector2D pos)
@@ -584,14 +630,13 @@ void BehaviorArmy::SelectUnits()
 	}
 }
 
-void BehaviorArmy::FindPath()
+void BehaviorArmy::FindPath(bool doOffset)
 {
 	Vector2D cursorGridPos = GridManager::GetInstance().ConvertToGridPoint(cursor.transform->GetTranslation());
-	bool useOffset = true;
 	for (GameObject *buildingObj : Building::allBuildings) {
 		Building *building = buildingObj->GetChildComponent<Building>();
-		if (building->buildingType == Building::Teleporter && building->GetPos() == cursorGridPos)
-			useOffset = false;
+		if (building->buildingType == Building::Teleporter && building->GetGridPos() == cursorGridPos)
+			doOffset = false;
 	}
 	for (unsigned i = 0; i < selectedUnits.size(); i++)
 	{
@@ -604,7 +649,7 @@ void BehaviorArmy::FindPath()
 			continue;
 		}
 
-		Vector2D pos = useOffset ? cursorGridPos + unit->offset : cursorGridPos;
+		Vector2D pos = doOffset ? cursorGridPos + unit->offset : cursorGridPos;
 		 
 		if (pos.x < 0)
 			pos.x = 0;
@@ -730,7 +775,7 @@ BehaviorUnit::Traits BehaviorArmy::GetUnitData(const char * name_) const
 void BehaviorArmy::UpdateFundsText()
 {
 	if (funds.text) {
-		funds.text->SetText(std::to_string((unsigned)funds.amount).c_str());
+		funds.text->SetText(("Jaxium: " + std::to_string((unsigned)funds.amount)).c_str());
 	}
 }
 

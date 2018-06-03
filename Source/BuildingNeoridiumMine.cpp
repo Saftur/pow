@@ -22,7 +22,7 @@
 
 std::map<BehaviorArmy::Side, float> BuildingNeoridiumMine::neoridium;
 
-BuildingNeoridiumMine::BuildingNeoridiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, NeoridiumMine, Advanced, 3.5f, 1000.0f, pos, 0, 50)
+BuildingNeoridiumMine::BuildingNeoridiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, NeoridiumMine, Advanced, 3.5f, pos, 0, 50)
 {
 }
 
@@ -45,6 +45,7 @@ void BuildingNeoridiumMine::BuildingUpdate(float dt){
 
 			//Find a random open node in the list of nearby nodes.
 			unsigned nodeID = rand() % nearbyNodes.size();
+			if (GridManager::GetInstance().GetOccupant<Building>(nearbyNodes[nodeID])) return; //Make sure there isn't a building there.
 			if (Space::GetLayer(0)->GetGameObjectManager()->CountObjectsWithFilter([&](GameObject* obj) {
 				if (obj->GetComponent<Crystal>()) {
 					if (obj->GetComponent<Transform>()->GetTranslation() == GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID])) {

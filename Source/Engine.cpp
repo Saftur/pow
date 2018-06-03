@@ -65,8 +65,6 @@ void Engine::Init(const char *startLevel)
 	// Initialize the game state manager.
 	LevelManager::StaticInit();
 	Space::LoadLayer(0, startLevel, true, true);
-
-	hasPauseMenu = LevelManager::LevelExists("PauseLevel");
 }
 
 // Update the game engine.
@@ -75,15 +73,6 @@ void Engine::Init(const char *startLevel)
 void Engine::Update(float dt)
 {
 	Trace::GetInstance().GetStream() << "Engine: Update" << std::endl;
-	if (AEInputCheckTriggered(VK_ESCAPE)) TogglePaused();
-	if (switchPause) {
-		if (hasPauseMenu) {
-			if (paused)
-				Space::LoadLayer(3, "PauseLevel", false, true);
-			else Space::DeleteLayer(3);
-		}
-		switchPause = false;
-	}
 
 	// Update the System (Windows, Event Handlers).
 	System::GetInstance().Update(dt);
@@ -126,21 +115,6 @@ Engine& Engine::GetInstance()
 {
 	static Engine instance;
 	return instance;
-}
-
-bool Engine::IsPaused() {
-	return paused;
-}
-
-void Engine::TogglePaused() {
-	paused = !paused;
-	switchPause = true;
-}
-
-void Engine::SetPaused(bool pause)
-{
-	paused = pause;
-	switchPause = true;
 }
 
 bool Engine::IsRunning()

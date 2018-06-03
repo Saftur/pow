@@ -71,14 +71,14 @@ void Cursor::Update(float dt) {
 	pos += move * moveSpeed * dt;
 
 
-	if (pos.x + scl.x / 2 > AEGfxGetWinMaxX())
-		pos.x = AEGfxGetWinMaxX() - scl.x / 2;
-	if (pos.x - scl.x / 2 < AEGfxGetWinMinX())
-		pos.x = AEGfxGetWinMinX() + scl.x / 2;
-	if (pos.y + scl.y / 2 > AEGfxGetWinMaxY())
-		pos.y = AEGfxGetWinMaxY() - scl.y / 2;
-	if (pos.y - scl.y / 2 < AEGfxGetWinMinY())
-		pos.y = AEGfxGetWinMinY() + scl.y / 2;
+	if (pos.x + scl.x / 2 > tilemap->GetTilemapScreenBottomRight().x + scl.x / 2)
+		pos.x = tilemap->GetTilemapScreenBottomRight().x;
+	if (pos.x - scl.x / 2 < tilemap->GetTilemapScreenTopLeft().x - scl.x / 2)
+		pos.x = tilemap->GetTilemapScreenTopLeft().x;
+	if (pos.y + scl.y / 2 > tilemap->GetTilemapScreenTopLeft().y + scl.y / 2)
+		pos.y = tilemap->GetTilemapScreenTopLeft().y;
+	if (pos.y - scl.y / 2 < tilemap->GetTilemapScreenBottomRight().y - scl.y / 2)
+		pos.y = tilemap->GetTilemapScreenBottomRight().y;
 
 	transform->SetTranslation(pos);
 }

@@ -54,13 +54,6 @@ public:
 	// Retrieve the instance of the Engine singleton
 	static Engine& GetInstance();
 
-	//Is the game paused?
-	bool IsPaused();
-
-	//Toggle paused.
-	void TogglePaused();
-	void SetPaused(bool pause);
-
 	bool IsRunning();
 
 	void Quit();
@@ -82,9 +75,5 @@ private:
 	Engine& operator=(const Engine&) = delete;
 
 	bool running = true;
-
-	bool hasPauseMenu = false;
-	bool paused = false; //Is the game paused?
-	bool switchPause = false;
 };
 /*----------------------------------------------------------------------------*/

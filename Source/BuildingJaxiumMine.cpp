@@ -23,7 +23,7 @@
 
 using std::vector;
 
-BuildingJaxiumMine::BuildingJaxiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, JaxiumMine, Basic, 3.5f, 1000.0f, pos, 50, 0)
+BuildingJaxiumMine::BuildingJaxiumMine(BehaviorArmy::Side side, Vector2D pos) : Building(side, JaxiumMine, Basic, 3.5f, pos, 50, 0)
 {
 }
 
@@ -64,6 +64,7 @@ void BuildingJaxiumMine::BuildingUpdate(float dt){
 
 			//Find a random open node in the list of nearby nodes.
 			unsigned nodeID = rand() % nearbyNodes.size();
+			if (GridManager::GetInstance().GetOccupant<Building>(nearbyNodes[nodeID])) return; //Make sure there isn't a building there.
 			if (Space::GetLayer(0)->GetGameObjectManager()->CountObjectsWithFilter([&](GameObject* obj) {
 				if (obj->GetComponent<Crystal>()) {
 					if (obj->GetComponent<Transform>()->GetTranslation() == GridManager::GetInstance().ConvertToWorldPoint(nearbyNodes[nodeID])) {

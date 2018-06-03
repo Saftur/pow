@@ -39,10 +39,11 @@ public:
 	enum SpecialtyType { Basic, Advanced, Special };
 	enum CostType { Jaxium, Neoridium };
 
-	Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, float maxHealth, Vector2D pos, float jaxiumDropAmount, float neoridiumDropAmount);
+	Building(BehaviorArmy::Side side, BuildingType type, SpecialtyType specialtyType, float buildTime, Vector2D pos, float jaxiumDropAmount, float neoridiumDropAmount);
 	~Building();
 
 	virtual Component* Clone() const = 0;
+	void OnDestroy();
 
 	static void InitializeBuildings(BehaviorArmy::Side side); //Initialize the buildings for the given army.
 
@@ -56,7 +57,7 @@ public:
 	void SetArmy(BehaviorArmy *army);
 	void SetSide(BehaviorArmy::Side side); //Set the side of this building.
 	void SetPos(Vector2D pos); //Set the mapPos of the building.
-	Vector2D GetPos() const;
+	Vector2D GetGridPos() const;
 
 	static void Lock(BehaviorArmy::Side side, BuildingType type); //Lock the given building for the given army.
 	static void Unlock(BehaviorArmy::Side side, BuildingType type); //Unlock the given building for the given army.
@@ -66,17 +67,17 @@ public:
 	bool IsUnlocked(); //Checks if this building is unlocked
 	bool CanBuy(); //Checks if this building can be bought (also calls IsUnlocked())
 	bool Buy(); //Buys this building
+	void Sell(); //Sells this building.
 
-	void SetHealth(float amount); //Set the building's health to some value.
-	float GetHealth(); //Return the amount of health the building has.
-	void Damage(float amount); //Lower the health of the building by X amount.
-	void Heal(float amount); //Increase the health of the building by X amount.
+	void ClearDrops(); //Sets the neoridium and jaxium drop amounts to 0.
 
 	static map<BuildingType, float> buildingCost;
 	static vector<GameObject*> allBuildings;
 
 	BehaviorArmy *army; //Which army owns this building.
 	BehaviorArmy::Side side; //Which side is this army on.
+
+	GameObject *builder; //The unit that is building this building.
 
 	BuildingType buildingType; //Building type.
 	SpecialtyType specialtyType; //What kind of building is this.
@@ -92,9 +93,6 @@ private:
 	float buildTimeRemaining; //How long until the building will be finnished creating.
 
 	Vector2D originalScale; //The original scale of the building, used to play a temporary building "animation".
-
-	float maxHealth; //The maximum health of the building.
-	float health; //The health of the building.
 
 	float jaxiumDropAmount; //The amount of Jaxium to drop on death.
 	float neoridiumDropAmount; //The amount of Neoridium to drop on death.

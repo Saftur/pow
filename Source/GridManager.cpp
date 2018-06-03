@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "GridManager.h"
 #include "BehaviorUnit.h"
+#include "Building.h"
 #pragma once
 
 using Node = GridManager::Node;
 
-GridManager GridManager::gridy = GridManager(12, 8, 64, 64, 0, 28);
+GridManager GridManager::gridy = GridManager(16, 12, 64, 64, 0, 28);
 
 GridManager::Node::Node(Vector2D gridPos, bool state)
 	: x((int)gridPos.x), y((int)gridPos.y), open(state), parent(nullptr) {}
@@ -154,27 +155,6 @@ int GridManager::GetDistanceBetween(int x1, int y1, int x2, int y2) const
 int GridManager::GetDistanceBetween(const Vector2D& pos1, const Vector2D& pos2) const
 {
 	return (int)pos1.Distance(pos2);
-}
-
-GameObject * GridManager::GetOccupant(Node * node) const
-{
-	return GetOccupant(node->gridPos());
-}
-
-GameObject * GridManager::GetOccupant(Vector2D node) const
-{
-	for (GameObject* unit : BehaviorUnit::allUnits)
-	{
-		if (unit->GetComponent<BehaviorUnit>()->GetGridPos() == node)
-			return unit;
-	}
-
-	return nullptr;
-}
-
-GameObject * GridManager::GetOccupant(int x, int y) const
-{
-	return GetOccupant(Vector2D((float)x, (float)y));
 }
 
 bool GridManager::IsWithinRange(Node * center, Node * target, int range) const

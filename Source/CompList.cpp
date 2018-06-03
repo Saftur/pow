@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Health.h"
 #include "CompList.h"
 #include "LevelManager.h"
 #include "Cursor.h"
@@ -12,6 +13,7 @@
 #include "CustomPointCounter.h"
 #include "CostDisplay.h"
 
+#include "GameMain.h"
 #include "CustomizationMain.h"
 
 #include "BuildingCommandPost.h"
@@ -21,6 +23,7 @@
 #include "BuildingTeleporter.h"
 #include "BuildingTurret.h"
 
+#include "ResumeButton.h"
 #include "CreateBuildingButton.h"
 #include "ResearchButton.h"
 #include "CreateUnitButton.h"
@@ -29,6 +32,8 @@
 #include "SaveArmyButton.h"
 #include "ChangeStatButton.h"
 #include "ChangeWeaponAbilityButton.h"
+#include "TurretUpgradeButton.h"
+#include "SellBuildingButton.h"
 
 
 #define NEWCOMP(name, comp) LevelManager::AddComponentType(name, comp)
@@ -43,8 +48,10 @@ void CompList::List() {
 	NEWCOMP("ArmyTraits", new ArmyTraits());
 	NEWCOMP("CustomPointCounter", new CustomPointCounter());
 	NEWCOMP("CostDisplay", new CostDisplay());
+	NEWCOMP("Health", new Health());
 
 	//Level main components.
+	NEWCOMP("GameMain", new GameMain());
 	NEWCOMP("CustomizationMain", new CustomizationMain());
 	
 	//Building components.
@@ -56,9 +63,12 @@ void CompList::List() {
 	NEWCOMP("Turret", new BuildingTurret(BehaviorArmy::Side::sIllegal, { -1, -1 }));
 
 	// Buttons
+	NEWCOMP("ResumeButton", new ResumeButton());
 	NEWCOMP("CreateBuildingButton", new CreateBuildingButton());
 	NEWCOMP("ResearchButton", new ResearchButton());
+	NEWCOMP("TurretUpgradeButton", new TurretUpgradeButton());
 	NEWCOMP("CreateUnitButton", new CreateUnitButton());
+	NEWCOMP("SellBuildingButton", new SellBuildingButton());
 	NEWCOMP("NewUnitButton", new NewUnitButton());
 	NEWCOMP("LoadArmyButton", new LoadArmyButton());
 	NEWCOMP("SaveArmyButton", new SaveArmyButton());

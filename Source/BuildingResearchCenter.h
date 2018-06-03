@@ -44,6 +44,7 @@ public:
 
 	static void InitializeResearchCost(); //Initialize the researchCost map.
 	static float GetCost(Research search); //Get the cost of the research.
+	static bool CanUnlock(BehaviorArmy::Side side, Research search); //Can this research be unlocked.
 
 private:
 

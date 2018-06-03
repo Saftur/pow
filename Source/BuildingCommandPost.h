@@ -46,7 +46,6 @@ public:
 	void OpenMenu(); //Open a menu for the research center.
 
 private:
-	static bool gameOver;
 };
 
 //------------------------------------------------------------------------------

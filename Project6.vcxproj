@@ -69,6 +69,8 @@
     <ClInclude Include="Source\ColliderBox.h" />
     <ClInclude Include="Source\ColliderCircle.h" />
     <ClInclude Include="Source\Component.h" />
+    <ClInclude Include="Source\GameMain.h" />
+    <ClInclude Include="Source\Health.h" />
     <ClInclude Include="Source\ComponentStub.h" />
     <ClInclude Include="Source\ControlList.h" />
     <ClInclude Include="Source\Controls.h" />
@@ -102,7 +104,9 @@
     <ClInclude Include="Source\Rendertext.h" />
     <ClInclude Include="Source\ResearchButton.h" />
     <ClInclude Include="Source\RestartButton.h" />
+    <ClInclude Include="Source\ResumeButton.h" />
     <ClInclude Include="Source\SaveArmyButton.h" />
+    <ClInclude Include="Source\SellBuildingButton.h" />
     <ClInclude Include="source\Serializable.h" />
     <ClInclude Include="source\SoundManager.h" />
     <ClInclude Include="Source\Space.h" />
@@ -117,6 +121,7 @@
     <ClInclude Include="Source\Tilemap.h" />
     <ClInclude Include="Source\Trace.h" />
     <ClInclude Include="Source\Transform.h" />
+    <ClInclude Include="Source\TurretUpgradeButton.h" />
     <ClInclude Include="Source\Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +151,8 @@
     <ClCompile Include="Source\ColliderBox.cpp" />
     <ClCompile Include="Source\ColliderCircle.cpp" />
     <ClCompile Include="Source\Component.cpp" />
+    <ClCompile Include="Source\GameMain.cpp" />
+    <ClCompile Include="Source\Health.cpp" />
     <ClCompile Include="Source\ComponentStub.cpp" />
     <ClCompile Include="Source\ControlList.cpp" />
     <ClCompile Include="Source\ArmyButton.cpp" />
@@ -179,7 +186,9 @@
     <ClCompile Include="Source\Rendertext.cpp" />
     <ClCompile Include="Source\ResearchButton.cpp" />
     <ClCompile Include="Source\RestartButton.cpp" />
+    <ClCompile Include="Source\ResumeButton.cpp" />
     <ClCompile Include="Source\SaveArmyButton.cpp" />
+    <ClCompile Include="Source\SellBuildingButton.cpp" />
     <ClCompile Include="source\Serializable.cpp" />
     <ClCompile Include="source\SoundManager.cpp" />
     <ClCompile Include="Source\Space.cpp" />
@@ -195,6 +204,7 @@
     <ClCompile Include="Source\Tilemap.cpp" />
     <ClCompile Include="Source\Trace.cpp" />
     <ClCompile Include="Source\Transform.cpp" />
+    <ClCompile Include="Source\TurretUgradeButton.cpp" />
     <ClCompile Include="Source\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -208,7 +218,10 @@
     <None Include="Data\Levels\MainMenu.json" />
     <None Include="Data\Levels\PauseLevel.json" />
     <None Include="Data\Levels\ResearchMenu.json" />
-    <None Include="Data\Levels\StartLevel.json" />
+    <None Include="Data\Levels\SellBuilding.json" />
+    <None Include="Data\Levels\TurretUpgradeMenu.json" />
+    <None Include="Data\Levels\WinSideLeft.json" />
+    <None Include="Data\Levels\WinSideRight.json" />
     <None Include="fmodAPI\inc\fmod_studio.cs" />
     <None Include="fmodAPI\lib\fmod.dll" />
     <None Include="fmodAPI\lib\fmodL.dll" />

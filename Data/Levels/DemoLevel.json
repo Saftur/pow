@@ -19,15 +19,19 @@
     "UV": [ 0.125, 0.125 ]
   },
   {
+    "Name": "MainObject",
+    "GameMain": {}
+  },
+  {
     "Name": "Tilemap",
     "Tilemap": {
-      "SpritesheetFilename": "Data\\Assets\\tilemap.png",
+      "SpritesheetFilename": "Data\\Assets\\Tilemap2.png",
       "TilemapFilename": "Data\\Tilemap1.txt",
       "OnScreenOffsetY": 28,
-      "OnScreenWidth": 768,
-      "OnScreenHeight": 512,
-      "SpritesheetWidth": 1,
-      "SpritesheetHeight": 1
+      "OnScreenWidth": 1024,
+      "OnScreenHeight": 768,
+      "SpritesheetWidth": 4,
+      "SpritesheetHeight": 4
     }
   },
   {
@@ -67,20 +71,32 @@
 	"Sprite": {
 	  "SpriteSource": {
 	    "Name": "JaxiumMineSpriteSource",
-		"Texture": "Data\\Assets\\Isometric Jaxium Mine Team 1.png",
-		"Cols": 1,
-		"Rows": 1
+		"Texture": "Data\\Assets\\Jaxium Mine.png",
+		"Cols": 6,
+		"Rows": 6
 	  },
 	  "Mesh": {
-	    "Name": "BuildingMesh",
+	    "Name": "JaxiumMineMesh",
 		"HalfSize": [ 0.5, 0.5 ],
-		"UV": [ 1, 1 ]
+		"UV": [ 0.15, 0.15 ]
 	  },
 	  "Alpha": 1,
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
 	},
-	"JaxiumMine": {}
+    "Animation": {
+	  "FrameCount": 33,
+	  "FrameDuration": 0.1,
+	  "IsLooping": true
+    },
+	"ColliderCircle" : {
+		"Radius": 32.0
+	},
+	"JaxiumMine": {},
+    "Health": {
+      "MaxHP": 1000,
+      "Offset": [ 0, 30 ]
+    }
   },
   {
     "Name": "NeoridiumMineArchetype",
@@ -95,12 +111,23 @@
 		"Cols": 1,
 		"Rows": 1
 	  },
-	  "Mesh": "BuildingMesh",
+	  "Mesh": {
+	    "Name": "BuildingMesh",
+		"HalfSize": [ 0.5, 0.5 ],
+		"UV": [ 1, 1 ]
+	  },
 	  "Alpha": 1,
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
 	},
-	"NeoridiumMine": {}
+	"ColliderCircle" : {
+		"Radius": 32.0
+	},
+	"NeoridiumMine": {},
+    "Health": {
+      "MaxHP": 1000,
+      "Offset": [ 0, 30 ]
+    }
   },
   {
     "Name": "ResearchCenterArchetype",
@@ -120,7 +147,14 @@
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
 	},
-	"ResearchCenter": {}
+	"ColliderCircle" : {
+		"Radius": 32.0
+	},
+	"ResearchCenter": {},
+    "Health": {
+      "MaxHP": 1000,
+      "Offset": [ 0, 30 ]
+    }
   },
   {
     "Name": "TeleporterArchetype",
@@ -140,7 +174,14 @@
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
 	},
-	"Teleporter": {}
+	"ColliderCircle" : {
+		"Radius": 32.0
+	},
+	"Teleporter": {},
+    "Health": {
+      "MaxHP": 250,
+      "Offset": [ 0, 30 ]
+    }
   },
   {
     "Name": "TurretArchetype",
@@ -160,10 +201,17 @@
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
 	},
-	"Turret": {}
+	"ColliderCircle" : {
+		"Radius": 32.0
+	},
+	"Turret": {},
+    "Health": {
+      "MaxHP": 500,
+      "Offset": [ 0, 30 ]
+    }
   },
   {
-    "Name": "UnitArchetype",
+    "Name": "Unit1",
     "Archetype": true,
     "Transform": {
       "Translation": [ 0, 0 ],
@@ -172,13 +220,13 @@
     },
     "Sprite": {
       "SpriteSource": {
-        "Name": "UnitSpriteSource",
+        "Name": "Unit1SpriteSource",
         "Texture": "Data\\Assets\\baseunit2.png",
         "Cols": 1,
         "Rows": 1
       },
       "Mesh": {
-        "Name": "UnitMesh",
+        "Name": "Unit1Mesh",
         "HalfSize": [ 0.5, 0.5 ],
         "UV": [ 1, 1 ]
       },
@@ -211,7 +259,204 @@
       "ModulateColor": [ 1, 0.2, 0, 1 ],
       "Text": "Unit",
       "Scale": [ 18, 23 ],
-      "Offset":  [ 0, 25 ]
+      "Offset": [ 0, -25 ]
+    },
+    "Health": {
+      "MaxHP": 100,
+      "Offset": [ 0, 30 ]
+    },
+    "Extras": [
+      {
+        "CompType": "Sprite",
+        "SpriteSource": {
+          "Name": "AbilitySpriteSource",
+          "Texture": "Data\\Assets\\abilities2.png",
+          "Cols": 4,
+          "Rows": 2
+        },
+        "Mesh": {
+          "Name": "AbilityMesh",
+          "HalfSize": [ 0.5, 0.5 ],
+          "UV": [ 0.25, 0.5 ]
+        },
+        "Alpha": 1,
+        "FrameIndex": 0,
+        "ModulateColor": [ 0, 0, 0, 0 ]
+      }
+    ]
+  },
+  {
+    "Name": "Unit2",
+    "Archetype": true,
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 64, 64 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "Unit2SpriteSource",
+        "Texture": "Data\\Assets\\Tank Unit Front sps.png",
+        "Cols": 5,
+        "Rows": 5
+      },
+      "Mesh": {
+        "Name": "Unit2Mesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.2, 0.2 ]
+      },
+      "Alpha": 1,
+      "FrameIndex": 0,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Animation": {
+	  "FrameCount": 24,
+	  "FrameDuration": 0.1,
+	  "IsLooping": true
+    },
+    "Physics": {},
+    "ColliderCircle": {
+      "Radius": 32.0
+    },
+    "BehaviorUnit": {
+
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Data\\Assets\\NewFont.png",
+        "Cols": 8,
+        "Rows": 8
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.125, 0.125 ]
+      },
+      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "Text": "Unit",
+      "Scale": [ 18, 23 ],
+      "Offset": [ 0, -25 ]
+    },
+    "Health": {
+      "MaxHP": 100,
+      "Offset": [ 0, 30 ]
+    }
+  },
+  {
+    "Name": "Unit3",
+    "Archetype": true,
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 64, 64 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "Unit3SpriteSource",
+        "Texture": "Data\\Assets\\Defense Unit Front sps.png",
+        "Cols": 4,
+        "Rows": 5
+      },
+      "Mesh": {
+        "Name": "Unit3Mesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.25, 0.2 ]
+      },
+      "Alpha": 1,
+      "FrameIndex": 0,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Animation": {
+	  "FrameCount": 20,
+	  "FrameDuration": 0.1,
+	  "IsLooping": true
+    },
+    "Physics": {},
+    "ColliderCircle": {
+      "Radius": 32.0
+    },
+    "BehaviorUnit": {
+
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Data\\Assets\\NewFont.png",
+        "Cols": 8,
+        "Rows": 8
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.125, 0.125 ]
+      },
+      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "Text": "Unit",
+      "Scale": [ 18, 23 ],
+      "Offset": [ 0, -25 ]
+    },
+    "Health": {
+      "MaxHP": 100,
+      "Offset": [ 0, 30 ]
+    }
+  },
+  {
+    "Name": "Unit4",
+    "Archetype": true,
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 64, 64 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "Unit4SpriteSource",
+        "Texture": "Data\\Assets\\baseunit2.png",
+        "Cols": 1,
+        "Rows": 1
+      },
+      "Mesh": {
+        "Name": "Unit4Mesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "FrameIndex": 0,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Animation": {
+	  "FrameCount": 1,
+	  "FrameDuration": 0.1,
+	  "IsLooping": false
+    },
+    "Physics": {},
+    "ColliderCircle": {
+      "Radius": 32.0
+    },
+    "BehaviorUnit": {
+
+    },
+    "Text": {
+      "SpriteSource": {
+        "Name": "Font",
+        "Texture": "Data\\Assets\\NewFont.png",
+        "Cols": 8,
+        "Rows": 8
+      },
+      "Mesh": {
+        "Name": "TextMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 0.125, 0.125 ]
+      },
+      "ModulateColor": [ 1, 0.2, 0, 1 ],
+      "Text": "Unit",
+      "Scale": [ 18, 23 ],
+      "Offset": [ 0, -25 ]
+    },
+    "Health": {
+      "MaxHP": 100,
+      "Offset": [ 0, 30 ]
     },
     "Extras": [
       {
@@ -242,7 +487,7 @@
     "Sprite": {
       "SpriteSource": {
         "Name": "JaxiumSpriteSource",
-        "Texture": "Data\\Assets\\Jaxium Crystal.png",
+        "Texture": "Data\\Assets\\Jaxium.png",
         "Cols": 1,
         "Rows": 1
       },
@@ -262,7 +507,7 @@
     "Sprite": {
       "SpriteSource": {
         "Name": "NeoridiumSpriteSource",
-        "Texture": "Data\\Assets\\Neoridium Crystal.png",
+        "Texture": "Data\\Assets\\Neoridium.png",
         "Cols": 1,
         "Rows": 1
       },
@@ -307,7 +552,7 @@
 	"Sprite": {
 	  "SpriteSource": {
 	    "Name": "CommandPostSpriteSource",
-		"Texture": "Data\\Assets\\CommandPost.png",
+		"Texture": "Data\\Assets\\Command center.png",
 		"Cols": 1,
 		"Rows": 1
 	  },
@@ -316,6 +561,13 @@
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
 	},
+	"ColliderCircle" : {
+		"Radius": 32.0
+	},
+    "Health": {
+      "MaxHP": 1000,
+      "Offset": [ 0, 30 ]
+    },
 	"CommandPost": {
 	  "Side": 1,
 	  "MapPos": [ 2, 4 ]
@@ -333,6 +585,13 @@
 	  "FrameIndex": 0,
 	  "ModulateColor": [ 0, 0, 0, 0]
 	},
+	"ColliderCircle" : {
+		"Radius": 32.0
+	},
+    "Health": {
+      "MaxHP": 1000,
+      "Offset": [ 0, 30 ]
+    },
 	"CommandPost": {
 	  "Side": 2,
 	  "MapPos": [ 9, 4 ]
@@ -373,7 +632,7 @@
   {
     "Name": "FundsDisplay1",
     "Transform": {
-      "Translation": [ -339, 264 ],
+      "Translation": [ -339, 400 ],
       "Scale": [ 100, 50 ],
       "Rotation": 0
     },
@@ -388,7 +647,37 @@
   {
     "Name": "FundsDisplay2",
     "Transform": {
-      "Translation": [ 339, 264 ],
+      "Translation": [ 339, 400 ],
+      "Scale": [ 100, 50 ],
+      "Rotation": 0
+    },
+    "Text": {
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
+      "ModulateColor": [ 1, 0, 0, 1 ],
+      "Text": "",
+      "Scale": [ 30, 30 ]
+    }
+  },
+  {
+    "Name": "LeftNeoridiumDisplay",
+    "Transform": {
+      "Translation": [ -339, 370 ],
+      "Scale": [ 100, 50 ],
+      "Rotation": 0
+    },
+    "Text": {
+      "SpriteSource": "Font",
+      "Mesh": "TextMesh",
+      "ModulateColor": [ 1, 0, 0, 1 ],
+      "Text": "",
+      "Scale": [ 30, 30 ]
+    }
+  },
+  {
+    "Name": "RightNeoridiumDisplay",
+    "Transform": {
+      "Translation": [ 339, 370 ],
       "Scale": [ 100, 50 ],
       "Rotation": 0
     },

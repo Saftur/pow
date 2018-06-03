@@ -113,6 +113,8 @@ public:
 	//  Whether or not it's legal
 	bool LegalSpawn(Vector2D pos);
 
+	void UpdateNeoridiumFundsText();
+
 	// 0 = cost over time
 	// 1 = higher train cost for bigger army
 	static const int costType = -1;
@@ -156,7 +158,7 @@ private:
 	//  curspos  = Position of cursor
 	//  deselect = Deselect instead
 	void SelectUnits();
-	void FindPath();
+	void FindPath(bool doOffset = true);
 	// Draw the currently editing path
 	void DrawPath(Camera *cam) const;
 
@@ -196,6 +198,8 @@ private:
 		// Text component of funds display object
 		Text *text;
 	} funds;
+
+	GameObject* neoridiumFundsDisplay = nullptr; //Text object to display Neoridium.
 
 	// Pointer to tilemap
 	Tilemap *tilemap;

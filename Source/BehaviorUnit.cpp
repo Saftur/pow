@@ -26,6 +26,11 @@
 #include "Physics.h"
 #include "SoundManager.h"
 #include "ColliderCircle.h"
+#include "Health.h"
+#include "Rendertext.h"
+#include "BehaviorArmy.h"
+#include "Building.h"
+#include "Space.h"
 
 //------------------------------------------------------------------------------
 // Enums:
@@ -85,6 +90,12 @@ void BehaviorUnit::Init(Traits& theTraits, BehaviorArmy* theArmy)
 	// Build the static arrays if they haven't already been built.
 	BuildArrays();
 
+	Text* name = GetParent()->GetComponent<Text>();
+	name->SetText(theTraits.name.c_str());
+	
+	if (theArmy->GetSide() == BehaviorArmy::Side::sRight)
+		name->SetColor({ 0.f, 0.f, 1.f, 1.f });
+
 	// Initialize this unit's traits.
 	traits = theTraits;
 
@@ -114,11 +125,21 @@ void BehaviorUnit::Init(Traits& theTraits, BehaviorArmy* theArmy)
 		stats.inventorySize += 2;
 	}
 
-	
+	GetParent()->GetComponent<Health>()->Initialize(stats.maxHP);
 }
 
 void BehaviorUnit::SetPath(std::vector<Node*> newPath)
 {
+	//If we are actually building something, we do not want to be able to move.
+	if (isBuilding) return;
+
+	//If we are moving to build something, stop trying to build it.
+	if (buildingArchetype) {
+		buildingArchetype = nullptr;
+		GridManager::GetInstance().SetNode(buildingPos, true);
+		buildingPos = nullptr;
+	}
+
 	changePath = false;
 	if (isMoving) {
 		changePath = true;
@@ -235,7 +256,12 @@ void BehaviorUnit::OnUpdate(float dt)
 			{
 				GameObject* projectile = new GameObject(*BehaviorProjectile::Projectiles[Weapons[traits.weapon].projectileArchetype]);
 				projectile->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(gridPos));
-				projectile->GetComponent<BehaviorProjectile>()->Fire(army, GridManager::GetInstance().ConvertToWorldPoint(target->GetComponent<BehaviorUnit>()->GetGridPos()) - GridManager::GetInstance().ConvertToWorldPoint(gridPos), Weapons[traits.weapon].damage * traits.strength, stats.attackRange);
+
+				BehaviorUnit* bUnit = target->GetComponent<BehaviorUnit>();
+				Building* building = target->GetChildComponent<Building>();
+
+				if(bUnit) projectile->GetComponent<BehaviorProjectile>()->Fire(army, GridManager::GetInstance().ConvertToWorldPoint(bUnit->GetGridPos()) - GridManager::GetInstance().ConvertToWorldPoint(gridPos), Weapons[traits.weapon].damage * traits.strength, stats.attackRange);
+				else if(building) projectile->GetComponent<BehaviorProjectile>()->Fire(army, GridManager::GetInstance().ConvertToWorldPoint(building->mapPos) - GridManager::GetInstance().ConvertToWorldPoint(gridPos), Weapons[traits.weapon].damage * traits.strength, stats.attackRange);
 				GetParent()->GetGameObjectManager()->Add(*projectile);
 				// TODO: Make sure this doesn't do shitloads of damage.
 				attackTimer = Weapons[traits.weapon].cooldown;
@@ -314,7 +340,37 @@ void BehaviorUnit::OnUpdate(float dt)
 
 				currMoveTarget = nullptr;
 
-				if (occupant && occupant->GetComponent<BehaviorUnit>()->GetArmy() != army)
+				BehaviorArmy *oArmy = nullptr;
+				if (occupant) {
+					BehaviorUnit *bUnit = occupant->GetComponent<BehaviorUnit>();
+					Building *bBuilding = occupant->GetChildComponent<Building>();
+
+					if (bUnit) oArmy = bUnit->GetArmy();
+					else if (bBuilding) oArmy = bBuilding->army;
+				}
+				else {
+					//Check if we are trying to build something there.
+					if (buildingArchetype) {
+						GridManager::GetInstance().SetNode(buildingPos, true);
+						if (army->LegalSpawn(buildingPos->gridPos())) {
+							isBuilding = true;
+
+							GameObject *newBuilding = new GameObject(*buildingArchetype);
+							Building *building = newBuilding->GetChildComponent<Building>();
+							building->SetPos(buildingPos->gridPos());
+							building->SetArmy(army);
+							building->Buy();
+							Space::GetLayer(0)->GetGameObjectManager()->Add(*newBuilding);
+
+							buildingArchetype = nullptr;
+							buildingPos = nullptr;
+
+							return;
+						}
+					}
+				}
+
+				if (occupant && oArmy != army)
 					SetNextState(cUnitAttack);
 				else if (!path.empty())
 					UpdatePath();
@@ -367,8 +423,10 @@ void BehaviorUnit::OnExit()
 
 void BehaviorUnit::OnDestroy()
 {
-	allUnits.erase(std::find(allUnits.begin(), allUnits.end(), GetParent()));
+	if (std::find(allUnits.begin(), allUnits.end(), GetParent()) != allUnits.end())
+		allUnits.erase(std::find(allUnits.begin(), allUnits.end(), GetParent()));
 	GridManager::GetInstance().SetNode(gridPos, true);
+	if(currMoveTarget) GridManager::GetInstance().SetNode(currMoveTarget, true);
 }
 
 // The collision handling function for Units.
@@ -419,10 +477,14 @@ bool BehaviorUnit::FindTarget(GameObject** enemy, Vector2D pos) const
 		// If we already have an enemy, verify that we can still attack them.
 		if (!(*enemy)->IsDestroyed())
 		{
-			if (GridManager::GetInstance().IsWithinRange(gridPos, (*enemy)->GetComponent<BehaviorUnit>()->gridPos, stats.attackRange))
+			BehaviorUnit* bUnit = (*enemy)->GetComponent<BehaviorUnit>();
+			Building* building = (*enemy)->GetChildComponent<Building>();
+
+			if (bUnit && GridManager::GetInstance().IsWithinRange(gridPos, bUnit->gridPos, stats.attackRange))
 			{
 				return true;
 			}
+			else if (building && GridManager::GetInstance().IsWithinRange(gridPos, building->mapPos, stats.attackRange)) return true;
 		}
 		else
 		{
@@ -440,14 +502,19 @@ bool BehaviorUnit::FindTarget(GameObject** enemy, Vector2D pos) const
 		{
 			for (int y = (int)upperLeft.y; y < (int)upperLeft.y + 2 * stats.attackRange; y++)
 			{
-				GameObject* unit = GridManager::GetInstance().GetOccupant({ (float)x, (float)y });
+				GameObject* unit = GridManager::GetInstance().GetOccupant(Vector2D( (float)x, (float)y ));
 
-				if (unit && GridManager::GetInstance().IsWithinRange(pos, { (float)x, (float)y }, stats.attackRange) && unit->GetComponent<BehaviorUnit>()->GetArmy() != army)
-				{
-					if (CanTarget(unit))
+				if (unit) {
+					BehaviorUnit* bUnit = unit->GetComponent<BehaviorUnit>();
+					Building* building = unit->GetChildComponent<Building>();
+
+					if (GridManager::GetInstance().IsWithinRange(pos, { (float)x, (float)y }, stats.attackRange) && ((bUnit && bUnit->GetArmy() != army) || building && building->army != army))
 					{
-						*enemy = unit;
-						return true;
+						if (CanTarget(unit))
+						{
+							*enemy = unit;
+							return true;
+						}
 					}
 				}
 			}
@@ -466,11 +533,20 @@ void BehaviorUnit::ModifyHP(int amt)
 {
 	if (stats.currHP <= 0) return;
 	stats.currHP += amt;
+	GetParent()->GetComponent<Health>()->UpdateHP(amt);
+}
 
-	if (stats.currHP > stats.maxHP)
-		stats.currHP = stats.maxHP;
-	else if (stats.currHP <= 0)
-		GetParent()->Destroy();
+bool BehaviorUnit::IsMoving() const
+{
+	return isMoving;
+}
+
+void BehaviorUnit::BuildBuilding(GameObject * archetype, Node * pos)
+{
+	SetPath(Pathfinder::FindPath(GridManager::GetInstance().GetNode(gridPos), pos));
+	GridManager::GetInstance().SetNode(pos, false);
+	buildingArchetype = archetype;
+	buildingPos = pos;
 }
 
 // Calculates velocity based off of movement speed, target pos, and current pos.
@@ -493,7 +569,10 @@ void BehaviorUnit::CalculateVelocity()
 // True if the unit can be targeted, false if not.
 bool BehaviorUnit::CanTarget(GameObject* enemy) const
 {
-	AttackGroup enemyGroup = enemy->GetComponent<BehaviorUnit>()->traits.group;
+	Building* building = enemy->GetChildComponent<Building>();
+	AttackGroup enemyGroup;
+	if (building) enemyGroup = cGroupInfantry;
+	else enemyGroup = enemy->GetComponent<BehaviorUnit>()->traits.group;
 
 	switch (Weapons[traits.weapon].group)
 	{

@@ -48,14 +48,14 @@ void System::Init()
 	sysInitInfo.mCreateConsole = 1;
 	sysInitInfo.mMaxFrameRate = 60;
 	sysInitInfo.mpWinCallBack = NULL;//MyWinCallBack;
-	sysInitInfo.mClassStyle = CS_HREDRAW | CS_VREDRAW;
-	sysInitInfo.mWindowStyle = WS_OVERLAPPEDWINDOW;//WS_POPUP | WS_VISIBLE | WS_SYSMENU | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;;		
+	sysInitInfo.mClassStyle = CS_HREDRAW | CS_VREDRAW | CS_NOCLOSE;
+	sysInitInfo.mWindowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX; //WS_POPUP | WS_VISIBLE | WS_SYSMENU | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;;		
 	sysInitInfo.mCreateWindow = 1;
 	sysInitInfo.mWindowHandle = NULL;
 	AESysInit(&sysInitInfo);
 
 	// Change the window title.
-	AESysSetWindowTitle("CS230 Project 2 - Graphics and Animation");
+	AESysSetWindowTitle("Push of War");
 
 	// reset the system modules
 	AESysReset();

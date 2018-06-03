@@ -42,8 +42,7 @@ void PopupMenu::CreateMenu(BehaviorArmy *army, MenuType type, Node *buildingMapP
 	//Destroy the menu for a given army if it exists, then create a new menu.
 	if (Exists(side)) DestroyMenu(side);
 
-	PopupMenu* menu = new PopupMenu(army, type);
-	menu->buildingMapPos = buildingMapPos;
+	PopupMenu* menu = new PopupMenu(army, type, buildingMapPos);
 	menus.push_back(menu);
 }
 
@@ -125,11 +124,12 @@ PopupMenu* PopupMenu::GetMenu(BehaviorArmy::Side side) {
 	return nullptr;
 }
 
-PopupMenu::PopupMenu(BehaviorArmy *army, MenuType type) : army(army), side(army->GetSide()), type(type)
+PopupMenu::PopupMenu(BehaviorArmy *army, MenuType type, Node *buildingMapPos) : army(army), side(army->GetSide()), type(type), buildingMapPos(buildingMapPos)
 {
 	//Load the level for the correct type of level.
 	map<string, void*> vars;
 	vars["Army"] = army;
+	vars["GridPosition"] = buildingMapPos;
 	switch (type) {
 	case Building:
 		Space::LoadLayer(side, "BuildingMenu", vars, true);
@@ -141,6 +141,12 @@ PopupMenu::PopupMenu(BehaviorArmy *army, MenuType type) : army(army), side(army-
 		break;
 	case CommandPost:
 		Space::LoadLayer(side, "CommandPostMenu", vars, true);
+		break;
+	case Turret:
+		Space::LoadLayer(side, "TurretUpgradeMenu", vars, true);
+		break;
+	case SellBuilding:
+		Space::LoadLayer(side, "SellBuilding", vars, true);
 		break;
 	}
 	Space::GetLayer(side)->GetLevelManager()->Update(0);

@@ -12,10 +12,12 @@ Component * RestartButton::Clone() const {
 }
 
 void RestartButton::ClickEffect(float dt) {
-	Engine::GetInstance().SetPaused(false);
 	Space::GetLayer(0)->GetLevelManager()->Restart();
 	if (Space::GetLayerCount() > 1) {
 		PopupMenu::Shutdown();
-		for (unsigned i = 1; i < Space::GetLayerCount(); i++) Space::DeleteLayer(i);
+		for (unsigned i = 1; i < MAX_LAYERS; i++) {
+			if (Space::GetLayer(i))
+				Space::GetLayer(i)->GetLevelManager()->Quit();
+		}
 	}
 }

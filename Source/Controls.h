@@ -9,8 +9,8 @@
 #define BTN_MOVE Gamepad::bA
 #define BTN_SPAWNUNIT Gamepad::bX
 #define BTN_TARGET Gamepad::bB
+#define BTN_GROUP Gamepad::bY
 
-#define BTN_SELECT_BUILDING Gamepad::bY
 #define BTN_BUILDING_MENU Gamepad::bRShoulder
 #define BTN_MENU_LEFT Gamepad::bDpadLeft
 #define BTN_MENU_RIGHT Gamepad::bDpadRight

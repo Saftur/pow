@@ -21,23 +21,14 @@
 #include <cctype>
 #include "rapidjson.h"
 #include "LevelManager.h"
+#include "Space.h"
 
-Text::Text(bool manualCreation, const char* text, const char* font, Color color, Vector2D textScale) : Component("Text"), active(true), offset({ 0, 0 }) {
-	if (manualCreation) {
-		str = text;
-		scale = textScale;
+Text::Text() : Component("Text"), active(true), offset({ 0, 0 }) {
+}
 
-		mesh = MeshCreateQuad(0.5f, 0.5f, 0.0625f, 0.16666667f);
-		texture = AEGfxTextureLoad(font);
-		spritesource = new SpriteSource(16, 6, texture);
-
-		sprite = new Sprite();
-		sprite->SetMesh(mesh);
-		//sprite->SetMeshHalfSize({ 0.5f, 0.5f });
-		//sprite->SetMeshUV({ 0.0625f, 0.16666667f });
-		sprite->SetSpriteSource(spritesource);
-		sprite->SetModulateColor(color);
-	}
+Text::Text(const Text & other) : Component("Text"),
+	active(other.active), str(other.str), scale(other.scale), offset(other.offset), sprite(other.sprite ? (Sprite*)other.sprite->Clone() : nullptr)
+{
 }
 
 Component* Text::Clone() const{
