@@ -19,6 +19,7 @@ public:
 	BehaviorUnit::Traits *NewUnitData(string name);
 	BehaviorUnit::Traits *SetUnitData(string name, BehaviorUnit::Traits traits);
 	BehaviorUnit::Traits GetUnitData(string name) const;
+	BehaviorUnit::Traits GetUnitData(unsigned id) const;
 
 	string armyFile;
 

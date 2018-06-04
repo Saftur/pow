@@ -105,3 +105,9 @@ BehaviorUnit::Traits ArmyTraits::GetUnitData(string name) const {
 	}
 	return BehaviorUnit::Traits({ -1 });
 }
+
+BehaviorUnit::Traits ArmyTraits::GetUnitData(unsigned id) const {
+	if (id < unitTypes.size())
+		return unitTypes[id];
+	return BehaviorUnit::Traits({ -1 });
+}

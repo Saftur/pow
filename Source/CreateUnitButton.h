@@ -11,5 +11,5 @@ public:
 	void ClickEffect(float dt);
 
 private:
-	string unitName;
+	unsigned unitId;
 };

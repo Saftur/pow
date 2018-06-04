@@ -9,16 +9,17 @@
 #include "AEEngine.h"
 #include <cstdio>
 #include <cstdlib>
+#include "GridManager.h"
 
 #include "System.h"
 
-Tilemap::Tilemap(const char* spritesheetFilename, const char* tilemapFilename, const char* collisionMapFilename, 
-	int onScreenOffsetX, int onScreenOffsetY, int onScreenWidth, int onScreenHeight, 
-		int spritesheetWidth, int spritesheetHeight) :
-		Component("Tilemap"),
-		offsetX(onScreenOffsetX), offsetY(onScreenOffsetY), width(onScreenWidth), height(onScreenHeight), 
-		sprite(new Sprite()), texture(AEGfxTextureLoad(spritesheetFilename)), 
-		transform(new Transform(0.0f, 0.0f))
+Tilemap::Tilemap(const char* spritesheetFilename, const char* tilemapFilename, const char* collisionMapFilename,
+	int onScreenOffsetX, int onScreenOffsetY, int onScreenWidth, int onScreenHeight,
+	int spritesheetWidth, int spritesheetHeight) :
+	Component("Tilemap"),
+	offsetX(onScreenOffsetX), offsetY(onScreenOffsetY), width(onScreenWidth), height(onScreenHeight),
+	sprite(new Sprite()), texture(AEGfxTextureLoad(spritesheetFilename)),
+	transform(new Transform(0.0f, 0.0f))
 {
 	ReadFiles(tilemapFilename, collisionMapFilename); // Initializes: tilemap, collisionMap, tilemapWidth, tilemapHeight
 	Trace::GetInstance().GetStream() << tilemapWidth << ", " << tilemapHeight << std::endl;
@@ -35,8 +36,6 @@ Tilemap::Tilemap(const char* spritesheetFilename, const char* tilemapFilename, c
 	meshQuad = MeshCreateQuad((float)tileWidth / 2.0f, (float)tileHeight / 2.0f, 1.0f / spritesheetWidth, 1.0f / spritesheetHeight);
 	spriteSource = new SpriteSource(spritesheetWidth, spritesheetHeight, texture);
 	sprite->SetMesh(meshQuad);
-	//sprite->SetMeshHalfSize({ (float)tileWidth / 2.0f, (float)tileHeight / 2.0f });
-	//sprite->SetMeshUV({ 1.0f / spritesheetWidth, 1.0f / spritesheetHeight });
 	sprite->SetSpriteSource(spriteSource);
 }
 
@@ -69,13 +68,11 @@ Component * Tilemap::Clone() const
 		}
 	}
 	if (collisionMap) {
-		newTilemap->collisionMap = new bool[tilemapWidth*tilemapHeight];
+		newTilemap->collisionMap = new int[tilemapWidth*tilemapHeight];
 		for (int i = 0; i < tilemapWidth*tilemapHeight; i++) {
 			newTilemap->collisionMap[i] = collisionMap[i];
 		}
 	}
-	//newTilemap->sprite = (Sprite*)sprite->Clone();
-	//newTilemap->spriteSource = new SpriteSource(*spriteSource);
 	if (transform)
 		newTilemap->transform = (Transform*)transform->Clone();
 	return newTilemap;
@@ -91,7 +88,6 @@ void Tilemap::Draw(Camera *cam) const
 			if (GetTile(x, y) != -1)
 			{
 				sprite->SetFrame(GetTile(x, y));
-				//sprite->Draw({ (f32)(tileWidth * x + offsetX - width / 2 + tileWidth / 2), -(f32)(tileHeight * y + offsetY - height / 2 + tileHeight / 2) });
 				Vector2D translation = { (f32)(tileWidth * x + offsetX - width / 2 + tileWidth / 2), -(f32)(tileHeight * y + offsetY - height / 2 + tileHeight / 2) };
 				if (parentTR)
 					translation += parentTR->GetTranslation();
@@ -119,8 +115,6 @@ Vector2D Tilemap::GetPosOnMap(Vector2D screenPos, Vector2D *offsetFromTile) cons
 		pos.X((float)(tilemapWidth - 1));
 	if (pos.Y() >= tilemapHeight)
 		pos.Y((float)(tilemapHeight - 1));
-	//pos.x += 0.5f;
-	//pos.y += 0.5f;
 	return pos;
 }
 
@@ -147,7 +141,6 @@ bool Tilemap::IsScreenPosOnMap(Vector2D screenPos) const
 	Vector2D topLeft = GetTilemapScreenTopLeft();
 	Vector2D bottomRight = GetTilemapScreenBottomRight();
 	return screenPos.x >= topLeft.x && screenPos.x <= bottomRight.x && screenPos.y >= bottomRight.y && screenPos.y <= topLeft.y;
-	//return IsMapPosOnMap(GetPosOnMap(screenPos));
 }
 
 bool Tilemap::IsObjectCollidingWithMap(Vector2D objectPosition, Vector2D objectScale) const
@@ -159,39 +152,29 @@ bool Tilemap::IsObjectCollidingWithMap(Vector2D objectPosition, Vector2D objectS
 	float sy = objectScale.Y() * tileHeight;
 	float x, y;
 	int tileX, tileY;
-	//Vector2D point = { 0, 0 };
 	for (int s = 0; s < 4; s++)
 	{
 		for (int p = -1; p <= 1; p += 2)
 		{
-			//point = objectPosition;
 			x = objectPosition.X();
 			y = objectPosition.Y();
 			if (s == 0)
 			{
-				//point.X(point.X() + sx / 2);
-				//point.Y(point.Y() + sx / 4 * p);
 				x += sx / 2;
 				y += sy / 4 * p;
 			}
 			else if (s == 1)
 			{
-				//point.x -= objectScale.x / 2;
-				//point.y += objectScale.y / 4 * p;
 				x -= sx / 2;
 				y += sy / 4 * p;
 			}
 			else if (s == 2)
 			{
-				//point.y += objectScale.y / 2;
-				//point.x += objectScale.x / 4 * p;
 				y += sy / 2;
 				x += sx / 4 * p;
 			}
 			else if (s == 3)
 			{
-				//point.y -= objectScale.y / 2;
-				//point.x += objectScale.x / 4 * p;
 				y -= sy / 2;
 				x += sx / 4 * p;
 			}
@@ -297,8 +280,6 @@ void Tilemap::Load(rapidjson::Value & obj)
 		meshQuad = MeshCreateQuad((float)tileWidth / 2.0f, (float)tileHeight / 2.0f, 1.0f / obj["SpritesheetWidth"].GetInt(), 1.0f / obj["SpritesheetHeight"].GetInt());
 		spriteSource = new SpriteSource(obj["SpritesheetWidth"].GetInt(), obj["SpritesheetHeight"].GetInt(), texture);
 		sprite->SetMesh(meshQuad);
-		//sprite->SetMeshHalfSize({ (float)tileWidth / 2.0f, (float)tileHeight / 2.0f });
-		//sprite->SetMeshUV({ 1.0f / obj["SpritesheetWidth"].GetInt(), 1.0f / obj["SpritesheetHeight"].GetInt() });
 		sprite->SetSpriteSource(spriteSource);
 	}
 }
@@ -361,7 +342,7 @@ void Tilemap::ReadFiles(const char* tilemapFilename, const char* collisionMapFil
 	fclose(tmFile);
 
 	if (cmFile) {
-		collisionMap = new bool[tilemapHeight*tilemapWidth];
+		collisionMap = new int[tilemapHeight*tilemapWidth];
 		lineNum = 0; tileNum = 0;
 		tile[1] = 0;
 		while ((c = (char)fgetc(cmFile)) != EOF) {
@@ -370,9 +351,22 @@ void Tilemap::ReadFiles(const char* tilemapFilename, const char* collisionMapFil
 				tileNum = 0;
 			} else {
 				tile[0] = c;
-				collisionMap[lineNum*tilemapWidth + tileNum++] = atoi(tile) != 0;
+				collisionMap[lineNum*tilemapWidth + tileNum++] = atoi(tile);
 			}
 		}
 		fclose(cmFile);
+	}
+
+	for (int i = 0; i < tilemapHeight * tilemapWidth; i++)
+	{
+		GridManager& manager = GridManager::GetInstance();
+		GridManager::Node* node = manager.GetNode(i % tilemapWidth, i / tilemapWidth);
+
+		if (tilemap[i] != 0)
+		{
+			node->open = false;
+		}
+
+		node->height = collisionMap[i];
 	}
 }

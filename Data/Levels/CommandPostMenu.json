@@ -53,7 +53,7 @@
       "Rotation": 0
     },
     "CreateUnitButton": {
-      "UnitName": "Unit1"
+      "UnitId": 0
     },
     "Sprite": {
 	  "SpriteSource": {
@@ -95,7 +95,7 @@
       "Rotation": 0
     },
     "CreateUnitButton": {
-      "UnitName": "Unit2"
+      "UnitId": 1
     },
     "Sprite": {
 	  "SpriteSource": {
@@ -137,7 +137,7 @@
       "Rotation": 0
     },
     "CreateUnitButton": {
-      "UnitName": "Unit3"
+      "UnitId": 2
     },
     "Sprite": {
 	  "SpriteSource": {
@@ -179,7 +179,7 @@
       "Rotation": 0
     },
     "CreateUnitButton": {
-      "UnitName": "Unit4"
+      "UnitId": 3
     },
     "Sprite": {
 	  "SpriteSource": {

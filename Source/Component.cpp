@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "Camera.h"
 #include "Trace.h"
+#include "SoundManager.h"
 
 Component::Component(const char * name) : 
 		Serializable(name), name(name)
@@ -47,4 +48,9 @@ void Component::SetParent(GameObject * object)
 const char * Component::GetName() const
 {
 	return name;
+}
+
+void Component::PlaySound(std::string name) const
+{
+	SoundManager::GetInstance().PlayEvent(name);
 }

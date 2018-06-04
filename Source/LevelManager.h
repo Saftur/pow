@@ -63,7 +63,8 @@ private:
 	enum ObjType {
 		otGameObject,
 		otSpriteSource,
-		otMesh
+		otMesh,
+		otBank
 	};
 
 	LevelManager(Space *space);

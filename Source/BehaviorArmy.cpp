@@ -59,6 +59,8 @@ enum states { cArmyNormal };
 // Public Functions:
 //------------------------------------------------------------------------------
 
+BehaviorArmy::FrontLine BehaviorArmy::frontLine;
+
 // Allocate a new (Army) behavior component.
 // Params:
 //  parent = The object that owns this behavior.
@@ -67,6 +69,11 @@ BehaviorArmy::BehaviorArmy() :
 {
 	SetCurrentState(cBehaviorInvalid);
 	SetNextState(cArmyNormal);
+
+	if (!&frontLine)
+	{
+		frontLine = FrontLine();
+	}
 }
 
 void BehaviorArmy::PushFrontLine(Vector2D pos)
@@ -222,6 +229,14 @@ void BehaviorArmy::OnEnter()
 			if (side == BehaviorArmy::sRight)
 				separatorObj->GetComponent<Transform>()->SetTranslation({-300, 0});
 		}
+		for (GameObject* obj : GetParent()->GetGameObjectManager()->GetObjectsByName("Army"))
+		{
+			BehaviorArmy* army = obj->GetComponent<BehaviorArmy>();
+			if (army && army->side != side)
+			{
+				otherArmy = army;
+			}
+		}
 
 		// Initialize tilemap
 		tilemap = GetParent()->GetGameObjectManager()->GetObjectByName("Tilemap")->GetComponent<Tilemap>();
@@ -303,6 +318,33 @@ void BehaviorArmy::OnUpdate(float dt)
 	switch (GetCurrentState())
 	{
 	case cArmyNormal:
+		// Make sure that furthestX is always equal to the position of our furthest unit.
+		if (side == sLeft)
+			furthestX = -1;
+		else
+			furthestX = GridManager::GetInstance().width;
+
+		for (GameObject* unit : BehaviorUnit::allUnits)
+		{
+			BehaviorUnit* bu = unit->GetComponent<BehaviorUnit>();
+
+			int newX = (int)bu->GetGridPos().x;
+
+			if (bu->GetArmy() == this)
+			{
+				if (side == sLeft)
+				{
+					if (newX > furthestX)
+						furthestX = newX;
+				}
+				else
+				{
+					if (newX < furthestX)
+						furthestX = newX;
+				}
+			}
+		}
+
 		// Get current cursor position
 		Vector2D cursPos = cursor.transform->GetWorldTranslation();
 		// Tilemap top left point
@@ -348,11 +390,6 @@ void BehaviorArmy::OnUpdate(float dt)
 						prevTarget = cursorNode;
 						FindPath();
 					}
-				}
-				else
-				{
-					if (controls.gamepad->GetButtonTriggered(BTN_SPAWNUNIT))
-						CreateUnit("Unit1", cursorNode->gridPos());
 				}
 			}
 
@@ -404,27 +441,6 @@ void BehaviorArmy::OnUpdate(float dt)
 				}
 				selectedUnits.clear();
 			}
-
-			// Are we selecting units?
-			if (controls.gamepad->GetButton(BTN_SELECT)) {
-				if (cursorNode != rectEndPos) {
-					rectEndPos = cursorNode;
-					SelectUnits();
-				}
-			} else {
-				if (selectedUnits.size() > 0)
-				{
-					if (cursorNode != prevTarget) {
-						prevTarget = cursorNode;
-						FindPath();
-					}
-				}
-				else
-				{
-					if (controls.gamepad->GetButtonTriggered(BTN_SPAWNUNIT))
-						CreateUnit("Unit1", cursorNode->gridPos());
-				}
-			}
 			break;
 		}
 
@@ -451,25 +467,62 @@ void BehaviorArmy::OnExit()
 void BehaviorArmy::Draw(Camera *cam) const
 {
 	if (!frontLine.transform) return;
+	GridManager& gm = GridManager::GetInstance();
+
+	// Check if we need to update the position of the line.
+	// True if our furthest unit is past the current line position but NOT past the other army's furthest unit.
+	// False if we aren't past the current line position or we are, but we are also past the other army's furthest unit.
+	if (side == sLeft)
+	{
+		// Are we past the line?
+		if (furthestX > gm.ConvertToGridPoint(frontLine.transform->GetTranslation()).x)
+		{
+			// Are we past the other army's furthest unit?
+			if (furthestX < otherArmy->furthestX)
+			{
+				// Update line's position.
+				frontLine.transform->SetTranslation(gm.ConvertToGridPoint(furthestX, (int)frontLine.transform->GetTranslation().y));
+				frontLine.pos = (int)frontLine.transform->GetTranslation().x;
+			}
+		}
+	}
+	else
+	{
+		// Are we past the line?
+		if (furthestX < gm.ConvertToGridPoint(frontLine.transform->GetTranslation()).x)
+		{
+			// Are we past the other army's furthest unit?
+			if (furthestX > otherArmy->furthestX)
+			{
+				// Update line's position.
+				frontLine.transform->SetTranslation(gm.ConvertToGridPoint(furthestX, (int)frontLine.transform->GetTranslation().y));
+				frontLine.pos = (int)frontLine.transform->GetTranslation().x;
+			}
+		}
+	}
+
+	
+	
 	Transform territoryTransform(0, 0);
-	Vector2D flTrs = frontLine.transform->GetTranslation();
-	Vector2D flScl = frontLine.transform->GetScale();
+	Vector2D frontLinePos = frontLine.transform->GetTranslation();
+	Vector2D frontLineScale = frontLine.transform->GetScale();
+	int height = gm.height * gm.tileHeight;
 	switch (side) {
 	case sLeft: {
-		Vector2D tmTopLeft = tilemap->GetTilemapScreenTopLeft();
-		territoryTransform.SetTranslation({ (flTrs.x - flScl.x / 2) / 2 + tmTopLeft.x / 2, flTrs.y });
-		territoryTransform.SetScale({ (flTrs.x - flScl.x / 2) - tmTopLeft.x, flScl.y });
+		Vector2D mapTopLeft = gm.ConvertToWorldPoint(0, 0) - Vector2D((int)gm.tileWidth / 2.f, (int)gm.tileHeight / 2.f);
+		territoryTransform.SetTranslation({ (frontLinePos.x - frontLineScale.x / 2) / 2 + mapTopLeft.x / 2, frontLinePos.y });
+		territoryTransform.SetScale({ (frontLinePos.x - frontLineScale.x / 2) - mapTopLeft.x, (float)height });
 		break;
 	}
 	case sRight: {
-		Vector2D tmBottomRight = tilemap->GetTilemapScreenBottomRight();
-		territoryTransform.SetTranslation({ (flTrs.x + flScl.x / 2) / 2 + tmBottomRight.x / 2, flTrs.y });
-		territoryTransform.SetScale({ tmBottomRight.x - (flTrs.x + flScl.x / 2), flScl.y });
+		Vector2D mapBottomRight = tilemap->GetTilemapScreenBottomRight();
+		territoryTransform.SetTranslation({ (frontLinePos.x + frontLineScale.x / 2) / 2 + mapBottomRight.x / 2, frontLinePos.y });
+		territoryTransform.SetScale({ mapBottomRight.x - (frontLinePos.x + frontLineScale.x / 2), (float)height });
 		break;
 	}
 	}
 	float alpha = path.sprite->GetAlpha();
-	path.sprite->SetAlpha(0.25f);
+	path.sprite->SetAlpha(0.5f);
 	path.sprite->Draw(cam, territoryTransform);
 	path.sprite->SetAlpha(alpha);
 	if (selectedUnits.size() > 0)
@@ -580,14 +633,14 @@ void BehaviorArmy::Load(rapidjson::Value & obj)
 	}
 }
 
-void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos)
+void BehaviorArmy::CreateUnit(unsigned unitId, Vector2D startPos)
 {
-	BehaviorUnit::Traits unitData = GetUnitData(unitName);
+	BehaviorUnit::Traits unitData = armyTraits.GetUnitData(unitId);
 	if (funds.amount < unitData.GetCost()) return;
 	if (!LegalSpawn(startPos)) return;
 	funds.amount -= unitData.GetCost();
 	UpdateFundsText();
-	GameObject *go = GetParent()->GetGameObjectManager()->GetArchetype(unitData.name.c_str());
+	GameObject *go = GetParent()->GetGameObjectManager()->GetArchetype((string("Unit")+std::to_string(unitId+1)).c_str());
 	if (!go) {
 		Trace::GetInstance().GetStream() << "No Unit archetype found" << std::endl;
 		return;
@@ -611,7 +664,6 @@ void BehaviorArmy::CreateUnit(const char *unitName, Vector2D startPos)
 
 bool BehaviorArmy::LegalSpawn(Vector2D pos)
 {
-	vector<GameObject*> unitGOs = GetParent()->GetGameObjectManager()->GetObjectsByName("Unit");
 	if (!GridManager::GetInstance().GetNode(pos)->open)
 		return false;
 	if (pos.x < 0 || pos.x >= tilemap->GetTilemapWidth() || pos.y < 0 || pos.y >= tilemap->GetTilemapHeight())

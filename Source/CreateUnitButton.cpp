@@ -9,8 +9,8 @@ void CreateUnitButton::Load(rapidjson::Value & obj) {
 	ArmyButton::Load(obj);
 	rapidjson::Value *tmp;
 
-	if (obj.HasMember("UnitName") && (tmp = &obj["UnitName"])->IsString()) {
-		unitName = tmp->GetString();
+	if (obj.HasMember("UnitId") && (tmp = &obj["UnitId"])->IsUint()) {
+		unitId = tmp->GetUint();
 	}
 }
 
@@ -28,5 +28,5 @@ void CreateUnitButton::ClickEffect(float dt) {
 
 	int nodeID = rand() % nearbyNodes.size();
 
-	army->CreateUnit(unitName.c_str(), nearbyNodes[nodeID]->gridPos());
+	army->CreateUnit(unitId, nearbyNodes[nodeID]->gridPos());
 }

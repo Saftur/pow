@@ -492,6 +492,12 @@ bool BehaviorUnit::FindTarget(GameObject** enemy, Vector2D pos) const
 			BehaviorUnit* bUnit = (*enemy)->GetComponent<BehaviorUnit>();
 			Building* building = (*enemy)->GetChildComponent<Building>();
 
+			if (bUnit && GridManager::GetInstance().GetNode(bUnit->gridPos)->height > GridManager::GetInstance().GetNode(gridPos)->height ||
+				building && GridManager::GetInstance().GetNode(building->GetGridPos())->height > GridManager::GetInstance().GetNode(gridPos)->height)
+			{
+				return false;
+			}
+
 			if (bUnit && GridManager::GetInstance().IsWithinRange(gridPos, bUnit->gridPos, stats.attackRange))
 			{
 				return true;
@@ -519,6 +525,12 @@ bool BehaviorUnit::FindTarget(GameObject** enemy, Vector2D pos) const
 				if (unit) {
 					BehaviorUnit* bUnit = unit->GetComponent<BehaviorUnit>();
 					Building* building = unit->GetChildComponent<Building>();
+
+					if (bUnit && GridManager::GetInstance().GetNode(bUnit->gridPos)->height > GridManager::GetInstance().GetNode(gridPos)->height ||
+						building && GridManager::GetInstance().GetNode(building->GetGridPos())->height > GridManager::GetInstance().GetNode(gridPos)->height)
+					{
+						continue;
+					}
 
 					if (GridManager::GetInstance().IsWithinRange(pos, { (float)x, (float)y }, stats.attackRange) && ((bUnit && bUnit->GetArmy() != army) || building && building->army != army))
 					{
