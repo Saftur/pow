@@ -446,27 +446,7 @@ void BehaviorArmy::OnUpdate(float dt)
 
 		break;
 	}
-}
 
-bool BehaviorArmy::SelectedUnit::operator==(const SelectedUnit &other)
-{
-	if (unit == other.unit)
-		return true;
-
-	return false;
-}
-
-void BehaviorArmy::OnExit()
-{
-	switch (GetCurrentState()) {
-	case cArmyNormal:
-		break;
-	}
-}
-
-void BehaviorArmy::Draw(Camera *cam) const
-{
-	if (!frontLine.transform) return;
 	GridManager& gm = GridManager::GetInstance();
 
 	// Check if we need to update the position of the line.
@@ -500,9 +480,29 @@ void BehaviorArmy::Draw(Camera *cam) const
 			}
 		}
 	}
+}
 
-	
-	
+bool BehaviorArmy::SelectedUnit::operator==(const SelectedUnit &other)
+{
+	if (unit == other.unit)
+		return true;
+
+	return false;
+}
+
+void BehaviorArmy::OnExit()
+{
+	switch (GetCurrentState()) {
+	case cArmyNormal:
+		break;
+	}
+}
+
+void BehaviorArmy::Draw(Camera *cam) const
+{
+	if (!path.sprite) return;
+	GridManager& gm = GridManager::GetInstance();
+
 	Transform territoryTransform(0, 0);
 	Vector2D frontLinePos = frontLine.transform->GetTranslation();
 	Vector2D frontLineScale = frontLine.transform->GetScale();
