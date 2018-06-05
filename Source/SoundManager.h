@@ -13,7 +13,7 @@ Header file for sound controller
 
 #include "fmod.hpp"
 #include "fmod_studio.hpp"
-#define GLOBAL_SOUND_PATH "Assets\\SFX\\"
+#define GLOBAL_SOUND_PATH "Data\\Assets\\SFX\\"
 
 typedef char* const Sound;
 

@@ -166,13 +166,6 @@ void BehaviorUnit::BuildArrays()
 	if (done)
 		return;
 	done = true;
-
-	///////////////////////////////////////////////////////////////
-	// TEST CODE
-	SoundManager::GetInstance().AddBank("Master Bank.strings.bank");
-	SoundManager::GetInstance().AddBank("Master Bank.bank");
-	SoundManager::GetInstance().PlayEvent("Level Music");
-	///////////////////////////////////////////////////////////////
 }
 
 // Clone an advanced behavior and return a pointer to the cloned object.

@@ -1,5 +1,15 @@
 [
   {
+    "Name": "SoundPlayer",
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 1, 1 ]
+    },
+    "SoundPlayer": {
+      "Sound": "Teleporter"
+    }
+  },
+  {
     "Name": "Camera",
     "Transform": {
       "Translation": [ 0, 0 ],

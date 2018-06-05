@@ -328,6 +328,9 @@
     <ClCompile Include="Source\ResumeButton.cpp">
       <Filter>Game\Buttons\NonGameButtons</Filter>
     </ClCompile>
+    <ClCompile Include="source\SoundPlayer.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h">
@@ -678,6 +681,9 @@
     </ClInclude>
     <ClInclude Include="Source\ResumeButton.h">
       <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SoundPlayer.h">
+      <Filter>Game\Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

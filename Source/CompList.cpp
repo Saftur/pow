@@ -34,6 +34,7 @@
 #include "ChangeWeaponAbilityButton.h"
 #include "TurretUpgradeButton.h"
 #include "SellBuildingButton.h"
+#include "SoundPlayer.h"
 
 
 #define NEWCOMP(name, comp) LevelManager::AddComponentType(name, comp)
@@ -49,6 +50,7 @@ void CompList::List() {
 	NEWCOMP("CustomPointCounter", new CustomPointCounter());
 	NEWCOMP("CostDisplay", new CostDisplay());
 	NEWCOMP("Health", new Health());
+	NEWCOMP("SoundPlayer", new SoundPlayer());
 
 	//Level main components.
 	NEWCOMP("GameMain", new GameMain());

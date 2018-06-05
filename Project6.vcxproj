@@ -109,6 +109,7 @@
     <ClInclude Include="Source\SellBuildingButton.h" />
     <ClInclude Include="source\Serializable.h" />
     <ClInclude Include="source\SoundManager.h" />
+    <ClInclude Include="source\SoundPlayer.h" />
     <ClInclude Include="Source\Space.h" />
     <ClInclude Include="Source\Sprite.h" />
     <ClInclude Include="Source\SpriteSource.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="Source\SellBuildingButton.cpp" />
     <ClCompile Include="source\Serializable.cpp" />
     <ClCompile Include="source\SoundManager.cpp" />
+    <ClCompile Include="source\SoundPlayer.cpp" />
     <ClCompile Include="Source\Space.cpp" />
     <ClCompile Include="Source\Sprite.cpp" />
     <ClCompile Include="Source\SpriteSource.cpp" />
