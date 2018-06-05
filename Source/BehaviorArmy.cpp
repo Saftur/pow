@@ -446,6 +446,40 @@ void BehaviorArmy::OnUpdate(float dt)
 
 		break;
 	}
+
+	GridManager& gm = GridManager::GetInstance();
+
+	// Check if we need to update the position of the line.
+	// True if our furthest unit is past the current line position but NOT past the other army's furthest unit.
+	// False if we aren't past the current line position or we are, but we are also past the other army's furthest unit.
+	if (side == sLeft)
+	{
+		// Are we past the line?
+		if (gm.ConvertToWorldPoint(furthestX, 0).x > frontLine.transform->GetTranslation().x)
+		{
+			// Are we past the other army's furthest unit?
+			if (furthestX < otherArmy->furthestX)
+			{
+				// Update line's position.
+				frontLine.transform->SetTranslation({gm.ConvertToWorldPoint(furthestX, 0).x + tilemap->GetTileWidth()/2.f, frontLine.transform->GetTranslation().y});
+				frontLine.pos = furthestX;
+			}
+		}
+	}
+	else
+	{
+		// Are we past the line?
+		if (gm.ConvertToWorldPoint(furthestX, 0).x <= frontLine.transform->GetTranslation().x)
+		{
+			// Are we past the other army's furthest unit?
+			if (furthestX > otherArmy->furthestX)
+			{
+				// Update line's position.
+				frontLine.transform->SetTranslation({gm.ConvertToWorldPoint(furthestX, 0).x - tilemap->GetTileWidth()/2.f, frontLine.transform->GetTranslation().y});
+				frontLine.pos = furthestX;
+			}
+		}
+	}
 }
 
 bool BehaviorArmy::SelectedUnit::operator==(const SelectedUnit &other)
@@ -466,43 +500,9 @@ void BehaviorArmy::OnExit()
 
 void BehaviorArmy::Draw(Camera *cam) const
 {
-	if (!frontLine.transform) return;
+	if (!path.sprite) return;
 	GridManager& gm = GridManager::GetInstance();
 
-	// Check if we need to update the position of the line.
-	// True if our furthest unit is past the current line position but NOT past the other army's furthest unit.
-	// False if we aren't past the current line position or we are, but we are also past the other army's furthest unit.
-	if (side == sLeft)
-	{
-		// Are we past the line?
-		if (furthestX > gm.ConvertToGridPoint(frontLine.transform->GetTranslation()).x)
-		{
-			// Are we past the other army's furthest unit?
-			if (furthestX < otherArmy->furthestX)
-			{
-				// Update line's position.
-				frontLine.transform->SetTranslation(gm.ConvertToGridPoint(furthestX, (int)frontLine.transform->GetTranslation().y));
-				frontLine.pos = (int)frontLine.transform->GetTranslation().x;
-			}
-		}
-	}
-	else
-	{
-		// Are we past the line?
-		if (furthestX < gm.ConvertToGridPoint(frontLine.transform->GetTranslation()).x)
-		{
-			// Are we past the other army's furthest unit?
-			if (furthestX > otherArmy->furthestX)
-			{
-				// Update line's position.
-				frontLine.transform->SetTranslation(gm.ConvertToGridPoint(furthestX, (int)frontLine.transform->GetTranslation().y));
-				frontLine.pos = (int)frontLine.transform->GetTranslation().x;
-			}
-		}
-	}
-
-	
-	
 	Transform territoryTransform(0, 0);
 	Vector2D frontLinePos = frontLine.transform->GetTranslation();
 	Vector2D frontLineScale = frontLine.transform->GetScale();
