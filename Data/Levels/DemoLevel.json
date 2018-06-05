@@ -536,7 +536,7 @@
       "Name": "Army1",
       "Side": "Left",
       "FrontLineName": "FrontLine1",
-      "FrontLineStart": 5,
+      "FrontLineStart": 10,
       "FundsDisplayName": "FundsDisplay1",
       "StartFunds": 1000,
       "PathLineName": "PathLine1",
@@ -551,7 +551,7 @@
       "Name": "Army2",
       "Side": "Right",
       "FrontLineName": "FrontLine1",
-      "FrontLineStart": 5,
+      "FrontLineStart": 10,
       "FundsDisplayName": "FundsDisplay2",
       "StartFunds": 1000,
       "PathLineName": "PathLine2",
@@ -586,7 +586,7 @@
     },
     "CommandPost": {
       "Side": 1,
-      "MapPos": [ 2, 4 ]
+      "MapPos": [ 3, 8 ]
     }
   },
   {
@@ -610,7 +610,7 @@
     },
     "CommandPost": {
       "Side": 2,
-      "MapPos": [ 9, 4 ]
+      "MapPos": [ 15, 9 ]
     }
   },
   {
