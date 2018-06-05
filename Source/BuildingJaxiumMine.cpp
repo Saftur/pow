@@ -20,6 +20,7 @@
 #include "GridManager.h"
 #include <vector>
 #include "Crystal.h"
+#include "SoundManager.h"
 
 using std::vector;
 
@@ -83,5 +84,11 @@ void BuildingJaxiumMine::BuildingUpdate(float dt){
 
 			Space::GetLayer(0)->GetGameObjectManager()->Add(*jaxium);
 		}
+
+		if (!firstRun)
+			return;
+		firstRun = false;
+		SoundManager::GetInstance().Add("Neoridium_Mine.wav");
+		SoundManager::GetInstance().PlaySFX("Neoridium_Mine.wav");
 	}
 }

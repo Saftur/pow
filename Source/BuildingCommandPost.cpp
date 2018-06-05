@@ -16,6 +16,7 @@
 #include "BuildingNeoridiumMine.h"
 #include "Space.h"
 #include "Health.h"
+#include "SoundManager.h"
 
 #include "AEEngine.h"
 
@@ -49,6 +50,11 @@ void BuildingCommandPost::OnDestroy() {
 
 void BuildingCommandPost::BuildingUpdate(float dt)
 {
+	if (!firstRun)
+		return;
+	firstRun = false;
+	SoundManager::GetInstance().Add("Command_Center.wav");
+	SoundManager::GetInstance().PlaySFX("Command_Center.wav");
 }
 
 void BuildingCommandPost::OpenMenu()

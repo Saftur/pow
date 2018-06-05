@@ -166,6 +166,9 @@ void BehaviorUnit::BuildArrays()
 	if (done)
 		return;
 	done = true;
+
+	SoundManager::GetInstance().Add("Laser_Turret.wav");
+	SoundManager::GetInstance().Add("Explosion.wav");
 }
 
 // Clone an advanced behavior and return a pointer to the cloned object.
@@ -247,6 +250,10 @@ void BehaviorUnit::OnUpdate(float dt)
 			// Can we shoot?
 			if (attackTimer <= 0.0f)
 			{
+				if (traits.weapon == cWeaponHandcannon)
+					SoundManager::GetInstance().PlaySFX("Laser_Turret.wav");
+				else if (traits.weapon == cWeaponBeamRifle)
+					SoundManager::GetInstance().PlaySFX("Explosion.wav");
 				GameObject* projectile = new GameObject(*BehaviorProjectile::Projectiles[Weapons[traits.weapon].projectileArchetype]);
 				projectile->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(gridPos));
 

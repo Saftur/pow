@@ -53,8 +53,7 @@ GameObject* BehaviorProjectile::Projectiles[3];
 BehaviorProjectile::BehaviorProjectile() :
 		Behavior("BehaviorProjectile")
 {
-	SoundManager::GetInstance().Add("Laser_Turret.wav");
-	SoundManager::GetInstance().Add("Explosion.wav");
+	
 
 	SetCurrentState(cBehaviorInvalid);
 }
@@ -80,7 +79,7 @@ void BehaviorProjectile::OnEnter()
 	{
 	case cProjectileMoving:
 
-		SoundManager::GetInstance().PlaySFX("Laser_Turret.wav");
+		
 		break;
 	}
 }

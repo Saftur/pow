@@ -28,6 +28,7 @@
 #include "BuildingCommandPost.h"
 #include "BuildingTeleporter.h"
 #include <algorithm>
+#include "SoundManager.h"
 #include "PopupMenu.h"
 
 map<BehaviorArmy::Side, bool[Building::BuildingType::BuildingCount]> Building::buildings;

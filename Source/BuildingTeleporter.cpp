@@ -20,6 +20,7 @@
 #include "GridManager.h"
 #include <vector>
 #include "Pathfinder.h"
+#include "SoundManager.h"
 
 using std::vector;
 
@@ -99,6 +100,11 @@ void BuildingTeleporter::BuildingUpdate(float dt){
 				}
 			}
 		}
+		if (!firstRun)
+			return;
+		firstRun = false;
+		SoundManager::GetInstance().Add("Teleporter.wav");
+		SoundManager::GetInstance().PlaySFX("Teleporter.wav");
 	}
 }
 
