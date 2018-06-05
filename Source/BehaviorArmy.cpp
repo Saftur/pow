@@ -475,28 +475,28 @@ void BehaviorArmy::Draw(Camera *cam) const
 	if (side == sLeft)
 	{
 		// Are we past the line?
-		if (furthestX > gm.ConvertToGridPoint(frontLine.transform->GetTranslation()).x)
+		if (gm.ConvertToWorldPoint(furthestX, 0).x > frontLine.transform->GetTranslation().x)
 		{
 			// Are we past the other army's furthest unit?
 			if (furthestX < otherArmy->furthestX)
 			{
 				// Update line's position.
-				frontLine.transform->SetTranslation(gm.ConvertToGridPoint(furthestX, (int)frontLine.transform->GetTranslation().y));
-				frontLine.pos = (int)frontLine.transform->GetTranslation().x;
+				frontLine.transform->SetTranslation({gm.ConvertToWorldPoint(furthestX, 0).x + tilemap->GetTileWidth()/2.f, frontLine.transform->GetTranslation().y});
+				frontLine.pos = furthestX;
 			}
 		}
 	}
 	else
 	{
 		// Are we past the line?
-		if (furthestX < gm.ConvertToGridPoint(frontLine.transform->GetTranslation()).x)
+		if (gm.ConvertToWorldPoint(furthestX, 0).x <= frontLine.transform->GetTranslation().x)
 		{
 			// Are we past the other army's furthest unit?
 			if (furthestX > otherArmy->furthestX)
 			{
 				// Update line's position.
-				frontLine.transform->SetTranslation(gm.ConvertToGridPoint(furthestX, (int)frontLine.transform->GetTranslation().y));
-				frontLine.pos = (int)frontLine.transform->GetTranslation().x;
+				frontLine.transform->SetTranslation({gm.ConvertToWorldPoint(furthestX, 0).x - tilemap->GetTileWidth()/2.f, frontLine.transform->GetTranslation().y});
+				frontLine.pos = furthestX;
 			}
 		}
 	}
