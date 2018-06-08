@@ -35,7 +35,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 	System::GetInstance().StoreWindowSettings(instanceH, show);
 
 	// Initialize the game engine.
-	Engine::GetInstance().Init("MainMenu");
+	Engine::GetInstance().Init("SplashScreen");
 
 	// MAIN LOOP: Do not exit until instructed to do so by the game state manager (GSM).
 	while (/*LevelManager::GetInstance().IsRunning()*/Engine::GetInstance().IsRunning())

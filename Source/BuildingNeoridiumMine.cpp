@@ -19,6 +19,7 @@
 #include "AEEngine.h"
 #include "Mesh.h"
 #include "SpriteSource.h"
+#include "SoundManager.h"
 
 std::map<BehaviorArmy::Side, float> BuildingNeoridiumMine::neoridium;
 
@@ -65,6 +66,11 @@ void BuildingNeoridiumMine::BuildingUpdate(float dt){
 			Space::GetLayer(0)->GetGameObjectManager()->Add(*neoridium);
 		}
 	}
+	if (!firstRun)
+		return;
+	firstRun = false;
+	SoundManager::GetInstance().Add("Neoridium_Mine.wav");
+	SoundManager::GetInstance().PlaySFX("Neoridium_Mine.wav");
 }
 
 bool BuildingNeoridiumMine::TakeNeoridium(BehaviorArmy::Side side, float amount)

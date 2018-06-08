@@ -109,6 +109,7 @@
     <ClInclude Include="Source\SellBuildingButton.h" />
     <ClInclude Include="source\Serializable.h" />
     <ClInclude Include="source\SoundManager.h" />
+    <ClInclude Include="source\SoundPlayer.h" />
     <ClInclude Include="Source\Space.h" />
     <ClInclude Include="Source\Sprite.h" />
     <ClInclude Include="Source\SpriteSource.h" />
@@ -119,6 +120,7 @@
     <ClInclude Include="Source\Teleporter.h" />
     <ClInclude Include="Source\TextBox.h" />
     <ClInclude Include="Source\Tilemap.h" />
+    <ClInclude Include="Source\Timer.h" />
     <ClInclude Include="Source\Trace.h" />
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\TurretUpgradeButton.h" />
@@ -191,6 +193,7 @@
     <ClCompile Include="Source\SellBuildingButton.cpp" />
     <ClCompile Include="source\Serializable.cpp" />
     <ClCompile Include="source\SoundManager.cpp" />
+    <ClCompile Include="source\SoundPlayer.cpp" />
     <ClCompile Include="Source\Space.cpp" />
     <ClCompile Include="Source\Sprite.cpp" />
     <ClCompile Include="Source\SpriteSource.cpp" />
@@ -202,6 +205,7 @@
     <ClCompile Include="Source\Teleporter.cpp" />
     <ClCompile Include="Source\TextBox.cpp" />
     <ClCompile Include="Source\Tilemap.cpp" />
+    <ClCompile Include="Source\Timer.cpp" />
     <ClCompile Include="Source\Trace.cpp" />
     <ClCompile Include="Source\Transform.cpp" />
     <ClCompile Include="Source\TurretUgradeButton.cpp" />
@@ -220,6 +224,7 @@
     <None Include="Data\Levels\PauseLevel.json" />
     <None Include="Data\Levels\ResearchMenu.json" />
     <None Include="Data\Levels\SellBuilding.json" />
+    <None Include="Data\Levels\SplashScreen.json" />
     <None Include="Data\Levels\TurretUpgradeMenu.json" />
     <None Include="Data\Levels\WinSideLeft.json" />
     <None Include="Data\Levels\WinSideRight.json" />

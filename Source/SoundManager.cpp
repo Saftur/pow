@@ -39,7 +39,7 @@ void SoundManager::CheckResult(FMOD_RESULT result)
 		Trace::GetInstance().GetStream() << "FMOD system initialization error! (" << result << ") " << std::endl;
 	}
 
-	//assert(!result);
+	assert(!result);
 }
 
 // Shut down the SoundManager.
@@ -225,7 +225,7 @@ void SoundManager::Add(Sound sound, const char* path)
 
 	tmp += sound;
 
-	GetSystem()->createSound(tmp.c_str(), FMOD_DEFAULT, NULL, (&soundRegistry.soundList[soundRegistry.soundCount++]));
+	CheckResult(GetSystem()->createSound(tmp.c_str(), FMOD_DEFAULT, NULL, (&soundRegistry.soundList[soundRegistry.soundCount++])));
 }
 
 // Plays a sound.

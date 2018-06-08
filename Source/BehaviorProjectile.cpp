@@ -25,6 +25,7 @@
 #include "BehaviorArmy.h"
 #include "Building.h"
 #include "Health.h"
+#include "SoundManager.h"
 
 //------------------------------------------------------------------------------
 // Enums:
@@ -52,6 +53,8 @@ GameObject* BehaviorProjectile::Projectiles[3];
 BehaviorProjectile::BehaviorProjectile() :
 		Behavior("BehaviorProjectile")
 {
+	
+
 	SetCurrentState(cBehaviorInvalid);
 }
 
@@ -76,7 +79,7 @@ void BehaviorProjectile::OnEnter()
 	{
 	case cProjectileMoving:
 
-		PlaySound(projectile.sound);
+		
 		break;
 	}
 }

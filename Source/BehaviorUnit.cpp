@@ -167,12 +167,8 @@ void BehaviorUnit::BuildArrays()
 		return;
 	done = true;
 
-	///////////////////////////////////////////////////////////////
-	// TEST CODE
-	SoundManager::GetInstance().AddBank("Master Bank.strings.bank");
-	SoundManager::GetInstance().AddBank("Master Bank.bank");
-	SoundManager::GetInstance().PlayEvent("Level Music");
-	///////////////////////////////////////////////////////////////
+	SoundManager::GetInstance().Add("Laser_Turret.wav");
+	SoundManager::GetInstance().Add("Explosion.wav");
 }
 
 // Clone an advanced behavior and return a pointer to the cloned object.
@@ -254,6 +250,10 @@ void BehaviorUnit::OnUpdate(float dt)
 			// Can we shoot?
 			if (attackTimer <= 0.0f)
 			{
+				if (traits.weapon == cWeaponHandcannon)
+					SoundManager::GetInstance().PlaySFX("Laser_Turret.wav");
+				else if (traits.weapon == cWeaponBeamRifle)
+					SoundManager::GetInstance().PlaySFX("Explosion.wav");
 				GameObject* projectile = new GameObject(*BehaviorProjectile::Projectiles[Weapons[traits.weapon].projectileArchetype]);
 				projectile->GetComponent<Transform>()->SetTranslation(GridManager::GetInstance().ConvertToWorldPoint(gridPos));
 
@@ -492,8 +492,8 @@ bool BehaviorUnit::FindTarget(GameObject** enemy, Vector2D pos) const
 			BehaviorUnit* bUnit = (*enemy)->GetComponent<BehaviorUnit>();
 			Building* building = (*enemy)->GetChildComponent<Building>();
 
-			if (bUnit && GridManager::GetInstance().GetNode(bUnit->gridPos)->height > GridManager::GetInstance().GetNode(gridPos)->height ||
-				building && GridManager::GetInstance().GetNode(building->GetGridPos())->height > GridManager::GetInstance().GetNode(gridPos)->height)
+			if ((bUnit && GridManager::GetInstance().GetNode(bUnit->gridPos)->height > GridManager::GetInstance().GetNode(gridPos)->height) ||
+				(building && GridManager::GetInstance().GetNode(building->GetGridPos())->height > GridManager::GetInstance().GetNode(gridPos)->height))
 			{
 				return false;
 			}
@@ -514,13 +514,45 @@ bool BehaviorUnit::FindTarget(GameObject** enemy, Vector2D pos) const
 		if (pos == Vector2D(-1, -1))
 			pos = gridPos;
 
-		Vector2D upperLeft = Vector2D(pos - Vector2D({ (float)stats.attackRange, (float)stats.attackRange }));
+
+		GameObject* closestUnit = nullptr;
+		int closestDistance = stats.attackRange + 1;
+
+		for (GameObject* unit : BehaviorUnit::allUnits) {
+			if (unit == GetParent()) continue;
+			BehaviorUnit* behavior = unit->GetComponent<BehaviorUnit>();
+
+			int distance = GridManager::GetInstance().GetDistanceBetween(gridPos, behavior->GetGridPos());
+			if (distance < closestDistance) {
+				if (behavior->GetArmy()->GetSide() != army->GetSide()) {
+					closestDistance = distance;
+					closestUnit = unit;
+				}
+			}
+		}
+
+		for (GameObject* building : Building::allBuildings) {
+			Building* bBuilding = building->GetChildComponent<Building>();
+
+			int distance = GridManager::GetInstance().GetDistanceBetween(gridPos, bBuilding->GetGridPos());
+			if (distance < closestDistance) {
+				if (bBuilding->army->GetSide() != army->GetSide()) {
+					closestDistance = distance;
+					closestUnit = building;
+				}
+			}
+		}
+		*enemy = closestUnit;
+
+		/*Vector2D upperLeft = Vector2D(pos - Vector2D({ (float)stats.attackRange, (float)stats.attackRange }));
 
 		for (int x = (int)upperLeft.x; x < (int)upperLeft.x + 2 * stats.attackRange; x++)
 		{
 			for (int y = (int)upperLeft.y; y < (int)upperLeft.y + 2 * stats.attackRange; y++)
 			{
 				GameObject* unit = GridManager::GetInstance().GetOccupant(Vector2D( (float)x, (float)y ));
+				if (!unit) unit = GridManager::GetInstance().GetOccupant<Building>(Vector2D((float)x, (float)y));
+				if (unit == GetParent()) continue;
 
 				if (unit) {
 					BehaviorUnit* bUnit = unit->GetComponent<BehaviorUnit>();
@@ -542,7 +574,7 @@ bool BehaviorUnit::FindTarget(GameObject** enemy, Vector2D pos) const
 					}
 				}
 			}
-		}
+		}*/
 	}
 
 	return false;
