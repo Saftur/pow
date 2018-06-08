@@ -331,6 +331,9 @@
     <ClCompile Include="source\SoundPlayer.cpp">
       <Filter>Game\Behaviors</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Timer.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h">
@@ -685,6 +688,9 @@
     <ClInclude Include="source\SoundPlayer.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Timer.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fmodAPI\lib\fmod.dll">
@@ -739,6 +745,9 @@
       <Filter>Game\Levels</Filter>
     </None>
     <None Include="Data\Levels\HUDLevel.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\SplashScreen.json">
       <Filter>Game\Levels</Filter>
     </None>
   </ItemGroup>

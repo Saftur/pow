@@ -45,7 +45,7 @@ void System::Init()
 	sysInitInfo.mShow = systemInfo.mCreateWindow;
 	sysInitInfo.mWinWidth = 1200;
 	sysInitInfo.mWinHeight = 600;
-	sysInitInfo.mCreateConsole = 1;
+	sysInitInfo.mCreateConsole = 0;
 	sysInitInfo.mMaxFrameRate = 60;
 	sysInitInfo.mpWinCallBack = NULL;//MyWinCallBack;
 	sysInitInfo.mClassStyle = CS_HREDRAW | CS_VREDRAW | CS_NOCLOSE;

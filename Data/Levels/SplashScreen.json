@@ -1,0 +1,37 @@
+[
+  {
+    "Name": "Camera",
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 1, 1 ]
+    },
+    "Camera": {}
+  },
+  {
+    "Name": "Background",
+    "Transform": {
+      "Translation": [ 0, 15 ],
+      "Scale": [ 960, 540 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "Background",
+        "Texture": "Data\\Assets\\credits.png",
+        "Cols": 1,
+        "Rows": 1
+      },
+      "Mesh": {
+        "Name": "BackgroundMesh",
+        "HalfSize": [ 1, 1 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "ModulateColor": [ 0, 0, 0, 0 ]
+    },
+    "Timer": {
+      "Duration": 2.3315,
+      "Level": "MainMenu"
+    }
+  }
+]

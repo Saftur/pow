@@ -120,6 +120,7 @@
     <ClInclude Include="Source\Teleporter.h" />
     <ClInclude Include="Source\TextBox.h" />
     <ClInclude Include="Source\Tilemap.h" />
+    <ClInclude Include="Source\Timer.h" />
     <ClInclude Include="Source\Trace.h" />
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\TurretUpgradeButton.h" />
@@ -204,6 +205,7 @@
     <ClCompile Include="Source\Teleporter.cpp" />
     <ClCompile Include="Source\TextBox.cpp" />
     <ClCompile Include="Source\Tilemap.cpp" />
+    <ClCompile Include="Source\Timer.cpp" />
     <ClCompile Include="Source\Trace.cpp" />
     <ClCompile Include="Source\Transform.cpp" />
     <ClCompile Include="Source\TurretUgradeButton.cpp" />
@@ -222,6 +224,7 @@
     <None Include="Data\Levels\PauseLevel.json" />
     <None Include="Data\Levels\ResearchMenu.json" />
     <None Include="Data\Levels\SellBuilding.json" />
+    <None Include="Data\Levels\SplashScreen.json" />
     <None Include="Data\Levels\TurretUpgradeMenu.json" />
     <None Include="Data\Levels\WinSideLeft.json" />
     <None Include="Data\Levels\WinSideRight.json" />
