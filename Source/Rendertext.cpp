@@ -96,13 +96,15 @@ void Text::Draw(Camera *cam) const {
 	for (int i = 0; i < len; i++){
 
 		if (str[i] == 32) sprite->SetFrame(0);
-		else if (str[i] >= 32 && str[i] <= 96) sprite->SetFrame(str[i] - 31);
-		else if (str[i] >= 97 && str[i] <= 122) sprite->SetFrame(str[i] - 63);
+		else if (str[i] >= 32 && str[i] <= 96) sprite->SetFrame(str[i] - 32);
+		else if (str[i] >= 97 && str[i] <= 122) sprite->SetFrame(str[i] - 32);
 		else sprite->SetFrame(0);
 		
 		sprite->Draw(cam, *transform);
 
-		transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x * 0.6f, 0.0f));
+		const char c = str[i];
+		if (c == 'i' || c == '!' || c == '\'' || c == '`' || c == ':' || c == ';') transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x / 4, 0.0f));
+		else transform->SetTranslation(transform->GetTranslation() + Vector2D(scale.x * 0.6f, 0.0f));
 	}
 
 	transform->SetTranslation(startPos);

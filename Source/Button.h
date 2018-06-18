@@ -24,10 +24,6 @@ using std::map;
 #include <string>
 using std::string;
 
-#include "BehaviorArmy.h"
-#include "Building.h"
-#include "BuildingResearchCenter.h"
-
 typedef class Vector2D Vector2D;
 typedef class GameObject GameObject;
 typedef class Transform Transform;

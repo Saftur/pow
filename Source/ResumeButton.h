@@ -4,11 +4,11 @@
 
 class ResumeButton : public Button {
 public:
-	ResumeButton();
+    ResumeButton();
 
-	Component *Clone() const;
+    Component *Clone() const;
 
-	void ClickEffect(float dt);
+    void ClickEffect(float dt);
 
 private:
 

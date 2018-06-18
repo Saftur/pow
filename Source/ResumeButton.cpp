@@ -9,9 +9,9 @@ ResumeButton::ResumeButton() : Button("ResumeButton") {
 }
 
 Component * ResumeButton::Clone() const {
-	return new ResumeButton(*this);
+    return new ResumeButton(*this);
 }
 
 void ResumeButton::ClickEffect(float dt) {
-	GetParent()->GetGameObjectManager()->GetObjectByName("MainObject")->GetComponent<GameMain>()->TogglePaused();
+    GetParent()->GetGameObjectManager()->GetObjectByName("MainObject")->GetComponent<GameMain>()->TogglePaused();
 }

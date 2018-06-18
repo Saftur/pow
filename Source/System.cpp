@@ -13,7 +13,6 @@
 #include "AEEngine.h"
 #include "System.h"
 #include "Engine.h"
-#include "Gamepad.h"
 
 //------------------------------------------------------------------------------
 // Libraries
@@ -74,7 +73,6 @@ void System::Update(float dt)
 
 	// Handling Input
 	AEInputUpdate();
-	Gamepad::UpdateAll();
 
 	// check if the window doesn't exist.
 	if (!AESysDoesWindowExist())
