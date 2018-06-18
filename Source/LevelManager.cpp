@@ -19,6 +19,7 @@
 #include "GameObjectManager.h"
 #include "Space.h"
 #include "SoundManager.h"
+#include "Tilemap.h"
 #include "Rendertext.h"
 #include "TextBox.h"
 #include "CompList.h"
@@ -48,6 +49,7 @@ void LevelManager::StaticInit()
 	AddComponentType("ColliderBox", new ColliderBox());
 	AddComponentType("ColliderCircle", new ColliderCircle(0));
 	AddComponentType("Camera", new Camera());
+	AddComponentType("Tilemap", new Tilemap());
 	AddComponentType("Text", new Text());
 	AddComponentType("TextBox", new TextBox());
 

@@ -46,11 +46,38 @@
     <Filter Include="Game\Levels">
       <UniqueIdentifier>{eec3befe-3433-43d5-8608-9c72ebc290de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameObjects\Tilemap">
+      <UniqueIdentifier>{26f6a7a3-cd51-4873-a8dc-d6d4ac3d337b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\GameObjects\RenderText">
       <UniqueIdentifier>{1624beb4-3d38-4c80-a6b5-a71e834c37dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Control">
+      <UniqueIdentifier>{24c27d79-129e-4255-877a-39ec8e039fcd}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\GameObjects\Button">
       <UniqueIdentifier>{ed05ba28-4811-4472-a13d-55c96845190d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Armies">
+      <UniqueIdentifier>{41f3a029-25d6-4467-a574-2b89e9253d1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameObjects\Pathfinding">
+      <UniqueIdentifier>{9b3ce7ad-4ba3-4916-820b-3743a8719c33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Buttons">
+      <UniqueIdentifier>{855420d7-5d4a-417b-b6c0-08388fe5a3cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Buildings">
+      <UniqueIdentifier>{a07c1ffc-9750-4c03-baba-0ba84c23acab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Control">
+      <UniqueIdentifier>{56c8ad49-83c8-4399-8ce2-7aa341c96c11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Buttons\GameButtons">
+      <UniqueIdentifier>{a82f3f35-59a4-47f6-8e7b-a8be248f7e35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Buttons\NonGameButtons">
+      <UniqueIdentifier>{6b38de7d-6ebb-4a7b-ad5c-6c32175b59c1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game\MainLoops">
       <UniqueIdentifier>{ddae13fd-0fea-4956-a6ed-bc64a9d0b999}</UniqueIdentifier>
@@ -106,6 +133,9 @@
     <ClCompile Include="Source\Collider.cpp">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Teleporter.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Random.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -118,11 +148,17 @@
     <ClCompile Include="Source\Component.cpp">
       <Filter>Engine\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Tilemap.cpp">
+      <Filter>Engine\GameObjects\Tilemap</Filter>
+    </ClCompile>
     <ClCompile Include="Source\ColliderCircle.cpp">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClCompile>
     <ClCompile Include="Source\Intersection2D.cpp">
       <Filter>Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorStub.cpp">
+      <Filter>Game\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="Source\ColliderBox.cpp">
       <Filter>Engine\GameObjects\Colliders</Filter>
@@ -130,11 +166,29 @@
     <ClCompile Include="source\Serializable.cpp">
       <Filter>Engine\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Source\BehaviorUnit.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorArmy.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
     <ClCompile Include="Source\CompList.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendertext.cpp">
       <Filter>Engine\GameObjects\RenderText</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Gamepad.cpp">
+      <Filter>Engine\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ControlList.cpp">
+      <Filter>Engine\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Map.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BehaviorProjectile.cpp">
+      <Filter>Game\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="source\BehaviorUnit.cpp">
       <Filter>Game\Behaviors</Filter>
@@ -142,8 +196,14 @@
     <ClCompile Include="Source\LevelManager.cpp">
       <Filter>Engine\Levels</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Cursor.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
     <ClCompile Include="Source\ComponentStub.cpp">
       <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PopupMenu.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Source\BehaviorArmy.cpp">
       <Filter>Game\Behaviors</Filter>
@@ -151,8 +211,38 @@
     <ClCompile Include="Source\Tilemap.cpp">
       <Filter>Engine\GameObjects\Tilemap</Filter>
     </ClCompile>
+    <ClCompile Include="source\BehaviorTestBox.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GridManager.cpp">
+      <Filter>Engine\GameObjects\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Pathfinder.cpp">
+      <Filter>Engine\GameObjects\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Building.cpp">
+      <Filter>Game\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BuildingCommandPost.cpp">
+      <Filter>Game\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BuildingJaxiumMine.cpp">
+      <Filter>Game\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BuildingNeoridiumMine.cpp">
+      <Filter>Game\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BuildingResearchCenter.cpp">
+      <Filter>Game\Buildings</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Button.cpp">
       <Filter>Engine\GameObjects\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Crystal.cpp">
+      <Filter>Game\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BuildingTeleporter.cpp">
+      <Filter>Game\Buildings</Filter>
     </ClCompile>
     <ClCompile Include="Source\Camera.cpp">
       <Filter>Engine\GameObjects\Graphics</Filter>
@@ -169,20 +259,80 @@
     <ClCompile Include="Source\QuitButton.cpp">
       <Filter>Engine\GameObjects\Button</Filter>
     </ClCompile>
+    <ClCompile Include="Source\BuildingTurret.cpp">
+      <Filter>Game\Buildings</Filter>
+    </ClCompile>
     <ClCompile Include="Source\ChangeLevelButton.cpp">
       <Filter>Engine\GameObjects\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MenuCursor.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ArmyButton.cpp">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CreateBuildingButton.cpp">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CreateUnitButton.cpp">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ResearchButton.cpp">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NewUnitButton.cpp">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ArmyTraits.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Source\TextBox.cpp">
       <Filter>Engine\GameObjects\RenderText</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ChangeStatButton.cpp">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LoadArmyButton.cpp">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SaveArmyButton.cpp">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CustomizationMain.cpp">
+      <Filter>Game\MainLoops</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Rect.cpp">
       <Filter>Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ChangeWeaponAbilityButton.cpp">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CustomPointCounter.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CostDisplay.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Health.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TurretUgradeButton.cpp">
+      <Filter>Game\Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SellBuildingButton.cpp">
+      <Filter>Game\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameMain.cpp">
       <Filter>Game\MainLoops</Filter>
     </ClCompile>
     <ClCompile Include="Source\ResumeButton.cpp">
-      <Filter>Engine\GameObjects\Button</Filter>
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SoundPlayer.cpp">
+      <Filter>Game\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Timer.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +391,9 @@
     <ClInclude Include="Source\Collider.h">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Teleporter.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Random.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -277,11 +430,17 @@
     <ClInclude Include="Source\Component.h">
       <Filter>Engine\GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Tilemap.h">
+      <Filter>Engine\GameObjects\Tilemap</Filter>
+    </ClInclude>
     <ClInclude Include="Source\ColliderCircle.h">
       <Filter>Engine\GameObjects\Colliders</Filter>
     </ClInclude>
     <ClInclude Include="Source\Intersection2D.h">
       <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorStub.h">
+      <Filter>Game\Behaviors</Filter>
     </ClInclude>
     <ClInclude Include="Source\ColliderBox.h">
       <Filter>Engine\GameObjects\Colliders</Filter>
@@ -349,17 +508,41 @@
     <ClInclude Include="source\Serializable.h">
       <Filter>Engine\GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="Source\BehaviorUnit.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorArmy.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
     <ClInclude Include="Source\CompList.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rendertext.h">
       <Filter>Engine\GameObjects\RenderText</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Gamepad.h">
+      <Filter>Engine\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ControlList.h">
+      <Filter>Engine\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Map.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BehaviorProjectile.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
     <ClInclude Include="source\BehaviorUnit.h">
       <Filter>Game\Behaviors</Filter>
     </ClInclude>
     <ClInclude Include="Source\LevelManager.h">
       <Filter>Engine\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PopupMenu.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cursor.h">
+      <Filter>Game\Behaviors</Filter>
     </ClInclude>
     <ClInclude Include="Source\ComponentStub.h">
       <Filter>Game\Behaviors</Filter>
@@ -370,8 +553,38 @@
     <ClInclude Include="Source\Tilemap.h">
       <Filter>Engine\GameObjects\Tilemap</Filter>
     </ClInclude>
+    <ClInclude Include="source\BehaviorTestBox.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Pathfinder.h">
+      <Filter>Engine\GameObjects\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GridManager.h">
+      <Filter>Engine\GameObjects\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Building.h">
+      <Filter>Game\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingResearchCenter.h">
+      <Filter>Game\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingCommandPost.h">
+      <Filter>Game\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingJaxiumMine.h">
+      <Filter>Game\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingNeoridiumMine.h">
+      <Filter>Game\Buildings</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Button.h">
       <Filter>Engine\GameObjects\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Crystal.h">
+      <Filter>Game\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingTeleporter.h">
+      <Filter>Game\Buildings</Filter>
     </ClInclude>
     <ClInclude Include="Source\Camera.h">
       <Filter>Engine\GameObjects\Graphics</Filter>
@@ -400,20 +613,83 @@
     <ClInclude Include="fmodAPI\inc\fmod_studio_common.h">
       <Filter>fmod</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Controls.h">
+      <Filter>Game\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuildingTurret.h">
+      <Filter>Game\Buildings</Filter>
+    </ClInclude>
     <ClInclude Include="Source\ChangeLevelButton.h">
       <Filter>Engine\GameObjects\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MenuCursor.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ArmyButton.h">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CreateBuildingButton.h">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CreateUnitButton.h">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResearchButton.h">
+      <Filter>Game\Buttons\GameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\NewUnitButton.h">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ArmyTraits.h">
+      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\TextBox.h">
       <Filter>Engine\GameObjects\RenderText</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ChangeStatButton.h">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LoadArmyButton.h">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SaveArmyButton.h">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CustomizationMain.h">
+      <Filter>Game\MainLoops</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Rect.h">
       <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ChangeWeaponAbilityButton.h">
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CustomPointCounter.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CostDisplay.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Health.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TurretUpgradeButton.h">
+      <Filter>Game\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SellBuildingButton.h">
+      <Filter>Game\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameMain.h">
       <Filter>Game\MainLoops</Filter>
     </ClInclude>
     <ClInclude Include="Source\ResumeButton.h">
-      <Filter>Engine\GameObjects\Button</Filter>
+      <Filter>Game\Buttons\NonGameButtons</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SoundPlayer.h">
+      <Filter>Game\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -429,10 +705,49 @@
     <None Include="Data\Levels\PauseLevel.json">
       <Filter>Game\Levels</Filter>
     </None>
+    <None Include="Data\Army1.ini">
+      <Filter>Game\Armies</Filter>
+    </None>
+    <None Include="Data\Army1Controls.json">
+      <Filter>Game\Armies</Filter>
+    </None>
+    <None Include="Data\Army2.ini">
+      <Filter>Game\Armies</Filter>
+    </None>
+    <None Include="Data\Levels\CommandPostMenu.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\ResearchMenu.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\BuildingMenu.json">
+      <Filter>Game\Levels</Filter>
+    </None>
     <None Include="fmodAPI\inc\fmod_studio.cs">
       <Filter>fmod</Filter>
     </None>
+    <None Include="Data\Levels\CustomizationMenu.json">
+      <Filter>Game\Levels</Filter>
+    </None>
     <None Include="Data\Levels\MainMenu.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\TurretUpgradeMenu.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\WinSideLeft.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\WinSideRight.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\SellBuilding.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\HUDLevel.json">
+      <Filter>Game\Levels</Filter>
+    </None>
+    <None Include="Data\Levels\SplashScreen.json">
       <Filter>Game\Levels</Filter>
     </None>
   </ItemGroup>

@@ -1,0 +1,105 @@
+{
+  "0": {
+    "Name": "TestObj",
+    "Transform": {
+      "Translation": [ 0, 0 ],
+      "Scale": [ 100, 100 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "TestSpriteSource",
+        "Texture": "Assets\\MonkeyStand.png",
+        "Cols": 1,
+        "Rows": 1
+      },
+      "Mesh": {
+        "Name": "TestMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [ 1, 1 ]
+      },
+      "Alpha": 1,
+      "FrameIndex": 0,
+      "ModulateColor": [ 1, 0, 0, 0.5 ]
+    },
+    "Animation": {
+      "FrameCount": 0,
+      "FrameDuration": 0,
+      "IsLooping": true
+    },
+    "Physics": {},
+    "Collider": {
+      "Type": "Circle",
+      "Radius": 1.0
+    },
+    "Extras": [
+      {
+        "CompType": "Sprite",
+        "SpriteSource": {
+          "Name": "Bleh",
+          "Texture": "Assets\\baseunit.png",
+          "Cols": 1,
+          "Rows": 1
+        },
+        "Mesh": "TestMesh",
+        "Alpha": 1,
+        "FrameIndex": 0,
+        "ModulateColor": [ 0, 0, 0, 0 ]
+      }
+    ]
+  },
+  "1": {
+    "Name": "TestObj2",
+    "Transform": {
+      "Translation": [ 100, 0 ],
+      "Scale": [ 100, 100 ],
+      "Rotation": 45
+    },
+    "Sprite": {
+      "SpriteSource": "TestSpriteSource",
+      "Mesh": "TestMesh",
+      "Alpha": 1,
+      "FrameIndex": 0,
+      "ModulateColor": [ 0, 1, 0, 0.5 ]
+    },
+    "Animation": {
+      "FrameCount": 0,
+      "FrameDuration": 0,
+      "IsLooping": true
+    },
+    "Physics": {},
+    "Collider": {
+      "Type": "Circle",
+      "Radius": 1.0
+    }
+  },
+  "2": {
+    "Name": "TestObj3",
+    "Transform": {
+      "Translation": [ 0, 100 ],
+      "Scale": [ 100, 100 ],
+      "Rotation": 0
+    },
+    "Sprite": {
+      "SpriteSource": {
+        "Name": "TestAnimationSpriteSource",
+        "Texture": "Assets\\MonkeyWalk.png",
+        "Cols": 3,
+        "Rows": 3
+      },
+      "Mesh": {
+        "Name": "AnimationMesh",
+        "HalfSize": [ 0.5, 0.5 ],
+        "UV": [0.333333333333, 0.333333333333]
+      },
+      "Alpha": 1,
+      "FrameIndex": 0,
+      "ModulateColor": [ 0, 0, 1, 0.5 ]
+    },
+    "Animation": {
+      "FrameCount": 8,
+      "FrameDuration": 0.25,
+      "IsLooping": true
+    }
+  }
+}

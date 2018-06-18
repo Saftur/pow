@@ -1,0 +1,32 @@
+#include "stdafx.h"
+#include "CreateUnitButton.h"
+#include <algorithm>
+
+CreateUnitButton::CreateUnitButton() : ArmyButton("CreateUnitButton") {
+}
+
+void CreateUnitButton::Load(rapidjson::Value & obj) {
+	ArmyButton::Load(obj);
+	rapidjson::Value *tmp;
+
+	if (obj.HasMember("UnitId") && (tmp = &obj["UnitId"])->IsUint()) {
+		unitId = tmp->GetUint();
+	}
+}
+
+Component * CreateUnitButton::Clone() const {
+	return new CreateUnitButton(*this);
+}
+
+void CreateUnitButton::ClickEffect(float dt) {
+	vector<GridManager::Node*> nearbyNodes = GridManager::GetInstance().GetNeighbors(mapPos);
+	for (unsigned i = 0; i < nearbyNodes.size(); i++) {
+		if (!army->LegalSpawn(nearbyNodes[i]->gridPos())) nearbyNodes[i] = nullptr;
+	}
+	nearbyNodes.erase(std::remove(nearbyNodes.begin(), nearbyNodes.end(), nullptr), nearbyNodes.end());
+	if (nearbyNodes.size() == 0) return;
+
+	int nodeID = rand() % nearbyNodes.size();
+
+	army->CreateUnit(unitId, nearbyNodes[nodeID]->gridPos());
+}

@@ -1,0 +1,89 @@
+Mesh
+{
+	"Name"
+	HalfSize(x, y)
+	UV(u, v)
+}
+
+SpriteSource
+{
+	"Name"	
+	Size(rows, cols)
+	Texture(sprite)
+}
+
+GameObject
+{
+	"Name"
+	Transform
+	{
+		Translation(x, y)
+		Scale(x, y)
+		Rotation(rot)
+		UIElement(t/f)
+	}
+	Sprite
+	{
+		"Name"
+		Alpha(value)
+		Frame(frame)
+		Mesh(name)
+		Mesh
+		{
+			HalfSize(x, y)
+			UV(u, v)
+		}
+		SpriteSource(name)
+		SpriteSource
+		{
+			Size(rows, cols)
+			Texture(sprite)
+		}
+	}
+	Animation
+	{
+		FrameDur(length)
+		IsLooping(t/f)
+	}
+	Physics
+	Collider
+	Behavior (name)
+}
+
+Platform
+{
+	Transform
+	{
+		Translation(x, y)
+		Scale(x, y)
+	}
+	Jump(height)
+	Speed(speed)
+	Vector
+	{
+		(0, 0)
+		(1, 0)
+	}
+}
+
+GameObject
+{
+	"Goal"
+	Transform
+	{
+		Translation(0, groundHeight)
+	}
+	Sprite
+	{
+		"Goal Sprite"
+		Mesh(goalMesh)
+		SpriteSource(goalSpriteSource)
+	}
+	Animation
+	{
+		FrameDur(0.25f)
+		IsLooping(true)
+	}
+	Physics
+	Collider
+	Behavior(BehaviorGoal(GameStateTable::GsLevel2))

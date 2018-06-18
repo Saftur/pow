@@ -1,0 +1,30 @@
+{
+  "CamAxisX": "LStickX",
+  "CamAxisY": "LStickY",
+  "CamUp": "DpadUp",
+  "CamDown": "DpadDown",
+  "CamLeft": "DpadLeft",
+  "CamRight": "DpadRight",
+  "Normal": {
+    "SpawnUnit1": "A",
+    "SpawnUnit2": "X",
+    "SpawnUnit3": "Y",
+    "SpawnUnit4": "B",
+    "SwitchCommand": "RTrigger"
+  },
+  "Command": {
+    "ClearPath": "X",
+    "BackPath": "B",
+    "PathToEnd": "Y",
+    "Recycle": "LShoulder",
+    "SwitchSelect": "LTrigger"
+  },
+  "Select": {
+    "SwitchManual": "X",
+    "SwitchAuto": "Y",
+    "Manual": {
+      "Select": "A",
+      "Deselect": "B"
+    }
+  }
+}
